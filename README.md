@@ -16,13 +16,13 @@ include <gcodepreview.scad>;
 and then use the commands:
 
 difference() {
-  cube([<Stock Length>, <Stock Width>, <Stock Thickness>], center=false);
+  cube([Stock Length, Stock Width, Stock Thickness], center=false);
 
-  gcut(<bx>, <by>, <bz>, <ex>, <ey>, <ez>, <tn>);
+  gcut(bx, by, bz, ex, ey, ez, tn);
 
-  garcCW(<bx>, <by>, <bz>, <ex>, <ey>, <ez>, <xoffset>, <yoffset>, <tn>);
+  garcCW(bx, by, bz, ex, ey, ez, xoffset, yoffset, tn);
 
-  garcCCW(<bx>, <by>, <bz>, <ex>, <ey>, <ez>, <xoffset>, <yoffset>, <tn>);
+  garcCCW(bx, by, bz, ex, ey, ez, xoffset, yoffset, tn);
   
 }
 
