@@ -17,19 +17,19 @@ Place the file in C:\Users\\\~\Documents\OpenSCAD\libraries
 
 and then use the commands:
 
-difference() {
-  cube([Stock Length, Stock Width, Stock Thickness], center=false);
+    difference() {
+      cube([Stock Length, Stock Width, Stock Thickness], center=false);
 
-  gcut(bx, by, bz, ex, ey, ez, tn);
+      gcut(bx, by, bz, ex, ey, ez, tn);
 
-  garcCW(bx, by, bz, ex, ey, ez, xoffset, yoffset, tn);
+      garcCW(bx, by, bz, ex, ey, ez, xoffset, yoffset, tn);
 
-  garcCCW(bx, by, bz, ex, ey, ez, xoffset, yoffset, tn);
+      garcCCW(bx, by, bz, ex, ey, ez, xoffset, yoffset, tn);
   
-}
+    }
 
 Where:
-
+ 
 beginning coordinates:
   bx
   by
