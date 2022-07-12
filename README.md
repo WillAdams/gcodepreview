@@ -11,7 +11,7 @@ https://community.carbide3d.com/t/previewing-g-code-using-openscad/35153
 
 Usage is:
 
-Place the file in C:\Users\~\Documents\OpenSCAD\libraries
+Place the file in C:\Users\\\~\Documents\OpenSCAD\libraries
 
     include <gcodepreview.scad>;
 
