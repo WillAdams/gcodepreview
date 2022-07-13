@@ -30,6 +30,8 @@ module garcCCWUR(bx, by, bz, ex, ey, ez, xoffset, yoffset, tn) {
 }
 
 module gcut(bx, by, bz, ex, ey, ez, tn) {
+    writeln("G1 X",bx," Y", by, "Z", bz);
+    writeln("G1 X",ex," Y", ey, "Z", ez);
   hull(){
     translate([bx, by, bz]){
       select_tool(tn);
