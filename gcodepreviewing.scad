@@ -1,5 +1,44 @@
 //!OpenSCAD
 
+
+module setupcut(stocklength, stockwidth, stockthickness, zeroheight, stockorigin) {
+
+writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,")");
+	writeln("G90");
+	writeln("G21");
+	writeln("(Move to safe Z to avoid workholding)");
+	writeln("G53G0Z-5.000");
+	writeln("M05");
+
+  if (zeroheight == "Top") {
+    translate([0, 0, (-stockthickness)]){
+      setstock(stocklength, stockwidth, stockthickness, stockorigin);
+    }
+  } else {
+    setstock(stocklength, stockwidth, stockthickness, stockorigin);
+  }
+
+}
+
+module setstock(stocklength, stockwidth, stockthickness, stockorigin) {
+  if (stockorigin == "Lower-Left") {
+    cube([stocklength, stockwidth, stockthickness], center=false);
+  } else if (stockorigin == "Center-Left") {
+    translate([0, (-stockwidth / 2), 0]){
+      cube([stocklength, stockwidth, stockthickness], center=false);
+    }
+  } else if (stockorigin == "Top-Left") {
+    translate([0, (-stockwidth), 0]){
+      cube([stocklength, stockwidth, stockthickness], center=false);
+    }
+  } else {
+    translate([(-stocklength / 2), (-stockwidth / 2), 0]){
+      cube([stocklength, stockwidth, stockthickness], center=false);
+    }
+  }
+
+}
+
 module gcp_endmill_square(es_diameter, es_flute_length) {
   cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=es_flute_length, center=false);
 }
