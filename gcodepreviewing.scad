@@ -1,5 +1,36 @@
 //!OpenSCAD
 
+module plungegcutretract(bx, by, bz, ex, ey, ez, tn, retract, plungerate, feedrate) {
+rapid(bx, by, retract*2, bx, by, retract);
+gcutfeed(bx, by, retract, bx, by, bz, tn, plungerate);
+gcutfeed(bx, by, bz, ex, ey, ez, tn, feedrate);
+rapid(ex, ey, ez, ex, ey, retract);
+}
+
+module plungegcutsetfeed(bx, by, bz, ex, ey, ez, tn, plungerate, feedrate) {
+cut(bx, by, bz, ex, ey, ez, tn);
+	writeln("G1 X",ex," Y", ey, "Z", ez,"F",plungerate);
+	writeln("F",feedrate);
+}
+
+
+module rapid(bx, by, bz, ex, ey, ez) {
+//	writeln("G0 X",bx," Y", by, "Z", bz);
+	writeln("G0 X",ex," Y", ey, "Z", ez);
+  hull(){
+    translate([bx, by, bz]){
+      select_tool(102);
+    }
+    translate([ex, ey, ez]){
+      select_tool(102);
+    }
+  }
+}
+
+module toolchange(toolno) {
+writeln("(TOOL/MILL,",toolno,")");
+	writeln(str("M6T",toolno));
+}
 
 module setupcut(stocklength, stockwidth, stockthickness, zeroheight, stockorigin) {
 
@@ -39,6 +70,7 @@ module setstock(stocklength, stockwidth, stockthickness, stockorigin) {
 
 }
 
+
 module gcp_endmill_square(es_diameter, es_flute_length) {
   cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=es_flute_length, center=false);
 }
@@ -68,9 +100,9 @@ module garcCCWUR(bx, by, bz, ex, ey, ez, xoffset, yoffset, tn) {
 
 }
 
-module gcut(bx, by, bz, ex, ey, ez, tn) {
-    writeln("G1 X",bx," Y", by, "Z", bz);
-    writeln("G1 X",ex," Y", ey, "Z", ez);
+module cut(bx, by, bz, ex, ey, ez, tn) {
+//	writeln("G1 X",bx," Y", by, "Z", bz);
+//	writeln("G1 X",ex," Y", ey, "Z", ez);
   hull(){
     translate([bx, by, bz]){
       select_tool(tn);
@@ -79,6 +111,18 @@ module gcut(bx, by, bz, ex, ey, ez, tn) {
       select_tool(tn);
     }
   }
+}
+
+module gcut(bx, by, bz, ex, ey, ez, tn) {
+//	writeln("G1 X",bx," Y", by, "Z", bz);
+	writeln("G1 X",ex," Y", ey, "Z", ez);
+cut(bx, by, bz, ex, ey, ez, tn);
+}
+
+module gcutfeed(bx, by, bz, ex, ey, ez, tn, feed) {
+//	writeln("G1 X",bx," Y", by, "Z", bz);
+	writeln("G1 X",ex," Y", ey, "Z", ez,"F",feed);
+cut(bx, by, bz, ex, ey, ez, tn);
 }
 
 module garcCCW(bx, by, bz, ex, ey, ez, xoffset, yoffset, tn) {
