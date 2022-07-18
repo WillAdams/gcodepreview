@@ -190,38 +190,3 @@ module garcCCWLR(bx, by, bz, ex, ey, ez, xoffset, yoffset, tn) {
   }
 
 }
-
-//Stock_Width = 4;
-//Stock_Length = 16.25;
-//Stock_Thickness = 0.25;
-//Top_Bottom_Thickness = 0.2559;
-//Box_Width = 8.125;
-//Box_Depth = 8.125;
-//Number_of_Pins = 15;
-//Lid_Position = 9;
-//Joint_Offset = 0.1875;
-//Tool_Diameter = 0.125;
-//Ball_Nose_Tool_No = 101;
-//V_endmill_Tool_No = 390;
-//Units = 25.4;
-//Arc_Detail = 3;
-//sw = Stock_Width * Units;
-//sl = Stock_Length * Units;
-//st = Stock_Thickness * Units;
-//tbt = Top_Bottom_Thickness * Units;
-//bw = Box_Width * Units;
-//bd = Box_Depth * Units;
-//jo = Joint_Offset * Units;
-//td = Tool_Diameter * Units;
-//tr = td / 2;
-//item = 0;
-//difference() {
-//  cube([sl, sw, st], center=false);
-//
-//  union(){
-//    garcCCW(15, 0, st / 2, 30, 15, 0, 0, 15, Ball_Nose_Tool_No);
-//    garcCCW(30, 15, st / 2, 15, 30, 0, -15, 0, Ball_Nose_Tool_No);
-//    garcCCW(0, 15, st / 2, 15, 0, 0, 15, 0, Ball_Nose_Tool_No);
-//    garcCCW(15, 30, st / 2, 0, 15, 0, 0, -15, Ball_Nose_Tool_No);
-//  }
-//}
