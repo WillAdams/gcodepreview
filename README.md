@@ -48,3 +48,5 @@ offsets:
   
 Tool Number:
   tn
+
+Tool numbers match those of tooling sold by Carbide 3D (ob. discl., I work for them).
