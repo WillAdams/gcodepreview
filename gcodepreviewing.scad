@@ -27,14 +27,9 @@ module rapid(bx, by, bz, ex, ey, ez) {
   }
 }
 
-module toolchange(toolno) {
-writeln("(TOOL/MILL,",toolno,")");
-	writeln(str("M6T",toolno));
-}
-
 module setupcut(stocklength, stockwidth, stockthickness, zeroheight, stockorigin) {
 
-writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,")");
+writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,", ", stocklength,", ",stockwidth,", ",stockthickness,")");
 	writeln("G90");
 	writeln("G21");
 	writeln("(Move to safe Z to avoid workholding)");
@@ -49,6 +44,10 @@ writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,")");
     setstock(stocklength, stockwidth, stockthickness, stockorigin);
   }
 
+}
+
+module closecut() {
+	writeln("M02");
 }
 
 module setstock(stocklength, stockwidth, stockthickness, stockorigin) {
@@ -170,6 +169,26 @@ module select_tool(tool_number) {
 
 }
 
+module toolchange(tool_number) {
+  if (tool_number == 201) {
+	writeln("(TOOL/MILL,6.35, 0.00, 0.00, 0.00)");
+  } else if (tool_number == 202) {
+	writeln("(TOOL/MILL,6.35, 3.17, 0.00, 0.00)");
+  } else if (tool_number == 102) {
+	writeln("(TOOL/MILL,3.17, 0.00, 0.00, 0.00)");
+  } else if (tool_number == 101) {
+	writeln("(TOOL/MILL,3.17, 1.58, 0.00, 0.00)");
+  } else if (tool_number == 301) {
+	writeln("(TOOL/MILL,0.03, 0.00, 10.00, 45.00)");
+  } else if (tool_number == 302) {
+	writeln("(TOOL/MILL,0.03, 0.00, 10.00, 30.00)");
+  } else if (tool_number == 390) {
+	writeln("(TOOL/MILL,0.03, 0.00, 10.00, 45.00)");
+  }
+	writeln(str("M6T",tool_number));
+}
+
+
 module garcCWLL(bx, by, bz, ex, ey, ez, xoffset, yoffset, tn) {
   for (m = [0 : abs(Arc_Detail) : 90 - Arc_Detail * 3]) {
     gcut(bx - sin((m - Arc_Detail)) * yoffset, by + (yoffset * (1 - cos(((m - Arc_Detail) / 2)))) * 4, bz + (ez - bz) * ((m - Arc_Detail) / 90), bx - sin(m) * yoffset, by + (yoffset * (1 - cos((m / 2)))) * 4, bz + (ez - bz) * (m / 90), tn);
@@ -190,3 +209,38 @@ module garcCCWLR(bx, by, bz, ex, ey, ez, xoffset, yoffset, tn) {
   }
 
 }
+
+//Stock_Width = 4;
+//Stock_Length = 16.25;
+//Stock_Thickness = 0.25;
+//Top_Bottom_Thickness = 0.2559;
+//Box_Width = 8.125;
+//Box_Depth = 8.125;
+//Number_of_Pins = 15;
+//Lid_Position = 9;
+//Joint_Offset = 0.1875;
+//Tool_Diameter = 0.125;
+//Ball_Nose_Tool_No = 101;
+//V_endmill_Tool_No = 390;
+//Units = 25.4;
+//Arc_Detail = 3;
+//sw = Stock_Width * Units;
+//sl = Stock_Length * Units;
+//st = Stock_Thickness * Units;
+//tbt = Top_Bottom_Thickness * Units;
+//bw = Box_Width * Units;
+//bd = Box_Depth * Units;
+//jo = Joint_Offset * Units;
+//td = Tool_Diameter * Units;
+//tr = td / 2;
+//item = 0;
+//difference() {
+//  cube([sl, sw, st], center=false);
+//
+//  union(){
+//    garcCCW(15, 0, st / 2, 30, 15, 0, 0, 15, Ball_Nose_Tool_No);
+//    garcCCW(30, 15, st / 2, 15, 30, 0, -15, 0, Ball_Nose_Tool_No);
+//    garcCCW(0, 15, st / 2, 15, 0, 0, 15, 0, Ball_Nose_Tool_No);
+//    garcCCW(15, 30, st / 2, 0, 15, 0, 0, -15, Ball_Nose_Tool_No);
+//  }
+//}
