@@ -9,15 +9,19 @@ rapid(ex, ey, ez, ex, ey, retract);
 
 module plungegcutsetfeed(bx, by, bz, ex, ey, ez, tn, plungerate, feedrate) {
 cut(bx, by, bz, ex, ey, ez, tn);
+if (generategcode == true) {
 	writeln("G1 X",ex," Y", ey, "Z", ez,"F",plungerate);
 	writeln("F",feedrate);
+}
 }
 
 
 module rapid(bx, by, bz, ex, ey, ez) {
 //	writeln("G0 X",bx," Y", by, "Z", bz);
+if (generategcode == true) {
 	writeln("G0 X",ex," Y", ey, "Z", ez);
-  hull(){
+}
+hull(){
     translate([bx, by, bz]){
       select_tool(102);
     }
@@ -29,13 +33,14 @@ module rapid(bx, by, bz, ex, ey, ez) {
 
 module setupcut(stocklength, stockwidth, stockthickness, zeroheight, stockorigin) {
 
+if (generategcode == true) {
 writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,", ", stocklength,", ",stockwidth,", ",stockthickness,")");
 	writeln("G90");
 	writeln("G21");
 	writeln("(Move to safe Z to avoid workholding)");
 	writeln("G53G0Z-5.000");
 	writeln("M05");
-
+}
   if (zeroheight == "Top") {
     translate([0, 0, (-stockthickness)]){
       setstock(stocklength, stockwidth, stockthickness, stockorigin);
@@ -47,7 +52,9 @@ writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,", ", s
 }
 
 module closecut() {
+if (generategcode == true) {
 	writeln("M02");
+}
 }
 
 module setstock(stocklength, stockwidth, stockthickness, stockorigin) {
@@ -114,13 +121,17 @@ module cut(bx, by, bz, ex, ey, ez, tn) {
 
 module gcut(bx, by, bz, ex, ey, ez, tn) {
 //	writeln("G1 X",bx," Y", by, "Z", bz);
+if (generategcode == true) {
 	writeln("G1 X",ex," Y", ey, "Z", ez);
+}
 cut(bx, by, bz, ex, ey, ez, tn);
 }
 
 module gcutfeed(bx, by, bz, ex, ey, ez, tn, feed) {
 //	writeln("G1 X",bx," Y", by, "Z", bz);
+if (generategcode == true) {
 	writeln("G1 X",ex," Y", ey, "Z", ez,"F",feed);
+}
 cut(bx, by, bz, ex, ey, ez, tn);
 }
 
@@ -170,6 +181,7 @@ module select_tool(tool_number) {
 }
 
 module toolchange(tool_number) {
+if (generategcode == true) {
   if (tool_number == 201) {
 	writeln("(TOOL/MILL,6.35, 0.00, 0.00, 0.00)");
   } else if (tool_number == 202) {
@@ -186,6 +198,7 @@ module toolchange(tool_number) {
 	writeln("(TOOL/MILL,0.03, 0.00, 10.00, 45.00)");
   }
 	writeln(str("M6T",tool_number));
+}
 }
 
 
