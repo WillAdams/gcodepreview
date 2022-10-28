@@ -17,8 +17,10 @@ Place the file in C:\Users\\\~\Documents\OpenSCAD\libraries or C:\Users\\\~\Docu
 
     include <gcodepreview.scad>;
 
-and then use the commands:
+and then use commands such as:
 
+    generategcode = true;
+    
     difference() {
       cube([Stock Length, Stock Width, Stock Thickness], center=false);
 
@@ -50,3 +52,9 @@ Tool Number:
   tn
 
 Tool numbers match those of tooling sold by Carbide 3D (ob. discl., I work for them).
+
+Note that there is now a specific command for setting up the stock:
+
+  setupcut(stocklength, stockwidth, stockthickness, "Top", "Lower-Left");
+
+(options for it match those of Carbide Create, or will eventually)
