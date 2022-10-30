@@ -15,7 +15,6 @@ if (generategcode == true) {
 }
 }
 
-
 module rapid(bx, by, bz, ex, ey, ez) {
 //	writeln("G0 X",bx," Y", by, "Z", bz);
 if (generategcode == true) {
@@ -32,23 +31,71 @@ hull(){
 }
 
 module setupcut(stocklength, stockwidth, stockthickness, zeroheight, stockorigin) {
-
+  if (zeroheight == "Top") {
+    if (stockorigin == "Lower-Left") {
+    translate([0, 0, (-stockthickness)]){
+    cube([stocklength, stockwidth, stockthickness], center=false);
+    }
 if (generategcode == true) {
-writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,", ", stocklength,", ",stockwidth,", ",stockthickness,")");
+writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,", ", "0.00, 0.00",", ",stockthickness,")");
+}
+    } else if (stockorigin == "Center-Left") {
+    translate([0, (-stockwidth / 2), -stockthickness]){
+      cube([stocklength, stockwidth, stockthickness], center=false);
+    } 
+if (generategcode == true) {
+writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,", ", "0.00, ",stockwidth/2,", ",stockthickness,")");
+}
+	} else if (stockorigin == "Top-Left") {
+    translate([0, (-stockwidth), -stockthickness]){
+      cube([stocklength, stockwidth, stockthickness], center=false);
+    }
+if (generategcode == true) {
+writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,", ", "0.00, ",stockwidth,", ",stockthickness,")");
+}
+}	else if (stockorigin == "Center") {
+    translate([(-stocklength / 2), (-stockwidth / 2), -stockthickness]){
+      cube([stocklength, stockwidth, stockthickness], center=false);
+    }
+if (generategcode == true) {
+writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,", ",stocklength/2,", ", stockwidth/2,", ",stockthickness,")");
+}
+}
+}
+else {
+    if (stockorigin == "Lower-Left") {
+    cube([stocklength, stockwidth, stockthickness], center=false);
+if (generategcode == true) {
+writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,",0.00, 0.00, 0.00)");
+    }
+}	else if (stockorigin == "Center-Left") {
+    translate([0, (-stockwidth / 2), 0]){
+      cube([stocklength, stockwidth, stockthickness], center=false);
+    } 
+	} else if (stockorigin == "Top-Left") {
+    translate([0, (-stockwidth), 0]){
+      cube([stocklength, stockwidth, stockthickness], center=false);
+    }
+if (generategcode == true) {
+writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,", 0.00, ", stockwidth,", 0.00)");
+}
+}	else if (stockorigin == "Center") {
+    translate([(-stocklength / 2), (-stockwidth / 2), 0]){
+      cube([stocklength, stockwidth, stockthickness], center=false);
+    }
+if (generategcode == true) {
+//(STOCK/BLOCK,125.00, 75.00, 6.35,62.50, 37.50, 0.00)
+writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,", ",stocklength/2,", ", stockwidth/2,", 0.00)");
+}
+}
+}
+if (generategcode == true) {
 	writeln("G90");
 	writeln("G21");
 	writeln("(Move to safe Z to avoid workholding)");
 	writeln("G53G0Z-5.000");
-	writeln("M05");
+//	writeln("M05");
 }
-  if (zeroheight == "Top") {
-    translate([0, 0, (-stockthickness)]){
-      setstock(stocklength, stockwidth, stockthickness, stockorigin);
-    }
-  } else {
-    setstock(stocklength, stockwidth, stockthickness, stockorigin);
-  }
-
 }
 
 module closecut() {
@@ -57,24 +104,24 @@ if (generategcode == true) {
 }
 }
 
-module setstock(stocklength, stockwidth, stockthickness, stockorigin) {
-  if (stockorigin == "Lower-Left") {
-    cube([stocklength, stockwidth, stockthickness], center=false);
-  } else if (stockorigin == "Center-Left") {
-    translate([0, (-stockwidth / 2), 0]){
-      cube([stocklength, stockwidth, stockthickness], center=false);
-    }
-  } else if (stockorigin == "Top-Left") {
-    translate([0, (-stockwidth), 0]){
-      cube([stocklength, stockwidth, stockthickness], center=false);
-    }
-  } else {
-    translate([(-stocklength / 2), (-stockwidth / 2), 0]){
-      cube([stocklength, stockwidth, stockthickness], center=false);
-    }
-  }
-
-}
+//module setstock(stocklength, stockwidth, stockthickness, stockorigin) {
+//  if (stockorigin == "Lower-Left") {
+//    cube([stocklength, stockwidth, stockthickness], center=false);
+//  } else if (stockorigin == "Center-Left") {
+//   translate([0, (-stockwidth / 2), 0]){
+//     cube([stocklength, stockwidth, stockthickness], center=false);
+//    }
+//  } else if (stockorigin == "Top-Left") {
+//    translate([0, (-stockwidth), 0]){
+//      cube([stocklength, stockwidth, stockthickness], center=false);
+//    }
+//  } else {
+//    translate([(-stocklength / 2), (-stockwidth / 2), 0]){
+//      cube([stocklength, stockwidth, stockthickness], center=false);
+//    }
+//  }
+//
+//}
 
 
 module gcp_endmill_square(es_diameter, es_flute_length) {
@@ -107,8 +154,6 @@ module garcCCWUR(bx, by, bz, ex, ey, ez, xoffset, yoffset, tn) {
 }
 
 module cut(bx, by, bz, ex, ey, ez, tn) {
-//	writeln("G1 X",bx," Y", by, "Z", bz);
-//	writeln("G1 X",ex," Y", ey, "Z", ez);
   hull(){
     translate([bx, by, bz]){
       select_tool(tn);
@@ -182,6 +227,7 @@ module select_tool(tool_number) {
 
 module toolchange(tool_number) {
 if (generategcode == true) {
+	writeln("M05");
   if (tool_number == 201) {
 	writeln("(TOOL/MILL,6.35, 0.00, 0.00, 0.00)");
   } else if (tool_number == 202) {
@@ -201,6 +247,11 @@ if (generategcode == true) {
 }
 }
 
+module startspindle(speed) {
+if (generategcode == true) {
+	writeln(str("M03S",speed));
+}
+}
 
 module garcCWLL(bx, by, bz, ex, ey, ez, xoffset, yoffset, tn) {
   for (m = [0 : abs(Arc_Detail) : 90 - Arc_Detail * 3]) {
@@ -221,6 +272,12 @@ module garcCCWLR(bx, by, bz, ex, ey, ez, xoffset, yoffset, tn) {
     gcut(bx + sin((m - Arc_Detail)) * yoffset, by + (yoffset * (1 - cos(((m - Arc_Detail) / 2)))) * 4, bz + (ez - bz) * ((m - Arc_Detail) / 90), bx + sin(m) * yoffset, by + (yoffset * (1 - cos((m / 2)))) * 4, bz + (ez - bz) * (m / 90), tn);
   }
 
+}
+
+module writecomment(comment) {
+if (generategcode == true) {
+	writeln("(",comment,")");
+}
 }
 
 //Stock_Width = 4;
