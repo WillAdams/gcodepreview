@@ -1,0 +1,31 @@
+include <C:/Users/willa/OneDrive/Documents/RapCAD/Libraries/gcodepreview.scad>
+
+stocklength = 125;
+stockwidth = 75;
+stockthickness = 6.35;
+toolradius = 1.5875;
+zeroheight = "Bottom"; // [Top, Bottom]
+stockorigin = "Center"; // [Lower-Left, Center-Left, Top-Left, Center]
+
+generategcode = true;
+retractheight = 3;
+feedrate = 850;
+plungerate = 425;
+
+//add stockthickness if zeroheight = Bottom
+safetyheight = retractheight; // + stockthickness;
+
+difference() {
+  setupcut(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
+
+  toolchange(102);
+  startspindle (17000);
+  
+  writecomment("PREPOSITION FOR RAPID PLUNGE");
+  rapid(0,0,safetyheight * 2,0,0,safetyheight);
+
+  plungegcutretract(0, 0, 0, 0, 0, -stockthickness, 102, retractheight, plungerate, feedrate); 
+
+}
+
+closecut();
