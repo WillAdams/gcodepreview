@@ -51,10 +51,12 @@ offsets:
 Tool Number:
   tn
 
-Tool numbers match those of tooling sold by Carbide 3D (ob. discl., I work for them).
+Tool numbers match those of tooling sold by Carbide 3D (ob. discl., I work for them). Comments are included in the G-code to match those expected by CutViewer.
 
 Note that there is now a specific command for setting up the stock:
 
   setupcut(stocklength, stockwidth, stockthickness, "Top", "Lower-Left");
 
 (options for it match those of Carbide Create, or will eventually)
+
+A complete example file is: gcode_flatten.rcad
