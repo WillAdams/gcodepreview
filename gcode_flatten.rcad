@@ -23,7 +23,7 @@ module radialflattenY(ybegin, yend, xbe, xcenter, ycenter, toolnumber, tr, depth
 }
 
 difference() {
-  setupcut(stocklength, stockwidth, stockthickness, "Top", "Lower-Left");
+  setupstock(stocklength, stockwidth, stockthickness, "Top", "Lower-Left");
 
   toolchange(101);
 
