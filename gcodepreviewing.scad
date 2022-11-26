@@ -30,7 +30,7 @@ hull(){
   }
 }
 
-module setupcut(stocklength, stockwidth, stockthickness, zeroheight, stockorigin) {
+module setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin) {
   if (zeroheight == "Top") {
     if (stockorigin == "Lower-Left") {
     translate([0, 0, (-stockthickness)]){
@@ -104,26 +104,6 @@ if (generategcode == true) {
 }
 }
 
-//module setstock(stocklength, stockwidth, stockthickness, stockorigin) {
-//  if (stockorigin == "Lower-Left") {
-//    cube([stocklength, stockwidth, stockthickness], center=false);
-//  } else if (stockorigin == "Center-Left") {
-//   translate([0, (-stockwidth / 2), 0]){
-//     cube([stocklength, stockwidth, stockthickness], center=false);
-//    }
-//  } else if (stockorigin == "Top-Left") {
-//    translate([0, (-stockwidth), 0]){
-//      cube([stocklength, stockwidth, stockthickness], center=false);
-//    }
-//  } else {
-//    translate([(-stocklength / 2), (-stockwidth / 2), 0]){
-//      cube([stocklength, stockwidth, stockthickness], center=false);
-//    }
-//  }
-//
-//}
-
-
 module gcp_endmill_square(es_diameter, es_flute_length) {
   cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=es_flute_length, center=false);
 }
@@ -141,7 +121,7 @@ module gcp_endmill_v(es_v_angle, es_diameter) {
   union(){
     cylinder(r1=0, r2=(es_diameter / 2), h=((es_diameter / 2) / tan((es_v_angle / 2))), center=false);
     translate([0, 0, ((es_diameter / 2) / tan((es_v_angle / 2)))]){
-      cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=((es_diameter / 2) / tan((es_v_angle / 2))), center=false);
+      cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=((es_diameter * 8) ), center=false);/// tan((es_v_angle / 2))
     }
   }
 }
@@ -237,11 +217,11 @@ if (generategcode == true) {
   } else if (tool_number == 101) {
 	writeln("(TOOL/MILL,3.17, 1.58, 0.00, 0.00)");
   } else if (tool_number == 301) {
-	writeln("(TOOL/MILL,0.03, 0.00, 10.00, 45.00)");
+	writeln("(TOOL/MILL,0.03, 0.00, 6.35, 45.00)");
   } else if (tool_number == 302) {
-	writeln("(TOOL/MILL,0.03, 0.00, 10.00, 30.00)");
+	writeln("(TOOL/MILL,0.03, 0.00, 10.998, 30.00)");
   } else if (tool_number == 390) {
-	writeln("(TOOL/MILL,0.03, 0.00, 10.00, 45.00)");
+	writeln("(TOOL/MILL,0.03, 0.00, 1.5875, 45.00)");
   }
 	writeln(str("M6T",tool_number));
 }
@@ -279,38 +259,3 @@ if (generategcode == true) {
 	writeln("(",comment,")");
 }
 }
-
-//Stock_Width = 4;
-//Stock_Length = 16.25;
-//Stock_Thickness = 0.25;
-//Top_Bottom_Thickness = 0.2559;
-//Box_Width = 8.125;
-//Box_Depth = 8.125;
-//Number_of_Pins = 15;
-//Lid_Position = 9;
-//Joint_Offset = 0.1875;
-//Tool_Diameter = 0.125;
-//Ball_Nose_Tool_No = 101;
-//V_endmill_Tool_No = 390;
-//Units = 25.4;
-//Arc_Detail = 3;
-//sw = Stock_Width * Units;
-//sl = Stock_Length * Units;
-//st = Stock_Thickness * Units;
-//tbt = Top_Bottom_Thickness * Units;
-//bw = Box_Width * Units;
-//bd = Box_Depth * Units;
-//jo = Joint_Offset * Units;
-//td = Tool_Diameter * Units;
-//tr = td / 2;
-//item = 0;
-//difference() {
-//  cube([sl, sw, st], center=false);
-//
-//  union(){
-//    garcCCW(15, 0, st / 2, 30, 15, 0, 0, 15, Ball_Nose_Tool_No);
-//    garcCCW(30, 15, st / 2, 15, 30, 0, -15, 0, Ball_Nose_Tool_No);
-//    garcCCW(0, 15, st / 2, 15, 0, 0, 15, 0, Ball_Nose_Tool_No);
-//    garcCCW(15, 30, st / 2, 0, 15, 0, 0, -15, Ball_Nose_Tool_No);
-//  }
-//}
