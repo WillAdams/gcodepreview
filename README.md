@@ -55,7 +55,7 @@ Tool numbers match those of tooling sold by Carbide 3D (ob. discl., I work for t
 
 Note that there is now a specific command for setting up the stock:
 
-  setupcut(stocklength, stockwidth, stockthickness, "Top", "Lower-Left");
+  setupstock(stocklength, stockwidth, stockthickness, "Top", "Lower-Left");
 
 (options for it match those of Carbide Create, or will eventually)
 
