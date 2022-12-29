@@ -10,14 +10,18 @@ rapid(ex, ey, ez, ex, ey, retract);
 module plungegcutsetfeed(bx, by, bz, ex, ey, ez, tn, plungerate, feedrate) {
 cut(bx, by, bz, ex, ey, ez, tn);
 if (generategcode == true) {
-	writeln("G1 X",ex," Y", ey, "Z", ez,"F",plungerate);
-	writeln("F",feedrate);
+	writeln("(plungegcutsetfeed)");
+	writeln("(PREPOSITION FOR RAPID PLUNGE)");
+	writeln("G0 X",bx," Y", by);
+	writeln("G1 Z", ez,"F",plungerate);
+	writeln("G1 X",ex," Y", ey, "Z", ez,"F",feedrate);
 }
 }
 
 module rapid(bx, by, bz, ex, ey, ez) {
 //	writeln("G0 X",bx," Y", by, "Z", bz);
 if (generategcode == true) {
+	writeln("(rapid)");
 	writeln("G0 X",ex," Y", ey, "Z", ez);
 }
 hull(){
@@ -37,6 +41,7 @@ module setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorig
     cube([stocklength, stockwidth, stockthickness], center=false);
     }
 if (generategcode == true) {
+	writeln("(setupstock)");
 writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,", ", "0.00, 0.00",", ",stockthickness,")");
 }
     } else if (stockorigin == "Center-Left") {
@@ -44,6 +49,7 @@ writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,", ", "
       cube([stocklength, stockwidth, stockthickness], center=false);
     } 
 if (generategcode == true) {
+	writeln("(setupstock)");
 writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,", ", "0.00, ",stockwidth/2,", ",stockthickness,")");
 }
 	} else if (stockorigin == "Top-Left") {
@@ -51,6 +57,7 @@ writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,", ", "
       cube([stocklength, stockwidth, stockthickness], center=false);
     }
 if (generategcode == true) {
+	writeln("(setupstock)");
 writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,", ", "0.00, ",stockwidth,", ",stockthickness,")");
 }
 }	else if (stockorigin == "Center") {
@@ -58,6 +65,7 @@ writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,", ", "
       cube([stocklength, stockwidth, stockthickness], center=false);
     }
 if (generategcode == true) {
+	writeln("(setupstock)");
 writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,", ",stocklength/2,", ", stockwidth/2,", ",stockthickness,")");
 }
 }
@@ -66,6 +74,7 @@ else {
     if (stockorigin == "Lower-Left") {
     cube([stocklength, stockwidth, stockthickness], center=false);
 if (generategcode == true) {
+	writeln("(setupstock)");
 writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,",0.00, 0.00, 0.00)");
     }
 }	else if (stockorigin == "Center-Left") {
@@ -77,6 +86,7 @@ writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,",0.00,
       cube([stocklength, stockwidth, stockthickness], center=false);
     }
 if (generategcode == true) {
+	writeln("(setupstock)");
 writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,", 0.00, ", stockwidth,", 0.00)");
 }
 }	else if (stockorigin == "Center") {
@@ -84,7 +94,7 @@ writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,", 0.00
       cube([stocklength, stockwidth, stockthickness], center=false);
     }
 if (generategcode == true) {
-//(STOCK/BLOCK,125.00, 75.00, 6.35,62.50, 37.50, 0.00)
+	writeln("(setupstock)");
 writeln("(STOCK/BLOCK, ",stocklength,", ",stockwidth,", ",stockthickness,", ",stocklength/2,", ", stockwidth/2,", 0.00)");
 }
 }
@@ -94,13 +104,21 @@ if (generategcode == true) {
 	writeln("G21");
 	writeln("(Move to safe Z to avoid workholding)");
 	writeln("G53G0Z-5.000");
-//	writeln("M05");
 }
 }
 
-module closecut() {
+module closecut(retract) {
 if (generategcode == true) {
+	writeln("(closecut)");
+	writeln("Z",retract);
 	writeln("M02");
+}
+}
+
+module retract(retract) {
+if (generategcode == true) {
+	writeln("(retract)");
+	writeln("Z",retract);
 }
 }
 
@@ -147,6 +165,7 @@ module cut(bx, by, bz, ex, ey, ez, tn) {
 module gcut(bx, by, bz, ex, ey, ez, tn) {
 //	writeln("G1 X",bx," Y", by, "Z", bz);
 if (generategcode == true) {
+	writeln("(gcut)");
 	writeln("G1 X",ex," Y", ey, "Z", ez);
 }
 cut(bx, by, bz, ex, ey, ez, tn);
@@ -155,6 +174,7 @@ cut(bx, by, bz, ex, ey, ez, tn);
 module gcutfeed(bx, by, bz, ex, ey, ez, tn, feed) {
 //	writeln("G1 X",bx," Y", by, "Z", bz);
 if (generategcode == true) {
+	writeln("(gcutfeed)");
 	writeln("G1 X",ex," Y", ey, "Z", ez,"F",feed);
 }
 cut(bx, by, bz, ex, ey, ez, tn);
@@ -207,7 +227,10 @@ module select_tool(tool_number) {
 
 module toolchange(tool_number) {
 if (generategcode == true) {
+	writeln("(toolchange)");
 	writeln("M05");
+	writeln("(Move to safe Z to avoid workholding)");
+	writeln("G53G0Z-5.000");
   if (tool_number == 201) {
 	writeln("(TOOL/MILL,6.35, 0.00, 0.00, 0.00)");
   } else if (tool_number == 202) {
@@ -229,6 +252,7 @@ if (generategcode == true) {
 
 module startspindle(speed) {
 if (generategcode == true) {
+	writeln(str("(startspindle)"));
 	writeln(str("M03S",speed));
 }
 }
