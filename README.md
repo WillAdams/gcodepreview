@@ -7,7 +7,7 @@ https://www.blockscad3d.com/community/projects/1244473
 
 The project is discussed at:
 
-https://community.carbide3d.com/t/previewing-g-code-using-openscad/35153
+https://forum.makerforums.info/t/g-code-preview-using-openscad-rapcad/85729
 
 Usage is:
 
