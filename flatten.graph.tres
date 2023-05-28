@@ -1,0 +1,2242 @@
+[gd_resource type="Resource" load_steps=247 format=2]
+
+[ext_resource path="res://Library/IO/SavedParameterDescription.cs" type="Script" id=1]
+[ext_resource path="res://Library/IO/SavedModuleDescription.cs" type="Script" id=2]
+[ext_resource path="res://Library/IO/SavedVariableCustomizerDescription.cs" type="Script" id=3]
+[ext_resource path="res://Library/IO/SavedVariableDescription.cs" type="Script" id=4]
+[ext_resource path="res://Library/IO/SavedExternalReference.cs" type="Script" id=5]
+[ext_resource path="res://Library/IO/SavedConnection.cs" type="Script" id=6]
+[ext_resource path="res://Library/IO/SavedMainModuleDescription.cs" type="Script" id=7]
+[ext_resource path="res://Library/IO/SavedNode.cs" type="Script" id=8]
+[ext_resource path="res://Library/IO/SavedGraph.cs" type="Script" id=9]
+[ext_resource path="res://Library/IO/SavedProject.cs" type="Script" id=10]
+
+[sub_resource type="Resource" id=1]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=2]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=3]
+script = ExtResource( 1 )
+Name = "bz"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=4]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=5]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=6]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=7]
+script = ExtResource( 1 )
+Name = "es_diameter"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=8]
+script = ExtResource( 1 )
+Name = "es_radius_tip"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=9]
+script = ExtResource( 1 )
+Name = "es_radius_width"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=10]
+script = ExtResource( 2 )
+Id = "c543525ad302eff708d6edafd5d540aaa9737bbdfb85715cc33839782bbe06ec_module_gcp_cut_radius"
+Name = "gcp_cut_radius"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ), SubResource( 7 ), SubResource( 8 ), SubResource( 9 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=11]
+script = ExtResource( 3 )
+ConstraintType = 0
+Tab = ""
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=12]
+script = ExtResource( 4 )
+Id = "c543525ad302eff708d6edafd5d540aaa9737bbdfb85715cc33839782bbe06ec_variable_n"
+Name = "n"
+Description = ""
+TypeHint = 8
+DefaultValue = null
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 11 )
+
+[sub_resource type="Resource" id=13]
+script = ExtResource( 3 )
+ConstraintType = 0
+Tab = ""
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=14]
+script = ExtResource( 4 )
+Id = "c543525ad302eff708d6edafd5d540aaa9737bbdfb85715cc33839782bbe06ec_variable_step"
+Name = "step"
+Description = ""
+TypeHint = 8
+DefaultValue = null
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 13 )
+
+[sub_resource type="Resource" id=15]
+script = ExtResource( 3 )
+ConstraintType = 0
+Tab = ""
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=16]
+script = ExtResource( 4 )
+Id = "c543525ad302eff708d6edafd5d540aaa9737bbdfb85715cc33839782bbe06ec_variable_endmillradius"
+Name = "endmillradius"
+Description = ""
+TypeHint = 8
+DefaultValue = null
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 15 )
+
+[sub_resource type="Resource" id=17]
+script = ExtResource( 3 )
+ConstraintType = 0
+Tab = ""
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=18]
+script = ExtResource( 4 )
+Id = "c543525ad302eff708d6edafd5d540aaa9737bbdfb85715cc33839782bbe06ec_variable_angle"
+Name = "angle"
+Description = ""
+TypeHint = 8
+DefaultValue = null
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 17 )
+
+[sub_resource type="Resource" id=19]
+script = ExtResource( 3 )
+ConstraintType = 0
+Tab = ""
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=20]
+script = ExtResource( 4 )
+Id = "c543525ad302eff708d6edafd5d540aaa9737bbdfb85715cc33839782bbe06ec_variable_dx"
+Name = "dx"
+Description = ""
+TypeHint = 8
+DefaultValue = null
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 19 )
+
+[sub_resource type="Resource" id=21]
+script = ExtResource( 3 )
+ConstraintType = 0
+Tab = ""
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=22]
+script = ExtResource( 4 )
+Id = "c543525ad302eff708d6edafd5d540aaa9737bbdfb85715cc33839782bbe06ec_variable_dxx"
+Name = "dxx"
+Description = ""
+TypeHint = 8
+DefaultValue = null
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 21 )
+
+[sub_resource type="Resource" id=23]
+script = ExtResource( 3 )
+ConstraintType = 0
+Tab = ""
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=24]
+script = ExtResource( 4 )
+Id = "c543525ad302eff708d6edafd5d540aaa9737bbdfb85715cc33839782bbe06ec_variable_dzz"
+Name = "dzz"
+Description = ""
+TypeHint = 8
+DefaultValue = null
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 23 )
+
+[sub_resource type="Resource" id=25]
+script = ExtResource( 3 )
+ConstraintType = 0
+Tab = ""
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=26]
+script = ExtResource( 4 )
+Id = "c543525ad302eff708d6edafd5d540aaa9737bbdfb85715cc33839782bbe06ec_variable_dz"
+Name = "dz"
+Description = ""
+TypeHint = 8
+DefaultValue = null
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 25 )
+
+[sub_resource type="Resource" id=27]
+script = ExtResource( 3 )
+ConstraintType = 0
+Tab = ""
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=28]
+script = ExtResource( 4 )
+Id = "c543525ad302eff708d6edafd5d540aaa9737bbdfb85715cc33839782bbe06ec_variable_dh"
+Name = "dh"
+Description = ""
+TypeHint = 8
+DefaultValue = null
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 27 )
+
+[sub_resource type="Resource" id=29]
+script = ExtResource( 5 )
+Id = "9c6fc887-1174-4677-8d8e-fe9529240c0e"
+IncludedBy = "e4564f24-a0fa-4be5-aa47-7e0ae7199432"
+References = [  ]
+IncludePath = "gcoderadiuspreview.scad"
+Mode = 1
+Functions = [  ]
+Modules = [ SubResource( 10 ) ]
+Variables = [ SubResource( 12 ), SubResource( 14 ), SubResource( 16 ), SubResource( 18 ), SubResource( 20 ), SubResource( 22 ), SubResource( 24 ), SubResource( 26 ), SubResource( 28 ) ]
+
+[sub_resource type="Resource" id=30]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=31]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=32]
+script = ExtResource( 1 )
+Name = "bz"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=33]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=34]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=35]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=36]
+script = ExtResource( 1 )
+Name = "tn"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=37]
+script = ExtResource( 1 )
+Name = "retract"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=38]
+script = ExtResource( 1 )
+Name = "plungerate"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=39]
+script = ExtResource( 1 )
+Name = "feedrate"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=40]
+script = ExtResource( 2 )
+Id = "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_plungegcutretract"
+Name = "plungegcutretract"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 30 ), SubResource( 31 ), SubResource( 32 ), SubResource( 33 ), SubResource( 34 ), SubResource( 35 ), SubResource( 36 ), SubResource( 37 ), SubResource( 38 ), SubResource( 39 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=41]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=42]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=43]
+script = ExtResource( 1 )
+Name = "bz"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=44]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=45]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=46]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=47]
+script = ExtResource( 1 )
+Name = "tn"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=48]
+script = ExtResource( 1 )
+Name = "plungerate"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=49]
+script = ExtResource( 1 )
+Name = "feedrate"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=50]
+script = ExtResource( 2 )
+Id = "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_plungegcutsetfeed"
+Name = "plungegcutsetfeed"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 41 ), SubResource( 42 ), SubResource( 43 ), SubResource( 44 ), SubResource( 45 ), SubResource( 46 ), SubResource( 47 ), SubResource( 48 ), SubResource( 49 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=51]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=52]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=53]
+script = ExtResource( 1 )
+Name = "bz"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=54]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=55]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=56]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=57]
+script = ExtResource( 2 )
+Id = "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_rapid"
+Name = "rapid"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 51 ), SubResource( 52 ), SubResource( 53 ), SubResource( 54 ), SubResource( 55 ), SubResource( 56 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=58]
+script = ExtResource( 1 )
+Name = "stocklength"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=59]
+script = ExtResource( 1 )
+Name = "stockwidth"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=60]
+script = ExtResource( 1 )
+Name = "stockthickness"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=61]
+script = ExtResource( 1 )
+Name = "zeroheight"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=62]
+script = ExtResource( 1 )
+Name = "stockorigin"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=63]
+script = ExtResource( 2 )
+Id = "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_setupcut"
+Name = "setupcut"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 58 ), SubResource( 59 ), SubResource( 60 ), SubResource( 61 ), SubResource( 62 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=64]
+script = ExtResource( 2 )
+Id = "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_closecut"
+Name = "closecut"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [  ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=65]
+script = ExtResource( 1 )
+Name = "es_diameter"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=66]
+script = ExtResource( 1 )
+Name = "es_flute_length"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=67]
+script = ExtResource( 2 )
+Id = "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_gcp_endmill_square"
+Name = "gcp_endmill_square"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 65 ), SubResource( 66 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=68]
+script = ExtResource( 1 )
+Name = "es_diameter"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=69]
+script = ExtResource( 1 )
+Name = "es_flute_length"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=70]
+script = ExtResource( 2 )
+Id = "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_gcp_endmill_ball"
+Name = "gcp_endmill_ball"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 68 ), SubResource( 69 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=71]
+script = ExtResource( 1 )
+Name = "es_v_angle"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=72]
+script = ExtResource( 1 )
+Name = "es_diameter"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=73]
+script = ExtResource( 2 )
+Id = "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_gcp_endmill_v"
+Name = "gcp_endmill_v"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 71 ), SubResource( 72 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=74]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=75]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=76]
+script = ExtResource( 1 )
+Name = "bz"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=77]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=78]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=79]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=80]
+script = ExtResource( 1 )
+Name = "xoffset"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=81]
+script = ExtResource( 1 )
+Name = "yoffset"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=82]
+script = ExtResource( 1 )
+Name = "tn"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=83]
+script = ExtResource( 2 )
+Id = "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_garcCCWUR"
+Name = "garcCCWUR"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 74 ), SubResource( 75 ), SubResource( 76 ), SubResource( 77 ), SubResource( 78 ), SubResource( 79 ), SubResource( 80 ), SubResource( 81 ), SubResource( 82 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=84]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=85]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=86]
+script = ExtResource( 1 )
+Name = "bz"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=87]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=88]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=89]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=90]
+script = ExtResource( 1 )
+Name = "tn"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=91]
+script = ExtResource( 2 )
+Id = "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_cut"
+Name = "cut"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 84 ), SubResource( 85 ), SubResource( 86 ), SubResource( 87 ), SubResource( 88 ), SubResource( 89 ), SubResource( 90 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=92]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=93]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=94]
+script = ExtResource( 1 )
+Name = "bz"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=95]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=96]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=97]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=98]
+script = ExtResource( 1 )
+Name = "tn"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=99]
+script = ExtResource( 2 )
+Id = "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_gcut"
+Name = "gcut"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 92 ), SubResource( 93 ), SubResource( 94 ), SubResource( 95 ), SubResource( 96 ), SubResource( 97 ), SubResource( 98 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=100]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=101]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=102]
+script = ExtResource( 1 )
+Name = "bz"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=103]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=104]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=105]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=106]
+script = ExtResource( 1 )
+Name = "tn"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=107]
+script = ExtResource( 1 )
+Name = "feed"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=108]
+script = ExtResource( 2 )
+Id = "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_gcutfeed"
+Name = "gcutfeed"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 100 ), SubResource( 101 ), SubResource( 102 ), SubResource( 103 ), SubResource( 104 ), SubResource( 105 ), SubResource( 106 ), SubResource( 107 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=109]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=110]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=111]
+script = ExtResource( 1 )
+Name = "bz"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=112]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=113]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=114]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=115]
+script = ExtResource( 1 )
+Name = "xoffset"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=116]
+script = ExtResource( 1 )
+Name = "yoffset"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=117]
+script = ExtResource( 1 )
+Name = "tn"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=118]
+script = ExtResource( 2 )
+Id = "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_garcCCW"
+Name = "garcCCW"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 109 ), SubResource( 110 ), SubResource( 111 ), SubResource( 112 ), SubResource( 113 ), SubResource( 114 ), SubResource( 115 ), SubResource( 116 ), SubResource( 117 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=119]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=120]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=121]
+script = ExtResource( 1 )
+Name = "bz"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=122]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=123]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=124]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=125]
+script = ExtResource( 1 )
+Name = "xoffset"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=126]
+script = ExtResource( 1 )
+Name = "yoffset"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=127]
+script = ExtResource( 1 )
+Name = "tn"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=128]
+script = ExtResource( 2 )
+Id = "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_garcCW"
+Name = "garcCW"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 119 ), SubResource( 120 ), SubResource( 121 ), SubResource( 122 ), SubResource( 123 ), SubResource( 124 ), SubResource( 125 ), SubResource( 126 ), SubResource( 127 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=129]
+script = ExtResource( 1 )
+Name = "tool_number"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=130]
+script = ExtResource( 2 )
+Id = "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_select_tool"
+Name = "select_tool"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 129 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=131]
+script = ExtResource( 1 )
+Name = "tool_number"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=132]
+script = ExtResource( 2 )
+Id = "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_toolchange"
+Name = "toolchange"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 131 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=133]
+script = ExtResource( 1 )
+Name = "speed"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=134]
+script = ExtResource( 2 )
+Id = "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_startspindle"
+Name = "startspindle"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 133 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=135]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=136]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=137]
+script = ExtResource( 1 )
+Name = "bz"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=138]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=139]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=140]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=141]
+script = ExtResource( 1 )
+Name = "xoffset"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=142]
+script = ExtResource( 1 )
+Name = "yoffset"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=143]
+script = ExtResource( 1 )
+Name = "tn"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=144]
+script = ExtResource( 2 )
+Id = "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_garcCWLL"
+Name = "garcCWLL"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 135 ), SubResource( 136 ), SubResource( 137 ), SubResource( 138 ), SubResource( 139 ), SubResource( 140 ), SubResource( 141 ), SubResource( 142 ), SubResource( 143 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=145]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=146]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=147]
+script = ExtResource( 1 )
+Name = "bz"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=148]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=149]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=150]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=151]
+script = ExtResource( 1 )
+Name = "xoffset"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=152]
+script = ExtResource( 1 )
+Name = "yoffset"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=153]
+script = ExtResource( 1 )
+Name = "tn"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=154]
+script = ExtResource( 2 )
+Id = "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_garcCWUL"
+Name = "garcCWUL"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 145 ), SubResource( 146 ), SubResource( 147 ), SubResource( 148 ), SubResource( 149 ), SubResource( 150 ), SubResource( 151 ), SubResource( 152 ), SubResource( 153 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=155]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=156]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=157]
+script = ExtResource( 1 )
+Name = "bz"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=158]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=159]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=160]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=161]
+script = ExtResource( 1 )
+Name = "xoffset"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=162]
+script = ExtResource( 1 )
+Name = "yoffset"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=163]
+script = ExtResource( 1 )
+Name = "tn"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=164]
+script = ExtResource( 2 )
+Id = "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_garcCCWLR"
+Name = "garcCCWLR"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 155 ), SubResource( 156 ), SubResource( 157 ), SubResource( 158 ), SubResource( 159 ), SubResource( 160 ), SubResource( 161 ), SubResource( 162 ), SubResource( 163 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=165]
+script = ExtResource( 1 )
+Name = "comment"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=166]
+script = ExtResource( 2 )
+Id = "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_writecomment"
+Name = "writecomment"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 165 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=167]
+script = ExtResource( 5 )
+Id = "bc3afa64-c3df-4d7f-969e-2db09348cbe5"
+IncludedBy = "e4564f24-a0fa-4be5-aa47-7e0ae7199432"
+References = [  ]
+IncludePath = "gcodepreviewing.scad"
+Mode = 1
+Functions = [  ]
+Modules = [ SubResource( 40 ), SubResource( 50 ), SubResource( 57 ), SubResource( 63 ), SubResource( 64 ), SubResource( 67 ), SubResource( 70 ), SubResource( 73 ), SubResource( 83 ), SubResource( 91 ), SubResource( 99 ), SubResource( 108 ), SubResource( 118 ), SubResource( 128 ), SubResource( 130 ), SubResource( 132 ), SubResource( 134 ), SubResource( 144 ), SubResource( 154 ), SubResource( 164 ), SubResource( 166 ) ]
+Variables = [  ]
+
+[sub_resource type="Resource" id=168]
+script = ExtResource( 5 )
+Id = "e4564f24-a0fa-4be5-aa47-7e0ae7199432"
+IncludedBy = ""
+References = [ "gcodepreviewing.scad", "gcoderadiuspreview.scad" ]
+IncludePath = "C:/Users/willa/OneDrive/Documents/RapCAD/Libraries/gcodepreview.scad"
+Mode = 1
+Functions = [  ]
+Modules = [  ]
+Variables = [  ]
+
+[sub_resource type="Resource" id=169]
+script = ExtResource( 6 )
+FromId = "33a88434-da66-4d7f-be88-a84604dc4f2f"
+FromPort = 0
+ToId = "c3a18b68-c3ef-43eb-ae62-c9a192357f61"
+ToPort = 0
+
+[sub_resource type="Resource" id=170]
+script = ExtResource( 6 )
+FromId = "c69c505a-10ff-47e7-81de-a6f0c4914ae4"
+FromPort = 0
+ToId = "e4fda751-7dcb-49ef-aea7-50c47f415edd"
+ToPort = 0
+
+[sub_resource type="Resource" id=171]
+script = ExtResource( 6 )
+FromId = "09889923-7515-43f9-a416-48c1b57cf07a"
+FromPort = 0
+ToId = "e4fda751-7dcb-49ef-aea7-50c47f415edd"
+ToPort = 1
+
+[sub_resource type="Resource" id=172]
+script = ExtResource( 6 )
+FromId = "0ea0d6ed-ce88-4ddd-b661-49ae1a74429f"
+FromPort = 0
+ToId = "e4fda751-7dcb-49ef-aea7-50c47f415edd"
+ToPort = 2
+
+[sub_resource type="Resource" id=173]
+script = ExtResource( 6 )
+FromId = "f195e211-1f62-48d8-ab85-83a0cd03beed"
+FromPort = 0
+ToId = "e4fda751-7dcb-49ef-aea7-50c47f415edd"
+ToPort = 3
+
+[sub_resource type="Resource" id=174]
+script = ExtResource( 6 )
+FromId = "bf351eaa-055a-4e81-8217-bae9cbe6ddd0"
+FromPort = 0
+ToId = "e4fda751-7dcb-49ef-aea7-50c47f415edd"
+ToPort = 4
+
+[sub_resource type="Resource" id=175]
+script = ExtResource( 6 )
+FromId = "67a30592-91e4-4e0e-916e-a8230e23d9d3"
+FromPort = 0
+ToId = "cba35eb1-733d-4582-a344-0c0a692ac62e"
+ToPort = 0
+
+[sub_resource type="Resource" id=176]
+script = ExtResource( 6 )
+FromId = "e4fda751-7dcb-49ef-aea7-50c47f415edd"
+FromPort = 0
+ToId = "8ec4e751-5469-4ee4-96f2-29e41cf328f3"
+ToPort = 0
+
+[sub_resource type="Resource" id=177]
+script = ExtResource( 6 )
+FromId = "c3a18b68-c3ef-43eb-ae62-c9a192357f61"
+FromPort = 0
+ToId = "8ec4e751-5469-4ee4-96f2-29e41cf328f3"
+ToPort = 0
+
+[sub_resource type="Resource" id=178]
+script = ExtResource( 6 )
+FromId = "d7c2c91c-e377-4976-8a6f-548aa3a32c35"
+FromPort = 0
+ToId = "580e1463-05cf-4bdb-bf61-4392dee0646f"
+ToPort = 0
+
+[sub_resource type="Resource" id=179]
+script = ExtResource( 6 )
+FromId = "d7c2c91c-e377-4976-8a6f-548aa3a32c35"
+FromPort = 0
+ToId = "580e1463-05cf-4bdb-bf61-4392dee0646f"
+ToPort = 1
+
+[sub_resource type="Resource" id=180]
+script = ExtResource( 6 )
+FromId = "d7c2c91c-e377-4976-8a6f-548aa3a32c35"
+FromPort = 0
+ToId = "580e1463-05cf-4bdb-bf61-4392dee0646f"
+ToPort = 3
+
+[sub_resource type="Resource" id=181]
+script = ExtResource( 6 )
+FromId = "d7c2c91c-e377-4976-8a6f-548aa3a32c35"
+FromPort = 0
+ToId = "580e1463-05cf-4bdb-bf61-4392dee0646f"
+ToPort = 4
+
+[sub_resource type="Resource" id=182]
+script = ExtResource( 6 )
+FromId = "33a88434-da66-4d7f-be88-a84604dc4f2f"
+FromPort = 0
+ToId = "580e1463-05cf-4bdb-bf61-4392dee0646f"
+ToPort = 5
+
+[sub_resource type="Resource" id=183]
+script = ExtResource( 6 )
+FromId = "33a88434-da66-4d7f-be88-a84604dc4f2f"
+FromPort = 0
+ToId = "4a6e1b19-cd6b-43c5-a801-ec76f9eeea6f"
+ToPort = 0
+
+[sub_resource type="Resource" id=184]
+script = ExtResource( 6 )
+FromId = "4a6e1b19-cd6b-43c5-a801-ec76f9eeea6f"
+FromPort = 0
+ToId = "580e1463-05cf-4bdb-bf61-4392dee0646f"
+ToPort = 2
+
+[sub_resource type="Resource" id=185]
+script = ExtResource( 6 )
+FromId = "f9313575-ae22-42d1-b28b-25f21f623980"
+FromPort = 0
+ToId = "e9e1e85b-fe21-4c21-9fb8-f71efcad044f"
+ToPort = 0
+
+[sub_resource type="Resource" id=186]
+script = ExtResource( 6 )
+FromId = "4a19761b-2305-4a48-8cc4-fa713843e2e9"
+FromPort = 0
+ToId = "eb2e6870-c5d0-461d-873e-d19116f20d1d"
+ToPort = 0
+
+[sub_resource type="Resource" id=187]
+script = ExtResource( 6 )
+FromId = "e9e1e85b-fe21-4c21-9fb8-f71efcad044f"
+FromPort = 0
+ToId = "8ec4e751-5469-4ee4-96f2-29e41cf328f3"
+ToPort = 1
+
+[sub_resource type="Resource" id=188]
+script = ExtResource( 6 )
+FromId = "580e1463-05cf-4bdb-bf61-4392dee0646f"
+FromPort = 0
+ToId = "8ec4e751-5469-4ee4-96f2-29e41cf328f3"
+ToPort = 1
+
+[sub_resource type="Resource" id=189]
+script = ExtResource( 6 )
+FromId = "eb2e6870-c5d0-461d-873e-d19116f20d1d"
+FromPort = 0
+ToId = "8ec4e751-5469-4ee4-96f2-29e41cf328f3"
+ToPort = 1
+
+[sub_resource type="Resource" id=190]
+script = ExtResource( 6 )
+FromId = "cba35eb1-733d-4582-a344-0c0a692ac62e"
+FromPort = 0
+ToId = "8ec4e751-5469-4ee4-96f2-29e41cf328f3"
+ToPort = 1
+
+[sub_resource type="Resource" id=191]
+script = ExtResource( 7 )
+Id = "be9731ca-3fae-458e-b8dc-2c58f1233078"
+Name = "<main>"
+NodeName = ""
+Description = "The main entrypoint."
+IsExternal = false
+IsBuiltin = true
+ExternalSource = ""
+Parameters = [  ]
+
+[sub_resource type="Resource" id=192]
+script = ExtResource( 8 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( -80, 80 )
+Id = "c69c505a-10ff-47e7-81de-a6f0c4914ae4"
+StoredData = {
+"variable_description_id": "b793b666-15aa-4b0d-a8ca-e23319705eed"
+}
+
+[sub_resource type="Resource" id=193]
+script = ExtResource( 8 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( -80, 180 )
+Id = "09889923-7515-43f9-a416-48c1b57cf07a"
+StoredData = {
+"variable_description_id": "d9b17565-7544-416a-bb4b-e73bd1df5d51"
+}
+
+[sub_resource type="Resource" id=194]
+script = ExtResource( 8 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( -80, 280 )
+Id = "0ea0d6ed-ce88-4ddd-b661-49ae1a74429f"
+StoredData = {
+"variable_description_id": "99fbe662-ba97-4557-ba67-bbb946307a18"
+}
+
+[sub_resource type="Resource" id=195]
+script = ExtResource( 8 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( -80, 380 )
+Id = "f195e211-1f62-48d8-ab85-83a0cd03beed"
+StoredData = {
+"variable_description_id": "ffe58a79-7611-4532-aba4-538c876d23c7"
+}
+
+[sub_resource type="Resource" id=196]
+script = ExtResource( 8 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( -80, 480 )
+Id = "bf351eaa-055a-4e81-8217-bae9cbe6ddd0"
+StoredData = {
+"variable_description_id": "40a0fbc8-c4c3-4cba-a945-7776bd424523"
+}
+
+[sub_resource type="Resource" id=197]
+script = ExtResource( 8 )
+Type = "OpenScadGraphEditor.Nodes.SetVariable"
+Position = Vector2( 600, 160 )
+Id = "c3a18b68-c3ef-43eb-ae62-c9a192357f61"
+StoredData = {
+"variable_description_id": "05230975-0e92-4369-a8f3-24a0ec045c7f"
+}
+
+[sub_resource type="Resource" id=198]
+script = ExtResource( 8 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 380, 160 )
+Id = "33a88434-da66-4d7f-be88-a84604dc4f2f"
+StoredData = {
+"variable_description_id": "4aef6796-ad11-498c-af81-d70c97bfde9c"
+}
+
+[sub_resource type="Resource" id=199]
+script = ExtResource( 8 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 200, 80 )
+Id = "e4fda751-7dcb-49ef-aea7-50c47f415edd"
+StoredData = {
+"module_description_id": "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_setupcut"
+}
+
+[sub_resource type="Resource" id=200]
+script = ExtResource( 8 )
+Type = "OpenScadGraphEditor.Nodes.Difference"
+Position = Vector2( 1180, 80 )
+Id = "8ec4e751-5469-4ee4-96f2-29e41cf328f3"
+StoredData = {
+}
+
+[sub_resource type="Resource" id=201]
+script = ExtResource( 8 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 600, 260 )
+Id = "cba35eb1-733d-4582-a344-0c0a692ac62e"
+StoredData = {
+"module_description_id": "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_toolchange"
+}
+
+[sub_resource type="Resource" id=202]
+script = ExtResource( 8 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 380, 260 )
+Id = "67a30592-91e4-4e0e-916e-a8230e23d9d3"
+StoredData = {
+"variable_description_id": "b7076742-0cf9-43f6-8c6d-b55621a650bc"
+}
+
+[sub_resource type="Resource" id=203]
+script = ExtResource( 8 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 700, 620 )
+Id = "580e1463-05cf-4bdb-bf61-4392dee0646f"
+StoredData = {
+"module_description_id": "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_rapid"
+}
+
+[sub_resource type="Resource" id=204]
+script = ExtResource( 8 )
+Type = "OpenScadGraphEditor.Nodes.LiteralNumber"
+Position = Vector2( 320, 700 )
+Id = "d7c2c91c-e377-4976-8a6f-548aa3a32c35"
+StoredData = {
+"output_literal_set.0": "False",
+"output_literal_value.0": "0"
+}
+
+[sub_resource type="Resource" id=205]
+script = ExtResource( 8 )
+Type = "OpenScadGraphEditor.Nodes.MultiplyOperator"
+Position = Vector2( 500, 360 )
+Id = "4a6e1b19-cd6b-43c5-a801-ec76f9eeea6f"
+StoredData = {
+"first_operand_port_type": "8",
+"input_literal_set.1": "False",
+"input_literal_value.1": "2",
+"second_operand_port_type": "3"
+}
+
+[sub_resource type="Resource" id=206]
+script = ExtResource( 8 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1140, 680 )
+Id = "e9e1e85b-fe21-4c21-9fb8-f71efcad044f"
+StoredData = {
+"module_description_id": "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_startspindle"
+}
+
+[sub_resource type="Resource" id=207]
+script = ExtResource( 8 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 960, 660 )
+Id = "f9313575-ae22-42d1-b28b-25f21f623980"
+StoredData = {
+"variable_description_id": "80feacb3-da3f-47e0-9945-d879d88f73b5"
+}
+
+[sub_resource type="Resource" id=208]
+script = ExtResource( 8 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 500, 500 )
+Id = "eb2e6870-c5d0-461d-873e-d19116f20d1d"
+StoredData = {
+"module_description_id": "b53e5b28044492fb8d08f55fbb8628523480c3a4d6ea517bfc6f9f887103e7d3_module_writecomment"
+}
+
+[sub_resource type="Resource" id=209]
+script = ExtResource( 8 )
+Type = "OpenScadGraphEditor.Nodes.LiteralString"
+Position = Vector2( 140, 500 )
+Id = "4a19761b-2305-4a48-8cc4-fa713843e2e9"
+StoredData = {
+"output_literal_set.0": "False",
+"output_literal_value.0": "PREPOSITION FOR RAPID PLUNGE"
+}
+
+[sub_resource type="Resource" id=210]
+script = ExtResource( 9 )
+Description = SubResource( 191 )
+Nodes = [ SubResource( 192 ), SubResource( 193 ), SubResource( 194 ), SubResource( 195 ), SubResource( 196 ), SubResource( 197 ), SubResource( 198 ), SubResource( 199 ), SubResource( 200 ), SubResource( 201 ), SubResource( 202 ), SubResource( 203 ), SubResource( 204 ), SubResource( 205 ), SubResource( 206 ), SubResource( 207 ), SubResource( 208 ), SubResource( 209 ) ]
+Connections = [ SubResource( 169 ), SubResource( 170 ), SubResource( 171 ), SubResource( 172 ), SubResource( 173 ), SubResource( 174 ), SubResource( 175 ), SubResource( 176 ), SubResource( 177 ), SubResource( 178 ), SubResource( 179 ), SubResource( 180 ), SubResource( 181 ), SubResource( 182 ), SubResource( 183 ), SubResource( 184 ), SubResource( 185 ), SubResource( 186 ), SubResource( 187 ), SubResource( 188 ), SubResource( 189 ), SubResource( 190 ) ]
+
+[sub_resource type="Resource" id=211]
+script = ExtResource( 3 )
+ConstraintType = 0
+Tab = "Part"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=212]
+script = ExtResource( 4 )
+Id = "b793b666-15aa-4b0d-a8ca-e23319705eed"
+Name = "stocklength"
+Description = ""
+TypeHint = 3
+DefaultValue = "125"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 211 )
+
+[sub_resource type="Resource" id=213]
+script = ExtResource( 3 )
+ConstraintType = 0
+Tab = "Part"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=214]
+script = ExtResource( 4 )
+Id = "d9b17565-7544-416a-bb4b-e73bd1df5d51"
+Name = "stockwidth"
+Description = ""
+TypeHint = 3
+DefaultValue = "75"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 213 )
+
+[sub_resource type="Resource" id=215]
+script = ExtResource( 3 )
+ConstraintType = 0
+Tab = "Part"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=216]
+script = ExtResource( 4 )
+Id = "99fbe662-ba97-4557-ba67-bbb946307a18"
+Name = "stockthickness"
+Description = ""
+TypeHint = 3
+DefaultValue = "6.35"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 215 )
+
+[sub_resource type="Resource" id=217]
+script = ExtResource( 3 )
+ConstraintType = 0
+Tab = "G-code"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=218]
+script = ExtResource( 4 )
+Id = "c2ab23d9-f8d0-459e-8155-e906450ae87d"
+Name = "toolradius"
+Description = ""
+TypeHint = 3
+DefaultValue = "1.5875"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 217 )
+
+[sub_resource type="Resource" id=219]
+script = ExtResource( 3 )
+ConstraintType = 3
+Tab = "G-code"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray( "Lower-Left", "Center-Left", "Top-Left", "Center" )
+OptionLabels = PoolStringArray( "", "", "", "" )
+
+[sub_resource type="Resource" id=220]
+script = ExtResource( 4 )
+Id = "40a0fbc8-c4c3-4cba-a945-7776bd424523"
+Name = "stockorigin"
+Description = ""
+TypeHint = 6
+DefaultValue = "Lower-Left"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 219 )
+
+[sub_resource type="Resource" id=221]
+script = ExtResource( 3 )
+ConstraintType = 3
+Tab = "G-code"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray( "Top", "Bottom" )
+OptionLabels = PoolStringArray( "", "" )
+
+[sub_resource type="Resource" id=222]
+script = ExtResource( 4 )
+Id = "ffe58a79-7611-4532-aba4-538c876d23c7"
+Name = "zeroheight"
+Description = ""
+TypeHint = 6
+DefaultValue = "Top"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 221 )
+
+[sub_resource type="Resource" id=223]
+script = ExtResource( 3 )
+ConstraintType = 0
+Tab = "G-code"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=224]
+script = ExtResource( 4 )
+Id = "667b53ff-64b5-4d68-b606-5d57e197b5c7"
+Name = "generategcode"
+Description = ""
+TypeHint = 2
+DefaultValue = "false"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 223 )
+
+[sub_resource type="Resource" id=225]
+script = ExtResource( 3 )
+ConstraintType = 0
+Tab = "G-code"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=226]
+script = ExtResource( 4 )
+Id = "4aef6796-ad11-498c-af81-d70c97bfde9c"
+Name = "retractheight"
+Description = ""
+TypeHint = 3
+DefaultValue = "3"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 225 )
+
+[sub_resource type="Resource" id=227]
+script = ExtResource( 3 )
+ConstraintType = 0
+Tab = "G-code"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=228]
+script = ExtResource( 4 )
+Id = "a3047bd8-923b-4016-86ca-87d0ae1d871b"
+Name = "feedrate"
+Description = ""
+TypeHint = 3
+DefaultValue = "850"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 227 )
+
+[sub_resource type="Resource" id=229]
+script = ExtResource( 3 )
+ConstraintType = 0
+Tab = "G-code"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=230]
+script = ExtResource( 4 )
+Id = "223186e8-c0e5-45cd-b248-8c109bd7e8c9"
+Name = "plungerate"
+Description = ""
+TypeHint = 3
+DefaultValue = "0"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 229 )
+
+[sub_resource type="Resource" id=231]
+script = ExtResource( 3 )
+ConstraintType = 0
+Tab = ""
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=232]
+script = ExtResource( 4 )
+Id = "05230975-0e92-4369-a8f3-24a0ec045c7f"
+Name = "safetyheight"
+Description = ""
+TypeHint = 8
+DefaultValue = null
+ShowInCustomizer = false
+CustomizerDescription = SubResource( 231 )
+
+[sub_resource type="Resource" id=233]
+script = ExtResource( 3 )
+ConstraintType = 3
+Tab = "G-code"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray( "101", "102" )
+OptionLabels = PoolStringArray( "", "" )
+
+[sub_resource type="Resource" id=234]
+script = ExtResource( 4 )
+Id = "b7076742-0cf9-43f6-8c6d-b55621a650bc"
+Name = "tool"
+Description = ""
+TypeHint = 3
+DefaultValue = "102"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 233 )
+
+[sub_resource type="Resource" id=235]
+script = ExtResource( 3 )
+ConstraintType = 0
+Tab = "G-code"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=236]
+script = ExtResource( 4 )
+Id = "80feacb3-da3f-47e0-9945-d879d88f73b5"
+Name = "spindlespeed"
+Description = ""
+TypeHint = 3
+DefaultValue = "17000"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 235 )
+
+[resource]
+script = ExtResource( 10 )
+Functions = [  ]
+Modules = [  ]
+MainModule = SubResource( 210 )
+Variables = [ SubResource( 212 ), SubResource( 214 ), SubResource( 216 ), SubResource( 218 ), SubResource( 220 ), SubResource( 222 ), SubResource( 224 ), SubResource( 226 ), SubResource( 228 ), SubResource( 230 ), SubResource( 232 ), SubResource( 234 ), SubResource( 236 ) ]
+ExternalReferences = [ SubResource( 29 ), SubResource( 167 ), SubResource( 168 ) ]
+Preamble = ""
