@@ -1,62 +1,60 @@
 # gcodepreview
 OpenSCAD library for moving a tool in lines and arcs so as to model how a part would be cut using G-Code.
 
+Update to make use of Python in OpenSCAD:
+
+http://www.guenther-sohler.net/openscad/
+
 A BlockSCAD file for the main modules is available at:
 
 https://www.blockscad3d.com/community/projects/1244473
 
 The project is discussed at:
 
-https://forum.makerforums.info/t/g-code-preview-using-openscad-rapcad/85729
+https://forum.makerforums.info/t/g-code-preview-using-openscad-rapcad/85729 
+
+and
+
+https://forum.makerforums.info/t/openscad-and-python-looking-to-finally-be-resolved/88171
 
 Usage is:
 
-Place the file in C:\Users\\\~\Documents\OpenSCAD\libraries or C:\Users\\\~\Documents\RapCAD\libraries
+Place the file in C:\Users\\\~\Documents\OpenSCAD\libraries (C:\Users\\\~\Documents\RapCAD\libraries is deprecated since RapCAD is not longer needed since Python is now used for writing out files)
 
-(It has since been updated for use w/ RapCAD, so as to take advantage of the writeln command)
+(While it was updated for use w/ RapCAD, so as to take advantage of the writeln command, it was possible to write that in Python)
 
+    use <gcodepreview.py>;
+    use <pygcodepreview.scad>;
     include <gcodepreview.scad>;
+
+Note that it is necessary to use the first two files (this allows loading the Python commands and then wrapping them in OpenSCAD commands) and then include the last file (which allows using OpenSCAD variables to selectively implement the Python commands via their being wrapped in OpenSCAD modules)
 
 and then use commands such as:
 
     generategcode = true;
+
+    opengcodefile(Gcode_filename);
     
     difference() {
-      cube([Stock Length, Stock Width, Stock Thickness], center=false);
+    setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
 
-      gcut(bx, by, bz, ex, ey, ez, tn);
+    movetosafez();
 
-      garcCW(bx, by, bz, ex, ey, ez, xoffset, yoffset, tn);
+    toolchange(squaretoolno,speed * square_ratio);
 
-      garcCCW(bx, by, bz, ex, ey, ez, xoffset, yoffset, tn);
-  
+    movetoorigin();
+
+    movetosafeheight();
+
+    cutoneaxis_setfeed("Z",-1,plunge*square_ratio);
+
+    cutwithfeed(stocklength/2,stockwidth/2,-stockthickness,feed);
+
+    closecut();
     }
 
-Where:
- 
-beginning coordinates:
-  bx
-  by
-  bz
-
-ending coordinates:
-  ex
-  ey
-  ez
-  
-offsets:
-  xoffset
-  yoffset
-  
-Tool Number:
-  tn
+    closegcodefile();
 
 Tool numbers match those of tooling sold by Carbide 3D (ob. discl., I work for them). Comments are included in the G-code to match those expected by CutViewer.
 
-Note that there is now a specific command for setting up the stock:
-
-  setupstock(stocklength, stockwidth, stockthickness, "Top", "Lower-Left");
-
-(options for it match those of Carbide Create, or will eventually)
-
-A complete example file is: gcode_flatten.rcad
+A complete example file is: gcodepreview_template.scad
