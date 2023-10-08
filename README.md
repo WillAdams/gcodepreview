@@ -43,8 +43,9 @@ and define variables which match the project and then use commands such as:
     
     begintoolpath(0,0,0.25);
     beginpolyline(0,0,0.25);
-    
+
     cutoneaxis_setfeed("Z",-1,plunge*square_ratio);
+    addpolyline(stocklength/2,stockwidth/2,-stockthickness);
     
     cutwithfeed(stocklength/2,stockwidth/2,-stockthickness,feed);
     
