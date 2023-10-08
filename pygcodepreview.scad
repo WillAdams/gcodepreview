@@ -24,6 +24,11 @@ module owriteone(first) {
 	writeln(first);
 }
 
+module dxfwriteone(first) {
+	writedxf(first);
+//    echo(first);
+}
+
 module owritetwo(first, second) {
 	writeln(first, second);
 }
