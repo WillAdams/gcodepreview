@@ -1,9 +1,11 @@
 # gcodepreview
-OpenSCAD library for moving a tool in lines and arcs so as to model how a part would be cut using G-Code.
+OpenSCAD library for moving a tool in lines and arcs so as to model how a part would be cut using G-Code, so as to allow OpenSCAD to function as a compleat CAD/CAM solution for subtractive CNC (mills and routers).
 
-Update to make use of Python in OpenSCAD:
+Updated to make use of Python in OpenSCAD:
 
 http://www.guenther-sohler.net/openscad/
+
+(previous versions had used RapCAD)
 
 A BlockSCAD file for the main modules is available at:
 
@@ -16,6 +18,10 @@ https://forum.makerforums.info/t/g-code-preview-using-openscad-rapcad/85729
 and
 
 https://forum.makerforums.info/t/openscad-and-python-looking-to-finally-be-resolved/88171
+
+and
+
+https://willadams.gitbook.io/design-into-3d/programming
 
 Usage is:
 
@@ -60,4 +66,15 @@ Tool numbers match those of tooling sold by Carbide 3D (ob. discl., I work for t
 
 A complete example file is: gcodepreview_template.scad
 
-Version 0.1 supports setting up stock, origin, rapdi positioning, making cuts, and writing out matching G-code, and optionally creating a DXF with polylines
+Version 0.1 supports setting up stock, origin, rapdi positioning, making cuts, and writing out matching G-code, and optionally creating a DXF with polylines.
+
+Possible future improvements:
+
+ - G-code: support for G2/G3 arcs
+ - DXF support for curves and the 3rd dimension
+ - G-code: import external tool libraries and feeds and speeds from JSON or CSV files
+ - support for additional tooling shapes such as dovetail tools, or roundover tooling
+ - general coding improvements --- current coding style is quite prosaic
+ - documentation beyond: https://willadams.gitbook.io/design-into-3d/programming
+ - possibly re-writing as a literate program
+ - generalized modules for cutting out various shapes/geometries
