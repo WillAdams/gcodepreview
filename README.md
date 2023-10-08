@@ -66,7 +66,7 @@ Tool numbers match those of tooling sold by Carbide 3D (ob. discl., I work for t
 
 A complete example file is: gcodepreview_template.scad
 
-Version 0.1 supports setting up stock, origin, rapdi positioning, making cuts, and writing out matching G-code, and optionally creating a DXF with polylines.
+Version 0.1 supports setting up stock, origin, rapdi positioning, making cuts, and writing out matching G-code, and has hooks in place for creating a DXF with polylines (not yet working).
 
 Possible future improvements:
 
