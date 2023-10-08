@@ -60,7 +60,7 @@ and define variables which match the project and then use commands such as:
     }
     
     closegcodefile();
-    closegdxffile();
+    closedxffile();
 
 Tool numbers match those of tooling sold by Carbide 3D (ob. discl., I work for them). Comments are included in the G-code to match those expected by CutViewer.
 
