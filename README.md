@@ -29,32 +29,34 @@ Place the file in C:\Users\\\~\Documents\OpenSCAD\libraries (C:\Users\\\~\Docume
 
 Note that it is necessary to use the first two files (this allows loading the Python commands and then wrapping them in OpenSCAD commands) and then include the last file (which allows using OpenSCAD variables to selectively implement the Python commands via their being wrapped in OpenSCAD modules)
 
-and then use commands such as:
-
-    generategcode = true;
+and define variables which match the project and then use commands such as:
 
     opengcodefile(Gcode_filename);
+    opendxffile(DXF_filename);
     
     difference() {
-    setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
-
+        setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
+    
     movetosafez();
-
+    
     toolchange(squaretoolno,speed * square_ratio);
-
-    movetoorigin();
-
-    movetosafeheight();
-
+    
+    begintoolpath(0,0,0.25);
+    beginpolyline(0,0,0.25);
+    
     cutoneaxis_setfeed("Z",-1,plunge*square_ratio);
-
+    
     cutwithfeed(stocklength/2,stockwidth/2,-stockthickness,feed);
-
-    closecut();
+    
+    endtoolpath();
+    
     }
-
+    
     closegcodefile();
+    closegdxffile();
 
 Tool numbers match those of tooling sold by Carbide 3D (ob. discl., I work for them). Comments are included in the G-code to match those expected by CutViewer.
 
 A complete example file is: gcodepreview_template.scad
+
+Version 0.1 supports setting up stock, origin, rapdi positioning, making cuts, and writing out matching G-code, and optionally creating a DXF with polylines
