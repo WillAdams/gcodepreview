@@ -4,8 +4,16 @@ module oopengcodefile(fn) {
 	popengcodefile(fn);
 }
 
+module oopendxffile(fn) {
+	popendxffile(fn);
+}
+
 module oclosegcodefile() {
 	pclosegcodefile();
+}
+
+module oclosedxffile() {
+	pclosedxffile();
 }
 
 module owritecomment(comment) {
@@ -74,7 +82,19 @@ module osettool(tn){
 psettool(tn);}
 
 function current_tool() = pcurrent_tool();
-//function current_tool() = pcurrent_tool();
 
+function getxpos() = xpos();
+function getypos() = ypos();
+function getzpos() = zpos();
 
-//function xpos() = pxpos();
+module setxpos(newxpos) {
+psetxpos(newxpos);
+}
+
+module setypos(newypos) {
+psetypos(newypos);
+}
+
+module setzpos(newzpos) {
+psetzpos(newzpos);
+}
