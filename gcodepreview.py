@@ -13,11 +13,19 @@ def writeln(*arguments):
     f.write(line_to_write)
     f.write("\n")
 
+def writedxf(*arguments):
+    line_to_write = ""
+    for element in arguments:
+        line_to_write += element
+    dxf.write(line_to_write)
+    print(line_to_write)
+    dxf.write("\n")
+
 def pclosegcodefile():
     f.close()
 
 def pclosedxffile():
-    f.close()
+    dxf.close()
 
 def psetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin):
     global mpx
