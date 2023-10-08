@@ -20,46 +20,46 @@ module opendxffile(fn) {
 if (generatedxf == true) {
 	oopendxffile(fn);
     echo(fn);
-    owriteone("0");
-    owriteone("SECTION");
-    owriteone("2");
-    owriteone("ENTITIES");
-    owriteone("0");
+    dxfwriteone("0");
+    dxfwriteone("SECTION");
+    dxfwriteone("2");
+    dxfwriteone("ENTITIES");
+    dxfwriteone("0");
 }
 }
 
 module beginpolyline(bx,by,bz) {
-    owriteone("POLYLINE");
-    owriteone("8");
-    owriteone("default");
-    owriteone("66");
-    owriteone("1");
-    owriteone("70");
-    owriteone("0");
-    owriteone("0");
-    owriteone("VERTEX");
-    owriteone("8");
-    owriteone("default");
-    owriteone("70");
-    owriteone("32");
-    owriteone("10");
-    owriteone(str(bx));
-    owriteone("20");
-    owriteone(str(by));
-    owriteone("0");
+    dxfwriteone("POLYLINE");
+    dxfwriteone("8");
+    dxfwriteone("default");
+    dxfwriteone("66");
+    dxfwriteone("1");
+    dxfwriteone("70");
+    dxfwriteone("0");
+    dxfwriteone("0");
+    dxfwriteone("VERTEX");
+    dxfwriteone("8");
+    dxfwriteone("default");
+    dxfwriteone("70");
+    dxfwriteone("32");
+    dxfwriteone("10");
+    dxfwriteone(str(bx));
+    dxfwriteone("20");
+    dxfwriteone(str(by));
+    dxfwriteone("0");
 }
 
 module addpolyline(bx,by,bz) {
-    owriteone("VERTEX");
-    owriteone("8");
-    owriteone("default");
-    owriteone("70");
-    owriteone("32");
-    owriteone("10");
-    owriteone(str(bx));
-    owriteone("20");
-    owriteone(str(by));
-    owriteone("0");
+    dxfwriteone("VERTEX");
+    dxfwriteone("8");
+    dxfwriteone("default");
+    dxfwriteone("70");
+    dxfwriteone("32");
+    dxfwriteone("10");
+    dxfwriteone(str(bx));
+    dxfwriteone("20");
+    dxfwriteone(str(by));
+    dxfwriteone("0");
 }
 
 module writecomment(comment) {
@@ -78,11 +78,11 @@ if (generategcode == true) {
 
 module closedxffile() {
 if (generategcode == true) {
-    owriteone("SEQEND");
-    owriteone("0");
-    owriteone("ENDSEC");
-    owriteone("0");
-    owriteone("EOF");
+    dxfwriteone("SEQEND");
+    dxfwriteone("0");
+    dxfwriteone("ENDSEC");
+    dxfwriteone("0");
+    dxfwriteone("EOF");
 	oclosedxffile();
 }
 }
