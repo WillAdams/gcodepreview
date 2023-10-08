@@ -29,6 +29,7 @@ if (generatedxf == true) {
 }
 
 module beginpolyline(bx,by,bz) {
+if (generatedxf == true) {
     dxfwriteone("POLYLINE");
     dxfwriteone("8");
     dxfwriteone("default");
@@ -48,8 +49,10 @@ module beginpolyline(bx,by,bz) {
     dxfwriteone(str(by));
     dxfwriteone("0");
 }
+}
 
 module addpolyline(bx,by,bz) {
+if (generatedxf == true) {
     dxfwriteone("VERTEX");
     dxfwriteone("8");
     dxfwriteone("default");
@@ -60,6 +63,7 @@ module addpolyline(bx,by,bz) {
     dxfwriteone("20");
     dxfwriteone(str(by));
     dxfwriteone("0");
+}
 }
 
 module writecomment(comment) {
@@ -77,14 +81,15 @@ if (generategcode == true) {
 }
 
 module closedxffile() {
-if (generategcode == true) {
+if (generatedxf == true) {
     dxfwriteone("SEQEND");
     dxfwriteone("0");
     dxfwriteone("ENDSEC");
     dxfwriteone("0");
     dxfwriteone("EOF");
 	oclosedxffile();
-}
+    echo("CLOSING");
+    }
 }
 
 module oset(ex, ey, ez) {
