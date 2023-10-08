@@ -26,6 +26,7 @@ module owriteone(first) {
 
 module dxfwriteone(first) {
 	writedxf(first);
+//	writeln(first);
 //    echo(first);
 }
 
