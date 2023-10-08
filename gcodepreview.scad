@@ -1,11 +1,65 @@
 //!OpenSCAD
 
+//gcodepreview 0.1
+//
+//used via use <gcodepreview.py>;
+//         use <pygcodepreview.scad>;
+//         include <gcodepreview.scad>;
+//
+//supports setting up stock, origin, rapdi positioning, making cuts, and writing out matching G-code
+
 module opengcodefile(fn) {
 if (generategcode == true) {
 	oopengcodefile(fn);
+    echo(fn);
     owritecomment(fn);
-    ech(fn);
 }
+}
+
+module opendxffile(fn) {
+if (generatedxf == true) {
+	oopendxffile(fn);
+    echo(fn);
+    owriteone("0");
+    owriteone("SECTION");
+    owriteone("2");
+    owriteone("ENTITIES");
+    owriteone("0");
+}
+}
+
+module beginpolyline(bx,by,bz) {
+    owriteone("POLYLINE");
+    owriteone("8");
+    owriteone("default");
+    owriteone("66");
+    owriteone("1");
+    owriteone("70");
+    owriteone("0");
+    owriteone("0");
+    owriteone("VERTEX");
+    owriteone("8");
+    owriteone("default");
+    owriteone("70");
+    owriteone("32");
+    owriteone("10");
+    owriteone(str(bx));
+    owriteone("20");
+    owriteone(str(by));
+    owriteone("0");
+}
+
+module addpolyline(bx,by,bz) {
+    owriteone("VERTEX");
+    owriteone("8");
+    owriteone("default");
+    owriteone("70");
+    owriteone("32");
+    owriteone("10");
+    owriteone(str(bx));
+    owriteone("20");
+    owriteone(str(by));
+    owriteone("0");
 }
 
 module writecomment(comment) {
@@ -16,29 +70,56 @@ if (generategcode == true) {
 
 module closegcodefile() {
 if (generategcode == true) {
+    owriteone("M05");
+    owriteone("M02");
 	oclosegcodefile();
 }
 }
 
-module NOTsetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin) {
-  osetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
-  if (zeroheight == "Top") {
-    if (stockorigin == "Lower-Left") {
-    translate([0, 0, (-stockthickness)]){
-    cube([stocklength, stockwidth, stockthickness], center=false);
+module closedxffile() {
 if (generategcode == true) {
-//	owriteone("(setupstock)");
-owritethree("(stockMin:0.00mm, 0.00mm, -",str(stockthickness),"mm)");
-owritefive("(stockMax:",str(stocklength),"mm, ",str(stockwidth),"mm, 0.00mm)");
-    owritenine("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", 0.00, 0.00, ",str(stockthickness),")");
+    owriteone("SEQEND");
+    owriteone("0");
+    owriteone("ENDSEC");
+    owriteone("0");
+    owriteone("EOF");
+	oclosedxffile();
 }
 }
+
+module oset(ex, ey, ez) {
+setxpos(ex);
+setypos(ey);
+setzpos(ez);
 }
+
+module otm(ex, ey, ez, r,g,b) {
+color([r,g,b]) hull(){
+    translate([xpos(), ypos(), zpos()]){
+      select_tool(current_tool());
+    }
+    translate([ex, ey, ez]){
+      select_tool(current_tool());
+    }
+  }
+oset(ex, ey, ez);
 }
+
+module ocut(ex, ey, ez) {
+//color([0.2,1,0.2]) hull(){
+otm(ex, ey, ez, 0.2,1,0.2);
+}
+
+module orapid(ex, ey, ez) {
+//color([0.93,0,0]) hull(){
+otm(ex, ey, ez, 0.93,0,0);
 }
 
 module setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin) {
   osetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
+//initialize default tool and XYZ origin
+  osettool(102);
+  oset(0,0,0);
   if (zeroheight == "Top") {
     if (stockorigin == "Lower-Left") {
     translate([0, 0, (-stockthickness)]){
@@ -210,17 +291,7 @@ if (generategcode == true) {
 	writecomment("rapid");
 	owritesix("G0 X",str(ex)," Y", str(ey), " Z", str(ez));
 }
-color([0.93,0,0]) hull(){
-    translate([bx, by, bz]){
-      select_tool(current_tool());
-    }
-    translate([ex, ey, ez]){
-      select_tool(current_tool());
-    }
-  }
-setxpos(ex);
-setypos(ey);
-setzpos(ez);
+    orapid(ex, ey, ez);
 }
 
 module rapid(ex, ey, ez) {
@@ -229,17 +300,7 @@ if (generategcode == true) {
 	writecomment("rapid");
 	owritesix("G0 X",str(ex)," Y", str(ey), " Z", str(ez));
 }
-color([0.93,0,0]) hull(){
-    translate([xpos(), ypos(), zpos()]){
-      select_tool(current_tool());
-    }
-    translate([ex, ey, ez]){
-      select_tool(current_tool());
-    }
-  }
-setxpos(ex);
-setypos(ey);
-setzpos(ez);
+    orapid(ex, ey, ez);
 }
 
 module movetosafez() {
@@ -247,13 +308,16 @@ if (generategcode == true) {
 	writecomment("Move to safe Z to avoid workholding");
     owriteone("G53G0Z-5.000");
 }
+    orapid(getxpos(), getypos(), retractheight+5);
 }
 
-module movetoorigin() {
+module begintoolpath(bx,by,bz) {
 if (generategcode == true) {
 	writecomment("PREPOSITION FOR RAPID PLUNGE");
-    owriteone("G0X-0.000Y0.000");
-}
+    owritefour("G0X", str(bx), "Y",str(by));
+    owritetwo("Z", str(bz));
+    }
+    orapid(bx,by,bz);
 }
 
 module movetosafeheight() {
@@ -274,6 +338,9 @@ if (zeroheight == "Top") {
     owritefive("G1",axis,str(depth),"F",str(feed));
 }
 }
+if (axis == "X") {setxpos(depth);}
+if (axis == "Y") {setypos(depth);}
+if (axis == "Z") {setzpos(depth);}
 }
 
 module cut(ex, ey, ez) {
@@ -282,17 +349,7 @@ if (generategcode == true) {
 //	writecomment("rapid");
 	owritesix("G1 X",str(ex)," Y", str(ey), " Z", str(ez));
 }
-color([0.2,1,0.2]) hull(){
-    translate([xpos(), ypos(), zpos()]){
-      select_tool(current_tool());
-    }
-    translate([ex, ey, ez]){
-      select_tool(current_tool());
-    }
-  }
-setxpos(ex);
-setypos(ey);
-setzpos(ez);
+ocut(ex, ey, ez);
 }
 
 module cutwithfeed(ex, ey, ez, feed) {
@@ -301,24 +358,14 @@ if (generategcode == true) {
 //	writecomment("rapid");
 	owriteeight("G1 X",str(ex)," Y", str(ey), " Z", str(ez),"F",str(feed));
 }
-color([0.2,1,0.2]) hull(){
-    translate([xpos(), ypos(), zpos()]){
-      select_tool(current_tool());
-    }
-    translate([ex, ey, ez]){
-      select_tool(current_tool());
-    }
-  }
-setxpos(ex);
-setypos(ey);
-setzpos(ez);
+ocut(ex, ey, ez);
 }
 
-module closecut() {
+module endtoolpath() {
 if (generategcode == true) {
 //Z31.750
-	owriteone("G53G0Z-5.000");
-    owriteone("M05");
-    owriteone("M02");
+//	owriteone("G53G0Z-5.000");
+    owritetwo("Z",str(retractheight));
 }
+    orapid(getxpos(),getypos(),retractheight);
 }
