@@ -1,8 +1,10 @@
-# import csv --- did not work
-
 def popengcodefile(fn):
     global f
     f = open(fn, "w")
+
+def popendxffile(fn):
+    global dxf
+    dxf = open(fn, "w")
 
 def writeln(*arguments):
     line_to_write = ""
@@ -12,6 +14,9 @@ def writeln(*arguments):
     f.write("\n")
 
 def pclosegcodefile():
+    f.close()
+
+def pclosedxffile():
     f.close()
 
 def psetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin):
@@ -44,14 +49,14 @@ def zpos():
     global mpz
     return mpz
 
-def setxpos(newxpos):
+def psetxpos(newxpos):
     global mpx
     mpx = newxpos
 
-def setypos(newypos):
+def psetypos(newypos):
     global mpy
     mpy = newypos
 
-def setzpos(newzpos):
+def psetzpos(newzpos):
     global mpz
     mpz = newzpos
