@@ -4,10 +4,18 @@ use <gcodepreview.py>;
 use <pygcodepreview.scad>;
 include <gcodepreview.scad>;
 
+$fa = 2;
+$fs = 0.125;
+
 /* [G-code] */
 Gcode_filename = "gcode.nc"; 
 /* [G-code] */
 generategcode = true;
+
+/* [DXF] */
+DXF_filename = "gcode.dxf"; 
+/* [DXF] */
+generatedxf = true;
 
 /* [CAM] */
 feedrate = 850;
@@ -45,6 +53,7 @@ stockorigin = "Center"; // [Lower-Left, Center-Left, Top-Left, Center]
 retractheight = 9;
 
 opengcodefile(Gcode_filename);
+opendxffile(DXF_filename);
 
 difference() {
 setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
@@ -53,18 +62,17 @@ movetosafez();
 
 toolchange(squaretoolno,speed * square_ratio);
 
-movetoorigin();
-
-movetosafeheight();
+begintoolpath(0,0,0.25);
+beginpolyline(0,0,0.25);
 
 cutoneaxis_setfeed("Z",-1,plunge*square_ratio);
 
-//cut(stocklength/2,stockwidth/2,-stockthickness);
-
 cutwithfeed(stocklength/2,stockwidth/2,-stockthickness,feed);
+addpolyline(stocklength/2,stockwidth/2,-stockthickness);
 
+endtoolpath();
 
-closecut();
 }
 
 closegcodefile();
+closegdxffile();
