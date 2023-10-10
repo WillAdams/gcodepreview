@@ -18,10 +18,6 @@ DXF_filename = "gcode.dxf";
 generatedxf = true;
 
 /* [CAM] */
-feedrate = 850;
-/* [CAM] */
-plungerate = 425;
-/* [CAM] */
 toolradius = 1.5875;
 /* [CAM] */
 squaretoolno = 102;
