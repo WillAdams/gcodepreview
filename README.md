@@ -56,6 +56,7 @@ and define variables which match the project and then use commands such as:
     cutwithfeed(stocklength/2,stockwidth/2,-stockthickness,feed);
     
     endtoolpath();
+    endpolyline();
     
     }
     
