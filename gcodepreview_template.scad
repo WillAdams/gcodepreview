@@ -67,6 +67,7 @@ cutwithfeed(stocklength/2,stockwidth/2,-stockthickness,feed);
 addpolyline(stocklength/2,stockwidth/2,-stockthickness);
 
 endtoolpath();
+endpolyline();
 
 }
 
