@@ -66,6 +66,13 @@ if (generatedxf == true) {
 }
 }
 
+module closepolyline() {
+if (generatedxf == true) {
+    dxfwriteone("SEQEND");
+    dxfwriteone("0");
+}
+}
+
 module writecomment(comment) {
 if (generategcode == true) {
 	owritecomment(comment);
@@ -82,8 +89,8 @@ if (generategcode == true) {
 
 module closedxffile() {
 if (generatedxf == true) {
-    dxfwriteone("SEQEND");
-    dxfwriteone("0");
+//    dxfwriteone("SEQEND");
+//    dxfwriteone("0");
     dxfwriteone("ENDSEC");
     dxfwriteone("0");
     dxfwriteone("EOF");
@@ -222,6 +229,7 @@ if (generategcode == true) {
 }
 
 module select_tool(tool_number) {
+echo(tool_number);
   if (tool_number == 201) {
     gcp_endmill_square(6.35, 19.05);
   } else if (tool_number == 202) {
