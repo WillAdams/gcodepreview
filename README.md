@@ -69,6 +69,10 @@ A complete example file is: gcodepreview_template.scad
 
 Version 0.1 supports setting up stock, origin, rapdi positioning, making cuts, and writing out matching G-code, and creating a DXF with polylines.
 
+Added features since initial upload:
+
+ - endpolyline(); --- this command allows ending one polyline so as to allow multiple lines in a DXF
+
 Possible future improvements:
 
  - G-code: support for G2/G3 arcs
