@@ -73,6 +73,10 @@ Added features since initial upload:
 
  - endpolyline(); --- this command allows ending one polyline so as to allow multiple lines in a DXF
 
+Next feature:
+
+ - exporting SVGs
+
 Possible future improvements:
 
  - G-code: support for G2/G3 arcs
