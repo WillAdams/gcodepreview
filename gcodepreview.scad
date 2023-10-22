@@ -317,6 +317,7 @@ if (generategcode == true) {
 }
 
 module movetosafez() {
+//this should be move to retract height
 if (generategcode == true) {
 	writecomment("Move to safe Z to avoid workholding");
     owriteone("G53G0Z-5.000");
@@ -334,6 +335,7 @@ if (generategcode == true) {
 }
 
 module movetosafeheight() {
+//this should be move to machine position
 if (generategcode == true) {
 //	writecomment("PREPOSITION FOR RAPID PLUNGE");Z25.650
 //G1Z24.663F381.0 ,"F",str(plunge)
@@ -341,6 +343,7 @@ if (zeroheight == "Top") {
     owritetwo("Z",str(retractheight));
 }
 }
+    orapid(getxpos(), getypos(), retractheight+5);
 }
 
 module cutoneaxis_setfeed(axis,depth,feed) {
