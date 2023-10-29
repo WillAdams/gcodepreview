@@ -16,6 +16,18 @@ if (generategcode == true) {
 }
 }
 
+module opensvgfile(fn) {
+if (generatesvg == true) {
+	oopensvgfile(fn);
+    echo(fn);
+    svgwriteone(str("<?xml version=",chr(34),"1.0",chr(34)," encoding=",chr(34),"UTF-8",chr(34)," standalone=",chr(34),"no",chr(34),"?>"));
+//	writesvglineend();
+svgwriteone(str("<svg  version=",chr(34),"1.1",chr(34)," xmlns=",chr(34),"http://www.w3.org/2000/svg",chr(34)," width=",chr(34),stocklength*3.77953,"px",chr(34)," height=",chr(34),stockwidth*3.77953,"px",chr(34),">"));
+//<path d="M755.906 0 L755.906 377.953 L0 377.953 L0 0 L755.906 0 Z " stroke="black" stroke-width="1" fill="none" />
+svgwriteone(str("<path d=",chr(34),"M",stocklength*3.77953," 0 L",stocklength*3.77953," ",stockwidth*3.77953," L0 ",stockwidth*3.77953," L0 0 L",stocklength*3.77953," 0 Z ",chr(34)," stroke=",chr(34),"black",chr(34)," stroke-width=",chr(34),"1",chr(34)," fill=",chr(34),"none",chr(34)," />"));
+    }
+}
+
 module opendxffile(fn) {
 if (generatedxf == true) {
 	oopendxffile(fn);
@@ -26,6 +38,12 @@ if (generatedxf == true) {
     dxfwriteone("ENTITIES");
     dxfwriteone("0");
 }
+}
+
+module writesvgline(bx,by,ex,ey) {
+if (generatesvg == true) {
+    svgwriteone(str("<path d=",chr(34),"M",bx*3.77953," ",by*3.77953," L",ex*3.77953," ",ey*3.77953," ",chr(34)," stroke=",chr(34),"black",chr(34)," stroke-width=",chr(34),"1",chr(34)," fill=",chr(34),"none",chr(34)," />"));
+    }
 }
 
 module beginpolyline(bx,by,bz) {
@@ -96,6 +114,14 @@ if (generatedxf == true) {
     dxfwriteone("EOF");
 	oclosedxffile();
     echo("CLOSING");
+    }
+}
+
+module closesvgfile() {
+if (generatesvg == true) {
+    svgwriteone("</svg>");
+	oclosesvgfile();
+    echo("CLOSING SVG");
     }
 }
 
@@ -229,7 +255,7 @@ if (generategcode == true) {
 }
 
 module select_tool(tool_number) {
-echo(tool_number);
+//echo(tool_number);
   if (tool_number == 201) {
     gcp_endmill_square(6.35, 19.05);
   } else if (tool_number == 202) {
@@ -364,6 +390,11 @@ module cut(ex, ey, ez) {
 if (generategcode == true) {
 //	writecomment("rapid");
 	owritesix("G1 X",str(ex)," Y", str(ey), " Z", str(ez));
+}
+if (generatesvg == true) {
+//	owritesix("G1 X",str(ex)," Y", str(ey), " Z", str(ez));
+//    orapid(getxpos(), getypos(), retractheight+5);
+    writesvgline(getxpos(),getypos(),ex,ey);
 }
 ocut(ex, ey, ez);
 }
