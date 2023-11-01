@@ -30,20 +30,84 @@ svgwriteone(str("<path d=",chr(34),"M",stocklength*3.77953," 0 L",stocklength*3.
 
 module opendxffile(fn) {
 if (generatedxf == true) {
-	oopendxffile(fn);
-    echo(fn);
+	oopendxffile(str(fn,".dxf"));
+//    echo(fn);
     dxfwriteone("0");
     dxfwriteone("SECTION");
     dxfwriteone("2");
     dxfwriteone("ENTITIES");
     dxfwriteone("0");
+if (large_ball_tool_no > 0) {	oopendxflgblfile(str(fn,".",large_ball_tool_no,".dxf"));
+    dxfpreamble(large_ball_tool_no);
+} 
+if (large_square_tool_no > 0) {	oopendxflgsqfile(str(fn,".",large_square_tool_no,".dxf"));
+    dxfpreamble(large_square_tool_no);
+} 
+if (large_V_tool_no > 0) {	oopendxflgVfile(str(fn,".",large_V_tool_no,".dxf"));
+    dxfpreamble(large_V_tool_no);
+} 
+if (small_ball_tool_no > 0) {	oopendxfsmblfile(str(fn,".",small_ball_tool_no,".dxf"));
+    dxfpreamble(small_ball_tool_no);
+} 
+if (small_square_tool_no > 0) {	oopendxfsmsqfile(str(fn,".",small_square_tool_no,".dxf"));
+//    echo(str("tool no",small_square_tool_no));
+    dxfpreamble(small_square_tool_no);
+} 
+if (small_V_tool_no > 0) {	oopendxfsmVfile(str(fn,".",small_V_tool_no,".dxf"));
+    dxfpreamble(small_V_tool_no);
+} 
 }
+}
+
+module dxfwrite(tn,arg) {
+if (tn == large_ball_tool_no) {
+    dxfwritelgbl(arg);}
+if (tn == large_square_tool_no) {
+    dxfwritelgsq(arg);}
+if (tn == large_V_tool_no) {
+    dxfwritelgV(arg);}
+if (tn == small_ball_tool_no) {
+    dxfwritesmbl(arg);}
+if (tn == small_square_tool_no) {
+    dxfwritesmsq(arg);}
+if (tn == small_V_tool_no) {
+    dxfwritesmV(arg);}
+}
+
+module dxfpreamble(tn) {
+//    echo(str("dxfpreamble",small_square_tool_no));
+    dxfwrite(tn,"0");
+    dxfwrite(tn,"SECTION");
+    dxfwrite(tn,"2");
+    dxfwrite(tn,"ENTITIES");
+    dxfwrite(tn,"0");
 }
 
 module writesvgline(bx,by,ex,ey) {
 if (generatesvg == true) {
     svgwriteone(str("<path d=",chr(34),"M",bx*3.77953," ",by*3.77953," L",ex*3.77953," ",ey*3.77953," ",chr(34)," stroke=",chr(34),"black",chr(34)," stroke-width=",chr(34),"1",chr(34)," fill=",chr(34),"none",chr(34)," />"));
     }
+}
+
+module dxfbpl(tn,bx,by) {
+    dxfwrite(tn,"POLYLINE");
+    dxfwrite(tn,"8");
+    dxfwrite(tn,"default");
+    dxfwrite(tn,"66");
+    dxfwrite(tn,"1");
+    dxfwrite(tn,"70");
+    dxfwrite(tn,"0");
+    dxfwrite(tn,"0");
+    dxfwrite(tn,"VERTEX");
+    dxfwrite(tn,"8");
+    dxfwrite(tn,"default");
+    dxfwrite(tn,"70");
+    dxfwrite(tn,"32");
+    dxfwrite(tn,"10");
+    dxfwrite(tn,str(bx));
+    dxfwrite(tn,"20");
+    dxfwrite(tn,str(by));
+    dxfwrite(tn,"0");
 }
 
 module beginpolyline(bx,by,bz) {
@@ -66,7 +130,20 @@ if (generatedxf == true) {
     dxfwriteone("20");
     dxfwriteone(str(by));
     dxfwriteone("0");
+    dxfbpl(current_tool(),bx,by);}
 }
+
+module dxfapl(tn,bx,by) {
+    dxfwrite(tn,"VERTEX");
+    dxfwrite(tn,"8");
+    dxfwrite(tn,"default");
+    dxfwrite(tn,"70");
+    dxfwrite(tn,"32");
+    dxfwrite(tn,"10");
+    dxfwrite(tn,str(bx));
+    dxfwrite(tn,"20");
+    dxfwrite(tn,str(by));
+    dxfwrite(tn,"0");
 }
 
 module addpolyline(bx,by,bz) {
@@ -81,14 +158,21 @@ if (generatedxf == true) {
     dxfwriteone("20");
     dxfwriteone(str(by));
     dxfwriteone("0");
+    dxfapl(current_tool(),bx,by);
+    }
 }
+
+module dxfcpl(tn) {
+    dxfwrite(tn,"SEQEND");
+    dxfwrite(tn,"0");
 }
 
 module closepolyline() {
 if (generatedxf == true) {
     dxfwriteone("SEQEND");
     dxfwriteone("0");
-}
+    dxfcpl(current_tool());
+    }
 }
 
 module writecomment(comment) {
@@ -105,15 +189,37 @@ if (generategcode == true) {
 }
 }
 
+module dxfpostamble(arg) {
+    dxfwrite(arg,"ENDSEC");
+    dxfwrite(arg,"0");
+    dxfwrite(arg,"EOF");
+}
+
 module closedxffile() {
 if (generatedxf == true) {
-//    dxfwriteone("SEQEND");
-//    dxfwriteone("0");
     dxfwriteone("ENDSEC");
     dxfwriteone("0");
     dxfwriteone("EOF");
 	oclosedxffile();
     echo("CLOSING");
+if (large_ball_tool_no > 0) {	dxfpostamble(large_ball_tool_no);
+    oclosedxflgblfile();
+} 
+if (large_square_tool_no > 0) {	dxfpostamble(large_square_tool_no);
+    oclosedxflgsqfile();
+} 
+if (large_V_tool_no > 0) {	dxfpostamble(large_V_tool_no);
+    oclosedxflgVfile();
+} 
+if (small_ball_tool_no > 0) {	dxfpostamble(small_ball_tool_no);
+    oclosedxfsmblfile();
+} 
+if (small_square_tool_no > 0) {	dxfpostamble(small_square_tool_no);
+    oclosedxfsmsqfile();
+} 
+if (small_V_tool_no > 0) {	dxfpostamble(small_V_tool_no);
+    oclosedxfsmVfile();
+} 
     }
 }
 
