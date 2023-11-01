@@ -74,17 +74,17 @@ Added features since initial upload:
  - endpolyline(); --- this command allows ending one polyline so as to allow multiple lines in a DXF
  - separate dxf files are written out for each tool where tool is ball/square/V and small/large (10/31)
 
-Next feature:
+Not quite working feature:
 
- - exporting SVGs
+ - exporting SVGs --- these are written out upside down due to coordinate differences between OpenSCAD/DXFs and SVGs
 
 Possible future improvements:
 
  - G-code: support for G2/G3 arcs
  - DXF support for curves and the 3rd dimension
- - G-code: import external tool libraries and feeds and speeds from JSON or CSV files
+ - G-code: import external tool libraries and feeds and speeds from JSON or CSV files --- note that it is up to the user to implement Depth per Pass so as to not take a single full-depth pass
  - support for additional tooling shapes such as dovetail tools, or roundover tooling
  - general coding improvements --- current coding style is quite prosaic
- - documentation beyond: https://willadams.gitbook.io/design-into-3d/programming
+ - documentation --- this will probably be at: https://willadams.gitbook.io/design-into-3d/programming
  - possibly re-writing as a literate program
- - generalized modules for cutting out various shapes/geometries
+ - generalized modules for cutting out various shapes/geometries --- a current one is to cut a rectangular area as vertical passes (the horizontal version will be developed presently)
