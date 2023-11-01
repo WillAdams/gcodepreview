@@ -7,20 +7,37 @@ include <gcodepreview.scad>;
 $fa = 2;
 $fs = 0.125;
 
-/* [G-code] */
-Gcode_filename = "gcode.nc"; 
-/* [G-code] */
-generategcode = true;
+/* [Export] */
+Base_filename = "export"; 
 
-/* [DXF] */
-DXF_filename = "gcode.dxf"; 
-/* [DXF] */
-generatedxf = true;
+/* [Export] */
+generatedxf = true; 
+
+/* [Export] */
+generategcode = true; 
+
+/* [Export] */
+generatesvg = false; 
 
 /* [CAM] */
 toolradius = 1.5875;
 /* [CAM] */
-squaretoolno = 102;
+large_ball_tool_no = 0; // [0:0,111:111,101:101,202:202]
+
+/* [CAM] */
+large_square_tool_no = 0; // [0:0,112:112,102:102,201:201]
+
+/* [CAM] */
+large_V_tool_no = 0; // [0:0,301:301,690:690]
+
+/* [CAM] */
+small_ball_tool_no = 0; // [0:0,121:121,111:111,101:101]
+
+/* [CAM] */
+small_square_tool_no = 102; // [0:0,122:122,112:112,102:102]
+
+/* [CAM] */
+small_V_tool_no = 0; // [0:0,390:390,301:301]
 
 /* [Feeds and Speeds] */
 plunge = 100;
@@ -48,15 +65,19 @@ stockorigin = "Center"; // [Lower-Left, Center-Left, Top-Left, Center]
 /* [Stock] */
 retractheight = 9;
 
-opengcodefile(Gcode_filename);
-opendxffile(DXF_filename);
+filename_gcode = str(Base_filename, ".nc");
+filename_dxf = str(Base_filename);
+filename_svg = str(Base_filename, ".svg");
+
+opengcodefile(filename_gcode);
+opendxffile(filename_dxf);
 
 difference() {
 setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
 
 movetosafez();
 
-toolchange(squaretoolno,speed * square_ratio);
+toolchange(small_square_tool_no,speed * square_ratio);
 
 begintoolpath(0,0,0.25);
 beginpolyline(0,0,0.25);
@@ -67,8 +88,7 @@ cutwithfeed(stocklength/2,stockwidth/2,-stockthickness,feed);
 addpolyline(stocklength/2,stockwidth/2,-stockthickness);
 
 endtoolpath();
-endpolyline();
-
+closepolyline();
 }
 
 closegcodefile();
