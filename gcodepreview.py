@@ -6,6 +6,34 @@ def popendxffile(fn):
     global dxf
     dxf = open(fn, "w")
 
+def popendxlgblffile(fn):
+    global dxflgbl
+    dxflgbl = open(fn, "w")
+
+def popendxflgsqfile(fn):
+    global dxfldsq
+    dxflgsq = open(fn, "w")
+
+def popendxflgVfile(fn):
+    global dxflgV
+    dxflgV = open(fn, "w")
+
+def popendxfsmblfile(fn):
+    global dxfsmbl
+    dxfsmbl = open(fn, "w")
+
+def popendxfsmsqfile(fn):
+    global dxfsmsq
+    dxfsmsq = open(fn, "w")
+
+def popendxfsmVfile(fn):
+    global dxfsmV
+    dxfsmV = open(fn, "w")
+
+def popensvgfile(fn):
+    global svg
+    svg = open(fn, "w")
+
 def writeln(*arguments):
     line_to_write = ""
     for element in arguments:
@@ -18,14 +46,92 @@ def writedxf(*arguments):
     for element in arguments:
         line_to_write += element
     dxf.write(line_to_write)
-    print(line_to_write)
     dxf.write("\n")
+
+def writedxflgbl(*arguments):
+    line_to_write = ""
+    for element in arguments:
+        line_to_write += element
+    dxflgbl.write(line_to_write)
+    print(line_to_write)
+    dxflgbl.write("\n")
+
+def writedxflgsq(*arguments):
+    line_to_write = ""
+    for element in arguments:
+        line_to_write += element
+    dxflgsq.write(line_to_write)
+    print(line_to_write)
+    dxflgsq.write("\n")
+
+def writedxflgV(*arguments):
+    line_to_write = ""
+    for element in arguments:
+        line_to_write += element
+    dxflgV.write(line_to_write)
+    print(line_to_write)
+    dxflgV.write("\n")
+
+def writedxfsmbl(*arguments):
+    line_to_write = ""
+    for element in arguments:
+        line_to_write += element
+    dxfsmbl.write(line_to_write)
+    print(line_to_write)
+    dxfsmbl.write("\n")
+
+def writedxfsmsq(*arguments):
+    line_to_write = ""
+    for element in arguments:
+        line_to_write += element
+    dxfsmsq.write(line_to_write)
+    print(line_to_write)
+    dxfsmsq.write("\n")
+
+def writedxfsmV(*arguments):
+    line_to_write = ""
+    for element in arguments:
+        line_to_write += element
+    dxfsmV.write(line_to_write)
+    print(line_to_write)
+    dxfsmV.write("\n")
+
+def writesvg(*arguments):
+    line_to_write = ""
+    for element in arguments:
+        line_to_write += element
+    svg.write(line_to_write)
+    print(line_to_write)
+
+def pwritesvgline():
+    svg.write("\n")
 
 def pclosegcodefile():
     f.close()
 
+def pclosesvgfile():
+    svg.close()
+
 def pclosedxffile():
     dxf.close()
+
+def pclosedxflgblfile():
+    dxflgbl.close()
+
+def pclosedxflgsqfile():
+    dxflgsq.close()
+
+def pclosedxflgVfile():
+    dxflgV.close()
+
+def pclosedxfsmblfile():
+    dxfsmbl.close()
+
+def pclosedxfsmsqfile():
+    dxfsmsq.close()
+
+def pclosedxfsmVfile():
+    dxfsmV.close()
 
 def psetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin):
     global mpx
