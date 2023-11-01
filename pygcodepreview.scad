@@ -4,8 +4,38 @@ module oopengcodefile(fn) {
 	popengcodefile(fn);
 }
 
+module oopensvgfile(fn) {
+	popensvgfile(fn);
+}
+
 module oopendxffile(fn) {
+    echo(fn);
 	popendxffile(fn);
+}
+
+module oopendxflgblfile(fn) {
+	popendxflgblfile(fn);
+}
+
+module oopendxflgsqfile(fn) {
+	popendxflgsqfile(fn);
+}
+
+module oopendxflgVfile(fn) {
+	popendxflgVfile(fn);
+}
+
+module oopendxfsmblfile(fn) {
+	popendxfsmblfile(fn);
+}
+
+module oopendxfsmsqfile(fn) {
+    echo(fn);
+	popendxfsmsqfile(fn);
+}
+
+module oopendxfsmVfile(fn) {
+	popendxfsmVfile(fn);
 }
 
 module oclosegcodefile() {
@@ -14,6 +44,34 @@ module oclosegcodefile() {
 
 module oclosedxffile() {
 	pclosedxffile();
+}
+
+module oclosedxflgblfile() {
+	pclosedxflgblfile();
+}
+
+module oclosedxflgsqfile() {
+	pclosedxflgsqfile();
+}
+
+module oclosedxflgVfile() {
+	pclosedxflgVfile();
+}
+
+module oclosedxfsmblfile() {
+	pclosedxfsmblfile();
+}
+
+module oclosedxfsmsqfile() {
+	pclosedxfsmsqfile();
+}
+
+module oclosedxfsmVfile() {
+	pclosedxfsmVfile();
+}
+
+module oclosesvgfile() {
+	pclosesvgfile();
 }
 
 module owritecomment(comment) {
@@ -28,6 +86,38 @@ module dxfwriteone(first) {
 	writedxf(first);
 //	writeln(first);
 //    echo(first);
+}
+
+module dxfwritelgbl(first) {
+	writedxflgbl(first);
+}
+
+module dxfwritelgsq(first) {
+	writedxflgsq(first);
+}
+
+module dxfwritelgV(first) {
+	writedxflgV(first);
+}
+
+module dxfwritesmbl(first) {
+	writedxfsmbl(first);
+}
+
+module dxfwritesmsq(first) {
+	writedxfsmsq(first);
+}
+
+module dxfwritesmV(first) {
+	writedxfsmV(first);
+}
+
+module svgwriteone(first) {
+	writesvg(first);
+}
+
+module writesvglineend(first) {
+	pwritesvgline();
 }
 
 module owritetwo(first, second) {
