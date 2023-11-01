@@ -72,6 +72,7 @@ Version 0.1 supports setting up stock, origin, rapdi positioning, making cuts, a
 Added features since initial upload:
 
  - endpolyline(); --- this command allows ending one polyline so as to allow multiple lines in a DXF
+ - separate dxf files are written out for each tool where tool is ball/square/V and small/large (10/31)
 
 Next feature:
 
