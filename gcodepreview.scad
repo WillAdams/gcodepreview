@@ -454,7 +454,7 @@ if (generategcode == true) {
 	writecomment("Move to safe Z to avoid workholding");
     owriteone("G53G0Z-5.000");
 }
-    orapid(getxpos(), getypos(), retractheight+5);
+    orapid(getxpos(), getypos(), retractheight+55);
 }
 
 module begintoolpath(bx,by,bz) {
@@ -475,7 +475,7 @@ if (zeroheight == "Top") {
     owritetwo("Z",str(retractheight));
 }
 }
-    orapid(getxpos(), getypos(), retractheight+5);
+    orapid(getxpos(), getypos(), retractheight+55);
 }
 
 module cutoneaxis_setfeed(axis,depth,feed) {
