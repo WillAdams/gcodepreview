@@ -1,6 +1,8 @@
 # gcodepreview
 OpenSCAD library for moving a tool in lines and arcs so as to model how a part would be cut using G-Code, so as to allow OpenSCAD to function as a compleat CAD/CAM solution for subtractive CNC (mills and routers).
 
+![OpenSCAD Cut Joinery Module](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/openscad_cutjoinery.png?raw=true)
+
 Updated to make use of Python in OpenSCAD:
 
 http://www.guenther-sohler.net/openscad/
@@ -65,9 +67,11 @@ and define variables which match the project and then use commands such as:
 
 Tool numbers match those of tooling sold by Carbide 3D (ob. discl., I work for them). Comments are included in the G-code to match those expected by CutViewer.
 
-A complete example file is: gcodepreview_template.scad
+A complete example file is: gcodepreview_template.scad another is openscad_gcodepreview_cutjoinery.tres.scad which is made from an OpenSCAD Graph Editor file:
 
-Version 0.1 supports setting up stock, origin, rapdi positioning, making cuts, and writing out matching G-code, and creating a DXF with polylines.
+![OpenSCAD Graph Editor Cut Joinery File](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/OSGE_cutjoinery.png?raw=true)
+
+Version 0.1 supports setting up stock, origin, rapid positioning, making cuts, and writing out matching G-code, and creating a DXF with polylines.
 
 Added features since initial upload:
 
