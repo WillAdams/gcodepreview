@@ -1,0 +1,5183 @@
+[gd_resource type="Resource" load_steps=583 format=2]
+
+[ext_resource path="res://Library/IO/SavedParameterDescription.cs" type="Script" id=1]
+[ext_resource path="res://Library/IO/SavedModuleDescription.cs" type="Script" id=2]
+[ext_resource path="res://Library/IO/SavedExternalReference.cs" type="Script" id=3]
+[ext_resource path="res://Library/IO/SavedConnection.cs" type="Script" id=4]
+[ext_resource path="res://Library/IO/SavedMainModuleDescription.cs" type="Script" id=5]
+[ext_resource path="res://Library/IO/SavedNode.cs" type="Script" id=6]
+[ext_resource path="res://Library/IO/SavedGraph.cs" type="Script" id=7]
+[ext_resource path="res://Library/IO/SavedVariableCustomizerDescription.cs" type="Script" id=8]
+[ext_resource path="res://Library/IO/SavedVariableDescription.cs" type="Script" id=9]
+[ext_resource path="res://Library/IO/SavedProject.cs" type="Script" id=10]
+
+[sub_resource type="Resource" id=1]
+script = ExtResource( 1 )
+Name = "fn"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=2]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_opengcodefile"
+Name = "opengcodefile"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 1 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=3]
+script = ExtResource( 1 )
+Name = "fn"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=4]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_opensvgfile"
+Name = "opensvgfile"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 3 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=5]
+script = ExtResource( 1 )
+Name = "fn"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=6]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_opendxffile"
+Name = "opendxffile"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 5 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=7]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=8]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=9]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=10]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=11]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_writesvgline"
+Name = "writesvgline"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 7 ), SubResource( 8 ), SubResource( 9 ), SubResource( 10 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=12]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=13]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=14]
+script = ExtResource( 1 )
+Name = "bz"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=15]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_beginpolyline"
+Name = "beginpolyline"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 12 ), SubResource( 13 ), SubResource( 14 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=16]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=17]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=18]
+script = ExtResource( 1 )
+Name = "bz"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=19]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_addpolyline"
+Name = "addpolyline"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 16 ), SubResource( 17 ), SubResource( 18 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=20]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_closepolyline"
+Name = "closepolyline"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [  ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=21]
+script = ExtResource( 1 )
+Name = "comment"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=22]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_writecomment"
+Name = "writecomment"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 21 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=23]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_closegcodefile"
+Name = "closegcodefile"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [  ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=24]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_closedxffile"
+Name = "closedxffile"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [  ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=25]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_closesvgfile"
+Name = "closesvgfile"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [  ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=26]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=27]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=28]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=29]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_oset"
+Name = "oset"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 26 ), SubResource( 27 ), SubResource( 28 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=30]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=31]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=32]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=33]
+script = ExtResource( 1 )
+Name = "r"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=34]
+script = ExtResource( 1 )
+Name = "g"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=35]
+script = ExtResource( 1 )
+Name = "b"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=36]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_otm"
+Name = "otm"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 30 ), SubResource( 31 ), SubResource( 32 ), SubResource( 33 ), SubResource( 34 ), SubResource( 35 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=37]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=38]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=39]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=40]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_ocut"
+Name = "ocut"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 37 ), SubResource( 38 ), SubResource( 39 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=41]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=42]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=43]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=44]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_orapid"
+Name = "orapid"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 41 ), SubResource( 42 ), SubResource( 43 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=45]
+script = ExtResource( 1 )
+Name = "stocklength"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=46]
+script = ExtResource( 1 )
+Name = "stockwidth"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=47]
+script = ExtResource( 1 )
+Name = "stockthickness"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=48]
+script = ExtResource( 1 )
+Name = "zeroheight"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=49]
+script = ExtResource( 1 )
+Name = "stockorigin"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=50]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_setupstock"
+Name = "setupstock"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 45 ), SubResource( 46 ), SubResource( 47 ), SubResource( 48 ), SubResource( 49 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=51]
+script = ExtResource( 1 )
+Name = "tool_number"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=52]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_select_tool"
+Name = "select_tool"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 51 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=53]
+script = ExtResource( 1 )
+Name = "tool_number"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=54]
+script = ExtResource( 1 )
+Name = "speed"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=55]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_toolchange"
+Name = "toolchange"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 53 ), SubResource( 54 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=56]
+script = ExtResource( 1 )
+Name = "es_diameter"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=57]
+script = ExtResource( 1 )
+Name = "es_flute_length"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=58]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_gcp_endmill_square"
+Name = "gcp_endmill_square"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 56 ), SubResource( 57 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=59]
+script = ExtResource( 1 )
+Name = "es_diameter"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=60]
+script = ExtResource( 1 )
+Name = "es_flute_length"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=61]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_gcp_endmill_ball"
+Name = "gcp_endmill_ball"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 59 ), SubResource( 60 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=62]
+script = ExtResource( 1 )
+Name = "es_v_angle"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=63]
+script = ExtResource( 1 )
+Name = "es_diameter"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=64]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_gcp_endmill_v"
+Name = "gcp_endmill_v"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 62 ), SubResource( 63 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=65]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=66]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=67]
+script = ExtResource( 1 )
+Name = "bz"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=68]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=69]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=70]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=71]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_rapidbx"
+Name = "rapidbx"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 65 ), SubResource( 66 ), SubResource( 67 ), SubResource( 68 ), SubResource( 69 ), SubResource( 70 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=72]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=73]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=74]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=75]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_rapid"
+Name = "rapid"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 72 ), SubResource( 73 ), SubResource( 74 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=76]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_movetosafez"
+Name = "movetosafez"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [  ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=77]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=78]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=79]
+script = ExtResource( 1 )
+Name = "bz"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=80]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_begintoolpath"
+Name = "begintoolpath"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 77 ), SubResource( 78 ), SubResource( 79 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=81]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_movetosafeheight"
+Name = "movetosafeheight"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [  ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=82]
+script = ExtResource( 1 )
+Name = "axis"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=83]
+script = ExtResource( 1 )
+Name = "depth"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=84]
+script = ExtResource( 1 )
+Name = "feed"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=85]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_cutoneaxis_setfeed"
+Name = "cutoneaxis_setfeed"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 82 ), SubResource( 83 ), SubResource( 84 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=86]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=87]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=88]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=89]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_cut"
+Name = "cut"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 86 ), SubResource( 87 ), SubResource( 88 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=90]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=91]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=92]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=93]
+script = ExtResource( 1 )
+Name = "feed"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=94]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_cutwithfeed"
+Name = "cutwithfeed"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 90 ), SubResource( 91 ), SubResource( 92 ), SubResource( 93 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=95]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_endtoolpath"
+Name = "endtoolpath"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [  ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=96]
+script = ExtResource( 3 )
+Id = "59805f60-bff2-4374-b955-0eeceb1ad3f5"
+IncludedBy = ""
+References = [  ]
+IncludePath = "C:/Users/willa/OneDrive/Documents/OpenSCAD/libraries/gcodepreview.scad"
+Mode = 1
+Functions = [  ]
+Modules = [ SubResource( 2 ), SubResource( 4 ), SubResource( 6 ), SubResource( 11 ), SubResource( 15 ), SubResource( 19 ), SubResource( 20 ), SubResource( 22 ), SubResource( 23 ), SubResource( 24 ), SubResource( 25 ), SubResource( 29 ), SubResource( 36 ), SubResource( 40 ), SubResource( 44 ), SubResource( 50 ), SubResource( 52 ), SubResource( 55 ), SubResource( 58 ), SubResource( 61 ), SubResource( 64 ), SubResource( 71 ), SubResource( 75 ), SubResource( 76 ), SubResource( 80 ), SubResource( 81 ), SubResource( 85 ), SubResource( 89 ), SubResource( 94 ), SubResource( 95 ) ]
+Variables = [  ]
+
+[sub_resource type="Resource" id=97]
+script = ExtResource( 4 )
+FromId = "6bbd26d8-ec88-4153-941c-7208759059ca"
+FromPort = 0
+ToId = "f3bd62f6-9c23-4d22-9ae3-693f3b9861c3"
+ToPort = 0
+
+[sub_resource type="Resource" id=98]
+script = ExtResource( 4 )
+FromId = "2c6ea103-121d-43dd-a99d-c9f81c4851f8"
+FromPort = 0
+ToId = "f3bd62f6-9c23-4d22-9ae3-693f3b9861c3"
+ToPort = 1
+
+[sub_resource type="Resource" id=99]
+script = ExtResource( 4 )
+FromId = "91a0157e-a5d2-46ca-9770-df21908d4119"
+FromPort = 0
+ToId = "f3bd62f6-9c23-4d22-9ae3-693f3b9861c3"
+ToPort = 2
+
+[sub_resource type="Resource" id=100]
+script = ExtResource( 4 )
+FromId = "c6eeed79-d915-4931-81ea-eeea0da9ec01"
+FromPort = 0
+ToId = "f3bd62f6-9c23-4d22-9ae3-693f3b9861c3"
+ToPort = 3
+
+[sub_resource type="Resource" id=101]
+script = ExtResource( 4 )
+FromId = "ab5c2142-64ad-408d-880a-41d5a28a50a0"
+FromPort = 0
+ToId = "f3bd62f6-9c23-4d22-9ae3-693f3b9861c3"
+ToPort = 4
+
+[sub_resource type="Resource" id=102]
+script = ExtResource( 4 )
+FromId = "f3bd62f6-9c23-4d22-9ae3-693f3b9861c3"
+FromPort = 0
+ToId = "edd975e0-fea7-4f5e-9073-12ebcd070b17"
+ToPort = 0
+
+[sub_resource type="Resource" id=103]
+script = ExtResource( 4 )
+FromId = "53834244-cb73-4e24-9425-c7dc4e185b8b"
+FromPort = 0
+ToId = "edd975e0-fea7-4f5e-9073-12ebcd070b17"
+ToPort = 1
+
+[sub_resource type="Resource" id=104]
+script = ExtResource( 4 )
+FromId = "3c0a12d7-09f9-4bcc-be77-fb8825cb3202"
+FromPort = 0
+ToId = "edd975e0-fea7-4f5e-9073-12ebcd070b17"
+ToPort = 1
+
+[sub_resource type="Resource" id=105]
+script = ExtResource( 4 )
+FromId = "9d264ead-ce50-406a-9721-9fd7510cb2bc"
+FromPort = 0
+ToId = "edd975e0-fea7-4f5e-9073-12ebcd070b17"
+ToPort = 0
+
+[sub_resource type="Resource" id=106]
+script = ExtResource( 4 )
+FromId = "39b01f9d-8dd6-4f0a-99f1-37ff24b5ad29"
+FromPort = 0
+ToId = "edd975e0-fea7-4f5e-9073-12ebcd070b17"
+ToPort = 0
+
+[sub_resource type="Resource" id=107]
+script = ExtResource( 4 )
+FromId = "99ef87c2-e965-43f0-9a91-aeb90c1ec2f0"
+FromPort = 0
+ToId = "edd975e0-fea7-4f5e-9073-12ebcd070b17"
+ToPort = 1
+
+[sub_resource type="Resource" id=108]
+script = ExtResource( 4 )
+FromId = "6bbd26d8-ec88-4153-941c-7208759059ca"
+FromPort = 0
+ToId = "bda75e20-160d-4b2f-a0c7-b7d5e62341b0"
+ToPort = 0
+
+[sub_resource type="Resource" id=109]
+script = ExtResource( 4 )
+FromId = "91a0157e-a5d2-46ca-9770-df21908d4119"
+FromPort = 0
+ToId = "60de9c8a-1f00-4b0d-bcb6-2c574abd0b19"
+ToPort = 0
+
+[sub_resource type="Resource" id=110]
+script = ExtResource( 4 )
+FromId = "01c895a4-b171-4995-b9ed-7b359e042a38"
+FromPort = 0
+ToId = "edd975e0-fea7-4f5e-9073-12ebcd070b17"
+ToPort = 1
+
+[sub_resource type="Resource" id=111]
+script = ExtResource( 4 )
+FromId = "19e4a405-27be-4cc2-945d-5cb110ae3191"
+FromPort = 0
+ToId = "edd975e0-fea7-4f5e-9073-12ebcd070b17"
+ToPort = 0
+
+[sub_resource type="Resource" id=112]
+script = ExtResource( 4 )
+FromId = "1fe0fd3d-1cb7-4d7e-af61-13801cfd8ed7"
+FromPort = 0
+ToId = "edd975e0-fea7-4f5e-9073-12ebcd070b17"
+ToPort = 1
+
+[sub_resource type="Resource" id=113]
+script = ExtResource( 4 )
+FromId = "c92cbf9b-a66a-4642-84db-0010536eca79"
+FromPort = 0
+ToId = "d64b1623-57b5-42ea-bb37-64b346a52224"
+ToPort = 0
+
+[sub_resource type="Resource" id=114]
+script = ExtResource( 4 )
+FromId = "d01d52ae-8b8e-42ab-9ec5-8e89d6b31f71"
+FromPort = 0
+ToId = "9d264ead-ce50-406a-9721-9fd7510cb2bc"
+ToPort = 0
+
+[sub_resource type="Resource" id=115]
+script = ExtResource( 4 )
+FromId = "a86e648b-dcdc-4f88-97cf-cbd916d27392"
+FromPort = 0
+ToId = "39b01f9d-8dd6-4f0a-99f1-37ff24b5ad29"
+ToPort = 0
+
+[sub_resource type="Resource" id=116]
+script = ExtResource( 4 )
+FromId = "3d9e0747-9865-4039-b010-7c24dfb9cd6c"
+FromPort = 0
+ToId = "7599686d-341d-4991-9b43-08a19f6fb54f"
+ToPort = 0
+
+[sub_resource type="Resource" id=117]
+script = ExtResource( 4 )
+FromId = "234b5b08-3b54-48af-9538-91234e29fa78"
+FromPort = 0
+ToId = "19e4a405-27be-4cc2-945d-5cb110ae3191"
+ToPort = 0
+
+[sub_resource type="Resource" id=118]
+script = ExtResource( 4 )
+FromId = "21bdfc0a-114f-4429-8afd-f3b4c866110a"
+FromPort = 0
+ToId = "c92cbf9b-a66a-4642-84db-0010536eca79"
+ToPort = 0
+
+[sub_resource type="Resource" id=119]
+script = ExtResource( 4 )
+FromId = "9fc0c904-8ada-4245-8ade-f0b98ebf99f6"
+FromPort = 0
+ToId = "c92cbf9b-a66a-4642-84db-0010536eca79"
+ToPort = 1
+
+[sub_resource type="Resource" id=120]
+script = ExtResource( 4 )
+FromId = "0b0341d6-fb32-4977-a433-7d7408aa5334"
+FromPort = 0
+ToId = "5a1749a5-4e49-4cfe-b139-795163cc74f6"
+ToPort = 1
+
+[sub_resource type="Resource" id=121]
+script = ExtResource( 4 )
+FromId = "8d231e6c-2bbc-422b-97d7-96b61f9317f4"
+FromPort = 0
+ToId = "3d9e0747-9865-4039-b010-7c24dfb9cd6c"
+ToPort = 1
+
+[sub_resource type="Resource" id=122]
+script = ExtResource( 4 )
+FromId = "21bdfc0a-114f-4429-8afd-f3b4c866110a"
+FromPort = 0
+ToId = "3d9e0747-9865-4039-b010-7c24dfb9cd6c"
+ToPort = 0
+
+[sub_resource type="Resource" id=123]
+script = ExtResource( 4 )
+FromId = "21bdfc0a-114f-4429-8afd-f3b4c866110a"
+FromPort = 0
+ToId = "833b8bd7-4e41-4989-bdae-0ea6de590429"
+ToPort = 0
+
+[sub_resource type="Resource" id=124]
+script = ExtResource( 4 )
+FromId = "2c6ea103-121d-43dd-a99d-c9f81c4851f8"
+FromPort = 0
+ToId = "094d1da4-7995-483e-822f-aff0d73ba3e9"
+ToPort = 0
+
+[sub_resource type="Resource" id=125]
+script = ExtResource( 4 )
+FromId = "91a0157e-a5d2-46ca-9770-df21908d4119"
+FromPort = 0
+ToId = "06d55f49-d749-4155-9b35-31412fcf84b5"
+ToPort = 1
+
+[sub_resource type="Resource" id=126]
+script = ExtResource( 4 )
+FromId = "91a0157e-a5d2-46ca-9770-df21908d4119"
+FromPort = 0
+ToId = "63b4e62f-4ad4-40b1-ab56-1195d13a232f"
+ToPort = 1
+
+[sub_resource type="Resource" id=127]
+script = ExtResource( 4 )
+FromId = "bda75e20-160d-4b2f-a0c7-b7d5e62341b0"
+FromPort = 0
+ToId = "63b4e62f-4ad4-40b1-ab56-1195d13a232f"
+ToPort = 0
+
+[sub_resource type="Resource" id=128]
+script = ExtResource( 4 )
+FromId = "2c6ea103-121d-43dd-a99d-c9f81c4851f8"
+FromPort = 0
+ToId = "0b441d83-6416-443b-be70-fc56d0d797a1"
+ToPort = 0
+
+[sub_resource type="Resource" id=129]
+script = ExtResource( 4 )
+FromId = "0b441d83-6416-443b-be70-fc56d0d797a1"
+FromPort = 0
+ToId = "06d55f49-d749-4155-9b35-31412fcf84b5"
+ToPort = 0
+
+[sub_resource type="Resource" id=130]
+script = ExtResource( 4 )
+FromId = "a7c05418-4fb8-422a-95b4-fa00b8b995c6"
+FromPort = 0
+ToId = "edd975e0-fea7-4f5e-9073-12ebcd070b17"
+ToPort = 1
+
+[sub_resource type="Resource" id=131]
+script = ExtResource( 4 )
+FromId = "094d1da4-7995-483e-822f-aff0d73ba3e9"
+FromPort = 0
+ToId = "a7c05418-4fb8-422a-95b4-fa00b8b995c6"
+ToPort = 0
+
+[sub_resource type="Resource" id=132]
+script = ExtResource( 4 )
+FromId = "094d1da4-7995-483e-822f-aff0d73ba3e9"
+FromPort = 0
+ToId = "a7c05418-4fb8-422a-95b4-fa00b8b995c6"
+ToPort = 1
+
+[sub_resource type="Resource" id=133]
+script = ExtResource( 4 )
+FromId = "0b441d83-6416-443b-be70-fc56d0d797a1"
+FromPort = 0
+ToId = "a7c05418-4fb8-422a-95b4-fa00b8b995c6"
+ToPort = 3
+
+[sub_resource type="Resource" id=134]
+script = ExtResource( 4 )
+FromId = "0b441d83-6416-443b-be70-fc56d0d797a1"
+FromPort = 0
+ToId = "a7c05418-4fb8-422a-95b4-fa00b8b995c6"
+ToPort = 4
+
+[sub_resource type="Resource" id=135]
+script = ExtResource( 4 )
+FromId = "60de9c8a-1f00-4b0d-bcb6-2c574abd0b19"
+FromPort = 0
+ToId = "a7c05418-4fb8-422a-95b4-fa00b8b995c6"
+ToPort = 5
+
+[sub_resource type="Resource" id=136]
+script = ExtResource( 4 )
+FromId = "1a18f7fe-526f-45f8-834f-f0c2c8a88c94"
+FromPort = 0
+ToId = "a7c05418-4fb8-422a-95b4-fa00b8b995c6"
+ToPort = 6
+
+[sub_resource type="Resource" id=137]
+script = ExtResource( 4 )
+FromId = "094d1da4-7995-483e-822f-aff0d73ba3e9"
+FromPort = 0
+ToId = "0d8c88ba-5631-496c-a61e-48f541a48fc9"
+ToPort = 0
+
+[sub_resource type="Resource" id=138]
+script = ExtResource( 4 )
+FromId = "094d1da4-7995-483e-822f-aff0d73ba3e9"
+FromPort = 0
+ToId = "0d8c88ba-5631-496c-a61e-48f541a48fc9"
+ToPort = 1
+
+[sub_resource type="Resource" id=139]
+script = ExtResource( 4 )
+FromId = "1a18f7fe-526f-45f8-834f-f0c2c8a88c94"
+FromPort = 0
+ToId = "0d8c88ba-5631-496c-a61e-48f541a48fc9"
+ToPort = 6
+
+[sub_resource type="Resource" id=140]
+script = ExtResource( 4 )
+FromId = "60de9c8a-1f00-4b0d-bcb6-2c574abd0b19"
+FromPort = 0
+ToId = "0d8c88ba-5631-496c-a61e-48f541a48fc9"
+ToPort = 5
+
+[sub_resource type="Resource" id=141]
+script = ExtResource( 4 )
+FromId = "0b441d83-6416-443b-be70-fc56d0d797a1"
+FromPort = 0
+ToId = "0d8c88ba-5631-496c-a61e-48f541a48fc9"
+ToPort = 4
+
+[sub_resource type="Resource" id=142]
+script = ExtResource( 4 )
+FromId = "0b441d83-6416-443b-be70-fc56d0d797a1"
+FromPort = 0
+ToId = "0d8c88ba-5631-496c-a61e-48f541a48fc9"
+ToPort = 3
+
+[sub_resource type="Resource" id=143]
+script = ExtResource( 4 )
+FromId = "0d8c88ba-5631-496c-a61e-48f541a48fc9"
+FromPort = 0
+ToId = "edd975e0-fea7-4f5e-9073-12ebcd070b17"
+ToPort = 1
+
+[sub_resource type="Resource" id=144]
+script = ExtResource( 5 )
+Id = "62455917-6aa9-4df5-b567-f6a79f2318e8"
+Name = "<main>"
+NodeName = ""
+Description = "The main entrypoint."
+IsExternal = false
+IsBuiltin = true
+ExternalSource = ""
+Parameters = [  ]
+
+[sub_resource type="Resource" id=145]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1180, 80 )
+Id = "9d264ead-ce50-406a-9721-9fd7510cb2bc"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_opengcodefile"
+}
+
+[sub_resource type="Resource" id=146]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1080, 140 )
+Id = "39b01f9d-8dd6-4f0a-99f1-37ff24b5ad29"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_opendxffile"
+}
+
+[sub_resource type="Resource" id=147]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.Difference"
+Position = Vector2( 2180, 20 )
+Id = "edd975e0-fea7-4f5e-9073-12ebcd070b17"
+StoredData = {
+}
+
+[sub_resource type="Resource" id=148]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 280, 400 )
+Id = "f3bd62f6-9c23-4d22-9ae3-693f3b9861c3"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_setupstock"
+}
+
+[sub_resource type="Resource" id=149]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 0, 440 )
+Id = "6bbd26d8-ec88-4153-941c-7208759059ca"
+StoredData = {
+"variable_description_id": "cb603a02-cbf4-4f2d-bcd3-c1c12ed51fc9"
+}
+
+[sub_resource type="Resource" id=150]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 0, 540 )
+Id = "2c6ea103-121d-43dd-a99d-c9f81c4851f8"
+StoredData = {
+"variable_description_id": "f56dee88-ca87-4ae4-9e87-941df73b940a"
+}
+
+[sub_resource type="Resource" id=151]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 0, 640 )
+Id = "91a0157e-a5d2-46ca-9770-df21908d4119"
+StoredData = {
+"variable_description_id": "4b258d37-5139-437a-a6dc-7b808098c815"
+}
+
+[sub_resource type="Resource" id=152]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 0, 740 )
+Id = "c6eeed79-d915-4931-81ea-eeea0da9ec01"
+StoredData = {
+"variable_description_id": "160faf4a-6679-43f2-b211-3e348ed88de8"
+}
+
+[sub_resource type="Resource" id=153]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 0, 840 )
+Id = "ab5c2142-64ad-408d-880a-41d5a28a50a0"
+StoredData = {
+"variable_description_id": "e2a1d82f-c1f1-4475-88b0-5f7e9a1b870a"
+}
+
+[sub_resource type="Resource" id=154]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 0, 1160 )
+Id = "c7ffb3a8-c8ec-49b8-b135-48dfa89cf830"
+StoredData = {
+"variable_description_id": "e67d606f-1449-4463-baa6-265910923574"
+}
+
+[sub_resource type="Resource" id=155]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1640, 1320 )
+Id = "53834244-cb73-4e24-9425-c7dc4e185b8b"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_endtoolpath"
+}
+
+[sub_resource type="Resource" id=156]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1760, 1340 )
+Id = "3c0a12d7-09f9-4bcc-be77-fb8825cb3202"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_closegcodefile"
+}
+
+[sub_resource type="Resource" id=157]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1900, 1360 )
+Id = "99ef87c2-e965-43f0-9a91-aeb90c1ec2f0"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_closedxffile"
+}
+
+[sub_resource type="Resource" id=158]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.DivideOperator"
+Position = Vector2( 540, 460 )
+Id = "bda75e20-160d-4b2f-a0c7-b7d5e62341b0"
+StoredData = {
+"first_operand_port_type": "3",
+"input_literal_set.0": "False",
+"input_literal_set.1": "False",
+"input_literal_value.0": "0",
+"input_literal_value.1": "2",
+"second_operand_port_type": "3"
+}
+
+[sub_resource type="Resource" id=159]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.MultiplyOperator"
+Position = Vector2( 540, 600 )
+Id = "60de9c8a-1f00-4b0d-bcb6-2c574abd0b19"
+StoredData = {
+"first_operand_port_type": "3",
+"input_literal_set.0": "False",
+"input_literal_set.1": "False",
+"input_literal_value.0": "0",
+"input_literal_value.1": "-1",
+"second_operand_port_type": "3"
+}
+
+[sub_resource type="Resource" id=160]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 0, 1060 )
+Id = "1a18f7fe-526f-45f8-834f-f0c2c8a88c94"
+StoredData = {
+"variable_description_id": "cc07ff83-8678-425f-9df8-6ede8cb71228"
+}
+
+[sub_resource type="Resource" id=161]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 0, 1360 )
+Id = "5a6db16e-be31-44c1-8d2d-823828b0401c"
+StoredData = {
+"variable_description_id": "02758f07-c18e-49db-9c9e-75f2dbd12b14"
+}
+
+[sub_resource type="Resource" id=162]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 0, 1260 )
+Id = "5d95cc3c-2eda-4926-910c-796d5e0cd4e9"
+StoredData = {
+"variable_description_id": "c458fc4b-78b4-4b58-990c-1dc02c0baa2c"
+}
+
+[sub_resource type="Resource" id=163]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1140, 320 )
+Id = "01c895a4-b171-4995-b9ed-7b359e042a38"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_movetosafeheight"
+}
+
+[sub_resource type="Resource" id=164]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1000, 220 )
+Id = "19e4a405-27be-4cc2-945d-5cb110ae3191"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_opensvgfile"
+}
+
+[sub_resource type="Resource" id=165]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 2020, 1380 )
+Id = "1fe0fd3d-1cb7-4d7e-af61-13801cfd8ed7"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_closesvgfile"
+}
+
+[sub_resource type="Resource" id=166]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 0, 100 )
+Id = "21bdfc0a-114f-4429-8afd-f3b4c866110a"
+StoredData = {
+"variable_description_id": "e1580bb5-be1a-49c7-9901-36e57f1a3558"
+}
+
+[sub_resource type="Resource" id=167]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.LiteralString"
+Position = Vector2( 0, 180 )
+Id = "9fc0c904-8ada-4245-8ade-f0b98ebf99f6"
+StoredData = {
+"output_literal_set.0": "False",
+"output_literal_value.0": ".nc"
+}
+
+[sub_resource type="Resource" id=168]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.LiteralString"
+Position = Vector2( 0, 260 )
+Id = "0b0341d6-fb32-4977-a433-7d7408aa5334"
+StoredData = {
+"output_literal_set.0": "False",
+"output_literal_value.0": ".dxf"
+}
+
+[sub_resource type="Resource" id=169]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.LiteralString"
+Position = Vector2( 0, 340 )
+Id = "8d231e6c-2bbc-422b-97d7-96b61f9317f4"
+StoredData = {
+"output_literal_set.0": "False",
+"output_literal_value.0": ".svg"
+}
+
+[sub_resource type="Resource" id=170]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.Str"
+Position = Vector2( 300, 80 )
+Id = "c92cbf9b-a66a-4642-84db-0010536eca79"
+StoredData = {
+"input_count": "2"
+}
+
+[sub_resource type="Resource" id=171]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.Str"
+Position = Vector2( 420, 180 )
+Id = "5a1749a5-4e49-4cfe-b139-795163cc74f6"
+StoredData = {
+"input_count": "2"
+}
+
+[sub_resource type="Resource" id=172]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.Str"
+Position = Vector2( 540, 280 )
+Id = "3d9e0747-9865-4039-b010-7c24dfb9cd6c"
+StoredData = {
+"input_count": "2"
+}
+
+[sub_resource type="Resource" id=173]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.SetVariable"
+Position = Vector2( 680, 80 )
+Id = "d64b1623-57b5-42ea-bb37-64b346a52224"
+StoredData = {
+"input_literal_set.0": "False",
+"input_literal_value.0": "",
+"variable_description_id": "c1697841-41b0-45c6-824d-b886c36fc8d7"
+}
+
+[sub_resource type="Resource" id=174]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 840, 80 )
+Id = "d01d52ae-8b8e-42ab-9ec5-8e89d6b31f71"
+StoredData = {
+"variable_description_id": "c1697841-41b0-45c6-824d-b886c36fc8d7"
+}
+
+[sub_resource type="Resource" id=175]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.SetVariable"
+Position = Vector2( 700, 180 )
+Id = "833b8bd7-4e41-4989-bdae-0ea6de590429"
+StoredData = {
+"input_literal_set.0": "False",
+"input_literal_value.0": "",
+"variable_description_id": "e33ad87e-dca4-4c6b-a4e3-3b7366589f38"
+}
+
+[sub_resource type="Resource" id=176]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 840, 180 )
+Id = "a86e648b-dcdc-4f88-97cf-cbd916d27392"
+StoredData = {
+"variable_description_id": "e33ad87e-dca4-4c6b-a4e3-3b7366589f38"
+}
+
+[sub_resource type="Resource" id=177]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.SetVariable"
+Position = Vector2( 700, 280 )
+Id = "7599686d-341d-4991-9b43-08a19f6fb54f"
+StoredData = {
+"input_literal_set.0": "False",
+"input_literal_value.0": "",
+"variable_description_id": "8caedb9e-00ab-49ff-8f6d-dd6f38a68ab1"
+}
+
+[sub_resource type="Resource" id=178]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 840, 280 )
+Id = "234b5b08-3b54-48af-9538-91234e29fa78"
+StoredData = {
+"variable_description_id": "8caedb9e-00ab-49ff-8f6d-dd6f38a68ab1"
+}
+
+[sub_resource type="Resource" id=179]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.DivideOperator"
+Position = Vector2( 540, 880 )
+Id = "094d1da4-7995-483e-822f-aff0d73ba3e9"
+StoredData = {
+"first_operand_port_type": "3",
+"input_literal_set.0": "False",
+"input_literal_set.1": "False",
+"input_literal_value.0": "0",
+"input_literal_value.1": "4",
+"second_operand_port_type": "3"
+}
+
+[sub_resource type="Resource" id=180]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.AddOperator"
+Position = Vector2( 700, 940 )
+Id = "06d55f49-d749-4155-9b35-31412fcf84b5"
+StoredData = {
+"first_operand_port_type": "3",
+"input_literal_set.0": "False",
+"input_literal_set.1": "False",
+"input_literal_value.0": "0",
+"input_literal_value.1": "0",
+"second_operand_port_type": "3"
+}
+
+[sub_resource type="Resource" id=181]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.LiteralString"
+Position = Vector2( 280, 920 )
+Id = "b0ece7c8-ef3c-425a-b402-4a7089f0d7cc"
+StoredData = {
+"output_literal_set.0": "False",
+"output_literal_value.0": "horizontal"
+}
+
+[sub_resource type="Resource" id=182]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.LiteralString"
+Position = Vector2( 280, 820 )
+Id = "a00b214a-5a05-4f5a-baa9-427e37fbffab"
+StoredData = {
+"output_literal_set.0": "False",
+"output_literal_value.0": "vertical"
+}
+
+[sub_resource type="Resource" id=183]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.AddOperator"
+Position = Vector2( 700, 1080 )
+Id = "63b4e62f-4ad4-40b1-ab56-1195d13a232f"
+StoredData = {
+"first_operand_port_type": "3",
+"input_literal_set.0": "False",
+"input_literal_set.1": "False",
+"input_literal_value.0": "0",
+"input_literal_value.1": "0",
+"second_operand_port_type": "3"
+}
+
+[sub_resource type="Resource" id=184]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.DivideOperator"
+Position = Vector2( 540, 740 )
+Id = "0b441d83-6416-443b-be70-fc56d0d797a1"
+StoredData = {
+"first_operand_port_type": "3",
+"input_literal_set.0": "False",
+"input_literal_set.1": "False",
+"input_literal_value.0": "0",
+"input_literal_value.1": "2",
+"second_operand_port_type": "3"
+}
+
+[sub_resource type="Resource" id=185]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1640, 160 )
+Id = "a7c05418-4fb8-422a-95b4-fa00b8b995c6"
+StoredData = {
+"input_literal_set.0": "False",
+"input_literal_set.1": "False",
+"input_literal_set.2": "False",
+"input_literal_set.3": "False",
+"input_literal_set.4": "False",
+"input_literal_set.5": "False",
+"input_literal_set.6": "False",
+"input_literal_set.7": "False",
+"input_literal_value.0": "0",
+"input_literal_value.1": "0",
+"input_literal_value.2": "0",
+"input_literal_value.3": "0",
+"input_literal_value.4": "0",
+"input_literal_value.5": "0",
+"input_literal_value.6": "0",
+"input_literal_value.7": "0",
+"module_description_id": "ca330f15-b7ba-47eb-b95b-26178368d3ec"
+}
+
+[sub_resource type="Resource" id=186]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1860, 200 )
+Id = "0d8c88ba-5631-496c-a61e-48f541a48fc9"
+StoredData = {
+"input_literal_set.0": "False",
+"input_literal_set.1": "False",
+"input_literal_set.2": "False",
+"input_literal_set.3": "False",
+"input_literal_set.4": "False",
+"input_literal_set.5": "False",
+"input_literal_set.6": "False",
+"input_literal_set.7": "False",
+"input_literal_value.0": "0",
+"input_literal_value.1": "0",
+"input_literal_value.2": "0",
+"input_literal_value.3": "0",
+"input_literal_value.4": "0",
+"input_literal_value.5": "0",
+"input_literal_value.6": "0",
+"input_literal_value.7": "0",
+"module_description_id": "5a5423a4-8586-472d-bb98-3f0b66502a7c"
+}
+
+[sub_resource type="Resource" id=187]
+script = ExtResource( 7 )
+Description = SubResource( 144 )
+Nodes = [ SubResource( 145 ), SubResource( 146 ), SubResource( 147 ), SubResource( 148 ), SubResource( 149 ), SubResource( 150 ), SubResource( 151 ), SubResource( 152 ), SubResource( 153 ), SubResource( 154 ), SubResource( 155 ), SubResource( 156 ), SubResource( 157 ), SubResource( 158 ), SubResource( 159 ), SubResource( 160 ), SubResource( 161 ), SubResource( 162 ), SubResource( 163 ), SubResource( 164 ), SubResource( 165 ), SubResource( 166 ), SubResource( 167 ), SubResource( 168 ), SubResource( 169 ), SubResource( 170 ), SubResource( 171 ), SubResource( 172 ), SubResource( 173 ), SubResource( 174 ), SubResource( 175 ), SubResource( 176 ), SubResource( 177 ), SubResource( 178 ), SubResource( 179 ), SubResource( 180 ), SubResource( 181 ), SubResource( 182 ), SubResource( 183 ), SubResource( 184 ), SubResource( 185 ), SubResource( 186 ) ]
+Connections = [ SubResource( 97 ), SubResource( 98 ), SubResource( 99 ), SubResource( 100 ), SubResource( 101 ), SubResource( 102 ), SubResource( 103 ), SubResource( 104 ), SubResource( 105 ), SubResource( 106 ), SubResource( 107 ), SubResource( 108 ), SubResource( 109 ), SubResource( 110 ), SubResource( 111 ), SubResource( 112 ), SubResource( 113 ), SubResource( 114 ), SubResource( 115 ), SubResource( 116 ), SubResource( 117 ), SubResource( 118 ), SubResource( 119 ), SubResource( 120 ), SubResource( 121 ), SubResource( 122 ), SubResource( 123 ), SubResource( 124 ), SubResource( 125 ), SubResource( 126 ), SubResource( 127 ), SubResource( 128 ), SubResource( 129 ), SubResource( 130 ), SubResource( 131 ), SubResource( 132 ), SubResource( 133 ), SubResource( 134 ), SubResource( 135 ), SubResource( 136 ), SubResource( 137 ), SubResource( 138 ), SubResource( 139 ), SubResource( 140 ), SubResource( 141 ), SubResource( 142 ), SubResource( 143 ) ]
+
+[sub_resource type="Resource" id=188]
+script = ExtResource( 4 )
+FromId = "e05bcb18-5b11-48c3-a629-608b3d1f9220"
+FromPort = 0
+ToId = "cdf94df1-c041-48ec-a336-817ff5b0af25"
+ToPort = 0
+
+[sub_resource type="Resource" id=189]
+script = ExtResource( 4 )
+FromId = "da3548af-d3b6-4484-a5c8-d4f4530ff8d7"
+FromPort = 0
+ToId = "cdf94df1-c041-48ec-a336-817ff5b0af25"
+ToPort = 2
+
+[sub_resource type="Resource" id=190]
+script = ExtResource( 4 )
+FromId = "f76e069d-80fe-4851-9264-56ff45b36545"
+FromPort = 0
+ToId = "bf48ff59-f7c0-45ea-bb44-db3d94236b5d"
+ToPort = 3
+
+[sub_resource type="Resource" id=191]
+script = ExtResource( 4 )
+FromId = "13b8776d-432e-400f-a258-32a9c392e016"
+FromPort = 0
+ToId = "cdf94df1-c041-48ec-a336-817ff5b0af25"
+ToPort = 1
+
+[sub_resource type="Resource" id=192]
+script = ExtResource( 4 )
+FromId = "37bd8e25-4154-4f04-9298-9669b8d63ded"
+FromPort = 0
+ToId = "01397380-cb87-492f-aa07-c947f5b9f19e"
+ToPort = 0
+
+[sub_resource type="Resource" id=193]
+script = ExtResource( 4 )
+FromId = "566eef62-42cb-4007-8756-5546cd9c837c"
+FromPort = 0
+ToId = "d964a084-098b-4562-8f96-78d65826702c"
+ToPort = 0
+
+[sub_resource type="Resource" id=194]
+script = ExtResource( 4 )
+FromId = "01397380-cb87-492f-aa07-c947f5b9f19e"
+FromPort = 0
+ToId = "d3c214a5-907b-4507-9257-2cf025fbda98"
+ToPort = 1
+
+[sub_resource type="Resource" id=195]
+script = ExtResource( 4 )
+FromId = "d3c214a5-907b-4507-9257-2cf025fbda98"
+FromPort = 0
+ToId = "eecfafef-fc51-49be-a47a-3245e856bd46"
+ToPort = 1
+
+[sub_resource type="Resource" id=196]
+script = ExtResource( 4 )
+FromId = "d964a084-098b-4562-8f96-78d65826702c"
+FromPort = 0
+ToId = "3159f087-771b-4ab2-975f-4feee20453f2"
+ToPort = 1
+
+[sub_resource type="Resource" id=197]
+script = ExtResource( 4 )
+FromId = "eecfafef-fc51-49be-a47a-3245e856bd46"
+FromPort = 0
+ToId = "3159f087-771b-4ab2-975f-4feee20453f2"
+ToPort = 0
+
+[sub_resource type="Resource" id=198]
+script = ExtResource( 4 )
+FromId = "e27b4951-8c3c-4f9a-b187-8a54a46fccb8"
+FromPort = 0
+ToId = "430512ce-a549-4f18-aa9b-39e527483ba5"
+ToPort = 0
+
+[sub_resource type="Resource" id=199]
+script = ExtResource( 4 )
+FromId = "4937bf92-6eb4-4fd6-bcee-655d635e5958"
+FromPort = 0
+ToId = "430512ce-a549-4f18-aa9b-39e527483ba5"
+ToPort = 0
+
+[sub_resource type="Resource" id=200]
+script = ExtResource( 4 )
+FromId = "e547559a-dbc4-4d52-a114-705aed901ffc"
+FromPort = 0
+ToId = "430512ce-a549-4f18-aa9b-39e527483ba5"
+ToPort = 0
+
+[sub_resource type="Resource" id=201]
+script = ExtResource( 4 )
+FromId = "920a946e-1d3c-4995-b042-131bc1e504e5"
+FromPort = 0
+ToId = "430512ce-a549-4f18-aa9b-39e527483ba5"
+ToPort = 0
+
+[sub_resource type="Resource" id=202]
+script = ExtResource( 4 )
+FromId = "fb0dfc7d-d8aa-4ca5-b0ad-4b59d2e3958d"
+FromPort = 0
+ToId = "44a123f7-9194-4484-8e9d-e42f088b1bc0"
+ToPort = 2
+
+[sub_resource type="Resource" id=203]
+script = ExtResource( 4 )
+FromId = "fb0dfc7d-d8aa-4ca5-b0ad-4b59d2e3958d"
+FromPort = 0
+ToId = "ec441094-9e5f-4804-8302-a51933a220e8"
+ToPort = 2
+
+[sub_resource type="Resource" id=204]
+script = ExtResource( 4 )
+FromId = "fb0dfc7d-d8aa-4ca5-b0ad-4b59d2e3958d"
+FromPort = 0
+ToId = "efbc48f0-82b9-435d-a7d6-a5d8651a1dbf"
+ToPort = 2
+
+[sub_resource type="Resource" id=205]
+script = ExtResource( 4 )
+FromId = "e2c20fe0-3bf8-4307-946c-c0ef74d11d53"
+FromPort = 0
+ToId = "ad54f46b-2716-4c7d-b8ee-72c18b5cf6bc"
+ToPort = 1
+
+[sub_resource type="Resource" id=206]
+script = ExtResource( 4 )
+FromId = "937270ec-fe79-4d83-909c-f71db42da6db"
+FromPort = 0
+ToId = "ad54f46b-2716-4c7d-b8ee-72c18b5cf6bc"
+ToPort = 1
+
+[sub_resource type="Resource" id=207]
+script = ExtResource( 4 )
+FromId = "ad54f46b-2716-4c7d-b8ee-72c18b5cf6bc"
+FromPort = 0
+ToId = "430512ce-a549-4f18-aa9b-39e527483ba5"
+ToPort = 0
+
+[sub_resource type="Resource" id=208]
+script = ExtResource( 4 )
+FromId = "2a37913f-f304-436f-8325-964936eb0ecf"
+FromPort = 0
+ToId = "ad54f46b-2716-4c7d-b8ee-72c18b5cf6bc"
+ToPort = 1
+
+[sub_resource type="Resource" id=209]
+script = ExtResource( 4 )
+FromId = "68091336-47e7-4235-b0a9-0fdfdc2d1a32"
+FromPort = 0
+ToId = "ad54f46b-2716-4c7d-b8ee-72c18b5cf6bc"
+ToPort = 1
+
+[sub_resource type="Resource" id=210]
+script = ExtResource( 4 )
+FromId = "eecfafef-fc51-49be-a47a-3245e856bd46"
+FromPort = 0
+ToId = "e27b4951-8c3c-4f9a-b187-8a54a46fccb8"
+ToPort = 1
+
+[sub_resource type="Resource" id=211]
+script = ExtResource( 4 )
+FromId = "eecfafef-fc51-49be-a47a-3245e856bd46"
+FromPort = 0
+ToId = "4937bf92-6eb4-4fd6-bcee-655d635e5958"
+ToPort = 1
+
+[sub_resource type="Resource" id=212]
+script = ExtResource( 4 )
+FromId = "eecfafef-fc51-49be-a47a-3245e856bd46"
+FromPort = 0
+ToId = "920a946e-1d3c-4995-b042-131bc1e504e5"
+ToPort = 1
+
+[sub_resource type="Resource" id=213]
+script = ExtResource( 4 )
+FromId = "eecfafef-fc51-49be-a47a-3245e856bd46"
+FromPort = 0
+ToId = "e547559a-dbc4-4d52-a114-705aed901ffc"
+ToPort = 1
+
+[sub_resource type="Resource" id=214]
+script = ExtResource( 4 )
+FromId = "3159f087-771b-4ab2-975f-4feee20453f2"
+FromPort = 0
+ToId = "68091336-47e7-4235-b0a9-0fdfdc2d1a32"
+ToPort = 1
+
+[sub_resource type="Resource" id=215]
+script = ExtResource( 4 )
+FromId = "3159f087-771b-4ab2-975f-4feee20453f2"
+FromPort = 0
+ToId = "2a37913f-f304-436f-8325-964936eb0ecf"
+ToPort = 1
+
+[sub_resource type="Resource" id=216]
+script = ExtResource( 4 )
+FromId = "3159f087-771b-4ab2-975f-4feee20453f2"
+FromPort = 0
+ToId = "937270ec-fe79-4d83-909c-f71db42da6db"
+ToPort = 1
+
+[sub_resource type="Resource" id=217]
+script = ExtResource( 4 )
+FromId = "20a4fb26-0880-4dbd-bf6d-0f843b9fa830"
+FromPort = 0
+ToId = "7b605a88-a29b-424f-935a-ff73e03916ee"
+ToPort = 0
+
+[sub_resource type="Resource" id=218]
+script = ExtResource( 4 )
+FromId = "d964a084-098b-4562-8f96-78d65826702c"
+FromPort = 0
+ToId = "d3c214a5-907b-4507-9257-2cf025fbda98"
+ToPort = 0
+
+[sub_resource type="Resource" id=219]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 0
+ToId = "ec441094-9e5f-4804-8302-a51933a220e8"
+ToPort = 0
+
+[sub_resource type="Resource" id=220]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 0
+ToId = "efbc48f0-82b9-435d-a7d6-a5d8651a1dbf"
+ToPort = 0
+
+[sub_resource type="Resource" id=221]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 0
+ToId = "44a123f7-9194-4484-8e9d-e42f088b1bc0"
+ToPort = 0
+
+[sub_resource type="Resource" id=222]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 0
+ToId = "bf48ff59-f7c0-45ea-bb44-db3d94236b5d"
+ToPort = 0
+
+[sub_resource type="Resource" id=223]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 0
+ToId = "e27b4951-8c3c-4f9a-b187-8a54a46fccb8"
+ToPort = 0
+
+[sub_resource type="Resource" id=224]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 0
+ToId = "4937bf92-6eb4-4fd6-bcee-655d635e5958"
+ToPort = 0
+
+[sub_resource type="Resource" id=225]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 1
+ToId = "ec441094-9e5f-4804-8302-a51933a220e8"
+ToPort = 1
+
+[sub_resource type="Resource" id=226]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 1
+ToId = "efbc48f0-82b9-435d-a7d6-a5d8651a1dbf"
+ToPort = 1
+
+[sub_resource type="Resource" id=227]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 1
+ToId = "44a123f7-9194-4484-8e9d-e42f088b1bc0"
+ToPort = 1
+
+[sub_resource type="Resource" id=228]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 1
+ToId = "bf48ff59-f7c0-45ea-bb44-db3d94236b5d"
+ToPort = 1
+
+[sub_resource type="Resource" id=229]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 1
+ToId = "566eef62-42cb-4007-8756-5546cd9c837c"
+ToPort = 1
+
+[sub_resource type="Resource" id=230]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 1
+ToId = "eecfafef-fc51-49be-a47a-3245e856bd46"
+ToPort = 0
+
+[sub_resource type="Resource" id=231]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 2
+ToId = "fb0dfc7d-d8aa-4ca5-b0ad-4b59d2e3958d"
+ToPort = 0
+
+[sub_resource type="Resource" id=232]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 3
+ToId = "7a654436-f004-43ec-97c4-b47d0582c751"
+ToPort = 0
+
+[sub_resource type="Resource" id=233]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 3
+ToId = "9125bfc9-bcb6-4b25-963d-5ce47e6d86af"
+ToPort = 0
+
+[sub_resource type="Resource" id=234]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 3
+ToId = "e547559a-dbc4-4d52-a114-705aed901ffc"
+ToPort = 0
+
+[sub_resource type="Resource" id=235]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 3
+ToId = "920a946e-1d3c-4995-b042-131bc1e504e5"
+ToPort = 0
+
+[sub_resource type="Resource" id=236]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 4
+ToId = "7a654436-f004-43ec-97c4-b47d0582c751"
+ToPort = 1
+
+[sub_resource type="Resource" id=237]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 4
+ToId = "9125bfc9-bcb6-4b25-963d-5ce47e6d86af"
+ToPort = 1
+
+[sub_resource type="Resource" id=238]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 4
+ToId = "566eef62-42cb-4007-8756-5546cd9c837c"
+ToPort = 0
+
+[sub_resource type="Resource" id=239]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 5
+ToId = "bf48ff59-f7c0-45ea-bb44-db3d94236b5d"
+ToPort = 2
+
+[sub_resource type="Resource" id=240]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 5
+ToId = "e547559a-dbc4-4d52-a114-705aed901ffc"
+ToPort = 2
+
+[sub_resource type="Resource" id=241]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 5
+ToId = "920a946e-1d3c-4995-b042-131bc1e504e5"
+ToPort = 2
+
+[sub_resource type="Resource" id=242]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 5
+ToId = "68091336-47e7-4235-b0a9-0fdfdc2d1a32"
+ToPort = 2
+
+[sub_resource type="Resource" id=243]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 5
+ToId = "2a37913f-f304-436f-8325-964936eb0ecf"
+ToPort = 2
+
+[sub_resource type="Resource" id=244]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 5
+ToId = "7a654436-f004-43ec-97c4-b47d0582c751"
+ToPort = 2
+
+[sub_resource type="Resource" id=245]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 5
+ToId = "9125bfc9-bcb6-4b25-963d-5ce47e6d86af"
+ToPort = 2
+
+[sub_resource type="Resource" id=246]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 5
+ToId = "4937bf92-6eb4-4fd6-bcee-655d635e5958"
+ToPort = 2
+
+[sub_resource type="Resource" id=247]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 5
+ToId = "e27b4951-8c3c-4f9a-b187-8a54a46fccb8"
+ToPort = 2
+
+[sub_resource type="Resource" id=248]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 6
+ToId = "fb0dfc7d-d8aa-4ca5-b0ad-4b59d2e3958d"
+ToPort = 1
+
+[sub_resource type="Resource" id=249]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 6
+ToId = "13b8776d-432e-400f-a258-32a9c392e016"
+ToPort = 0
+
+[sub_resource type="Resource" id=250]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 4
+ToId = "20a4fb26-0880-4dbd-bf6d-0f843b9fa830"
+ToPort = 0
+
+[sub_resource type="Resource" id=251]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 1
+ToId = "20a4fb26-0880-4dbd-bf6d-0f843b9fa830"
+ToPort = 1
+
+[sub_resource type="Resource" id=252]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 6
+ToId = "7b605a88-a29b-424f-935a-ff73e03916ee"
+ToPort = 1
+
+[sub_resource type="Resource" id=253]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 3
+ToId = "68091336-47e7-4235-b0a9-0fdfdc2d1a32"
+ToPort = 0
+
+[sub_resource type="Resource" id=254]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 3
+ToId = "2a37913f-f304-436f-8325-964936eb0ecf"
+ToPort = 0
+
+[sub_resource type="Resource" id=255]
+script = ExtResource( 4 )
+FromId = "4cca5229-8c70-4876-9b5c-bda2e02f4095"
+FromPort = 0
+ToId = "42fb6a9f-8bc7-414f-8933-3e66b4f49530"
+ToPort = 1
+
+[sub_resource type="Resource" id=256]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 0
+ToId = "e2c20fe0-3bf8-4307-946c-c0ef74d11d53"
+ToPort = 0
+
+[sub_resource type="Resource" id=257]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 5
+ToId = "e2c20fe0-3bf8-4307-946c-c0ef74d11d53"
+ToPort = 2
+
+[sub_resource type="Resource" id=258]
+script = ExtResource( 4 )
+FromId = "3159f087-771b-4ab2-975f-4feee20453f2"
+FromPort = 0
+ToId = "e2c20fe0-3bf8-4307-946c-c0ef74d11d53"
+ToPort = 1
+
+[sub_resource type="Resource" id=259]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 0
+ToId = "937270ec-fe79-4d83-909c-f71db42da6db"
+ToPort = 0
+
+[sub_resource type="Resource" id=260]
+script = ExtResource( 4 )
+FromId = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+FromPort = 5
+ToId = "937270ec-fe79-4d83-909c-f71db42da6db"
+ToPort = 2
+
+[sub_resource type="Resource" id=261]
+script = ExtResource( 4 )
+FromId = "01397380-cb87-492f-aa07-c947f5b9f19e"
+FromPort = 0
+ToId = "14817878-68ec-4709-b2d7-5a38d2089237"
+ToPort = 0
+
+[sub_resource type="Resource" id=262]
+script = ExtResource( 4 )
+FromId = "42fb6a9f-8bc7-414f-8933-3e66b4f49530"
+FromPort = 0
+ToId = "14817878-68ec-4709-b2d7-5a38d2089237"
+ToPort = 1
+
+[sub_resource type="Resource" id=263]
+script = ExtResource( 4 )
+FromId = "14817878-68ec-4709-b2d7-5a38d2089237"
+FromPort = 0
+ToId = "ad54f46b-2716-4c7d-b8ee-72c18b5cf6bc"
+ToPort = 0
+
+[sub_resource type="Resource" id=264]
+script = ExtResource( 4 )
+FromId = "7b605a88-a29b-424f-935a-ff73e03916ee"
+FromPort = 0
+ToId = "4f59622c-d50d-4aae-83ce-16432a6fe3bc"
+ToPort = 0
+
+[sub_resource type="Resource" id=265]
+script = ExtResource( 4 )
+FromId = "4f59622c-d50d-4aae-83ce-16432a6fe3bc"
+FromPort = 0
+ToId = "e7445189-0bd2-4de0-b269-7d25d45e99c3"
+ToPort = 0
+
+[sub_resource type="Resource" id=266]
+script = ExtResource( 4 )
+FromId = "e7445189-0bd2-4de0-b269-7d25d45e99c3"
+FromPort = 0
+ToId = "7a5c4e97-193b-436d-8262-c9751fd8b80c"
+ToPort = 0
+
+[sub_resource type="Resource" id=267]
+script = ExtResource( 4 )
+FromId = "7a5c4e97-193b-436d-8262-c9751fd8b80c"
+FromPort = 0
+ToId = "d964a084-098b-4562-8f96-78d65826702c"
+ToPort = 1
+
+[sub_resource type="Resource" id=268]
+script = ExtResource( 4 )
+FromId = "7a5c4e97-193b-436d-8262-c9751fd8b80c"
+FromPort = 0
+ToId = "37bd8e25-4154-4f04-9298-9669b8d63ded"
+ToPort = 2
+
+[sub_resource type="Resource" id=269]
+script = ExtResource( 4 )
+FromId = "7a5c4e97-193b-436d-8262-c9751fd8b80c"
+FromPort = 0
+ToId = "42fb6a9f-8bc7-414f-8933-3e66b4f49530"
+ToPort = 0
+
+[sub_resource type="Resource" id=270]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 3
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=271]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 3
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=272]
+script = ExtResource( 1 )
+Name = "bz"
+Label = ""
+Description = ""
+TypeHint = 3
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=273]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 3
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=274]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 3
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=275]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 3
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=276]
+script = ExtResource( 1 )
+Name = "tr"
+Label = ""
+Description = ""
+TypeHint = 3
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=277]
+script = ExtResource( 1 )
+Name = "stepover"
+Label = ""
+Description = ""
+TypeHint = 3
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=278]
+script = ExtResource( 2 )
+Id = "5a5423a4-8586-472d-bb98-3f0b66502a7c"
+Name = "cut_rectangle_horizontal"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 270 ), SubResource( 271 ), SubResource( 272 ), SubResource( 273 ), SubResource( 274 ), SubResource( 275 ), SubResource( 276 ), SubResource( 277 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=279]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleEntryPoint"
+Position = Vector2( -980, -740 )
+Id = "df5073c4-52f4-4d7c-b01a-2a2d679120f3"
+StoredData = {
+"module_description_id": "5a5423a4-8586-472d-bb98-3f0b66502a7c",
+"output_literal_set.0": "False",
+"output_literal_set.1": "False",
+"output_literal_set.2": "False",
+"output_literal_set.3": "False",
+"output_literal_set.4": "False",
+"output_literal_set.5": "False",
+"output_literal_set.6": "False",
+"output_literal_set.7": "False",
+"output_literal_value.0": "0",
+"output_literal_value.1": "0",
+"output_literal_value.2": "0",
+"output_literal_value.3": "0",
+"output_literal_value.4": "0",
+"output_literal_value.5": "0",
+"output_literal_value.6": "0",
+"output_literal_value.7": "0"
+}
+
+[sub_resource type="Resource" id=280]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( -140, -120 )
+Id = "cdf94df1-c041-48ec-a336-817ff5b0af25"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_cutoneaxis_setfeed"
+}
+
+[sub_resource type="Resource" id=281]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1380, 1520 )
+Id = "e805f504-1025-47fd-aa80-d8f9add9e9e6"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_closepolyline"
+}
+
+[sub_resource type="Resource" id=282]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1160, 1860 )
+Id = "05610359-74e1-4201-abc7-0cf0e75845b5"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_movetosafez"
+}
+
+[sub_resource type="Resource" id=283]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( -100, 100 )
+Id = "bf48ff59-f7c0-45ea-bb44-db3d94236b5d"
+StoredData = {
+"custom_attribute.applied_modifiers": "8",
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_cutwithfeed"
+}
+
+[sub_resource type="Resource" id=284]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1100, 200 )
+Id = "4937bf92-6eb4-4fd6-bcee-655d635e5958"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_addpolyline"
+}
+
+[sub_resource type="Resource" id=285]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( -80, -340 )
+Id = "44a123f7-9194-4484-8e9d-e42f088b1bc0"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_rapid"
+}
+
+[sub_resource type="Resource" id=286]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( -100, -600 )
+Id = "efbc48f0-82b9-435d-a7d6-a5d8651a1dbf"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_beginpolyline"
+}
+
+[sub_resource type="Resource" id=287]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.LiteralString"
+Position = Vector2( -400, -120 )
+Id = "e05bcb18-5b11-48c3-a629-608b3d1f9220"
+StoredData = {
+"output_literal_set.0": "False",
+"output_literal_value.0": "Z"
+}
+
+[sub_resource type="Resource" id=288]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( -100, -820 )
+Id = "ec441094-9e5f-4804-8302-a51933a220e8"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_begintoolpath"
+}
+
+[sub_resource type="Resource" id=289]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( -320, 280 )
+Id = "f76e069d-80fe-4851-9264-56ff45b36545"
+StoredData = {
+"variable_description_id": "40103345-239f-4bf4-b5b6-f42c6534df7c"
+}
+
+[sub_resource type="Resource" id=290]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( -640, 280 )
+Id = "da3548af-d3b6-4484-a5c8-d4f4530ff8d7"
+StoredData = {
+"variable_description_id": "282ec9f5-8537-4f5b-a7c6-d421718a5d7d"
+}
+
+[sub_resource type="Resource" id=291]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ForLoop.ForLoopStart"
+Position = Vector2( 360, 380 )
+Id = "01397380-cb87-492f-aa07-c947f5b9f19e"
+StoredData = {
+"intersect_mode": "False",
+"loop_end_id": "430512ce-a549-4f18-aa9b-39e527483ba5",
+"nest_level": "1",
+"output_literal_set.0": "False",
+"output_literal_value.0": ""
+}
+
+[sub_resource type="Resource" id=292]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ForLoop.ForLoopEnd"
+Position = Vector2( 1580, 300 )
+Id = "430512ce-a549-4f18-aa9b-39e527483ba5"
+StoredData = {
+"loopStartId": "01397380-cb87-492f-aa07-c947f5b9f19e"
+}
+
+[sub_resource type="Resource" id=293]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.MultiplyOperator"
+Position = Vector2( -400, -20 )
+Id = "13b8776d-432e-400f-a258-32a9c392e016"
+StoredData = {
+"first_operand_port_type": "3",
+"input_literal_set.0": "False",
+"input_literal_set.1": "False",
+"input_literal_value.0": "0",
+"input_literal_value.1": "-1",
+"second_operand_port_type": "3"
+}
+
+[sub_resource type="Resource" id=294]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ConstructRange"
+Position = Vector2( 160, 420 )
+Id = "37bd8e25-4154-4f04-9298-9669b8d63ded"
+StoredData = {
+"input_literal_set.0": "False",
+"input_literal_set.1": "False",
+"input_literal_set.2": "False",
+"input_literal_value.0": "0",
+"input_literal_value.1": "2",
+"input_literal_value.2": "0"
+}
+
+[sub_resource type="Resource" id=295]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1000, 160 )
+Id = "e27b4951-8c3c-4f9a-b187-8a54a46fccb8"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_cut"
+}
+
+[sub_resource type="Resource" id=296]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.SubtractOperator"
+Position = Vector2( 40, -420 )
+Id = "566eef62-42cb-4007-8756-5546cd9c837c"
+StoredData = {
+"first_operand_port_type": "3",
+"input_literal_set.0": "False",
+"input_literal_set.1": "False",
+"input_literal_value.0": "0",
+"input_literal_value.1": "-1",
+"second_operand_port_type": "3"
+}
+
+[sub_resource type="Resource" id=297]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.DivideOperator"
+Position = Vector2( 460, -400 )
+Id = "d964a084-098b-4562-8f96-78d65826702c"
+StoredData = {
+"first_operand_port_type": "3",
+"input_literal_set.0": "False",
+"input_literal_value.0": "0",
+"second_operand_port_type": "8"
+}
+
+[sub_resource type="Resource" id=298]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.AddOperator"
+Position = Vector2( 760, -40 )
+Id = "eecfafef-fc51-49be-a47a-3245e856bd46"
+StoredData = {
+"first_operand_port_type": "3",
+"input_literal_set.0": "False",
+"input_literal_value.0": "0",
+"second_operand_port_type": "8"
+}
+
+[sub_resource type="Resource" id=299]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.MultiplyOperator"
+Position = Vector2( 580, 120 )
+Id = "d3c214a5-907b-4507-9257-2cf025fbda98"
+StoredData = {
+"first_operand_port_type": "3",
+"input_literal_set.0": "False",
+"input_literal_value.0": "0",
+"second_operand_port_type": "8"
+}
+
+[sub_resource type="Resource" id=300]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1100, 780 )
+Id = "920a946e-1d3c-4995-b042-131bc1e504e5"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_addpolyline"
+}
+
+[sub_resource type="Resource" id=301]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1000, 760 )
+Id = "e547559a-dbc4-4d52-a114-705aed901ffc"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_cut"
+}
+
+[sub_resource type="Resource" id=302]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1100, 420 )
+Id = "2a37913f-f304-436f-8325-964936eb0ecf"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_addpolyline"
+}
+
+[sub_resource type="Resource" id=303]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1000, 380 )
+Id = "68091336-47e7-4235-b0a9-0fdfdc2d1a32"
+StoredData = {
+"custom_attribute.applied_modifiers": "1",
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_cut"
+}
+
+[sub_resource type="Resource" id=304]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.AddOperator"
+Position = Vector2( 860, 720 )
+Id = "3159f087-771b-4ab2-975f-4feee20453f2"
+StoredData = {
+"first_operand_port_type": "8",
+"input_literal_set.1": "False",
+"input_literal_value.1": "0",
+"second_operand_port_type": "3"
+}
+
+[sub_resource type="Resource" id=305]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1100, 560 )
+Id = "937270ec-fe79-4d83-909c-f71db42da6db"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_addpolyline"
+}
+
+[sub_resource type="Resource" id=306]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1000, 560 )
+Id = "e2c20fe0-3bf8-4307-946c-c0ef74d11d53"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_cut"
+}
+
+[sub_resource type="Resource" id=307]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.AddOperator"
+Position = Vector2( -400, -340 )
+Id = "fb0dfc7d-d8aa-4ca5-b0ad-4b59d2e3958d"
+StoredData = {
+"first_operand_port_type": "3",
+"input_literal_set.0": "False",
+"input_literal_set.1": "False",
+"input_literal_value.0": "0",
+"input_literal_value.1": "0",
+"second_operand_port_type": "3"
+}
+
+[sub_resource type="Resource" id=308]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( -40, 960 )
+Id = "9125bfc9-bcb6-4b25-963d-5ce47e6d86af"
+StoredData = {
+"custom_attribute.applied_modifiers": "8",
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_addpolyline"
+}
+
+[sub_resource type="Resource" id=309]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( -40, 760 )
+Id = "7a654436-f004-43ec-97c4-b47d0582c751"
+StoredData = {
+"custom_attribute.applied_modifiers": "8",
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_cut"
+}
+
+[sub_resource type="Resource" id=310]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.Branch"
+Position = Vector2( 1400, 780 )
+Id = "ad54f46b-2716-4c7d-b8ee-72c18b5cf6bc"
+StoredData = {
+"input_literal_set.0": "False",
+"input_literal_value.0": "false"
+}
+
+[sub_resource type="Resource" id=311]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.SubtractOperator"
+Position = Vector2( -440, 360 )
+Id = "20a4fb26-0880-4dbd-bf6d-0f843b9fa830"
+StoredData = {
+"first_operand_port_type": "3",
+"input_literal_set.0": "False",
+"input_literal_set.1": "False",
+"input_literal_value.0": "0",
+"input_literal_value.1": "-1",
+"second_operand_port_type": "3"
+}
+
+[sub_resource type="Resource" id=312]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.DivideOperator"
+Position = Vector2( -300, 380 )
+Id = "7b605a88-a29b-424f-935a-ff73e03916ee"
+StoredData = {
+"first_operand_port_type": "3",
+"input_literal_set.0": "False",
+"input_literal_set.1": "False",
+"input_literal_value.0": "0",
+"input_literal_value.1": "0",
+"second_operand_port_type": "3"
+}
+
+[sub_resource type="Resource" id=313]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.FunctionInvocation"
+Position = Vector2( -80, 480 )
+Id = "e7445189-0bd2-4de0-b269-7d25d45e99c3"
+StoredData = {
+"function_description_id": "__builtin__function__round",
+"input_literal_set.0": "False",
+"input_literal_value.0": "0"
+}
+
+[sub_resource type="Resource" id=314]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.SubtractOperator"
+Position = Vector2( 460, 1080 )
+Id = "42fb6a9f-8bc7-414f-8933-3e66b4f49530"
+StoredData = {
+"first_operand_port_type": "8",
+"input_literal_set.1": "False",
+"input_literal_value.1": "0",
+"second_operand_port_type": "3"
+}
+
+[sub_resource type="Resource" id=315]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.LiteralNumber"
+Position = Vector2( 144.445, 931.867 )
+Id = "4cca5229-8c70-4876-9b5c-bda2e02f4095"
+StoredData = {
+"output_literal_set.0": "False",
+"output_literal_value.0": "1"
+}
+
+[sub_resource type="Resource" id=316]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.LessEqualOperator"
+Position = Vector2( 740, 1160 )
+Id = "14817878-68ec-4709-b2d7-5a38d2089237"
+StoredData = {
+"first_operand_port_type": "8",
+"input_literal_set.1": "False",
+"input_literal_value.1": "0",
+"second_operand_port_type": "3"
+}
+
+[sub_resource type="Resource" id=317]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.Half"
+Position = Vector2( -200, 460 )
+Id = "4f59622c-d50d-4aae-83ce-16432a6fe3bc"
+StoredData = {
+}
+
+[sub_resource type="Resource" id=318]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.Double"
+Position = Vector2( 40, 440 )
+Id = "7a5c4e97-193b-436d-8262-c9751fd8b80c"
+StoredData = {
+}
+
+[sub_resource type="Resource" id=319]
+script = ExtResource( 7 )
+Description = SubResource( 278 )
+Nodes = [ SubResource( 279 ), SubResource( 280 ), SubResource( 281 ), SubResource( 282 ), SubResource( 283 ), SubResource( 284 ), SubResource( 285 ), SubResource( 286 ), SubResource( 287 ), SubResource( 288 ), SubResource( 289 ), SubResource( 290 ), SubResource( 291 ), SubResource( 292 ), SubResource( 293 ), SubResource( 294 ), SubResource( 295 ), SubResource( 296 ), SubResource( 297 ), SubResource( 298 ), SubResource( 299 ), SubResource( 300 ), SubResource( 301 ), SubResource( 302 ), SubResource( 303 ), SubResource( 304 ), SubResource( 305 ), SubResource( 306 ), SubResource( 307 ), SubResource( 308 ), SubResource( 309 ), SubResource( 310 ), SubResource( 311 ), SubResource( 312 ), SubResource( 313 ), SubResource( 314 ), SubResource( 315 ), SubResource( 316 ), SubResource( 317 ), SubResource( 318 ) ]
+Connections = [ SubResource( 188 ), SubResource( 189 ), SubResource( 190 ), SubResource( 191 ), SubResource( 192 ), SubResource( 193 ), SubResource( 194 ), SubResource( 195 ), SubResource( 196 ), SubResource( 197 ), SubResource( 198 ), SubResource( 199 ), SubResource( 200 ), SubResource( 201 ), SubResource( 202 ), SubResource( 203 ), SubResource( 204 ), SubResource( 205 ), SubResource( 206 ), SubResource( 207 ), SubResource( 208 ), SubResource( 209 ), SubResource( 210 ), SubResource( 211 ), SubResource( 212 ), SubResource( 213 ), SubResource( 214 ), SubResource( 215 ), SubResource( 216 ), SubResource( 217 ), SubResource( 218 ), SubResource( 219 ), SubResource( 220 ), SubResource( 221 ), SubResource( 222 ), SubResource( 223 ), SubResource( 224 ), SubResource( 225 ), SubResource( 226 ), SubResource( 227 ), SubResource( 228 ), SubResource( 229 ), SubResource( 230 ), SubResource( 231 ), SubResource( 232 ), SubResource( 233 ), SubResource( 234 ), SubResource( 235 ), SubResource( 236 ), SubResource( 237 ), SubResource( 238 ), SubResource( 239 ), SubResource( 240 ), SubResource( 241 ), SubResource( 242 ), SubResource( 243 ), SubResource( 244 ), SubResource( 245 ), SubResource( 246 ), SubResource( 247 ), SubResource( 248 ), SubResource( 249 ), SubResource( 250 ), SubResource( 251 ), SubResource( 252 ), SubResource( 253 ), SubResource( 254 ), SubResource( 255 ), SubResource( 256 ), SubResource( 257 ), SubResource( 258 ), SubResource( 259 ), SubResource( 260 ), SubResource( 261 ), SubResource( 262 ), SubResource( 263 ), SubResource( 264 ), SubResource( 265 ), SubResource( 266 ), SubResource( 267 ), SubResource( 268 ), SubResource( 269 ) ]
+
+[sub_resource type="Resource" id=320]
+script = ExtResource( 4 )
+FromId = "ec983212-9852-404f-bd14-07fd1c0aedc3"
+FromPort = 0
+ToId = "7155840e-49dc-41f5-ba88-68542ee3e69f"
+ToPort = 1
+
+[sub_resource type="Resource" id=321]
+script = ExtResource( 4 )
+FromId = "4b755282-c369-4cc5-abcc-d4a8d6b3fee4"
+FromPort = 0
+ToId = "65cf7200-0726-45dc-91a0-02e559db57ec"
+ToPort = 1
+
+[sub_resource type="Resource" id=322]
+script = ExtResource( 4 )
+FromId = "65cf7200-0726-45dc-91a0-02e559db57ec"
+FromPort = 0
+ToId = "7155840e-49dc-41f5-ba88-68542ee3e69f"
+ToPort = 0
+
+[sub_resource type="Resource" id=323]
+script = ExtResource( 4 )
+FromId = "4b755282-c369-4cc5-abcc-d4a8d6b3fee4"
+FromPort = 1
+ToId = "ec983212-9852-404f-bd14-07fd1c0aedc3"
+ToPort = 0
+
+[sub_resource type="Resource" id=324]
+script = ExtResource( 4 )
+FromId = "4b755282-c369-4cc5-abcc-d4a8d6b3fee4"
+FromPort = 2
+ToId = "ec983212-9852-404f-bd14-07fd1c0aedc3"
+ToPort = 1
+
+[sub_resource type="Resource" id=325]
+script = ExtResource( 4 )
+FromId = "4b755282-c369-4cc5-abcc-d4a8d6b3fee4"
+FromPort = 3
+ToId = "ec983212-9852-404f-bd14-07fd1c0aedc3"
+ToPort = 2
+
+[sub_resource type="Resource" id=326]
+script = ExtResource( 4 )
+FromId = "4b755282-c369-4cc5-abcc-d4a8d6b3fee4"
+FromPort = 4
+ToId = "ec983212-9852-404f-bd14-07fd1c0aedc3"
+ToPort = 3
+
+[sub_resource type="Resource" id=327]
+script = ExtResource( 4 )
+FromId = "4b755282-c369-4cc5-abcc-d4a8d6b3fee4"
+FromPort = 5
+ToId = "ec983212-9852-404f-bd14-07fd1c0aedc3"
+ToPort = 4
+
+[sub_resource type="Resource" id=328]
+script = ExtResource( 4 )
+FromId = "4b755282-c369-4cc5-abcc-d4a8d6b3fee4"
+FromPort = 6
+ToId = "ec983212-9852-404f-bd14-07fd1c0aedc3"
+ToPort = 5
+
+[sub_resource type="Resource" id=329]
+script = ExtResource( 4 )
+FromId = "4b755282-c369-4cc5-abcc-d4a8d6b3fee4"
+FromPort = 7
+ToId = "ec983212-9852-404f-bd14-07fd1c0aedc3"
+ToPort = 6
+
+[sub_resource type="Resource" id=330]
+script = ExtResource( 4 )
+FromId = "4b755282-c369-4cc5-abcc-d4a8d6b3fee4"
+FromPort = 8
+ToId = "ec983212-9852-404f-bd14-07fd1c0aedc3"
+ToPort = 7
+
+[sub_resource type="Resource" id=331]
+script = ExtResource( 4 )
+FromId = "bbf3d1ee-2684-4d03-866a-e4eafb8f05f6"
+FromPort = 0
+ToId = "65cf7200-0726-45dc-91a0-02e559db57ec"
+ToPort = 0
+
+[sub_resource type="Resource" id=332]
+script = ExtResource( 4 )
+FromId = "00eda32c-a403-426b-8fba-34a155902f06"
+FromPort = 0
+ToId = "896176e7-d02d-4bfb-8a42-741baab81aa4"
+ToPort = 0
+
+[sub_resource type="Resource" id=333]
+script = ExtResource( 4 )
+FromId = "d9022800-bb8d-43ab-b62e-976ac4b7c25c"
+FromPort = 0
+ToId = "00eda32c-a403-426b-8fba-34a155902f06"
+ToPort = 0
+
+[sub_resource type="Resource" id=334]
+script = ExtResource( 4 )
+FromId = "4b755282-c369-4cc5-abcc-d4a8d6b3fee4"
+FromPort = 0
+ToId = "00eda32c-a403-426b-8fba-34a155902f06"
+ToPort = 1
+
+[sub_resource type="Resource" id=335]
+script = ExtResource( 4 )
+FromId = "11ab1cda-2748-4789-9460-86c8f8896335"
+FromPort = 0
+ToId = "896176e7-d02d-4bfb-8a42-741baab81aa4"
+ToPort = 1
+
+[sub_resource type="Resource" id=336]
+script = ExtResource( 4 )
+FromId = "4b755282-c369-4cc5-abcc-d4a8d6b3fee4"
+FromPort = 1
+ToId = "11ab1cda-2748-4789-9460-86c8f8896335"
+ToPort = 0
+
+[sub_resource type="Resource" id=337]
+script = ExtResource( 4 )
+FromId = "4b755282-c369-4cc5-abcc-d4a8d6b3fee4"
+FromPort = 2
+ToId = "11ab1cda-2748-4789-9460-86c8f8896335"
+ToPort = 1
+
+[sub_resource type="Resource" id=338]
+script = ExtResource( 4 )
+FromId = "4b755282-c369-4cc5-abcc-d4a8d6b3fee4"
+FromPort = 3
+ToId = "11ab1cda-2748-4789-9460-86c8f8896335"
+ToPort = 2
+
+[sub_resource type="Resource" id=339]
+script = ExtResource( 4 )
+FromId = "4b755282-c369-4cc5-abcc-d4a8d6b3fee4"
+FromPort = 4
+ToId = "11ab1cda-2748-4789-9460-86c8f8896335"
+ToPort = 3
+
+[sub_resource type="Resource" id=340]
+script = ExtResource( 4 )
+FromId = "4b755282-c369-4cc5-abcc-d4a8d6b3fee4"
+FromPort = 5
+ToId = "11ab1cda-2748-4789-9460-86c8f8896335"
+ToPort = 4
+
+[sub_resource type="Resource" id=341]
+script = ExtResource( 4 )
+FromId = "4b755282-c369-4cc5-abcc-d4a8d6b3fee4"
+FromPort = 6
+ToId = "11ab1cda-2748-4789-9460-86c8f8896335"
+ToPort = 5
+
+[sub_resource type="Resource" id=342]
+script = ExtResource( 4 )
+FromId = "4b755282-c369-4cc5-abcc-d4a8d6b3fee4"
+FromPort = 7
+ToId = "11ab1cda-2748-4789-9460-86c8f8896335"
+ToPort = 6
+
+[sub_resource type="Resource" id=343]
+script = ExtResource( 4 )
+FromId = "4b755282-c369-4cc5-abcc-d4a8d6b3fee4"
+FromPort = 8
+ToId = "11ab1cda-2748-4789-9460-86c8f8896335"
+ToPort = 7
+
+[sub_resource type="Resource" id=344]
+script = ExtResource( 4 )
+FromId = "7b0a164b-37ee-4a74-a708-d611361de9f8"
+FromPort = 0
+ToId = "bd050ef1-0420-4e2e-a502-f6f8fb222aba"
+ToPort = 0
+
+[sub_resource type="Resource" id=345]
+script = ExtResource( 4 )
+FromId = "4b755282-c369-4cc5-abcc-d4a8d6b3fee4"
+FromPort = 9
+ToId = "7b0a164b-37ee-4a74-a708-d611361de9f8"
+ToPort = 0
+
+[sub_resource type="Resource" id=346]
+script = ExtResource( 1 )
+Name = "options"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=347]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 3
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=348]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 3
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=349]
+script = ExtResource( 1 )
+Name = "bz"
+Label = ""
+Description = ""
+TypeHint = 3
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=350]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 3
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=351]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 3
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=352]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 3
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=353]
+script = ExtResource( 1 )
+Name = "tr"
+Label = ""
+Description = ""
+TypeHint = 3
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=354]
+script = ExtResource( 1 )
+Name = "stepover"
+Label = ""
+Description = ""
+TypeHint = 3
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=355]
+script = ExtResource( 1 )
+Name = "clearperimeter"
+Label = ""
+Description = ""
+TypeHint = 2
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=356]
+script = ExtResource( 2 )
+Id = "9aba9b21-9ef0-4338-aed1-40822615e688"
+Name = "cut_rectangle"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 346 ), SubResource( 347 ), SubResource( 348 ), SubResource( 349 ), SubResource( 350 ), SubResource( 351 ), SubResource( 352 ), SubResource( 353 ), SubResource( 354 ), SubResource( 355 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=357]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleEntryPoint"
+Position = Vector2( -800, -480 )
+Id = "4b755282-c369-4cc5-abcc-d4a8d6b3fee4"
+StoredData = {
+"module_description_id": "9aba9b21-9ef0-4338-aed1-40822615e688",
+"output_literal_set.1": "False",
+"output_literal_set.2": "False",
+"output_literal_set.3": "False",
+"output_literal_set.4": "False",
+"output_literal_set.5": "False",
+"output_literal_set.6": "False",
+"output_literal_set.7": "False",
+"output_literal_set.8": "False",
+"output_literal_set.9": "False",
+"output_literal_value.1": "0",
+"output_literal_value.2": "0",
+"output_literal_value.3": "0",
+"output_literal_value.4": "0",
+"output_literal_value.5": "0",
+"output_literal_value.6": "0",
+"output_literal_value.7": "0",
+"output_literal_value.8": "0",
+"output_literal_value.9": "false"
+}
+
+[sub_resource type="Resource" id=358]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( -240, -320 )
+Id = "ec983212-9852-404f-bd14-07fd1c0aedc3"
+StoredData = {
+"input_literal_set.0": "False",
+"input_literal_set.1": "False",
+"input_literal_set.2": "False",
+"input_literal_set.3": "False",
+"input_literal_set.4": "False",
+"input_literal_set.5": "False",
+"input_literal_set.6": "False",
+"input_literal_set.7": "False",
+"input_literal_value.0": "0",
+"input_literal_value.1": "0",
+"input_literal_value.2": "0",
+"input_literal_value.3": "0",
+"input_literal_value.4": "0",
+"input_literal_value.5": "0",
+"input_literal_value.6": "0",
+"input_literal_value.7": "0",
+"module_description_id": "5a5423a4-8586-472d-bb98-3f0b66502a7c"
+}
+
+[sub_resource type="Resource" id=359]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.Branch"
+Position = Vector2( 40, -780 )
+Id = "7155840e-49dc-41f5-ba88-68542ee3e69f"
+StoredData = {
+"input_literal_set.0": "False",
+"input_literal_value.0": "false"
+}
+
+[sub_resource type="Resource" id=360]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.EqualOperator"
+Position = Vector2( -233.078, -699.018 )
+Id = "65cf7200-0726-45dc-91a0-02e559db57ec"
+StoredData = {
+"first_operand_port_type": "6",
+"input_literal_set.0": "False",
+"input_literal_value.0": "",
+"second_operand_port_type": "8"
+}
+
+[sub_resource type="Resource" id=361]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.LiteralString"
+Position = Vector2( -500, -740 )
+Id = "bbf3d1ee-2684-4d03-866a-e4eafb8f05f6"
+StoredData = {
+"output_literal_set.0": "False",
+"output_literal_value.0": "horizontal"
+}
+
+[sub_resource type="Resource" id=362]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.EqualOperator"
+Position = Vector2( 300, -480 )
+Id = "00eda32c-a403-426b-8fba-34a155902f06"
+StoredData = {
+"first_operand_port_type": "6",
+"input_literal_set.0": "False",
+"input_literal_value.0": "",
+"second_operand_port_type": "8"
+}
+
+[sub_resource type="Resource" id=363]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.Branch"
+Position = Vector2( 580, -560 )
+Id = "896176e7-d02d-4bfb-8a42-741baab81aa4"
+StoredData = {
+"input_literal_set.0": "False",
+"input_literal_value.0": "false"
+}
+
+[sub_resource type="Resource" id=364]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.LiteralString"
+Position = Vector2( 40, -520 )
+Id = "d9022800-bb8d-43ab-b62e-976ac4b7c25c"
+StoredData = {
+"output_literal_set.0": "False",
+"output_literal_value.0": "vertical"
+}
+
+[sub_resource type="Resource" id=365]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 0, -240 )
+Id = "11ab1cda-2748-4789-9460-86c8f8896335"
+StoredData = {
+"input_literal_set.0": "False",
+"input_literal_set.1": "False",
+"input_literal_set.2": "False",
+"input_literal_set.3": "False",
+"input_literal_set.4": "False",
+"input_literal_set.5": "False",
+"input_literal_set.6": "False",
+"input_literal_set.7": "False",
+"input_literal_value.0": "0",
+"input_literal_value.1": "0",
+"input_literal_value.2": "0",
+"input_literal_value.3": "0",
+"input_literal_value.4": "0",
+"input_literal_value.5": "0",
+"input_literal_value.6": "0",
+"input_literal_value.7": "0",
+"module_description_id": "ca330f15-b7ba-47eb-b95b-26178368d3ec"
+}
+
+[sub_resource type="Resource" id=366]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.EqualOperator"
+Position = Vector2( -420, 280 )
+Id = "7b0a164b-37ee-4a74-a708-d611361de9f8"
+StoredData = {
+"first_operand_port_type": "2",
+"input_literal_set.0": "False",
+"input_literal_set.1": "False",
+"input_literal_value.0": "false",
+"input_literal_value.1": "true",
+"second_operand_port_type": "2"
+}
+
+[sub_resource type="Resource" id=367]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.Branch"
+Position = Vector2( 560, 220 )
+Id = "bd050ef1-0420-4e2e-a502-f6f8fb222aba"
+StoredData = {
+"input_literal_set.0": "False",
+"input_literal_value.0": "false"
+}
+
+[sub_resource type="Resource" id=368]
+script = ExtResource( 7 )
+Description = SubResource( 356 )
+Nodes = [ SubResource( 357 ), SubResource( 358 ), SubResource( 359 ), SubResource( 360 ), SubResource( 361 ), SubResource( 362 ), SubResource( 363 ), SubResource( 364 ), SubResource( 365 ), SubResource( 366 ), SubResource( 367 ) ]
+Connections = [ SubResource( 320 ), SubResource( 321 ), SubResource( 322 ), SubResource( 323 ), SubResource( 324 ), SubResource( 325 ), SubResource( 326 ), SubResource( 327 ), SubResource( 328 ), SubResource( 329 ), SubResource( 330 ), SubResource( 331 ), SubResource( 332 ), SubResource( 333 ), SubResource( 334 ), SubResource( 335 ), SubResource( 336 ), SubResource( 337 ), SubResource( 338 ), SubResource( 339 ), SubResource( 340 ), SubResource( 341 ), SubResource( 342 ), SubResource( 343 ), SubResource( 344 ), SubResource( 345 ) ]
+
+[sub_resource type="Resource" id=369]
+script = ExtResource( 4 )
+FromId = "513895a8-b0b0-48d6-87fc-48fdc1e8bb3a"
+FromPort = 0
+ToId = "8d6c75cc-ca58-4512-a168-d913c68c4457"
+ToPort = 0
+
+[sub_resource type="Resource" id=370]
+script = ExtResource( 4 )
+FromId = "cb49f4cc-26ed-4c0c-8819-b59f4e33750d"
+FromPort = 0
+ToId = "8d6c75cc-ca58-4512-a168-d913c68c4457"
+ToPort = 2
+
+[sub_resource type="Resource" id=371]
+script = ExtResource( 4 )
+FromId = "295cd499-9179-49c7-9770-60f448815da0"
+FromPort = 0
+ToId = "243a2dcd-3b2f-49cb-a2dc-b52f38587604"
+ToPort = 3
+
+[sub_resource type="Resource" id=372]
+script = ExtResource( 4 )
+FromId = "8b26e5b8-8055-42e2-ae19-a2651cb78961"
+FromPort = 0
+ToId = "8d6c75cc-ca58-4512-a168-d913c68c4457"
+ToPort = 1
+
+[sub_resource type="Resource" id=373]
+script = ExtResource( 4 )
+FromId = "3aa3615b-5779-4b0c-8db9-d9bff3fa8058"
+FromPort = 0
+ToId = "afcc1638-66c4-4f96-b3c7-0b6b48dc924c"
+ToPort = 0
+
+[sub_resource type="Resource" id=374]
+script = ExtResource( 4 )
+FromId = "57c59192-a214-414c-8cbc-bcc327129a65"
+FromPort = 0
+ToId = "5154783a-24d6-4406-9c1f-b83aed4e0463"
+ToPort = 0
+
+[sub_resource type="Resource" id=375]
+script = ExtResource( 4 )
+FromId = "afcc1638-66c4-4f96-b3c7-0b6b48dc924c"
+FromPort = 0
+ToId = "5150b82a-b1ec-4d42-adfa-390bdd5b943f"
+ToPort = 1
+
+[sub_resource type="Resource" id=376]
+script = ExtResource( 4 )
+FromId = "5150b82a-b1ec-4d42-adfa-390bdd5b943f"
+FromPort = 0
+ToId = "2cf3de31-982c-4d67-a793-70c55b1b64a3"
+ToPort = 1
+
+[sub_resource type="Resource" id=377]
+script = ExtResource( 4 )
+FromId = "5154783a-24d6-4406-9c1f-b83aed4e0463"
+FromPort = 0
+ToId = "da9d2d20-9f9a-43cc-bf59-0ae41d28abf6"
+ToPort = 1
+
+[sub_resource type="Resource" id=378]
+script = ExtResource( 4 )
+FromId = "2cf3de31-982c-4d67-a793-70c55b1b64a3"
+FromPort = 0
+ToId = "da9d2d20-9f9a-43cc-bf59-0ae41d28abf6"
+ToPort = 0
+
+[sub_resource type="Resource" id=379]
+script = ExtResource( 4 )
+FromId = "eb723e0a-ab74-46f0-bf50-3f95e755461d"
+FromPort = 0
+ToId = "7d0250d2-9e13-4f6a-ab99-f0326e020c52"
+ToPort = 0
+
+[sub_resource type="Resource" id=380]
+script = ExtResource( 4 )
+FromId = "b0de4462-ab77-49f9-b5cd-23b6e2fc2787"
+FromPort = 0
+ToId = "7d0250d2-9e13-4f6a-ab99-f0326e020c52"
+ToPort = 0
+
+[sub_resource type="Resource" id=381]
+script = ExtResource( 4 )
+FromId = "8c10b82b-e6b8-4bdf-8199-4bf040d940b3"
+FromPort = 0
+ToId = "7d0250d2-9e13-4f6a-ab99-f0326e020c52"
+ToPort = 0
+
+[sub_resource type="Resource" id=382]
+script = ExtResource( 4 )
+FromId = "42419bf4-d770-48cf-80c5-19029ef9df4d"
+FromPort = 0
+ToId = "7d0250d2-9e13-4f6a-ab99-f0326e020c52"
+ToPort = 0
+
+[sub_resource type="Resource" id=383]
+script = ExtResource( 4 )
+FromId = "457fb0cb-3198-46c3-8447-08f9c350fe5f"
+FromPort = 0
+ToId = "406502f6-87b2-4e6b-aa6a-1cd80a6f769c"
+ToPort = 2
+
+[sub_resource type="Resource" id=384]
+script = ExtResource( 4 )
+FromId = "457fb0cb-3198-46c3-8447-08f9c350fe5f"
+FromPort = 0
+ToId = "5226338b-b3dc-43bb-9c14-bc0bbdfc7594"
+ToPort = 2
+
+[sub_resource type="Resource" id=385]
+script = ExtResource( 4 )
+FromId = "457fb0cb-3198-46c3-8447-08f9c350fe5f"
+FromPort = 0
+ToId = "6ed8a92f-a232-457b-9d9e-541e698d2d08"
+ToPort = 2
+
+[sub_resource type="Resource" id=386]
+script = ExtResource( 4 )
+FromId = "ee699bc7-7be6-4955-a4e1-34d904fc93bf"
+FromPort = 0
+ToId = "f2804773-ad74-4264-8feb-256c554b52df"
+ToPort = 1
+
+[sub_resource type="Resource" id=387]
+script = ExtResource( 4 )
+FromId = "e6c463e1-501e-44c6-903b-3f379a36f0a2"
+FromPort = 0
+ToId = "f2804773-ad74-4264-8feb-256c554b52df"
+ToPort = 1
+
+[sub_resource type="Resource" id=388]
+script = ExtResource( 4 )
+FromId = "f2804773-ad74-4264-8feb-256c554b52df"
+FromPort = 0
+ToId = "7d0250d2-9e13-4f6a-ab99-f0326e020c52"
+ToPort = 0
+
+[sub_resource type="Resource" id=389]
+script = ExtResource( 4 )
+FromId = "ef77b2ce-84d4-4f0d-b2d4-7cdc32bc154d"
+FromPort = 0
+ToId = "766c66b1-38a4-4ca0-928d-12306c3f4e14"
+ToPort = 0
+
+[sub_resource type="Resource" id=390]
+script = ExtResource( 4 )
+FromId = "5154783a-24d6-4406-9c1f-b83aed4e0463"
+FromPort = 0
+ToId = "5150b82a-b1ec-4d42-adfa-390bdd5b943f"
+ToPort = 0
+
+[sub_resource type="Resource" id=391]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 0
+ToId = "5226338b-b3dc-43bb-9c14-bc0bbdfc7594"
+ToPort = 0
+
+[sub_resource type="Resource" id=392]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 0
+ToId = "6ed8a92f-a232-457b-9d9e-541e698d2d08"
+ToPort = 0
+
+[sub_resource type="Resource" id=393]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 0
+ToId = "406502f6-87b2-4e6b-aa6a-1cd80a6f769c"
+ToPort = 0
+
+[sub_resource type="Resource" id=394]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 0
+ToId = "243a2dcd-3b2f-49cb-a2dc-b52f38587604"
+ToPort = 0
+
+[sub_resource type="Resource" id=395]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 1
+ToId = "5226338b-b3dc-43bb-9c14-bc0bbdfc7594"
+ToPort = 1
+
+[sub_resource type="Resource" id=396]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 1
+ToId = "6ed8a92f-a232-457b-9d9e-541e698d2d08"
+ToPort = 1
+
+[sub_resource type="Resource" id=397]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 1
+ToId = "406502f6-87b2-4e6b-aa6a-1cd80a6f769c"
+ToPort = 1
+
+[sub_resource type="Resource" id=398]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 1
+ToId = "243a2dcd-3b2f-49cb-a2dc-b52f38587604"
+ToPort = 1
+
+[sub_resource type="Resource" id=399]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 2
+ToId = "457fb0cb-3198-46c3-8447-08f9c350fe5f"
+ToPort = 0
+
+[sub_resource type="Resource" id=400]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 3
+ToId = "b777d192-86e8-4b88-a868-435a9562271e"
+ToPort = 0
+
+[sub_resource type="Resource" id=401]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 3
+ToId = "8f08b5cb-44d5-4fb9-8393-422329f34f03"
+ToPort = 0
+
+[sub_resource type="Resource" id=402]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 4
+ToId = "b777d192-86e8-4b88-a868-435a9562271e"
+ToPort = 1
+
+[sub_resource type="Resource" id=403]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 4
+ToId = "8f08b5cb-44d5-4fb9-8393-422329f34f03"
+ToPort = 1
+
+[sub_resource type="Resource" id=404]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 5
+ToId = "243a2dcd-3b2f-49cb-a2dc-b52f38587604"
+ToPort = 2
+
+[sub_resource type="Resource" id=405]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 5
+ToId = "8c10b82b-e6b8-4bdf-8199-4bf040d940b3"
+ToPort = 2
+
+[sub_resource type="Resource" id=406]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 5
+ToId = "ec7c1622-afed-488b-9e51-99c25095dce8"
+ToPort = 2
+
+[sub_resource type="Resource" id=407]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 5
+ToId = "231050e8-f222-4cb3-acc3-ed9c4bd36cbb"
+ToPort = 2
+
+[sub_resource type="Resource" id=408]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 5
+ToId = "b777d192-86e8-4b88-a868-435a9562271e"
+ToPort = 2
+
+[sub_resource type="Resource" id=409]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 5
+ToId = "8f08b5cb-44d5-4fb9-8393-422329f34f03"
+ToPort = 2
+
+[sub_resource type="Resource" id=410]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 5
+ToId = "b0de4462-ab77-49f9-b5cd-23b6e2fc2787"
+ToPort = 2
+
+[sub_resource type="Resource" id=411]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 5
+ToId = "eb723e0a-ab74-46f0-bf50-3f95e755461d"
+ToPort = 2
+
+[sub_resource type="Resource" id=412]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 6
+ToId = "457fb0cb-3198-46c3-8447-08f9c350fe5f"
+ToPort = 1
+
+[sub_resource type="Resource" id=413]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 6
+ToId = "8b26e5b8-8055-42e2-ae19-a2651cb78961"
+ToPort = 0
+
+[sub_resource type="Resource" id=414]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 6
+ToId = "766c66b1-38a4-4ca0-928d-12306c3f4e14"
+ToPort = 1
+
+[sub_resource type="Resource" id=415]
+script = ExtResource( 4 )
+FromId = "c0bc1a87-a68f-4009-b4aa-7f564716fd77"
+FromPort = 0
+ToId = "5736b4f2-dc5d-418b-8bb6-344b6b69cad9"
+ToPort = 1
+
+[sub_resource type="Resource" id=416]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 5
+ToId = "ee699bc7-7be6-4955-a4e1-34d904fc93bf"
+ToPort = 2
+
+[sub_resource type="Resource" id=417]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 5
+ToId = "e6c463e1-501e-44c6-903b-3f379a36f0a2"
+ToPort = 2
+
+[sub_resource type="Resource" id=418]
+script = ExtResource( 4 )
+FromId = "afcc1638-66c4-4f96-b3c7-0b6b48dc924c"
+FromPort = 0
+ToId = "dc0e7700-9fe0-4482-917b-8c0df70fddd2"
+ToPort = 0
+
+[sub_resource type="Resource" id=419]
+script = ExtResource( 4 )
+FromId = "5736b4f2-dc5d-418b-8bb6-344b6b69cad9"
+FromPort = 0
+ToId = "dc0e7700-9fe0-4482-917b-8c0df70fddd2"
+ToPort = 1
+
+[sub_resource type="Resource" id=420]
+script = ExtResource( 4 )
+FromId = "dc0e7700-9fe0-4482-917b-8c0df70fddd2"
+FromPort = 0
+ToId = "f2804773-ad74-4264-8feb-256c554b52df"
+ToPort = 0
+
+[sub_resource type="Resource" id=421]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 0
+ToId = "ef77b2ce-84d4-4f0d-b2d4-7cdc32bc154d"
+ToPort = 1
+
+[sub_resource type="Resource" id=422]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 3
+ToId = "ef77b2ce-84d4-4f0d-b2d4-7cdc32bc154d"
+ToPort = 0
+
+[sub_resource type="Resource" id=423]
+script = ExtResource( 4 )
+FromId = "5154783a-24d6-4406-9c1f-b83aed4e0463"
+FromPort = 0
+ToId = "782a8eb6-9fba-45e8-83f6-222abce22f25"
+ToPort = 0
+
+[sub_resource type="Resource" id=424]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 1
+ToId = "eb723e0a-ab74-46f0-bf50-3f95e755461d"
+ToPort = 1
+
+[sub_resource type="Resource" id=425]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 3
+ToId = "57c59192-a214-414c-8cbc-bcc327129a65"
+ToPort = 0
+
+[sub_resource type="Resource" id=426]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 0
+ToId = "57c59192-a214-414c-8cbc-bcc327129a65"
+ToPort = 1
+
+[sub_resource type="Resource" id=427]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 0
+ToId = "2cf3de31-982c-4d67-a793-70c55b1b64a3"
+ToPort = 0
+
+[sub_resource type="Resource" id=428]
+script = ExtResource( 4 )
+FromId = "2cf3de31-982c-4d67-a793-70c55b1b64a3"
+FromPort = 0
+ToId = "eb723e0a-ab74-46f0-bf50-3f95e755461d"
+ToPort = 0
+
+[sub_resource type="Resource" id=429]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 4
+ToId = "8c10b82b-e6b8-4bdf-8199-4bf040d940b3"
+ToPort = 1
+
+[sub_resource type="Resource" id=430]
+script = ExtResource( 4 )
+FromId = "2cf3de31-982c-4d67-a793-70c55b1b64a3"
+FromPort = 0
+ToId = "8c10b82b-e6b8-4bdf-8199-4bf040d940b3"
+ToPort = 0
+
+[sub_resource type="Resource" id=431]
+script = ExtResource( 4 )
+FromId = "da9d2d20-9f9a-43cc-bf59-0ae41d28abf6"
+FromPort = 0
+ToId = "ec7c1622-afed-488b-9e51-99c25095dce8"
+ToPort = 0
+
+[sub_resource type="Resource" id=432]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 4
+ToId = "ec7c1622-afed-488b-9e51-99c25095dce8"
+ToPort = 1
+
+[sub_resource type="Resource" id=433]
+script = ExtResource( 4 )
+FromId = "da9d2d20-9f9a-43cc-bf59-0ae41d28abf6"
+FromPort = 0
+ToId = "ee699bc7-7be6-4955-a4e1-34d904fc93bf"
+ToPort = 0
+
+[sub_resource type="Resource" id=434]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 1
+ToId = "ee699bc7-7be6-4955-a4e1-34d904fc93bf"
+ToPort = 1
+
+[sub_resource type="Resource" id=435]
+script = ExtResource( 4 )
+FromId = "2cf3de31-982c-4d67-a793-70c55b1b64a3"
+FromPort = 0
+ToId = "b0de4462-ab77-49f9-b5cd-23b6e2fc2787"
+ToPort = 0
+
+[sub_resource type="Resource" id=436]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 1
+ToId = "b0de4462-ab77-49f9-b5cd-23b6e2fc2787"
+ToPort = 1
+
+[sub_resource type="Resource" id=437]
+script = ExtResource( 4 )
+FromId = "2cf3de31-982c-4d67-a793-70c55b1b64a3"
+FromPort = 0
+ToId = "42419bf4-d770-48cf-80c5-19029ef9df4d"
+ToPort = 0
+
+[sub_resource type="Resource" id=438]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 4
+ToId = "42419bf4-d770-48cf-80c5-19029ef9df4d"
+ToPort = 1
+
+[sub_resource type="Resource" id=439]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 5
+ToId = "42419bf4-d770-48cf-80c5-19029ef9df4d"
+ToPort = 2
+
+[sub_resource type="Resource" id=440]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 4
+ToId = "231050e8-f222-4cb3-acc3-ed9c4bd36cbb"
+ToPort = 1
+
+[sub_resource type="Resource" id=441]
+script = ExtResource( 4 )
+FromId = "da9d2d20-9f9a-43cc-bf59-0ae41d28abf6"
+FromPort = 0
+ToId = "e6c463e1-501e-44c6-903b-3f379a36f0a2"
+ToPort = 0
+
+[sub_resource type="Resource" id=442]
+script = ExtResource( 4 )
+FromId = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+FromPort = 1
+ToId = "e6c463e1-501e-44c6-903b-3f379a36f0a2"
+ToPort = 1
+
+[sub_resource type="Resource" id=443]
+script = ExtResource( 4 )
+FromId = "766c66b1-38a4-4ca0-928d-12306c3f4e14"
+FromPort = 0
+ToId = "3f56f0b6-00a6-4627-b5c0-7c4288a29667"
+ToPort = 0
+
+[sub_resource type="Resource" id=444]
+script = ExtResource( 4 )
+FromId = "3f56f0b6-00a6-4627-b5c0-7c4288a29667"
+FromPort = 0
+ToId = "4a37c075-9a1a-4dd7-a341-469ddcaec447"
+ToPort = 0
+
+[sub_resource type="Resource" id=445]
+script = ExtResource( 4 )
+FromId = "4a37c075-9a1a-4dd7-a341-469ddcaec447"
+FromPort = 0
+ToId = "201acac8-4edd-4283-bad2-1cd2999b9520"
+ToPort = 0
+
+[sub_resource type="Resource" id=446]
+script = ExtResource( 4 )
+FromId = "201acac8-4edd-4283-bad2-1cd2999b9520"
+FromPort = 0
+ToId = "5154783a-24d6-4406-9c1f-b83aed4e0463"
+ToPort = 1
+
+[sub_resource type="Resource" id=447]
+script = ExtResource( 4 )
+FromId = "201acac8-4edd-4283-bad2-1cd2999b9520"
+FromPort = 0
+ToId = "3aa3615b-5779-4b0c-8db9-d9bff3fa8058"
+ToPort = 2
+
+[sub_resource type="Resource" id=448]
+script = ExtResource( 4 )
+FromId = "201acac8-4edd-4283-bad2-1cd2999b9520"
+FromPort = 0
+ToId = "5736b4f2-dc5d-418b-8bb6-344b6b69cad9"
+ToPort = 0
+
+[sub_resource type="Resource" id=449]
+script = ExtResource( 4 )
+FromId = "da9d2d20-9f9a-43cc-bf59-0ae41d28abf6"
+FromPort = 0
+ToId = "231050e8-f222-4cb3-acc3-ed9c4bd36cbb"
+ToPort = 0
+
+[sub_resource type="Resource" id=450]
+script = ExtResource( 4 )
+FromId = "231050e8-f222-4cb3-acc3-ed9c4bd36cbb"
+FromPort = 0
+ToId = "f2804773-ad74-4264-8feb-256c554b52df"
+ToPort = 1
+
+[sub_resource type="Resource" id=451]
+script = ExtResource( 4 )
+FromId = "ec7c1622-afed-488b-9e51-99c25095dce8"
+FromPort = 0
+ToId = "f2804773-ad74-4264-8feb-256c554b52df"
+ToPort = 1
+
+[sub_resource type="Resource" id=452]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 3
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=453]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 3
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=454]
+script = ExtResource( 1 )
+Name = "bz"
+Label = ""
+Description = ""
+TypeHint = 3
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=455]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 3
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=456]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 3
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=457]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 3
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=458]
+script = ExtResource( 1 )
+Name = "tr"
+Label = ""
+Description = ""
+TypeHint = 3
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=459]
+script = ExtResource( 1 )
+Name = "stepover"
+Label = ""
+Description = ""
+TypeHint = 3
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=460]
+script = ExtResource( 2 )
+Id = "ca330f15-b7ba-47eb-b95b-26178368d3ec"
+Name = "cut_rectangle_vertical"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 452 ), SubResource( 453 ), SubResource( 454 ), SubResource( 455 ), SubResource( 456 ), SubResource( 457 ), SubResource( 458 ), SubResource( 459 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=461]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleEntryPoint"
+Position = Vector2( -980, -740 )
+Id = "06efbd48-dc13-48ca-b1e9-cc9f9ada48dc"
+StoredData = {
+"module_description_id": "ca330f15-b7ba-47eb-b95b-26178368d3ec",
+"output_literal_set.0": "False",
+"output_literal_set.1": "False",
+"output_literal_set.2": "False",
+"output_literal_set.3": "False",
+"output_literal_set.4": "False",
+"output_literal_set.5": "False",
+"output_literal_set.6": "False",
+"output_literal_set.7": "False",
+"output_literal_value.0": "0",
+"output_literal_value.1": "0",
+"output_literal_value.2": "0",
+"output_literal_value.3": "0",
+"output_literal_value.4": "0",
+"output_literal_value.5": "0",
+"output_literal_value.6": "0",
+"output_literal_value.7": "0"
+}
+
+[sub_resource type="Resource" id=462]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( -140, -120 )
+Id = "8d6c75cc-ca58-4512-a168-d913c68c4457"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_cutoneaxis_setfeed"
+}
+
+[sub_resource type="Resource" id=463]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1380, 1520 )
+Id = "8edae29c-2ef0-4710-905f-1c21f14c49ed"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_closepolyline"
+}
+
+[sub_resource type="Resource" id=464]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1160, 1860 )
+Id = "e1be28b7-2c83-4076-866b-19059fc2f94e"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_movetosafez"
+}
+
+[sub_resource type="Resource" id=465]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( -100, 100 )
+Id = "243a2dcd-3b2f-49cb-a2dc-b52f38587604"
+StoredData = {
+"custom_attribute.applied_modifiers": "8",
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_cutwithfeed"
+}
+
+[sub_resource type="Resource" id=466]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1100, 20 )
+Id = "b0de4462-ab77-49f9-b5cd-23b6e2fc2787"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_addpolyline"
+}
+
+[sub_resource type="Resource" id=467]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( -80, -340 )
+Id = "406502f6-87b2-4e6b-aa6a-1cd80a6f769c"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_rapid"
+}
+
+[sub_resource type="Resource" id=468]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( -100, -600 )
+Id = "6ed8a92f-a232-457b-9d9e-541e698d2d08"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_beginpolyline"
+}
+
+[sub_resource type="Resource" id=469]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.LiteralString"
+Position = Vector2( -400, -120 )
+Id = "513895a8-b0b0-48d6-87fc-48fdc1e8bb3a"
+StoredData = {
+"output_literal_set.0": "False",
+"output_literal_value.0": "Z"
+}
+
+[sub_resource type="Resource" id=470]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( -100, -820 )
+Id = "5226338b-b3dc-43bb-9c14-bc0bbdfc7594"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_begintoolpath"
+}
+
+[sub_resource type="Resource" id=471]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( -320, 280 )
+Id = "295cd499-9179-49c7-9770-60f448815da0"
+StoredData = {
+"variable_description_id": "40103345-239f-4bf4-b5b6-f42c6534df7c"
+}
+
+[sub_resource type="Resource" id=472]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( -640, 280 )
+Id = "cb49f4cc-26ed-4c0c-8819-b59f4e33750d"
+StoredData = {
+"variable_description_id": "282ec9f5-8537-4f5b-a7c6-d421718a5d7d"
+}
+
+[sub_resource type="Resource" id=473]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ForLoop.ForLoopStart"
+Position = Vector2( 360, 380 )
+Id = "afcc1638-66c4-4f96-b3c7-0b6b48dc924c"
+StoredData = {
+"intersect_mode": "False",
+"loop_end_id": "7d0250d2-9e13-4f6a-ab99-f0326e020c52",
+"nest_level": "1",
+"output_literal_set.0": "False",
+"output_literal_value.0": ""
+}
+
+[sub_resource type="Resource" id=474]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ForLoop.ForLoopEnd"
+Position = Vector2( 1580, 300 )
+Id = "7d0250d2-9e13-4f6a-ab99-f0326e020c52"
+StoredData = {
+"loopStartId": "afcc1638-66c4-4f96-b3c7-0b6b48dc924c"
+}
+
+[sub_resource type="Resource" id=475]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.MultiplyOperator"
+Position = Vector2( -400, -20 )
+Id = "8b26e5b8-8055-42e2-ae19-a2651cb78961"
+StoredData = {
+"first_operand_port_type": "3",
+"input_literal_set.0": "False",
+"input_literal_set.1": "False",
+"input_literal_value.0": "0",
+"input_literal_value.1": "-1",
+"second_operand_port_type": "3"
+}
+
+[sub_resource type="Resource" id=476]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ConstructRange"
+Position = Vector2( 160, 420 )
+Id = "3aa3615b-5779-4b0c-8db9-d9bff3fa8058"
+StoredData = {
+"input_literal_set.0": "False",
+"input_literal_set.1": "False",
+"input_literal_set.2": "False",
+"input_literal_value.0": "0",
+"input_literal_value.1": "2",
+"input_literal_value.2": "0"
+}
+
+[sub_resource type="Resource" id=477]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1000, 0 )
+Id = "eb723e0a-ab74-46f0-bf50-3f95e755461d"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_cut"
+}
+
+[sub_resource type="Resource" id=478]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.SubtractOperator"
+Position = Vector2( 40, -420 )
+Id = "57c59192-a214-414c-8cbc-bcc327129a65"
+StoredData = {
+"first_operand_port_type": "3",
+"input_literal_set.0": "False",
+"input_literal_set.1": "False",
+"input_literal_value.0": "0",
+"input_literal_value.1": "-1",
+"second_operand_port_type": "3"
+}
+
+[sub_resource type="Resource" id=479]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.DivideOperator"
+Position = Vector2( 460, -400 )
+Id = "5154783a-24d6-4406-9c1f-b83aed4e0463"
+StoredData = {
+"first_operand_port_type": "3",
+"input_literal_set.0": "False",
+"input_literal_value.0": "0",
+"second_operand_port_type": "8"
+}
+
+[sub_resource type="Resource" id=480]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.AddOperator"
+Position = Vector2( 760, -40 )
+Id = "2cf3de31-982c-4d67-a793-70c55b1b64a3"
+StoredData = {
+"first_operand_port_type": "3",
+"input_literal_set.0": "False",
+"input_literal_value.0": "0",
+"second_operand_port_type": "8"
+}
+
+[sub_resource type="Resource" id=481]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.MultiplyOperator"
+Position = Vector2( 580, 120 )
+Id = "5150b82a-b1ec-4d42-adfa-390bdd5b943f"
+StoredData = {
+"first_operand_port_type": "3",
+"input_literal_set.0": "False",
+"input_literal_value.0": "0",
+"second_operand_port_type": "8"
+}
+
+[sub_resource type="Resource" id=482]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1100, 240 )
+Id = "42419bf4-d770-48cf-80c5-19029ef9df4d"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_addpolyline"
+}
+
+[sub_resource type="Resource" id=483]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1000, 220 )
+Id = "8c10b82b-e6b8-4bdf-8199-4bf040d940b3"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_cut"
+}
+
+[sub_resource type="Resource" id=484]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1100, 460 )
+Id = "231050e8-f222-4cb3-acc3-ed9c4bd36cbb"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_addpolyline"
+}
+
+[sub_resource type="Resource" id=485]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1000, 460 )
+Id = "ec7c1622-afed-488b-9e51-99c25095dce8"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_cut"
+}
+
+[sub_resource type="Resource" id=486]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.AddOperator"
+Position = Vector2( 860, 720 )
+Id = "da9d2d20-9f9a-43cc-bf59-0ae41d28abf6"
+StoredData = {
+"first_operand_port_type": "8",
+"input_literal_set.1": "False",
+"input_literal_value.1": "0",
+"second_operand_port_type": "3"
+}
+
+[sub_resource type="Resource" id=487]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1100, 900 )
+Id = "e6c463e1-501e-44c6-903b-3f379a36f0a2"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_addpolyline"
+}
+
+[sub_resource type="Resource" id=488]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1000, 860 )
+Id = "ee699bc7-7be6-4955-a4e1-34d904fc93bf"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_cut"
+}
+
+[sub_resource type="Resource" id=489]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.AddOperator"
+Position = Vector2( -400, -340 )
+Id = "457fb0cb-3198-46c3-8447-08f9c350fe5f"
+StoredData = {
+"first_operand_port_type": "3",
+"input_literal_set.0": "False",
+"input_literal_set.1": "False",
+"input_literal_value.0": "0",
+"input_literal_value.1": "0",
+"second_operand_port_type": "3"
+}
+
+[sub_resource type="Resource" id=490]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( -40, 960 )
+Id = "8f08b5cb-44d5-4fb9-8393-422329f34f03"
+StoredData = {
+"custom_attribute.applied_modifiers": "8",
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_addpolyline"
+}
+
+[sub_resource type="Resource" id=491]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( -40, 760 )
+Id = "b777d192-86e8-4b88-a868-435a9562271e"
+StoredData = {
+"custom_attribute.applied_modifiers": "8",
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_cut"
+}
+
+[sub_resource type="Resource" id=492]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.Branch"
+Position = Vector2( 1400, 780 )
+Id = "f2804773-ad74-4264-8feb-256c554b52df"
+StoredData = {
+"input_literal_set.0": "False",
+"input_literal_value.0": "false"
+}
+
+[sub_resource type="Resource" id=493]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.SubtractOperator"
+Position = Vector2( -500, 140 )
+Id = "ef77b2ce-84d4-4f0d-b2d4-7cdc32bc154d"
+StoredData = {
+"first_operand_port_type": "3",
+"input_literal_set.0": "False",
+"input_literal_set.1": "False",
+"input_literal_value.0": "0",
+"input_literal_value.1": "-1",
+"second_operand_port_type": "3"
+}
+
+[sub_resource type="Resource" id=494]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.DivideOperator"
+Position = Vector2( -300, 440 )
+Id = "766c66b1-38a4-4ca0-928d-12306c3f4e14"
+StoredData = {
+"first_operand_port_type": "3",
+"input_literal_set.0": "False",
+"input_literal_set.1": "False",
+"input_literal_value.0": "0",
+"input_literal_value.1": "0",
+"second_operand_port_type": "3"
+}
+
+[sub_resource type="Resource" id=495]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.FunctionInvocation"
+Position = Vector2( -100, 440 )
+Id = "4a37c075-9a1a-4dd7-a341-469ddcaec447"
+StoredData = {
+"function_description_id": "__builtin__function__round",
+"input_literal_set.0": "False",
+"input_literal_value.0": "0"
+}
+
+[sub_resource type="Resource" id=496]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.Echo"
+Position = Vector2( 921.17, -220.652 )
+Id = "782a8eb6-9fba-45e8-83f6-222abce22f25"
+StoredData = {
+"input_count": "1"
+}
+
+[sub_resource type="Resource" id=497]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.SubtractOperator"
+Position = Vector2( 460, 1080 )
+Id = "5736b4f2-dc5d-418b-8bb6-344b6b69cad9"
+StoredData = {
+"first_operand_port_type": "8",
+"input_literal_set.1": "False",
+"input_literal_value.1": "0",
+"second_operand_port_type": "3"
+}
+
+[sub_resource type="Resource" id=498]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.LiteralNumber"
+Position = Vector2( 144.445, 931.867 )
+Id = "c0bc1a87-a68f-4009-b4aa-7f564716fd77"
+StoredData = {
+"output_literal_set.0": "False",
+"output_literal_value.0": "1"
+}
+
+[sub_resource type="Resource" id=499]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.LessEqualOperator"
+Position = Vector2( 740, 1160 )
+Id = "dc0e7700-9fe0-4482-917b-8c0df70fddd2"
+StoredData = {
+"first_operand_port_type": "8",
+"input_literal_set.1": "False",
+"input_literal_value.1": "0",
+"second_operand_port_type": "3"
+}
+
+[sub_resource type="Resource" id=500]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.Half"
+Position = Vector2( -180, 620 )
+Id = "3f56f0b6-00a6-4627-b5c0-7c4288a29667"
+StoredData = {
+}
+
+[sub_resource type="Resource" id=501]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.Double"
+Position = Vector2( 40, 360 )
+Id = "201acac8-4edd-4283-bad2-1cd2999b9520"
+StoredData = {
+}
+
+[sub_resource type="Resource" id=502]
+script = ExtResource( 7 )
+Description = SubResource( 460 )
+Nodes = [ SubResource( 461 ), SubResource( 462 ), SubResource( 463 ), SubResource( 464 ), SubResource( 465 ), SubResource( 466 ), SubResource( 467 ), SubResource( 468 ), SubResource( 469 ), SubResource( 470 ), SubResource( 471 ), SubResource( 472 ), SubResource( 473 ), SubResource( 474 ), SubResource( 475 ), SubResource( 476 ), SubResource( 477 ), SubResource( 478 ), SubResource( 479 ), SubResource( 480 ), SubResource( 481 ), SubResource( 482 ), SubResource( 483 ), SubResource( 484 ), SubResource( 485 ), SubResource( 486 ), SubResource( 487 ), SubResource( 488 ), SubResource( 489 ), SubResource( 490 ), SubResource( 491 ), SubResource( 492 ), SubResource( 493 ), SubResource( 494 ), SubResource( 495 ), SubResource( 496 ), SubResource( 497 ), SubResource( 498 ), SubResource( 499 ), SubResource( 500 ), SubResource( 501 ) ]
+Connections = [ SubResource( 369 ), SubResource( 370 ), SubResource( 371 ), SubResource( 372 ), SubResource( 373 ), SubResource( 374 ), SubResource( 375 ), SubResource( 376 ), SubResource( 377 ), SubResource( 378 ), SubResource( 379 ), SubResource( 380 ), SubResource( 381 ), SubResource( 382 ), SubResource( 383 ), SubResource( 384 ), SubResource( 385 ), SubResource( 386 ), SubResource( 387 ), SubResource( 388 ), SubResource( 389 ), SubResource( 390 ), SubResource( 391 ), SubResource( 392 ), SubResource( 393 ), SubResource( 394 ), SubResource( 395 ), SubResource( 396 ), SubResource( 397 ), SubResource( 398 ), SubResource( 399 ), SubResource( 400 ), SubResource( 401 ), SubResource( 402 ), SubResource( 403 ), SubResource( 404 ), SubResource( 405 ), SubResource( 406 ), SubResource( 407 ), SubResource( 408 ), SubResource( 409 ), SubResource( 410 ), SubResource( 411 ), SubResource( 412 ), SubResource( 413 ), SubResource( 414 ), SubResource( 415 ), SubResource( 416 ), SubResource( 417 ), SubResource( 418 ), SubResource( 419 ), SubResource( 420 ), SubResource( 421 ), SubResource( 422 ), SubResource( 423 ), SubResource( 424 ), SubResource( 425 ), SubResource( 426 ), SubResource( 427 ), SubResource( 428 ), SubResource( 429 ), SubResource( 430 ), SubResource( 431 ), SubResource( 432 ), SubResource( 433 ), SubResource( 434 ), SubResource( 435 ), SubResource( 436 ), SubResource( 437 ), SubResource( 438 ), SubResource( 439 ), SubResource( 440 ), SubResource( 441 ), SubResource( 442 ), SubResource( 443 ), SubResource( 444 ), SubResource( 445 ), SubResource( 446 ), SubResource( 447 ), SubResource( 448 ), SubResource( 449 ), SubResource( 450 ), SubResource( 451 ) ]
+
+[sub_resource type="Resource" id=503]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = ""
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=504]
+script = ExtResource( 9 )
+Id = "8caedb9e-00ab-49ff-8f6d-dd6f38a68ab1"
+Name = "filename_svg"
+Description = ""
+TypeHint = 6
+DefaultValue = ""
+ShowInCustomizer = false
+CustomizerDescription = SubResource( 503 )
+
+[sub_resource type="Resource" id=505]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Export"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=506]
+script = ExtResource( 9 )
+Id = "9be2f33d-c26e-4913-9232-0063f3153e7c"
+Name = "generategcode"
+Description = ""
+TypeHint = 2
+DefaultValue = "true"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 505 )
+
+[sub_resource type="Resource" id=507]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = ""
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=508]
+script = ExtResource( 9 )
+Id = "e33ad87e-dca4-4c6b-a4e3-3b7366589f38"
+Name = "filename_dxf"
+Description = ""
+TypeHint = 6
+DefaultValue = ""
+ShowInCustomizer = false
+CustomizerDescription = SubResource( 507 )
+
+[sub_resource type="Resource" id=509]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Export"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=510]
+script = ExtResource( 9 )
+Id = "9d986c72-453c-4d50-924d-fd31076fb865"
+Name = "generatedxf"
+Description = ""
+TypeHint = 2
+DefaultValue = "true"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 509 )
+
+[sub_resource type="Resource" id=511]
+script = ExtResource( 8 )
+ConstraintType = 3
+Tab = "CAM"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray( "0", "122", "112", "102" )
+OptionLabels = PoolStringArray( "", "", "", "" )
+
+[sub_resource type="Resource" id=512]
+script = ExtResource( 9 )
+Id = "e67d606f-1449-4463-baa6-265910923574"
+Name = "small_square_tool_no"
+Description = ""
+TypeHint = 3
+DefaultValue = "102"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 511 )
+
+[sub_resource type="Resource" id=513]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Feeds and Speeds"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=514]
+script = ExtResource( 9 )
+Id = "282ec9f5-8537-4f5b-a7c6-d421718a5d7d"
+Name = "plunge"
+Description = ""
+TypeHint = 3
+DefaultValue = "100"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 513 )
+
+[sub_resource type="Resource" id=515]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Feeds and Speeds"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=516]
+script = ExtResource( 9 )
+Id = "40103345-239f-4bf4-b5b6-f42c6534df7c"
+Name = "feed"
+Description = ""
+TypeHint = 3
+DefaultValue = "400"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 515 )
+
+[sub_resource type="Resource" id=517]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Feeds and Speeds"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=518]
+script = ExtResource( 9 )
+Id = "33502828-c7b3-47d4-84ce-dda6bf07f8f5"
+Name = "speed"
+Description = ""
+TypeHint = 3
+DefaultValue = "16000"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 517 )
+
+[sub_resource type="Resource" id=519]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Feeds and Speeds"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=520]
+script = ExtResource( 9 )
+Id = "b8f303c8-2bd6-4d62-83de-fcc51c6c584b"
+Name = "square_ratio"
+Description = ""
+TypeHint = 3
+DefaultValue = "1"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 519 )
+
+[sub_resource type="Resource" id=521]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Feeds and Speeds"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=522]
+script = ExtResource( 9 )
+Id = "a098e3cc-1cc8-47a3-bd29-81a5989c24a0"
+Name = "small_V_ratio"
+Description = ""
+TypeHint = 3
+DefaultValue = "0.75"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 521 )
+
+[sub_resource type="Resource" id=523]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Feeds and Speeds"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=524]
+script = ExtResource( 9 )
+Id = "4bc20421-0edd-43db-af87-ffb71980b6f4"
+Name = "large_V_ratio"
+Description = ""
+TypeHint = 3
+DefaultValue = "0.875"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 523 )
+
+[sub_resource type="Resource" id=525]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Stock"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=526]
+script = ExtResource( 9 )
+Id = "cb603a02-cbf4-4f2d-bcd3-c1c12ed51fc9"
+Name = "stocklength"
+Description = ""
+TypeHint = 3
+DefaultValue = "219"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 525 )
+
+[sub_resource type="Resource" id=527]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Stock"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=528]
+script = ExtResource( 9 )
+Id = "f56dee88-ca87-4ae4-9e87-941df73b940a"
+Name = "stockwidth"
+Description = ""
+TypeHint = 3
+DefaultValue = "150"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 527 )
+
+[sub_resource type="Resource" id=529]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Stock"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=530]
+script = ExtResource( 9 )
+Id = "4b258d37-5139-437a-a6dc-7b808098c815"
+Name = "stockthickness"
+Description = ""
+TypeHint = 3
+DefaultValue = "7.9"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 529 )
+
+[sub_resource type="Resource" id=531]
+script = ExtResource( 8 )
+ConstraintType = 3
+Tab = "Stock"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray( "Top", "Bottom" )
+OptionLabels = PoolStringArray( "", "" )
+
+[sub_resource type="Resource" id=532]
+script = ExtResource( 9 )
+Id = "160faf4a-6679-43f2-b211-3e348ed88de8"
+Name = "zeroheight"
+Description = ""
+TypeHint = 6
+DefaultValue = "Top"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 531 )
+
+[sub_resource type="Resource" id=533]
+script = ExtResource( 8 )
+ConstraintType = 3
+Tab = "Stock"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray( "Lower-Left", "Center-Left", "Top-Left", "Center" )
+OptionLabels = PoolStringArray( "", "", "", "" )
+
+[sub_resource type="Resource" id=534]
+script = ExtResource( 9 )
+Id = "e2a1d82f-c1f1-4475-88b0-5f7e9a1b870a"
+Name = "stockorigin"
+Description = ""
+TypeHint = 6
+DefaultValue = "Lower-Left"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 533 )
+
+[sub_resource type="Resource" id=535]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Stock"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=536]
+script = ExtResource( 9 )
+Id = "c7f1669e-4ff8-4c4b-a529-751cf7104d86"
+Name = "retractheight"
+Description = ""
+TypeHint = 3
+DefaultValue = "9"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 535 )
+
+[sub_resource type="Resource" id=537]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "CAM"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=538]
+script = ExtResource( 9 )
+Id = "cc07ff83-8678-425f-9df8-6ede8cb71228"
+Name = "toolradius"
+Description = ""
+TypeHint = 3
+DefaultValue = "1.5875"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 537 )
+
+[sub_resource type="Resource" id=539]
+script = ExtResource( 8 )
+ConstraintType = 3
+Tab = "CAM"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray( "0", "390", "301" )
+OptionLabels = PoolStringArray( "", "", "" )
+
+[sub_resource type="Resource" id=540]
+script = ExtResource( 9 )
+Id = "02758f07-c18e-49db-9c9e-75f2dbd12b14"
+Name = "small_V_tool_no"
+Description = ""
+TypeHint = 3
+DefaultValue = "390"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 539 )
+
+[sub_resource type="Resource" id=541]
+script = ExtResource( 8 )
+ConstraintType = 3
+Tab = "CAM"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray( "0", "301", "690" )
+OptionLabels = PoolStringArray( "", "", "" )
+
+[sub_resource type="Resource" id=542]
+script = ExtResource( 9 )
+Id = "c458fc4b-78b4-4b58-990c-1dc02c0baa2c"
+Name = "large_V_tool_no"
+Description = ""
+TypeHint = 3
+DefaultValue = "301"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 541 )
+
+[sub_resource type="Resource" id=543]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = ""
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=544]
+script = ExtResource( 9 )
+Id = "f4ef5e6c-93f0-45e5-9c54-a4023d6e2cc2"
+Name = "v_joints_no"
+Description = ""
+TypeHint = 3
+DefaultValue = "0"
+ShowInCustomizer = false
+CustomizerDescription = SubResource( 543 )
+
+[sub_resource type="Resource" id=545]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = ""
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=546]
+script = ExtResource( 9 )
+Id = "3d15ff3c-bb75-475f-950a-7f1e897ce1d2"
+Name = "v_joints_size"
+Description = ""
+TypeHint = 3
+DefaultValue = "0"
+ShowInCustomizer = false
+CustomizerDescription = SubResource( 545 )
+
+[sub_resource type="Resource" id=547]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = ""
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=548]
+script = ExtResource( 9 )
+Id = "5bb300f5-5e77-45bf-a2bb-711cbcf0d30a"
+Name = "v_joints_spacing"
+Description = ""
+TypeHint = 3
+DefaultValue = "0"
+ShowInCustomizer = false
+CustomizerDescription = SubResource( 547 )
+
+[sub_resource type="Resource" id=549]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = ""
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=550]
+script = ExtResource( 9 )
+Id = "bb092ed1-53a2-4e8f-9d83-4528beff5e26"
+Name = "joint_width"
+Description = ""
+TypeHint = 3
+DefaultValue = "0"
+ShowInCustomizer = false
+CustomizerDescription = SubResource( 549 )
+
+[sub_resource type="Resource" id=551]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = ""
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=552]
+script = ExtResource( 9 )
+Id = "c1697841-41b0-45c6-824d-b886c36fc8d7"
+Name = "filename_gcode"
+Description = ""
+TypeHint = 6
+DefaultValue = ""
+ShowInCustomizer = false
+CustomizerDescription = SubResource( 551 )
+
+[sub_resource type="Resource" id=553]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Export"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=554]
+script = ExtResource( 9 )
+Id = "57f86f0c-d88c-4253-ad61-69d838bb967f"
+Name = "generatesvg"
+Description = ""
+TypeHint = 2
+DefaultValue = "true"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 553 )
+
+[sub_resource type="Resource" id=555]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Export"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=556]
+script = ExtResource( 9 )
+Id = "e1580bb5-be1a-49c7-9901-36e57f1a3558"
+Name = "Base_filename"
+Description = ""
+TypeHint = 6
+DefaultValue = "export"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 555 )
+
+[sub_resource type="Resource" id=557]
+script = ExtResource( 8 )
+ConstraintType = 3
+Tab = "CAM"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray( "0", "121", "111", "101" )
+OptionLabels = PoolStringArray( "", "", "", "" )
+
+[sub_resource type="Resource" id=558]
+script = ExtResource( 9 )
+Id = "21ed6a08-ab0f-462e-a508-0c4ee470f818"
+Name = "small_ball_tool_no"
+Description = ""
+TypeHint = 3
+DefaultValue = "0"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 557 )
+
+[sub_resource type="Resource" id=559]
+script = ExtResource( 8 )
+ConstraintType = 3
+Tab = "CAM"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray( "0", "111", "101", "202" )
+OptionLabels = PoolStringArray( "", "", "", "" )
+
+[sub_resource type="Resource" id=560]
+script = ExtResource( 9 )
+Id = "06df9882-e910-4f0a-bee4-ca90cebb9d3c"
+Name = "large_ball_tool_no"
+Description = ""
+TypeHint = 3
+DefaultValue = "0"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 559 )
+
+[sub_resource type="Resource" id=561]
+script = ExtResource( 8 )
+ConstraintType = 3
+Tab = "CAM"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray( "0", "112", "102", "201" )
+OptionLabels = PoolStringArray( "", "", "", "" )
+
+[sub_resource type="Resource" id=562]
+script = ExtResource( 9 )
+Id = "94177abc-c6ab-45b7-b65e-797446644676"
+Name = "large_square_tool_no"
+Description = ""
+TypeHint = 3
+DefaultValue = "0"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 561 )
+
+[sub_resource type="Resource" id=563]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Joinery"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=564]
+script = ExtResource( 9 )
+Id = "38efd0e7-660e-4047-8e65-6cb30a3dcdf0"
+Name = "Joinery_Gap"
+Description = ""
+TypeHint = 3
+DefaultValue = "0.1"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 563 )
+
+[sub_resource type="Resource" id=565]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Joinery"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=566]
+script = ExtResource( 9 )
+Id = "9edb54cb-1b76-46f5-be16-792460215d7d"
+Name = "Glue_Gap"
+Description = ""
+TypeHint = 3
+DefaultValue = "0.05"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 565 )
+
+[sub_resource type="Resource" id=567]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = ""
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=568]
+script = ExtResource( 9 )
+Id = "ec699f98-17d0-4781-b820-84e54a88182d"
+Name = "h_joints_no"
+Description = ""
+TypeHint = 3
+DefaultValue = "0"
+ShowInCustomizer = false
+CustomizerDescription = SubResource( 567 )
+
+[sub_resource type="Resource" id=569]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = ""
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=570]
+script = ExtResource( 9 )
+Id = "58f73b71-5bf1-4fe8-b2db-11c4b2f9ea0d"
+Name = "h_joints_size"
+Description = ""
+TypeHint = 3
+DefaultValue = "0"
+ShowInCustomizer = false
+CustomizerDescription = SubResource( 569 )
+
+[sub_resource type="Resource" id=571]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = ""
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=572]
+script = ExtResource( 9 )
+Id = "89f5d4cb-3676-40bc-b1c0-5747aa2c618b"
+Name = "h_joints_spacing"
+Description = ""
+TypeHint = 3
+DefaultValue = "0"
+ShowInCustomizer = false
+CustomizerDescription = SubResource( 571 )
+
+[resource]
+script = ExtResource( 10 )
+Functions = [  ]
+Modules = [ SubResource( 319 ), SubResource( 368 ), SubResource( 502 ) ]
+MainModule = SubResource( 187 )
+Variables = [ SubResource( 504 ), SubResource( 506 ), SubResource( 508 ), SubResource( 510 ), SubResource( 512 ), SubResource( 514 ), SubResource( 516 ), SubResource( 518 ), SubResource( 520 ), SubResource( 522 ), SubResource( 524 ), SubResource( 526 ), SubResource( 528 ), SubResource( 530 ), SubResource( 532 ), SubResource( 534 ), SubResource( 536 ), SubResource( 538 ), SubResource( 540 ), SubResource( 542 ), SubResource( 544 ), SubResource( 546 ), SubResource( 548 ), SubResource( 550 ), SubResource( 552 ), SubResource( 554 ), SubResource( 556 ), SubResource( 558 ), SubResource( 560 ), SubResource( 562 ), SubResource( 564 ), SubResource( 566 ), SubResource( 568 ), SubResource( 570 ), SubResource( 572 ) ]
+ExternalReferences = [ SubResource( 96 ) ]
+Preamble = "//!OpenSCAD
+
+use <gcodepreview.py>;
+use <pygcodepreview.scad>;
+
+$fa = 4;
+$fs = 0.25;
+"
