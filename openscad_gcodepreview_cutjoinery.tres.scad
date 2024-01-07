@@ -167,8 +167,8 @@ module cuthorizontalpasses(bx, by, bz, ex, ey, ez, no_passes) {
  */
 module cutjoinery_horizontal_odd(bx, by, bz, ex, ey, ez, tool_radius, square_tool_no, large_V_tool_no, V_tool_no) {
     if ((square_tool_no > 0)) {
-        cut_rectangle(options = "horizontal", bx = bx, by = (by - tool_radius), bz = bz, ex = ex, ey = ((((bz - ez) + ey) - tool_radius) - tool_radius), ez = (tool_radius * -1), tr = tool_radius, stepover = 0, clearperimeter = false);
         toolchange(tool_number = square_tool_no, speed = speed);
+        cut_rectangle(options = "horizontal", bx = bx, by = (by - tool_radius), bz = bz, ex = ex, ey = ((((bz - ez) + ey) - tool_radius) - tool_radius), ez = (tool_radius * -1), tr = tool_radius, stepover = 0, clearperimeter = false);
         * cuthorizontalpasses(bx = bx, by = (((by - (bz - ez)) + tool_radius) + tool_radius), bz = bz, ex = ex, ey = ((((bz - ez) + ey) - tool_radius) - tool_radius), ez = (tool_radius * -1), no_passes = round(number = ((bz - ez) / tool_radius)));
         cjho(bx = bx, by = by, bz = bz, ex = ex, ey = ey, ez = ez, tool_radius = tool_radius);
     }
@@ -243,8 +243,8 @@ module cutjoinery_vertical_both(bx, by, bz, ex, ey, ez, tool_radius, square_tool
  */
 module cutjoinery_vertical_odd(bx, by, bz, ex, ey, ez, tool_radius, square_tool_no, large_V_tool_no, V_tool_no) {
     if ((square_tool_no > 0)) {
-        cut_rectangle(options = "vertical", bx = (((bx - (bz - ez)) + tool_radius) + tool_radius), by = by, bz = bz, ex = (ex - tool_radius), ey = ey, ez = (tool_radius * -1), tr = tool_radius, stepover = 0, clearperimeter = false);
         toolchange(tool_number = square_tool_no, speed = speed);
+        cut_rectangle(options = "vertical", bx = (((bx - (bz - ez)) + tool_radius) + tool_radius), by = by, bz = bz, ex = (ex - tool_radius), ey = ey, ez = (tool_radius * -1), tr = tool_radius, stepover = 0, clearperimeter = false);
         * cutverticalpasses(bx = (((bx - (bz - ez)) + tool_radius) + tool_radius), by = by, bz = bz, ex = (ex - tool_radius), ey = ey, ez = (tool_radius * -1), no_passes = round(number = (((bz - ez) + ex) / tool_radius)));
         cjvodd(bx = bx, by = by, bz = bz, ex = ex, ey = ey, ez = ez, tool_radius = tool_radius);
     }
@@ -424,8 +424,8 @@ module cjvb_pin(bx, by, bz, tr, pin_width, pin_step_size) {
  */
 module cutjoinery_horizontal_both(bx, by, bz, ex, ey, ez, tool_radius, square_tool_no, large_V_tool_no, V_tool_no) {
     if ((square_tool_no > 0)) {
-        cut_rectangle(options = "horizontal", bx = bx, by = (((by - (bz - ez)) + tool_radius) + tool_radius), bz = bz, ex = ex, ey = ((((bz - ez) + ey) - tool_radius) - tool_radius), ez = (tool_radius * -1), tr = tool_radius, stepover = 0, clearperimeter = false);
         toolchange(tool_number = square_tool_no, speed = speed);
+        cut_rectangle(options = "horizontal", bx = bx, by = (((by - (bz - ez)) + tool_radius) + tool_radius), bz = bz, ex = ex, ey = ((((bz - ez) + ey) - tool_radius) - tool_radius), ez = (tool_radius * -1), tr = tool_radius, stepover = 0, clearperimeter = false);
         * cuthorizontalpasses(bx = bx, by = (((by - (bz - ez)) + tool_radius) + tool_radius), bz = bz, ex = ex, ey = ((((bz - ez) + ey) - tool_radius) - tool_radius), ez = (tool_radius * -1), no_passes = round(number = ((bz - ez) / tool_radius)));
         cjhb(bx = bx, by = by, bz = bz, ex = ex, ey = ey, ez = ez, tool_radius = tool_radius);
     }
@@ -525,8 +525,8 @@ module cjvo_pins(bx, by, bz, tr, pin_width, pin_step_size) {
  */
 module cutjoinery_vertical_even(bx, by, bz, ex, ey, ez, tool_radius, square_tool_no, large_V_tool_no, V_tool_no) {
     if ((square_tool_no > 0)) {
-        cut_rectangle(options = "vertical", bx = bx, by = by, bz = bz, ex = ((((bz - ez) + ex) - tool_radius) - tool_radius), ey = ey, ez = (tool_radius * -1), tr = tool_radius, stepover = 0, clearperimeter = false);
         toolchange(tool_number = square_tool_no, speed = speed);
+        cut_rectangle(options = "vertical", bx = bx, by = by, bz = bz, ex = ((((bz - ez) + ex) - tool_radius) - tool_radius), ey = ey, ez = (tool_radius * -1), tr = tool_radius, stepover = 0, clearperimeter = false);
         * cutverticalpasses(bx = bx, by = by, bz = bz, ex = ((((bz - ez) + ex) - tool_radius) - tool_radius), ey = ey, ez = (tool_radius * -1), no_passes = round(number = (((bz - ez) + ex) / tool_radius)));
         cjveven(bx = bx, by = by, bz = bz, ex = ex, ey = ey, ez = ez, tool_radius = tool_radius);
     }
@@ -932,10 +932,10 @@ difference() {
     }
     
     movetosafeheight();
-    cutjoinery_vertical_both(bx = (stocklength / 2), by = 0, bz = 0, ex = (stocklength / 2), ey = stockwidth, ez = (stockthickness * -1), tool_radius = toolradius, square_tool_no = small_square_tool_no, large_V_tool_no = large_V_tool_no, V_tool_no = small_V_tool_no);
+    * cutjoinery_vertical_both(bx = (stocklength / 2), by = 0, bz = 0, ex = (stocklength / 2), ey = stockwidth, ez = (stockthickness * -1), tool_radius = toolradius, square_tool_no = small_square_tool_no, large_V_tool_no = large_V_tool_no, V_tool_no = small_V_tool_no);
     * cutjoinery_vertical_odd(bx = stocklength, by = 0, bz = 0, ex = stocklength, ey = stockwidth, ez = (stockthickness * -1), tool_radius = toolradius, square_tool_no = small_square_tool_no, large_V_tool_no = large_V_tool_no, V_tool_no = small_V_tool_no);
     * cutjoinery_vertical_even(bx = 0, by = 0, bz = 0, ex = 0, ey = stockwidth, ez = (stockthickness * -1), tool_radius = toolradius, square_tool_no = small_square_tool_no, large_V_tool_no = large_V_tool_no, V_tool_no = small_V_tool_no);
-    * cutjoinery_horizontal_both(bx = 0, by = 0, bz = 0, ex = stocklength, ey = (stockwidth / 2), ez = (stockthickness * -1), tool_radius = toolradius, square_tool_no = small_square_tool_no, large_V_tool_no = large_V_tool_no, V_tool_no = small_V_tool_no);
+    cutjoinery_horizontal_both(bx = 0, by = (stockwidth / 2), bz = 0, ex = stocklength, ey = (stockwidth / 2), ez = (stockthickness * -1), tool_radius = toolradius, square_tool_no = small_square_tool_no, large_V_tool_no = large_V_tool_no, V_tool_no = small_V_tool_no);
     * cutjoinery_horizontal_odd(bx = 0, by = 0, bz = 0, ex = stocklength, ey = 0, ez = (stockthickness * -1), tool_radius = toolradius, square_tool_no = small_square_tool_no, large_V_tool_no = large_V_tool_no, V_tool_no = small_V_tool_no);
     * cutjoinery_horizontal_even(bx = 0, by = stockwidth, bz = 0, ex = stocklength, ey = stockwidth, ez = (stockthickness * -1), tool_radius = toolradius, square_tool_no = small_square_tool_no, large_V_tool_no = large_V_tool_no, V_tool_no = small_V_tool_no);
     endtoolpath();

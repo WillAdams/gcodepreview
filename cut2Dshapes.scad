@@ -44,7 +44,7 @@ module cut_rectangle_horizontal(bx, by, bz, ex, ey, ez, tr, stepover) {
         cut(ex = ex, ey = (by + (((ey - by) / (round(number = (((ey - by) / tr) / 2)) * 2)) * var0__gHM5AYfLL0mqB8lH9bnxng)), ez = ez);
         addpolyline(bx = ex, by = (by + (((ey - by) / (round(number = (((ey - by) / tr) / 2)) * 2)) * var0__gHM5AYfLL0mqB8lH9bnxng)), bz = ez);
         if ((var0__gHM5AYfLL0mqB8lH9bnxng <= ((round(number = (((ey - by) / tr) / 2)) * 2) - 1))) {
-            # cut(ex = ex, ey = ((by + (((ey - by) / (round(number = (((ey - by) / tr) / 2)) * 2)) * var0__gHM5AYfLL0mqB8lH9bnxng)) + ((ey - by) / (round(number = (((ey - by) / tr) / 2)) * 2))), ez = ez);
+            cut(ex = ex, ey = ((by + (((ey - by) / (round(number = (((ey - by) / tr) / 2)) * 2)) * var0__gHM5AYfLL0mqB8lH9bnxng)) + ((ey - by) / (round(number = (((ey - by) / tr) / 2)) * 2))), ez = ez);
             addpolyline(bx = ex, by = ((by + (((ey - by) / (round(number = (((ey - by) / tr) / 2)) * 2)) * var0__gHM5AYfLL0mqB8lH9bnxng)) + ((ey - by) / (round(number = (((ey - by) / tr) / 2)) * 2))), bz = ez);
             cut(ex = bx, ey = ((by + (((ey - by) / (round(number = (((ey - by) / tr) / 2)) * 2)) * var0__gHM5AYfLL0mqB8lH9bnxng)) + ((ey - by) / (round(number = (((ey - by) / tr) / 2)) * 2))), ez = ez);
             addpolyline(bx = bx, by = ((by + (((ey - by) / (round(number = (((ey - by) / tr) / 2)) * 2)) * var0__gHM5AYfLL0mqB8lH9bnxng)) + ((ey - by) / (round(number = (((ey - by) / tr) / 2)) * 2))), bz = ez);
