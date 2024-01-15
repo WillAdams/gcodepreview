@@ -1,0 +1,2018 @@
+[gd_resource type="Resource" load_steps=218 format=2]
+
+[ext_resource path="res://Library/IO/SavedParameterDescription.cs" type="Script" id=1]
+[ext_resource path="res://Library/IO/SavedModuleDescription.cs" type="Script" id=2]
+[ext_resource path="res://Library/IO/SavedExternalReference.cs" type="Script" id=3]
+[ext_resource path="res://Library/IO/SavedConnection.cs" type="Script" id=4]
+[ext_resource path="res://Library/IO/SavedMainModuleDescription.cs" type="Script" id=5]
+[ext_resource path="res://Library/IO/SavedNode.cs" type="Script" id=6]
+[ext_resource path="res://Library/IO/SavedGraph.cs" type="Script" id=7]
+[ext_resource path="res://Library/IO/SavedVariableCustomizerDescription.cs" type="Script" id=8]
+[ext_resource path="res://Library/IO/SavedVariableDescription.cs" type="Script" id=9]
+[ext_resource path="res://Library/IO/SavedProject.cs" type="Script" id=10]
+
+[sub_resource type="Resource" id=1]
+script = ExtResource( 1 )
+Name = "fn"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=2]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_opengcodefile"
+Name = "opengcodefile"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 1 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=3]
+script = ExtResource( 1 )
+Name = "fn"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=4]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_opensvgfile"
+Name = "opensvgfile"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 3 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=5]
+script = ExtResource( 1 )
+Name = "fn"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=6]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_opendxffile"
+Name = "opendxffile"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 5 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=7]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=8]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=9]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=10]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=11]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_writesvgline"
+Name = "writesvgline"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 7 ), SubResource( 8 ), SubResource( 9 ), SubResource( 10 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=12]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=13]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=14]
+script = ExtResource( 1 )
+Name = "bz"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=15]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_beginpolyline"
+Name = "beginpolyline"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 12 ), SubResource( 13 ), SubResource( 14 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=16]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=17]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=18]
+script = ExtResource( 1 )
+Name = "bz"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=19]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_addpolyline"
+Name = "addpolyline"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 16 ), SubResource( 17 ), SubResource( 18 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=20]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_closepolyline"
+Name = "closepolyline"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [  ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=21]
+script = ExtResource( 1 )
+Name = "comment"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=22]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_writecomment"
+Name = "writecomment"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 21 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=23]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_closegcodefile"
+Name = "closegcodefile"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [  ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=24]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_closedxffile"
+Name = "closedxffile"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [  ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=25]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_closesvgfile"
+Name = "closesvgfile"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [  ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=26]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=27]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=28]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=29]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_oset"
+Name = "oset"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 26 ), SubResource( 27 ), SubResource( 28 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=30]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=31]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=32]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=33]
+script = ExtResource( 1 )
+Name = "r"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=34]
+script = ExtResource( 1 )
+Name = "g"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=35]
+script = ExtResource( 1 )
+Name = "b"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=36]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_otm"
+Name = "otm"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 30 ), SubResource( 31 ), SubResource( 32 ), SubResource( 33 ), SubResource( 34 ), SubResource( 35 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=37]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=38]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=39]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=40]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_ocut"
+Name = "ocut"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 37 ), SubResource( 38 ), SubResource( 39 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=41]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=42]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=43]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=44]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_orapid"
+Name = "orapid"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 41 ), SubResource( 42 ), SubResource( 43 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=45]
+script = ExtResource( 1 )
+Name = "stocklength"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=46]
+script = ExtResource( 1 )
+Name = "stockwidth"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=47]
+script = ExtResource( 1 )
+Name = "stockthickness"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=48]
+script = ExtResource( 1 )
+Name = "zeroheight"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=49]
+script = ExtResource( 1 )
+Name = "stockorigin"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=50]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_setupstock"
+Name = "setupstock"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 45 ), SubResource( 46 ), SubResource( 47 ), SubResource( 48 ), SubResource( 49 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=51]
+script = ExtResource( 1 )
+Name = "tool_number"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=52]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_select_tool"
+Name = "select_tool"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 51 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=53]
+script = ExtResource( 1 )
+Name = "tool_number"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=54]
+script = ExtResource( 1 )
+Name = "speed"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=55]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_toolchange"
+Name = "toolchange"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 53 ), SubResource( 54 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=56]
+script = ExtResource( 1 )
+Name = "es_diameter"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=57]
+script = ExtResource( 1 )
+Name = "es_flute_length"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=58]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_gcp_endmill_square"
+Name = "gcp_endmill_square"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 56 ), SubResource( 57 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=59]
+script = ExtResource( 1 )
+Name = "es_diameter"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=60]
+script = ExtResource( 1 )
+Name = "es_flute_length"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=61]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_gcp_endmill_ball"
+Name = "gcp_endmill_ball"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 59 ), SubResource( 60 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=62]
+script = ExtResource( 1 )
+Name = "es_v_angle"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=63]
+script = ExtResource( 1 )
+Name = "es_diameter"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=64]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_gcp_endmill_v"
+Name = "gcp_endmill_v"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 62 ), SubResource( 63 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=65]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=66]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=67]
+script = ExtResource( 1 )
+Name = "bz"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=68]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=69]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=70]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=71]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_rapidbx"
+Name = "rapidbx"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 65 ), SubResource( 66 ), SubResource( 67 ), SubResource( 68 ), SubResource( 69 ), SubResource( 70 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=72]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=73]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=74]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=75]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_rapid"
+Name = "rapid"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 72 ), SubResource( 73 ), SubResource( 74 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=76]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_movetosafez"
+Name = "movetosafez"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [  ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=77]
+script = ExtResource( 1 )
+Name = "bx"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=78]
+script = ExtResource( 1 )
+Name = "by"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=79]
+script = ExtResource( 1 )
+Name = "bz"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=80]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_begintoolpath"
+Name = "begintoolpath"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 77 ), SubResource( 78 ), SubResource( 79 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=81]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_movetosafeheight"
+Name = "movetosafeheight"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [  ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=82]
+script = ExtResource( 1 )
+Name = "axis"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=83]
+script = ExtResource( 1 )
+Name = "depth"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=84]
+script = ExtResource( 1 )
+Name = "feed"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=85]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_cutoneaxis_setfeed"
+Name = "cutoneaxis_setfeed"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 82 ), SubResource( 83 ), SubResource( 84 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=86]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=87]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=88]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=89]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_cut"
+Name = "cut"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 86 ), SubResource( 87 ), SubResource( 88 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=90]
+script = ExtResource( 1 )
+Name = "ex"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=91]
+script = ExtResource( 1 )
+Name = "ey"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=92]
+script = ExtResource( 1 )
+Name = "ez"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=93]
+script = ExtResource( 1 )
+Name = "feed"
+Label = ""
+Description = ""
+TypeHint = 8
+RenderHint = 0
+IsOptional = false
+
+[sub_resource type="Resource" id=94]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_cutwithfeed"
+Name = "cutwithfeed"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [ SubResource( 90 ), SubResource( 91 ), SubResource( 92 ), SubResource( 93 ) ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=95]
+script = ExtResource( 2 )
+Id = "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_endtoolpath"
+Name = "endtoolpath"
+NodeName = ""
+Description = ""
+IsExternal = false
+IsBuiltin = false
+ExternalSource = ""
+Parameters = [  ]
+SupportsChildren = false
+
+[sub_resource type="Resource" id=96]
+script = ExtResource( 3 )
+Id = "59805f60-bff2-4374-b955-0eeceb1ad3f5"
+IncludedBy = ""
+References = [  ]
+IncludePath = "C:/Users/willa/OneDrive/Documents/OpenSCAD/libraries/gcodepreview.scad"
+Mode = 1
+Functions = [  ]
+Modules = [ SubResource( 2 ), SubResource( 4 ), SubResource( 6 ), SubResource( 11 ), SubResource( 15 ), SubResource( 19 ), SubResource( 20 ), SubResource( 22 ), SubResource( 23 ), SubResource( 24 ), SubResource( 25 ), SubResource( 29 ), SubResource( 36 ), SubResource( 40 ), SubResource( 44 ), SubResource( 50 ), SubResource( 52 ), SubResource( 55 ), SubResource( 58 ), SubResource( 61 ), SubResource( 64 ), SubResource( 71 ), SubResource( 75 ), SubResource( 76 ), SubResource( 80 ), SubResource( 81 ), SubResource( 85 ), SubResource( 89 ), SubResource( 94 ), SubResource( 95 ) ]
+Variables = [  ]
+
+[sub_resource type="Resource" id=97]
+script = ExtResource( 4 )
+FromId = "6bbd26d8-ec88-4153-941c-7208759059ca"
+FromPort = 0
+ToId = "f3bd62f6-9c23-4d22-9ae3-693f3b9861c3"
+ToPort = 0
+
+[sub_resource type="Resource" id=98]
+script = ExtResource( 4 )
+FromId = "2c6ea103-121d-43dd-a99d-c9f81c4851f8"
+FromPort = 0
+ToId = "f3bd62f6-9c23-4d22-9ae3-693f3b9861c3"
+ToPort = 1
+
+[sub_resource type="Resource" id=99]
+script = ExtResource( 4 )
+FromId = "91a0157e-a5d2-46ca-9770-df21908d4119"
+FromPort = 0
+ToId = "f3bd62f6-9c23-4d22-9ae3-693f3b9861c3"
+ToPort = 2
+
+[sub_resource type="Resource" id=100]
+script = ExtResource( 4 )
+FromId = "c6eeed79-d915-4931-81ea-eeea0da9ec01"
+FromPort = 0
+ToId = "f3bd62f6-9c23-4d22-9ae3-693f3b9861c3"
+ToPort = 3
+
+[sub_resource type="Resource" id=101]
+script = ExtResource( 4 )
+FromId = "ab5c2142-64ad-408d-880a-41d5a28a50a0"
+FromPort = 0
+ToId = "f3bd62f6-9c23-4d22-9ae3-693f3b9861c3"
+ToPort = 4
+
+[sub_resource type="Resource" id=102]
+script = ExtResource( 4 )
+FromId = "f3bd62f6-9c23-4d22-9ae3-693f3b9861c3"
+FromPort = 0
+ToId = "edd975e0-fea7-4f5e-9073-12ebcd070b17"
+ToPort = 0
+
+[sub_resource type="Resource" id=103]
+script = ExtResource( 4 )
+FromId = "53834244-cb73-4e24-9425-c7dc4e185b8b"
+FromPort = 0
+ToId = "edd975e0-fea7-4f5e-9073-12ebcd070b17"
+ToPort = 1
+
+[sub_resource type="Resource" id=104]
+script = ExtResource( 4 )
+FromId = "3c0a12d7-09f9-4bcc-be77-fb8825cb3202"
+FromPort = 0
+ToId = "edd975e0-fea7-4f5e-9073-12ebcd070b17"
+ToPort = 1
+
+[sub_resource type="Resource" id=105]
+script = ExtResource( 4 )
+FromId = "9d264ead-ce50-406a-9721-9fd7510cb2bc"
+FromPort = 0
+ToId = "edd975e0-fea7-4f5e-9073-12ebcd070b17"
+ToPort = 0
+
+[sub_resource type="Resource" id=106]
+script = ExtResource( 4 )
+FromId = "39b01f9d-8dd6-4f0a-99f1-37ff24b5ad29"
+FromPort = 0
+ToId = "edd975e0-fea7-4f5e-9073-12ebcd070b17"
+ToPort = 0
+
+[sub_resource type="Resource" id=107]
+script = ExtResource( 4 )
+FromId = "99ef87c2-e965-43f0-9a91-aeb90c1ec2f0"
+FromPort = 0
+ToId = "edd975e0-fea7-4f5e-9073-12ebcd070b17"
+ToPort = 1
+
+[sub_resource type="Resource" id=108]
+script = ExtResource( 4 )
+FromId = "01c895a4-b171-4995-b9ed-7b359e042a38"
+FromPort = 0
+ToId = "edd975e0-fea7-4f5e-9073-12ebcd070b17"
+ToPort = 1
+
+[sub_resource type="Resource" id=109]
+script = ExtResource( 4 )
+FromId = "19e4a405-27be-4cc2-945d-5cb110ae3191"
+FromPort = 0
+ToId = "edd975e0-fea7-4f5e-9073-12ebcd070b17"
+ToPort = 0
+
+[sub_resource type="Resource" id=110]
+script = ExtResource( 4 )
+FromId = "1fe0fd3d-1cb7-4d7e-af61-13801cfd8ed7"
+FromPort = 0
+ToId = "edd975e0-fea7-4f5e-9073-12ebcd070b17"
+ToPort = 1
+
+[sub_resource type="Resource" id=111]
+script = ExtResource( 4 )
+FromId = "c92cbf9b-a66a-4642-84db-0010536eca79"
+FromPort = 0
+ToId = "d64b1623-57b5-42ea-bb37-64b346a52224"
+ToPort = 0
+
+[sub_resource type="Resource" id=112]
+script = ExtResource( 4 )
+FromId = "d01d52ae-8b8e-42ab-9ec5-8e89d6b31f71"
+FromPort = 0
+ToId = "9d264ead-ce50-406a-9721-9fd7510cb2bc"
+ToPort = 0
+
+[sub_resource type="Resource" id=113]
+script = ExtResource( 4 )
+FromId = "a86e648b-dcdc-4f88-97cf-cbd916d27392"
+FromPort = 0
+ToId = "39b01f9d-8dd6-4f0a-99f1-37ff24b5ad29"
+ToPort = 0
+
+[sub_resource type="Resource" id=114]
+script = ExtResource( 4 )
+FromId = "3d9e0747-9865-4039-b010-7c24dfb9cd6c"
+FromPort = 0
+ToId = "7599686d-341d-4991-9b43-08a19f6fb54f"
+ToPort = 0
+
+[sub_resource type="Resource" id=115]
+script = ExtResource( 4 )
+FromId = "234b5b08-3b54-48af-9538-91234e29fa78"
+FromPort = 0
+ToId = "19e4a405-27be-4cc2-945d-5cb110ae3191"
+ToPort = 0
+
+[sub_resource type="Resource" id=116]
+script = ExtResource( 4 )
+FromId = "21bdfc0a-114f-4429-8afd-f3b4c866110a"
+FromPort = 0
+ToId = "c92cbf9b-a66a-4642-84db-0010536eca79"
+ToPort = 0
+
+[sub_resource type="Resource" id=117]
+script = ExtResource( 4 )
+FromId = "9fc0c904-8ada-4245-8ade-f0b98ebf99f6"
+FromPort = 0
+ToId = "c92cbf9b-a66a-4642-84db-0010536eca79"
+ToPort = 1
+
+[sub_resource type="Resource" id=118]
+script = ExtResource( 4 )
+FromId = "0b0341d6-fb32-4977-a433-7d7408aa5334"
+FromPort = 0
+ToId = "5a1749a5-4e49-4cfe-b139-795163cc74f6"
+ToPort = 1
+
+[sub_resource type="Resource" id=119]
+script = ExtResource( 4 )
+FromId = "8d231e6c-2bbc-422b-97d7-96b61f9317f4"
+FromPort = 0
+ToId = "3d9e0747-9865-4039-b010-7c24dfb9cd6c"
+ToPort = 1
+
+[sub_resource type="Resource" id=120]
+script = ExtResource( 4 )
+FromId = "21bdfc0a-114f-4429-8afd-f3b4c866110a"
+FromPort = 0
+ToId = "3d9e0747-9865-4039-b010-7c24dfb9cd6c"
+ToPort = 0
+
+[sub_resource type="Resource" id=121]
+script = ExtResource( 4 )
+FromId = "21bdfc0a-114f-4429-8afd-f3b4c866110a"
+FromPort = 0
+ToId = "833b8bd7-4e41-4989-bdae-0ea6de590429"
+ToPort = 0
+
+[sub_resource type="Resource" id=122]
+script = ExtResource( 5 )
+Id = "62455917-6aa9-4df5-b567-f6a79f2318e8"
+Name = "<main>"
+NodeName = ""
+Description = "The main entrypoint."
+IsExternal = false
+IsBuiltin = true
+ExternalSource = ""
+Parameters = [  ]
+
+[sub_resource type="Resource" id=123]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1180, 80 )
+Id = "9d264ead-ce50-406a-9721-9fd7510cb2bc"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_opengcodefile"
+}
+
+[sub_resource type="Resource" id=124]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1080, 140 )
+Id = "39b01f9d-8dd6-4f0a-99f1-37ff24b5ad29"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_opendxffile"
+}
+
+[sub_resource type="Resource" id=125]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.Difference"
+Position = Vector2( 2180, 20 )
+Id = "edd975e0-fea7-4f5e-9073-12ebcd070b17"
+StoredData = {
+}
+
+[sub_resource type="Resource" id=126]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 280, 400 )
+Id = "f3bd62f6-9c23-4d22-9ae3-693f3b9861c3"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_setupstock"
+}
+
+[sub_resource type="Resource" id=127]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 0, 440 )
+Id = "6bbd26d8-ec88-4153-941c-7208759059ca"
+StoredData = {
+"variable_description_id": "cb603a02-cbf4-4f2d-bcd3-c1c12ed51fc9"
+}
+
+[sub_resource type="Resource" id=128]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 0, 540 )
+Id = "2c6ea103-121d-43dd-a99d-c9f81c4851f8"
+StoredData = {
+"variable_description_id": "f56dee88-ca87-4ae4-9e87-941df73b940a"
+}
+
+[sub_resource type="Resource" id=129]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 0, 640 )
+Id = "91a0157e-a5d2-46ca-9770-df21908d4119"
+StoredData = {
+"variable_description_id": "4b258d37-5139-437a-a6dc-7b808098c815"
+}
+
+[sub_resource type="Resource" id=130]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 0, 740 )
+Id = "c6eeed79-d915-4931-81ea-eeea0da9ec01"
+StoredData = {
+"variable_description_id": "160faf4a-6679-43f2-b211-3e348ed88de8"
+}
+
+[sub_resource type="Resource" id=131]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 0, 840 )
+Id = "ab5c2142-64ad-408d-880a-41d5a28a50a0"
+StoredData = {
+"variable_description_id": "e2a1d82f-c1f1-4475-88b0-5f7e9a1b870a"
+}
+
+[sub_resource type="Resource" id=132]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 0, 1160 )
+Id = "c7ffb3a8-c8ec-49b8-b135-48dfa89cf830"
+StoredData = {
+"variable_description_id": "e67d606f-1449-4463-baa6-265910923574"
+}
+
+[sub_resource type="Resource" id=133]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1640, 1320 )
+Id = "53834244-cb73-4e24-9425-c7dc4e185b8b"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_endtoolpath"
+}
+
+[sub_resource type="Resource" id=134]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1760, 1340 )
+Id = "3c0a12d7-09f9-4bcc-be77-fb8825cb3202"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_closegcodefile"
+}
+
+[sub_resource type="Resource" id=135]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1900, 1360 )
+Id = "99ef87c2-e965-43f0-9a91-aeb90c1ec2f0"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_closedxffile"
+}
+
+[sub_resource type="Resource" id=136]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 0, 1060 )
+Id = "1a18f7fe-526f-45f8-834f-f0c2c8a88c94"
+StoredData = {
+"variable_description_id": "cc07ff83-8678-425f-9df8-6ede8cb71228"
+}
+
+[sub_resource type="Resource" id=137]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 0, 1360 )
+Id = "5a6db16e-be31-44c1-8d2d-823828b0401c"
+StoredData = {
+"variable_description_id": "02758f07-c18e-49db-9c9e-75f2dbd12b14"
+}
+
+[sub_resource type="Resource" id=138]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 0, 1260 )
+Id = "5d95cc3c-2eda-4926-910c-796d5e0cd4e9"
+StoredData = {
+"variable_description_id": "c458fc4b-78b4-4b58-990c-1dc02c0baa2c"
+}
+
+[sub_resource type="Resource" id=139]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1140, 320 )
+Id = "01c895a4-b171-4995-b9ed-7b359e042a38"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_movetosafeheight"
+}
+
+[sub_resource type="Resource" id=140]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 1000, 220 )
+Id = "19e4a405-27be-4cc2-945d-5cb110ae3191"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_opensvgfile"
+}
+
+[sub_resource type="Resource" id=141]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.ModuleInvocation"
+Position = Vector2( 2020, 1380 )
+Id = "1fe0fd3d-1cb7-4d7e-af61-13801cfd8ed7"
+StoredData = {
+"module_description_id": "c3841fafca4088702afc55acc93e7e463461da6314d45292cec05729a0da3cc8_module_closesvgfile"
+}
+
+[sub_resource type="Resource" id=142]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 0, 100 )
+Id = "21bdfc0a-114f-4429-8afd-f3b4c866110a"
+StoredData = {
+"variable_description_id": "e1580bb5-be1a-49c7-9901-36e57f1a3558"
+}
+
+[sub_resource type="Resource" id=143]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.LiteralString"
+Position = Vector2( 0, 180 )
+Id = "9fc0c904-8ada-4245-8ade-f0b98ebf99f6"
+StoredData = {
+"output_literal_set.0": "False",
+"output_literal_value.0": ".nc"
+}
+
+[sub_resource type="Resource" id=144]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.LiteralString"
+Position = Vector2( 0, 260 )
+Id = "0b0341d6-fb32-4977-a433-7d7408aa5334"
+StoredData = {
+"output_literal_set.0": "False",
+"output_literal_value.0": ".dxf"
+}
+
+[sub_resource type="Resource" id=145]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.LiteralString"
+Position = Vector2( 0, 340 )
+Id = "8d231e6c-2bbc-422b-97d7-96b61f9317f4"
+StoredData = {
+"output_literal_set.0": "False",
+"output_literal_value.0": ".svg"
+}
+
+[sub_resource type="Resource" id=146]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.Str"
+Position = Vector2( 300, 80 )
+Id = "c92cbf9b-a66a-4642-84db-0010536eca79"
+StoredData = {
+"input_count": "2"
+}
+
+[sub_resource type="Resource" id=147]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.Str"
+Position = Vector2( 420, 180 )
+Id = "5a1749a5-4e49-4cfe-b139-795163cc74f6"
+StoredData = {
+"input_count": "2"
+}
+
+[sub_resource type="Resource" id=148]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.Str"
+Position = Vector2( 540, 280 )
+Id = "3d9e0747-9865-4039-b010-7c24dfb9cd6c"
+StoredData = {
+"input_count": "2"
+}
+
+[sub_resource type="Resource" id=149]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.SetVariable"
+Position = Vector2( 680, 80 )
+Id = "d64b1623-57b5-42ea-bb37-64b346a52224"
+StoredData = {
+"input_literal_set.0": "False",
+"input_literal_value.0": "",
+"variable_description_id": "c1697841-41b0-45c6-824d-b886c36fc8d7"
+}
+
+[sub_resource type="Resource" id=150]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 840, 80 )
+Id = "d01d52ae-8b8e-42ab-9ec5-8e89d6b31f71"
+StoredData = {
+"variable_description_id": "c1697841-41b0-45c6-824d-b886c36fc8d7"
+}
+
+[sub_resource type="Resource" id=151]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.SetVariable"
+Position = Vector2( 700, 180 )
+Id = "833b8bd7-4e41-4989-bdae-0ea6de590429"
+StoredData = {
+"input_literal_set.0": "False",
+"input_literal_value.0": "",
+"variable_description_id": "e33ad87e-dca4-4c6b-a4e3-3b7366589f38"
+}
+
+[sub_resource type="Resource" id=152]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 840, 180 )
+Id = "a86e648b-dcdc-4f88-97cf-cbd916d27392"
+StoredData = {
+"variable_description_id": "e33ad87e-dca4-4c6b-a4e3-3b7366589f38"
+}
+
+[sub_resource type="Resource" id=153]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.SetVariable"
+Position = Vector2( 700, 280 )
+Id = "7599686d-341d-4991-9b43-08a19f6fb54f"
+StoredData = {
+"input_literal_set.0": "False",
+"input_literal_value.0": "",
+"variable_description_id": "8caedb9e-00ab-49ff-8f6d-dd6f38a68ab1"
+}
+
+[sub_resource type="Resource" id=154]
+script = ExtResource( 6 )
+Type = "OpenScadGraphEditor.Nodes.GetVariable"
+Position = Vector2( 840, 280 )
+Id = "234b5b08-3b54-48af-9538-91234e29fa78"
+StoredData = {
+"variable_description_id": "8caedb9e-00ab-49ff-8f6d-dd6f38a68ab1"
+}
+
+[sub_resource type="Resource" id=155]
+script = ExtResource( 7 )
+Description = SubResource( 122 )
+Nodes = [ SubResource( 123 ), SubResource( 124 ), SubResource( 125 ), SubResource( 126 ), SubResource( 127 ), SubResource( 128 ), SubResource( 129 ), SubResource( 130 ), SubResource( 131 ), SubResource( 132 ), SubResource( 133 ), SubResource( 134 ), SubResource( 135 ), SubResource( 136 ), SubResource( 137 ), SubResource( 138 ), SubResource( 139 ), SubResource( 140 ), SubResource( 141 ), SubResource( 142 ), SubResource( 143 ), SubResource( 144 ), SubResource( 145 ), SubResource( 146 ), SubResource( 147 ), SubResource( 148 ), SubResource( 149 ), SubResource( 150 ), SubResource( 151 ), SubResource( 152 ), SubResource( 153 ), SubResource( 154 ) ]
+Connections = [ SubResource( 97 ), SubResource( 98 ), SubResource( 99 ), SubResource( 100 ), SubResource( 101 ), SubResource( 102 ), SubResource( 103 ), SubResource( 104 ), SubResource( 105 ), SubResource( 106 ), SubResource( 107 ), SubResource( 108 ), SubResource( 109 ), SubResource( 110 ), SubResource( 111 ), SubResource( 112 ), SubResource( 113 ), SubResource( 114 ), SubResource( 115 ), SubResource( 116 ), SubResource( 117 ), SubResource( 118 ), SubResource( 119 ), SubResource( 120 ), SubResource( 121 ) ]
+
+[sub_resource type="Resource" id=156]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = ""
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=157]
+script = ExtResource( 9 )
+Id = "8caedb9e-00ab-49ff-8f6d-dd6f38a68ab1"
+Name = "filename_svg"
+Description = ""
+TypeHint = 6
+DefaultValue = ""
+ShowInCustomizer = false
+CustomizerDescription = SubResource( 156 )
+
+[sub_resource type="Resource" id=158]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Export"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=159]
+script = ExtResource( 9 )
+Id = "9be2f33d-c26e-4913-9232-0063f3153e7c"
+Name = "generategcode"
+Description = ""
+TypeHint = 2
+DefaultValue = "true"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 158 )
+
+[sub_resource type="Resource" id=160]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = ""
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=161]
+script = ExtResource( 9 )
+Id = "e33ad87e-dca4-4c6b-a4e3-3b7366589f38"
+Name = "filename_dxf"
+Description = ""
+TypeHint = 6
+DefaultValue = ""
+ShowInCustomizer = false
+CustomizerDescription = SubResource( 160 )
+
+[sub_resource type="Resource" id=162]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Export"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=163]
+script = ExtResource( 9 )
+Id = "9d986c72-453c-4d50-924d-fd31076fb865"
+Name = "generatedxf"
+Description = ""
+TypeHint = 2
+DefaultValue = "true"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 162 )
+
+[sub_resource type="Resource" id=164]
+script = ExtResource( 8 )
+ConstraintType = 3
+Tab = "CAM"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray( "0", "122", "112", "102" )
+OptionLabels = PoolStringArray( "", "", "", "" )
+
+[sub_resource type="Resource" id=165]
+script = ExtResource( 9 )
+Id = "e67d606f-1449-4463-baa6-265910923574"
+Name = "small_square_tool_no"
+Description = ""
+TypeHint = 3
+DefaultValue = "102"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 164 )
+
+[sub_resource type="Resource" id=166]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Feeds and Speeds"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=167]
+script = ExtResource( 9 )
+Id = "282ec9f5-8537-4f5b-a7c6-d421718a5d7d"
+Name = "plunge"
+Description = ""
+TypeHint = 3
+DefaultValue = "100"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 166 )
+
+[sub_resource type="Resource" id=168]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Feeds and Speeds"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=169]
+script = ExtResource( 9 )
+Id = "40103345-239f-4bf4-b5b6-f42c6534df7c"
+Name = "feed"
+Description = ""
+TypeHint = 3
+DefaultValue = "400"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 168 )
+
+[sub_resource type="Resource" id=170]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Feeds and Speeds"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=171]
+script = ExtResource( 9 )
+Id = "33502828-c7b3-47d4-84ce-dda6bf07f8f5"
+Name = "speed"
+Description = ""
+TypeHint = 3
+DefaultValue = "16000"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 170 )
+
+[sub_resource type="Resource" id=172]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Feeds and Speeds"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=173]
+script = ExtResource( 9 )
+Id = "b8f303c8-2bd6-4d62-83de-fcc51c6c584b"
+Name = "square_ratio"
+Description = ""
+TypeHint = 3
+DefaultValue = "1"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 172 )
+
+[sub_resource type="Resource" id=174]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Feeds and Speeds"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=175]
+script = ExtResource( 9 )
+Id = "a098e3cc-1cc8-47a3-bd29-81a5989c24a0"
+Name = "small_V_ratio"
+Description = ""
+TypeHint = 3
+DefaultValue = "0.75"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 174 )
+
+[sub_resource type="Resource" id=176]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Feeds and Speeds"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=177]
+script = ExtResource( 9 )
+Id = "4bc20421-0edd-43db-af87-ffb71980b6f4"
+Name = "large_V_ratio"
+Description = ""
+TypeHint = 3
+DefaultValue = "0.875"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 176 )
+
+[sub_resource type="Resource" id=178]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Stock"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=179]
+script = ExtResource( 9 )
+Id = "cb603a02-cbf4-4f2d-bcd3-c1c12ed51fc9"
+Name = "stocklength"
+Description = ""
+TypeHint = 3
+DefaultValue = "219"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 178 )
+
+[sub_resource type="Resource" id=180]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Stock"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=181]
+script = ExtResource( 9 )
+Id = "f56dee88-ca87-4ae4-9e87-941df73b940a"
+Name = "stockwidth"
+Description = ""
+TypeHint = 3
+DefaultValue = "150"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 180 )
+
+[sub_resource type="Resource" id=182]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Stock"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=183]
+script = ExtResource( 9 )
+Id = "4b258d37-5139-437a-a6dc-7b808098c815"
+Name = "stockthickness"
+Description = ""
+TypeHint = 3
+DefaultValue = "7.9"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 182 )
+
+[sub_resource type="Resource" id=184]
+script = ExtResource( 8 )
+ConstraintType = 3
+Tab = "Stock"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray( "Top", "Bottom" )
+OptionLabels = PoolStringArray( "", "" )
+
+[sub_resource type="Resource" id=185]
+script = ExtResource( 9 )
+Id = "160faf4a-6679-43f2-b211-3e348ed88de8"
+Name = "zeroheight"
+Description = ""
+TypeHint = 6
+DefaultValue = "Top"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 184 )
+
+[sub_resource type="Resource" id=186]
+script = ExtResource( 8 )
+ConstraintType = 3
+Tab = "Stock"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray( "Lower-Left", "Center-Left", "Top-Left", "Center" )
+OptionLabels = PoolStringArray( "", "", "", "" )
+
+[sub_resource type="Resource" id=187]
+script = ExtResource( 9 )
+Id = "e2a1d82f-c1f1-4475-88b0-5f7e9a1b870a"
+Name = "stockorigin"
+Description = ""
+TypeHint = 6
+DefaultValue = "Lower-Left"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 186 )
+
+[sub_resource type="Resource" id=188]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Stock"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=189]
+script = ExtResource( 9 )
+Id = "c7f1669e-4ff8-4c4b-a529-751cf7104d86"
+Name = "retractheight"
+Description = ""
+TypeHint = 3
+DefaultValue = "9"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 188 )
+
+[sub_resource type="Resource" id=190]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "CAM"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=191]
+script = ExtResource( 9 )
+Id = "cc07ff83-8678-425f-9df8-6ede8cb71228"
+Name = "toolradius"
+Description = ""
+TypeHint = 3
+DefaultValue = "1.5875"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 190 )
+
+[sub_resource type="Resource" id=192]
+script = ExtResource( 8 )
+ConstraintType = 3
+Tab = "CAM"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray( "0", "390", "301" )
+OptionLabels = PoolStringArray( "", "", "" )
+
+[sub_resource type="Resource" id=193]
+script = ExtResource( 9 )
+Id = "02758f07-c18e-49db-9c9e-75f2dbd12b14"
+Name = "small_V_tool_no"
+Description = ""
+TypeHint = 3
+DefaultValue = "390"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 192 )
+
+[sub_resource type="Resource" id=194]
+script = ExtResource( 8 )
+ConstraintType = 3
+Tab = "CAM"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray( "0", "301", "690" )
+OptionLabels = PoolStringArray( "", "", "" )
+
+[sub_resource type="Resource" id=195]
+script = ExtResource( 9 )
+Id = "c458fc4b-78b4-4b58-990c-1dc02c0baa2c"
+Name = "large_V_tool_no"
+Description = ""
+TypeHint = 3
+DefaultValue = "301"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 194 )
+
+[sub_resource type="Resource" id=196]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = ""
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=197]
+script = ExtResource( 9 )
+Id = "c1697841-41b0-45c6-824d-b886c36fc8d7"
+Name = "filename_gcode"
+Description = ""
+TypeHint = 6
+DefaultValue = ""
+ShowInCustomizer = false
+CustomizerDescription = SubResource( 196 )
+
+[sub_resource type="Resource" id=198]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Export"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=199]
+script = ExtResource( 9 )
+Id = "57f86f0c-d88c-4253-ad61-69d838bb967f"
+Name = "generatesvg"
+Description = ""
+TypeHint = 2
+DefaultValue = "true"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 198 )
+
+[sub_resource type="Resource" id=200]
+script = ExtResource( 8 )
+ConstraintType = 0
+Tab = "Export"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray(  )
+OptionLabels = PoolStringArray(  )
+
+[sub_resource type="Resource" id=201]
+script = ExtResource( 9 )
+Id = "e1580bb5-be1a-49c7-9901-36e57f1a3558"
+Name = "Base_filename"
+Description = ""
+TypeHint = 6
+DefaultValue = "export"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 200 )
+
+[sub_resource type="Resource" id=202]
+script = ExtResource( 8 )
+ConstraintType = 3
+Tab = "CAM"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray( "0", "121", "111", "101" )
+OptionLabels = PoolStringArray( "", "", "", "" )
+
+[sub_resource type="Resource" id=203]
+script = ExtResource( 9 )
+Id = "21ed6a08-ab0f-462e-a508-0c4ee470f818"
+Name = "small_ball_tool_no"
+Description = ""
+TypeHint = 3
+DefaultValue = "0"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 202 )
+
+[sub_resource type="Resource" id=204]
+script = ExtResource( 8 )
+ConstraintType = 3
+Tab = "CAM"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray( "0", "111", "101", "202" )
+OptionLabels = PoolStringArray( "", "", "", "" )
+
+[sub_resource type="Resource" id=205]
+script = ExtResource( 9 )
+Id = "06df9882-e910-4f0a-bee4-ca90cebb9d3c"
+Name = "large_ball_tool_no"
+Description = ""
+TypeHint = 3
+DefaultValue = "0"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 204 )
+
+[sub_resource type="Resource" id=206]
+script = ExtResource( 8 )
+ConstraintType = 3
+Tab = "CAM"
+Min = ""
+Step = ""
+Max = ""
+MaxLength = ""
+OptionValues = PoolStringArray( "0", "112", "102", "201" )
+OptionLabels = PoolStringArray( "", "", "", "" )
+
+[sub_resource type="Resource" id=207]
+script = ExtResource( 9 )
+Id = "94177abc-c6ab-45b7-b65e-797446644676"
+Name = "large_square_tool_no"
+Description = ""
+TypeHint = 3
+DefaultValue = "0"
+ShowInCustomizer = true
+CustomizerDescription = SubResource( 206 )
+
+[resource]
+script = ExtResource( 10 )
+Functions = [  ]
+Modules = [  ]
+MainModule = SubResource( 155 )
+Variables = [ SubResource( 157 ), SubResource( 159 ), SubResource( 161 ), SubResource( 163 ), SubResource( 165 ), SubResource( 167 ), SubResource( 169 ), SubResource( 171 ), SubResource( 173 ), SubResource( 175 ), SubResource( 177 ), SubResource( 179 ), SubResource( 181 ), SubResource( 183 ), SubResource( 185 ), SubResource( 187 ), SubResource( 189 ), SubResource( 191 ), SubResource( 193 ), SubResource( 195 ), SubResource( 197 ), SubResource( 199 ), SubResource( 201 ), SubResource( 203 ), SubResource( 205 ), SubResource( 207 ) ]
+ExternalReferences = [ SubResource( 96 ) ]
+Preamble = "//!OpenSCAD
+
+use <gcodepreview.py>;
+use <pygcodepreview.scad>;
+
+$fa = 4;
+$fs = 0.25;
+"
