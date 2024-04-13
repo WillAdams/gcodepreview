@@ -1,0 +1,201 @@
+% \iffalse meta-comment
+%
+% gcodepreview.dtx
+% Author: William F. Adams (willadams at aol dot com)
+% Copyright 2021--24 William F. Adams
+%
+% This work may be distributed and/or modified under the
+% conditions of the GNU LESSER GENERAL PUBLIC LICENSE
+% Version 2.1, February 1999
+%
+% This work consists of the files listed in the README file.
+%
+% 
+% 
+%<*driver>
+\documentclass[twoside]{ltxdoc}
+\usepackage{docmfp}
+\usepackage{url}
+\usepackage[draft=false,
+            plainpages=false,
+            pdfpagelabels,
+            bookmarksnumbered,
+            hyperindex=false
+           ]{hyperref}
+\makeatletter
+  \@mparswitchfalse
+\makeatother
+\renewcommand{\MakeUppercase}[1]{#1}
+\pagestyle{headings}
+\EnableCrossrefs
+\CodelineIndex
+%%% \OnlyDescription
+\setcounter{StandardModuleDepth}{1}
+\begin{document}
+  \DocInput{gcodepreview.dtx}
+\end{document}
+%</driver>
+%
+% \fi
+%
+% \DoNotIndex{\bullet}
+%
+%
+% \changes{v0.2}{2024/04/12}{Initial conversion to DTX}
+% \def\dtxfile{gcodepreview.dtx}
+% \def\fileversion{v0.2} \def\filedate{2024/04/12}
+%
+% \title{The gcodepreview OpenSCAD library\thanks{This
+%        file (\texttt{\dtxfile}) has version number \fileversion, last revised
+%        \filedate.}}
+%
+% \author{%
+% Author: William F. Adams\\
+% \texttt{willadams at aol dot com}
+% }
+% \date{\filedate}
+% \maketitle
+% \begin{abstract}
+%    The gcodepreview library allows using OpenSCAD to move a tool in lines 
+%and output dxf and G-code files so as to work as a CAD/CAM program for CNC.
+% \end{abstract}
+% \tableofcontents
+%
+%
+% \section{readme.md}
+%
+%    \begin{macrocode}
+%<rdm> # gcodepreview
+%<rdm> 
+%<rdm> OpenSCAD library for moving a tool in lines and arcs so as to model how a part would be cut 
+%<rdm> using G-Code, so as to allow OpenSCAD to function as a compleat CAD/CAM solution for 
+%<rdm> subtractive CNC (mills and routers).
+%<rdm> 
+%<rdm> ![OpenSCAD Cut Joinery Module](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/openscad_cutjoinery.png?raw=true)
+%<rdm> 
+%<rdm> Updated to make use of Python in OpenSCAD:
+%<rdm> 
+%<rdm> http://www.guenther-sohler.net/openscad/
+%<rdm> 
+%<rdm> (previous versions had used RapCAD)
+%<rdm> 
+%<rdm> A BlockSCAD file for the main modules is available at:
+%<rdm> 
+%<rdm> https://www.blockscad3d.com/community/projects/1244473
+%<rdm> 
+%<rdm> The project is discussed at:
+%<rdm> 
+%<rdm> https://forum.makerforums.info/t/g-code-preview-using-openscad-rapcad/85729 
+%<rdm> 
+%<rdm> and
+%<rdm> 
+%<rdm> https://forum.makerforums.info/t/openscad-and-python-looking-to-finally-be-resolved/88171
+%<rdm> 
+%<rdm> and
+%<rdm> 
+%<rdm> https://willadams.gitbook.io/design-into-3d/programming
+%<rdm> 
+%<rdm> Usage is:
+%<rdm> 
+%<rdm> Place the file in C:\Users\\\~\Documents\OpenSCAD\libraries (C:\Users\\\~\Documents\RapCAD\libraries is 
+%<rdm> deprecated since RapCAD is not longer needed since Python is now used for writing out files)
+%<rdm> 
+%<rdm> (While it was updated for use w/ RapCAD, so as to take advantage of the writeln command, 
+%<rdm> it was possible to write that in Python)
+%<rdm> 
+%<rdm>     use <gcodepreview.py>;
+%<rdm>     use <pygcodepreview.scad>;
+%<rdm>     include <gcodepreview.scad>;
+%<rdm> 
+%<rdm> Note that it is necessary to use the first two files (this allows loading 
+%<rdm> the Python commands and then wrapping them in OpenSCAD commands) and then 
+%<rdm> include the last file (which allows using OpenSCAD variables to selectively 
+%<rdm> implement the Python commands via their being wrapped in OpenSCAD modules)
+%<rdm> 
+%<rdm> and define variables which match the project and then use commands such as:
+%<rdm> 
+%<rdm>     opengcodefile(Gcode_filename);
+%<rdm>     opendxffile(DXF_filename);
+%<rdm>     
+%<rdm>     difference() {
+%<rdm>         setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
+%<rdm>     
+%<rdm>     movetosafez();
+%<rdm>     
+%<rdm>     toolchange(squaretoolno,speed * square_ratio);
+%<rdm>     
+%<rdm>     begintoolpath(0,0,0.25);
+%<rdm>     beginpolyline(0,0,0.25);
+%<rdm> 
+%<rdm>     cutoneaxis_setfeed("Z",-1,plunge*square_ratio);
+%<rdm>     addpolyline(stocklength/2,stockwidth/2,-stockthickness);
+%<rdm>     
+%<rdm>     cutwithfeed(stocklength/2,stockwidth/2,-stockthickness,feed);
+%<rdm>     
+%<rdm>     endtoolpath();
+%<rdm>     endpolyline();
+%<rdm>     
+%<rdm>     }
+%<rdm>     
+%<rdm>     closegcodefile();
+%<rdm>     closedxffile();
+%<rdm> 
+%<rdm> Tool numbers match those of tooling sold by Carbide 3D (ob. discl., I work for them). 
+%<rdm> Comments are included in the G-code to match those expected by CutViewer.
+%<rdm> 
+%<rdm> A complete example file is: gcodepreview_template.scad another is 
+%<rdm> openscad_gcodepreview_cutjoinery.tres.scad which is made from an 
+%<rdm> OpenSCAD Graph Editor file:
+%<rdm> 
+%<rdm> ![OpenSCAD Graph Editor Cut Joinery File](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/OSGE_cutjoinery.png?raw=true)
+%<rdm> 
+%<rdm> Version 0.1 supports setting up stock, origin, rapid positioning, making cuts, 
+%<rdm> and writing out matching G-code, and creating a DXF with polylines.
+%<rdm> 
+%<rdm> Added features since initial upload:
+%<rdm> 
+%<rdm>  - endpolyline(); --- this command allows ending one polyline so as to allow multiple lines in a DXF
+%<rdm>  - separate dxf files are written out for each tool where tool is ball/square/V and small/large (10/31)
+%<rdm> 
+%<rdm> Not quite working feature:
+%<rdm> 
+%<rdm>  - exporting SVGs --- these are written out upside down due to coordinate differences between OpenSCAD/DXFs and SVGs
+%<rdm> 
+%<rdm> Possible future improvements:
+%<rdm> 
+%<rdm>  - G-code: support for G2/G3 arcs
+%<rdm>  - DXF support for curves and the 3rd dimension
+%<rdm>  - G-code: import external tool libraries and feeds and speeds from JSON or CSV files --- note that it is up to the user to implement Depth per Pass so as to not take a single full-depth pass
+%<rdm>  - support for additional tooling shapes such as dovetail tools, or roundover tooling
+%<rdm>  - general coding improvements --- current coding style is quite prosaic
+%<rdm>  - documentation --- this will probably be at: https://willadams.gitbook.io/design-into-3d/programming
+%<rdm>  - possibly re-writing as a literate program
+%<rdm>  - generalized modules for cutting out various shapes/geometries --- a current one is to cut a rectangular area as vertical passes (the horizontal version will be developed presently)
+%
+%    \end{macrocode}
+%
+% \section{gcodepreview}
+%
+% As noted above, this library works by using Python code as a back-end so as to persistently
+% store and access variables, and to write out files. Doing so requires a total of three files:
+%
+%  - A Python file: gcodepreview.py (gcpy)
+%  - An OpenSCAD file: gcodepreview.scad (gcpscad)
+%  - An OpenSCAD file which connects the other two files: pygcodepreview.scad (pyscad)
+%
+%
+% \bibliographystyle{alpha}
+%
+% \begin{thebibliography}{RS274}
+%
+% \bibitem[RS274]{KRAMER00}
+% Thomas R. Kramer, Frederick M. Proctor, Elena R. Messina.\\
+% \url{https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=823374}
+%
+% \end{thebibliography}
+%
+%
+% \Finale
+% \PrintIndex
+%
+\endinput
