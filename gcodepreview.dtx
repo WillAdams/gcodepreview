@@ -1269,6 +1269,105 @@
 %<gcpscad> }
 %    \end{macrocode}
 % 
+% \section{gcodepreview\_template.scad}
+% 
+%    \begin{macrocode}
+%<gcptmpl> //!OpenSCAD
+%<gcptmpl> 
+%<gcptmpl> use <gcodepreview.py>;
+%<gcptmpl> use <pygcodepreview.scad>;
+%<gcptmpl> include <gcodepreview.scad>;
+%<gcptmpl> 
+%<gcptmpl> $fa = 2;
+%<gcptmpl> $fs = 0.125;
+%<gcptmpl> 
+%<gcptmpl> /* [Export] */
+%<gcptmpl> Base_filename = "export"; 
+%<gcptmpl> 
+%<gcptmpl> /* [Export] */
+%<gcptmpl> generatedxf = true; 
+%<gcptmpl> 
+%<gcptmpl> /* [Export] */
+%<gcptmpl> generategcode = true; 
+%<gcptmpl> 
+%<gcptmpl> /* [Export] */
+%<gcptmpl> generatesvg = false; 
+%<gcptmpl> 
+%<gcptmpl> /* [CAM] */
+%<gcptmpl> toolradius = 1.5875;
+%<gcptmpl> /* [CAM] */
+%<gcptmpl> large_ball_tool_no = 0; // [0:0,111:111,101:101,202:202]
+%<gcptmpl> 
+%<gcptmpl> /* [CAM] */
+%<gcptmpl> large_square_tool_no = 0; // [0:0,112:112,102:102,201:201]
+%<gcptmpl> 
+%<gcptmpl> /* [CAM] */
+%<gcptmpl> large_V_tool_no = 0; // [0:0,301:301,690:690]
+%<gcptmpl> 
+%<gcptmpl> /* [CAM] */
+%<gcptmpl> small_ball_tool_no = 0; // [0:0,121:121,111:111,101:101]
+%<gcptmpl> 
+%<gcptmpl> /* [CAM] */
+%<gcptmpl> small_square_tool_no = 102; // [0:0,122:122,112:112,102:102]
+%<gcptmpl> 
+%<gcptmpl> /* [CAM] */
+%<gcptmpl> small_V_tool_no = 0; // [0:0,390:390,301:301]
+%<gcptmpl> 
+%<gcptmpl> /* [Feeds and Speeds] */
+%<gcptmpl> plunge = 100;
+%<gcptmpl> /* [Feeds and Speeds] */
+%<gcptmpl> feed = 400;
+%<gcptmpl> /* [Feeds and Speeds] */
+%<gcptmpl> speed = 16000;
+%<gcptmpl> /* [Feeds and Speeds] */
+%<gcptmpl> square_ratio = 1.0; // [0.25:2]
+%<gcptmpl> /* [Feeds and Speeds] */
+%<gcptmpl> small_V_ratio = 0.75; // [0.25:2]
+%<gcptmpl> /* [Feeds and Speeds] */
+%<gcptmpl> large_V_ratio = 0.875; // [0.25:2]
+%<gcptmpl> 
+%<gcptmpl> /* [Stock] */
+%<gcptmpl> stocklength = 219;
+%<gcptmpl> /* [Stock] */
+%<gcptmpl> stockwidth = 150;
+%<gcptmpl> /* [Stock] */
+%<gcptmpl> stockthickness = 8.35;
+%<gcptmpl> /* [Stock] */
+%<gcptmpl> zeroheight = "Top"; // [Top, Bottom]
+%<gcptmpl> /* [Stock] */
+%<gcptmpl> stockorigin = "Center"; // [Lower-Left, Center-Left, Top-Left, Center]
+%<gcptmpl> /* [Stock] */
+%<gcptmpl> retractheight = 9;
+%<gcptmpl> 
+%<gcptmpl> filename_gcode = str(Base_filename, ".nc");
+%<gcptmpl> filename_dxf = str(Base_filename);
+%<gcptmpl> filename_svg = str(Base_filename, ".svg");
+%<gcptmpl> 
+%<gcptmpl> opengcodefile(filename_gcode);
+%<gcptmpl> opendxffile(filename_dxf);
+%<gcptmpl> 
+%<gcptmpl> difference() {
+%<gcptmpl> setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
+%<gcptmpl> 
+%<gcptmpl> movetosafez();
+%<gcptmpl> 
+%<gcptmpl> toolchange(small_square_tool_no,speed * square_ratio);
+%<gcptmpl> 
+%<gcptmpl> begintoolpath(0,0,0.25);
+%<gcptmpl> beginpolyline(0,0,0.25);
+%<gcptmpl> 
+%<gcptmpl> cutoneaxis_setfeed("Z",-1,plunge*square_ratio);
+%<gcptmpl> 
+%<gcptmpl> cutwithfeed(stocklength/2,stockwidth/2,-stockthickness,feed);
+%<gcptmpl> addpolyline(stocklength/2,stockwidth/2,-stockthickness);
+%<gcptmpl> 
+%<gcptmpl> endtoolpath();
+%<gcptmpl> closepolyline();
+%<gcptmpl> }
+%<gcptmpl> 
+%<gcptmpl> closegcodefile();
+%<gcptmpl> closedxffile();%    \end{macrocode}
+% 
 % \bibliographystyle{alpha}
 %
 % \begin{thebibliography}{RS274}
