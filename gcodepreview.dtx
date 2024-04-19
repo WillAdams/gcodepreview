@@ -29,6 +29,8 @@
 \pagestyle{headings}
 \EnableCrossrefs
 \CodelineIndex
+\usepackage{makeidx} 
+%\usepackage[columns=1]{idxlayout}
 %%% \OnlyDescription
 \setcounter{StandardModuleDepth}{1}
 \begin{document}
@@ -178,11 +180,1095 @@
 % As noted above, this library works by using Python code as a back-end so as to persistently
 % store and access variables, and to write out files. Doing so requires a total of three files:
 %
-%  - A Python file: gcodepreview.py (gcpy)
-%  - An OpenSCAD file: gcodepreview.scad (gcpscad)
-%  - An OpenSCAD file which connects the other two files: pygcodepreview.scad (pyscad)
+% \begin{itemize}
+%  \item A Python file: gcodepreview.py (gcpy)
+%  \item An OpenSCAD file: gcodepreview.scad (gcpscad)
+%  \item An OpenSCAD file which connects the other two files: pygcodepreview.scad (pyscad)
+% \end{itemize}
 %
+% Each file will begin with a suitable comment indicating the file type:
 %
+%    \begin{macrocode}
+%<gcpy> #!/usr/bin/env python
+%<gcpy> 
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+%<pyscad> //!OpenSCAD
+%<pyscad> 
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+%<gcpscad> //!OpenSCAD
+%<gcpscad> 
+%<gcpscad> //gcodepreview 0.1
+%<gcpscad> //
+%<gcpscad> //used via use <gcodepreview.py>;
+%<gcpscad> //         use <pygcodepreview.scad>;
+%<gcpscad> //         include <gcodepreview.scad>;
+%<gcpscad> //
+%    \end{macrocode}
+%
+% The original implementation in RapSCAD used a command \texttt{writeln}\DescribeRoutine{writeln} --- fortunately,
+% this command is easily re-created in Python:
+%
+%    \begin{macrocode}
+%<gcpy> def writeln(*arguments):
+%<gcpy>     line_to_write = ""
+%<gcpy>     for element in arguments:
+%<gcpy>         line_to_write += element
+%<gcpy>     f.write(line_to_write)
+%<gcpy>     f.write("\n")
+%    \end{macrocode}
+%
+% \noindent which command will accept a series of arguments and then write them out to a file object.
+%
+% \subsection{Position and Variables}
+% 
+% In modeling the machine motion and G-code it will be necessary to have the machine track 
+% several variables. This will be done using paired functions (which will return the matching variable)
+% and a matching (global) variable, as well as additional functions for setting the matching variable.
+%
+% The first such variables are for XYZ position:
+%
+% \begin{itemize}
+%  \item \texttt{mpx} \DescribeVariable{mpx}
+%  \item \texttt{mpy} \DescribeVariable{mpy}
+%  \item \texttt{mpz} \DescribeVariable{mpz}
+% \end{itemize}
+%
+% It will further be necessary to have a variable for the current tool:
+%
+% \begin{itemize}
+%  \item \texttt{currenttool} \DescribeVariable{currenttool}
+% \end{itemize}
+%
+% For each command it will be necessary to implement an appropriate aspect in each file. 
+% The Python file wil manage the Python variables and handle things which can only be done in Python,
+% while there will be two OpenSCAD files as noted above, one which calls the Python code (thjs 
+% will be \texttt{use}d), while the other will be \texttt{include}d and will be able to access
+% and use OpenSCAD variables, as well as implement Customizer options.
+% 
+% The first such routine will be appropriately enough, to set up the stock, and perform other
+% initializations. \DescribeRoutine{psetupstock}
+% 
+%    \begin{macrocode}
+%<gcpy> def psetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin):
+%<gcpy>     global mpx
+%<gcpy>     mpx = float(0)
+%<gcpy>     global mpy
+%<gcpy>     mpy = float(0)
+%<gcpy>     global mpz
+%<gcpy>     mpz = float(0)
+%<gcpy>     global currenttool
+%<gcpy>     currenttool = 102
+%<gcpy> 
+%    \end{macrocode}
+%
+% \DescribeRoutine{osetupstock}
+%    \begin{macrocode}
+%<pyscad> module osetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin) {
+%<pyscad>     psetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
+%<pyscad> }
+%<pyscad> 
+%    \end{macrocode}
+%
+% \DescribeRoutine{setupstock}
+%    \begin{macrocode}
+%<gcpscad> module setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin) {
+%<gcpscad>   osetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
+%<gcpscad> //initialize default tool and XYZ origin
+%<gcpscad>   osettool(102);
+%<gcpscad>   oset(0,0,0);
+%<gcpscad>   if (zeroheight == "Top") {
+%<gcpscad>     if (stockorigin == "Lower-Left") {
+%<gcpscad>     translate([0, 0, (-stockthickness)]){
+%<gcpscad>     cube([stocklength, stockwidth, stockthickness], center=false);
+%<gcpscad> if (generategcode == true) {
+%<gcpscad> //	owriteone("(setupstock)");
+%<gcpscad> owritethree("(stockMin:0.00mm, 0.00mm, -",str(stockthickness),"mm)");
+%<gcpscad> owritefive("(stockMax:",str(stocklength),"mm, ",str(stockwidth),"mm, 0.00mm)");
+%<gcpscad>     owritenine("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", 0.00, 0.00, ",str(stockthickness),")");
+%<gcpscad> }
+%<gcpscad> }
+%<gcpscad> }
+%<gcpscad>      else if (stockorigin == "Center-Left") {
+%<gcpscad>     translate([0, (-stockwidth / 2), -stockthickness]){
+%<gcpscad>       cube([stocklength, stockwidth, stockthickness], center=false);
+%<gcpscad>     if (generategcode == true) {
+%<gcpscad> //	owriteone("(setupstock)");
+%<gcpscad> owritefive("(stockMin:0.00mm, -",str(stockwidth/2),"mm, -",str(stockthickness),"mm)");
+%<gcpscad> owritefive("(stockMax:",str(stocklength),"mm, ",str(stockwidth/2),"mm, 0.00mm)");
+%<gcpscad>     owriteeleven("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", 0.00, ",str(stockwidth/2),", ",str(stockthickness),")");
+%<gcpscad>     }
+%<gcpscad>     }
+%<gcpscad>     } else if (stockorigin == "Top-Left") {
+%<gcpscad>     translate([0, (-stockwidth), -stockthickness]){
+%<gcpscad>       cube([stocklength, stockwidth, stockthickness], center=false);
+%<gcpscad> if (generategcode == true) {
+%<gcpscad> //	owriteone("(setupstock)");
+%<gcpscad> owritefive("(stockMin:0.00mm, -",str(stockwidth),"mm, -",str(stockthickness),"mm)");
+%<gcpscad> owritethree("(stockMax:",str(stocklength),"mm, 0.00mm, 0.00mm)");
+%<gcpscad> owriteeleven("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", 0.00, ",str(stockwidth),", ",str(stockthickness),")");
+%<gcpscad>     }
+%<gcpscad>     }
+%<gcpscad>     }
+%<gcpscad> 	else if (stockorigin == "Center") {
+%<gcpscad> //owritecomment("Center");
+%<gcpscad>     translate([(-stocklength / 2), (-stockwidth / 2), -stockthickness]){
+%<gcpscad>       cube([stocklength, stockwidth, stockthickness], center=false);
+%<gcpscad> if (generategcode == true) {
+%<gcpscad> //	owriteone("(setupstock)");
+%<gcpscad> owriteseven("(stockMin: -",str(stocklength/2),", -",str(stockwidth/2),"mm, -",str(stockthickness),"mm)");
+%<gcpscad> owritefive("(stockMax:",str(stocklength/2),"mm, ",str(stockwidth/2),"mm, 0.00mm)");
+%<gcpscad> owritethirteen("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", ",str(stocklength/2),", ", str(stockwidth/2),", ",str(stockthickness),")");
+%<gcpscad> }
+%<gcpscad> }
+%<gcpscad> }
+%<gcpscad> } else if (zeroheight == "Bottom") {
+%<gcpscad> //owritecomment("Bottom");
+%<gcpscad>     if (stockorigin == "Lower-Left") {
+%<gcpscad>     cube([stocklength, stockwidth, stockthickness], center=false);
+%<gcpscad> if (generategcode == true) {
+%<gcpscad> //	owriteone("(setupstock)");
+%<gcpscad> owriteone("(stockMin:0.00mm, 0.00mm, 0.00mm)");
+%<gcpscad> owriteseven("(stockMax:",str(stocklength),"mm, ",str(stockwidth),"mm, ",str(stockthickness),"mm)");
+%<gcpscad> owriteseven("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),",0.00, 0.00, 0.00)");
+%<gcpscad>     }
+%<gcpscad> }	else if (stockorigin == "Center-Left") {
+%<gcpscad>     translate([0, (-stockwidth / 2), 0]){
+%<gcpscad>       cube([stocklength, stockwidth, stockthickness], center=false);
+%<gcpscad> if (generategcode == true) {
+%<gcpscad> //	owriteone("(setupstock)");
+%<gcpscad> owritethree("(stockMin:0.00mm, -",str(stockwidth/2),"mm, 0.00mm)");
+%<gcpscad> owriteseven("(stockMax:",str(stocklength),"mm, ",str(stockwidth/2),"mm, ",str(stockthickness),"mm)");
+%<gcpscad> owritenine("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),",0.00, ",str(stockwidth/2),", 0.00)");
+%<gcpscad>     }
+%<gcpscad>     } 
+%<gcpscad> 	} else if (stockorigin == "Top-Left") {
+%<gcpscad>     translate([0, (-stockwidth), 0]){
+%<gcpscad>       cube([stocklength, stockwidth, stockthickness], center=false);
+%<gcpscad>     }
+%<gcpscad> if (generategcode == true) {
+%<gcpscad> //	owriteone("(setupstock)");
+%<gcpscad> owritethree("(stockMin:0.00mm, -",str(stockwidth),"mm, 0.00mm)");
+%<gcpscad> owritefive("(stockMax:",str(stocklength),"mm, 0.00mm, ",str(stockthickness),"mm)");
+%<gcpscad> owritenine("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", 0.00, ", str(stockwidth),", 0.00)");
+%<gcpscad> }
+%<gcpscad> }	else if (stockorigin == "Center") {
+%<gcpscad>     translate([(-stocklength / 2), (-stockwidth / 2), 0]){
+%<gcpscad>       cube([stocklength, stockwidth, stockthickness], center=false);
+%<gcpscad>     }
+%<gcpscad> if (generategcode == true) {
+%<gcpscad> //	owriteone("(setupstock)");
+%<gcpscad> owritefive("(stockMin:-",str(stocklength/2),", -",str(stockwidth/2),"mm, 0.00mm)");
+%<gcpscad> owriteseven("(stockMax:",str(stocklength/2),"mm, ",str(stockwidth/2),"mm, ",str(stockthickness),"mm)");
+%<gcpscad> owriteeleven("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", ",str(stocklength/2),", ", str(stockwidth/2),", 0.00)");
+%<gcpscad> }
+%<gcpscad> }
+%<gcpscad> }
+%<gcpscad> if (generategcode == true) {
+%<gcpscad> 	owriteone("G90");
+%<gcpscad> 	owriteone("G21");
+%<gcpscad> //	owriteone("(Move to safe Z to avoid workholding)");
+%<gcpscad> //	owriteone("G53G0Z-5.000");
+%<gcpscad> }
+%<gcpscad> //owritecomment("ENDSETUP");
+%<gcpscad> }
+%<gcpscad> 
+%    \end{macrocode}
+%
+% \DescribeRoutine{xpos}\DescribeRoutine{ypos}\DescribeRoutine{zpos}
+% It will be necessary to have Python functions which return the current values of the 
+% machine position in Cartesian coordinates: 
+%
+%    \begin{macrocode}
+%<gcpy> def xpos():
+%<gcpy>     global mpx
+%<gcpy>     return mpx
+%<gcpy> 
+%<gcpy> def ypos():
+%<gcpy>     global mpy
+%<gcpy>     return mpy
+%<gcpy> 
+%<gcpy> def zpos():
+%<gcpy>     global mpz
+%<gcpy>     return mpz
+%<gcpy> 
+%    \end{macrocode}
+%
+% \noindent and in turn, functions which set the positions: \DescribeRoutine{psetxpos}
+%  \DescribeRoutine{psetypos}
+%  \DescribeRoutine{psetzpos}
+%
+%    \begin{macrocode}
+%<gcpy> def psetxpos(newxpos):
+%<gcpy>     global mpx
+%<gcpy>     mpx = newxpos
+%<gcpy> 
+%<gcpy> def psetypos(newypos):
+%<gcpy>     global mpy
+%<gcpy>     mpy = newypos
+%<gcpy> 
+%<gcpy> def psetzpos(newzpos):
+%<gcpy>     global mpz
+%<gcpy>     mpz = newzpos
+%<gcpy>  
+%    \end{macrocode}
+% 
+% \noindent and as noted above, there will need to be matching OpenSCAD versions: \DescribeRoutine{getxpos}
+% \DescribeRoutine{getypos}
+% \DescribeRoutine{getzpos}
+% \DescribeRoutine{setxpos}
+% \DescribeRoutine{setypos}
+% \DescribeRoutine{setzpos}
+% 
+%    \begin{macrocode}
+%<pyscad> function getxpos() = xpos();
+%<pyscad> function getypos() = ypos();
+%<pyscad> function getzpos() = zpos();
+%<pyscad> 
+%<pyscad> module setxpos(newxpos) {
+%<pyscad> psetxpos(newxpos);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module setypos(newypos) {
+%<pyscad> psetypos(newypos);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module setzpos(newzpos) {
+%<pyscad> psetzpos(newzpos);
+%<pyscad> }
+%<pyscad> 
+%    \end{macrocode}
+% 
+% \DescribeRoutine{oset}
+%    \begin{macrocode}
+%<gcpscad> module oset(ex, ey, ez) {
+%<gcpscad> setxpos(ex);
+%<gcpscad> setypos(ey);
+%<gcpscad> setzpos(ez);
+%<gcpscad> }
+%<gcpscad> 
+%    \end{macrocode}
+% 
+% \subsection{Tools and Changes}
+% 
+% Similarly Python functions and variables will be used to track and
+% set and return the current tool: \DescribeRoutine{psettool}
+% \DescribeRoutine{pcurrenttool}
+% 
+%    \begin{macrocode}
+%<gcpy> def psettool(tn):
+%<gcpy>     global currenttool
+%<gcpy>     currenttool = tn
+%<gcpy> 
+%<gcpy> def pcurrent_tool():
+%<gcpy>     global currenttool
+%<gcpy>     return currenttool
+%<gcpy> 
+%    \end{macrocode}
+% 
+% \noindent and matching OpenSCAD modules set and return the current tool: \DescribeRoutine{osettool}
+% \DescribeRoutine{currenttool}
+% 
+%    \begin{macrocode}
+%<pyscad> module osettool(tn){
+%<pyscad> psettool(tn);}
+%<pyscad> 
+%<pyscad> function current_tool() = pcurrent_tool();
+%<pyscad> 
+%    \end{macrocode}
+% 
+% \noindent and apply the appropriate commands for a \texttt{toolchange}.\DescribeRoutine{toolchange}
+% 
+%    \begin{macrocode}
+%<gcpscad> module toolchange(tool_number,speed) {
+%<gcpscad>    osettool(tool_number); 
+%<gcpscad> if (generategcode == true) {
+%<gcpscad> 	writecomment("Toolpath");
+%<gcpscad> 	owriteone("M05");
+%<gcpscad> //	writecomment("Move to safe Z to avoid workholding");
+%<gcpscad> //	owriteone("G53G0Z-5.000");
+%<gcpscad> //    writecomment("Begin toolpath");
+%<gcpscad>   if (tool_number == 201) {
+%<gcpscad> 	writecomment("TOOL/MILL,6.35, 0.00, 0.00, 0.00");
+%<gcpscad>   } else if (tool_number == 202) {
+%<gcpscad> 	writecomment("TOOL/MILL,6.35, 3.17, 0.00, 0.00");
+%<gcpscad>   } else if (tool_number == 102) {
+%<gcpscad> 	writecomment("TOOL/MILL,3.17, 0.00, 0.00, 0.00");
+%<gcpscad>   } else if (tool_number == 101) {
+%<gcpscad> 	writecomment("TOOL/MILL,3.17, 1.58, 0.00, 0.00");
+%<gcpscad>   } else if (tool_number == 301) {
+%<gcpscad> 	writecomment("TOOL/MILL,0.03, 0.00, 6.35, 45.00");
+%<gcpscad>   } else if (tool_number == 302) {
+%<gcpscad> 	writecommment("TOOL/MILL,0.03, 0.00, 10.998, 30.00");
+%<gcpscad>   } else if (tool_number == 390) {
+%<gcpscad> 	writecomment("TOOL/MILL,0.03, 0.00, 1.5875, 45.00");
+%<gcpscad>   }
+%<gcpscad>     select_tool(tool_number);
+%<gcpscad> 	owritetwo("M6T",str(tool_number));
+%<gcpscad> 	owritetwo("M03S",str(speed));
+%<gcpscad> }
+%<gcpscad> }
+%<gcpscad> 
+%    \end{macrocode}
+% 
+% There must also be a module for selecting tools: \texttt{select\_tool}:\DescribeRoutine{selecttool}
+% \DescribeVariable{tool_number}
+% 
+%    \begin{macrocode}
+%<gcpscad> module select_tool(tool_number) {
+%<gcpscad> //echo(tool_number);
+%<gcpscad>   if (tool_number == 201) {
+%<gcpscad>     gcp_endmill_square(6.35, 19.05);
+%<gcpscad>   } else if (tool_number == 202) {
+%<gcpscad>     gcp_endmill_ball(6.35, 19.05);
+%<gcpscad>   } else if (tool_number == 102) {
+%<gcpscad>     gcp_endmill_square(3.175, 19.05);
+%<gcpscad>   } else if (tool_number == 101) {
+%<gcpscad>     gcp_endmill_ball(3.175, 19.05);
+%<gcpscad>   } else if (tool_number == 301) {
+%<gcpscad>     gcp_endmill_v(90, 12.7);
+%<gcpscad>   } else if (tool_number == 302) {
+%<gcpscad>     gcp_endmill_v(60, 12.7);
+%<gcpscad>   } else if (tool_number == 390) {
+%<gcpscad>     gcp_endmill_v(90, 3.175);
+%<gcpscad>   }
+%<gcpscad> }
+%<gcpscad> 
+%    \end{macrocode}
+% 
+% Each tool must be modeled in 3D using an OpenSCAD module:
+% 
+% \DescribeRoutine{gcp_endmill_square}
+%    \begin{macrocode}
+%<gcpscad> module gcp_endmill_square(es_diameter, es_flute_length) {
+%<gcpscad>   cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=es_flute_length, center=false);
+%<gcpscad> }
+%<gcpscad> 
+%    \end{macrocode}
+% 
+% \DescribeRoutine{gcp_endmill_ball}
+%    \begin{macrocode}
+%<gcpscad> module gcp_endmill_ball(es_diameter, es_flute_length) {
+%<gcpscad>   translate([0, 0, (es_diameter / 2)]){
+%<gcpscad>     union(){
+%<gcpscad>       sphere(r=(es_diameter / 2));
+%<gcpscad>       cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=es_flute_length, center=false);
+%<gcpscad>     }
+%<gcpscad>   }
+%<gcpscad> }
+%<gcpscad> 
+%    \end{macrocode}
+% 
+% \DescribeRoutine{gcp_endmill_v}
+%    \begin{macrocode}
+%<gcpscad> module gcp_endmill_v(es_v_angle, es_diameter) {
+%<gcpscad>   union(){
+%<gcpscad>     cylinder(r1=0, r2=(es_diameter / 2), h=((es_diameter / 2) / tan((es_v_angle / 2))), center=false);
+%<gcpscad>     translate([0, 0, ((es_diameter / 2) / tan((es_v_angle / 2)))]){
+%<gcpscad>       cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=((es_diameter * 8) ), center=false);/// tan((es_v_angle / 2))
+%<gcpscad>     }
+%<gcpscad>   }
+%<gcpscad> }
+%<gcpscad> 
+%    \end{macrocode}
+% 
+% \subsection{File Handling}
+% 
+% For writing to files it will be necessary to have commands for each step of working with the files. 
+% 
+% \DescribeRoutine{popengcodefile}\DescribeRoutine{popendxffile}\DescribeRoutine{popendxlgblffile}
+% \DescribeRoutine{popendxflgsqfile}\DescribeRoutine{popendxflgVfile}\DescribeRoutine{popendxfsmblfile}
+% There is a separate function for each type of file, and for DXFs, there are multiple file instances, 
+% one for each type of different type and size of tool which it is expected a project will work with.
+% \DescribeRoutine{popendxfsmsqfile}\DescribeRoutine{popendxfsmVfile}\DescribeRoutine{popensvgfile}
+% 
+%    \begin{macrocode}
+%<gcpy> def popengcodefile(fn):
+%<gcpy>     global f
+%<gcpy>     f = open(fn, "w")
+%<gcpy> 
+%<gcpy> def popendxffile(fn):
+%<gcpy>     global dxf
+%<gcpy>     dxf = open(fn, "w")
+%<gcpy> 
+%<gcpy> def popendxlgblffile(fn):
+%<gcpy>     global dxflgbl
+%<gcpy>     dxflgbl = open(fn, "w")
+%<gcpy> 
+%<gcpy> def popendxflgsqfile(fn):
+%<gcpy>     global dxfldsq
+%<gcpy>     dxflgsq = open(fn, "w")
+%<gcpy> 
+%<gcpy> def popendxflgVfile(fn):
+%<gcpy>     global dxflgV
+%<gcpy>     dxflgV = open(fn, "w")
+%<gcpy> 
+%<gcpy> def popendxfsmblfile(fn):
+%<gcpy>     global dxfsmbl
+%<gcpy>     dxfsmbl = open(fn, "w")
+%<gcpy> 
+%<gcpy> def popendxfsmsqfile(fn):
+%<gcpy>     global dxfsmsq
+%<gcpy>     dxfsmsq = open(fn, "w")
+%<gcpy> 
+%<gcpy> def popendxfsmVfile(fn):
+%<gcpy>     global dxfsmV
+%<gcpy>     dxfsmV = open(fn, "w")
+%<gcpy> 
+%<gcpy> def popensvgfile(fn):
+%<gcpy>     global svg
+%<gcpy>     svg = open(fn, "w")
+%<gcpy> 
+%    \end{macrocode}
+% 
+% \DescribeRoutine{oopengcodefile}\DescribeRoutine{oopensvgfile}\DescribeRoutine{oopendxffile}
+% There will need to be matching OpenSCAD modules for the Python functions.
+%    \begin{macrocode}
+%<pyscad> module oopengcodefile(fn) {
+%<pyscad> 	popengcodefile(fn);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module oopensvgfile(fn) {
+%<pyscad> 	popensvgfile(fn);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module oopendxffile(fn) {
+%<pyscad>     echo(fn);
+%<pyscad> 	popendxffile(fn);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module oopendxflgblfile(fn) {
+%<pyscad> 	popendxflgblfile(fn);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module oopendxflgsqfile(fn) {
+%<pyscad> 	popendxflgsqfile(fn);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module oopendxflgVfile(fn) {
+%<pyscad> 	popendxflgVfile(fn);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module oopendxfsmblfile(fn) {
+%<pyscad> 	popendxfsmblfile(fn);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module oopendxfsmsqfile(fn) {
+%<pyscad>     echo(fn);
+%<pyscad> 	popendxfsmsqfile(fn);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module oopendxfsmVfile(fn) {
+%<pyscad> 	popendxfsmVfile(fn);
+%<pyscad> }
+%<pyscad> 
+%    \end{macrocode}
+% 
+% \DescribeRoutine{opengcodefile}\DescribeRoutine{opensvgfile}\DescribeRoutine{opendxffile}
+%    \begin{macrocode}
+%<gcpscad> module opengcodefile(fn) {
+%<gcpscad> if (generategcode == true) {
+%<gcpscad> 	oopengcodefile(fn);
+%<gcpscad>     echo(fn);
+%<gcpscad>     owritecomment(fn);
+%<gcpscad> }
+%<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module opensvgfile(fn) {
+%<gcpscad> if (generatesvg == true) {
+%<gcpscad> 	oopensvgfile(fn);
+%<gcpscad>     echo(fn);
+%<gcpscad>     svgwriteone(str("<?xml version=",chr(34),"1.0",chr(34)," encoding=",chr(34),"UTF-8",chr(34)," standalone=",chr(34),"no",chr(34),"?> "));
+%<gcpscad> //	writesvglineend();
+%<gcpscad> svgwriteone(str("<svg  version=",chr(34),"1.1",chr(34)," xmlns=",chr(34),"http://www.w3.org/2000/svg",chr(34)," width=",chr(34),stocklength*3.77953,"px",chr(34)," height=",chr(34),stockwidth*3.77953,"px",chr(34),"> "));
+%<gcpscad> //<path d="M755.906 0 L755.906 377.953 L0 377.953 L0 0 L755.906 0 Z " stroke="black" stroke-width="1" fill="none" /> 
+%<gcpscad> svgwriteone(str("<path d=",chr(34),"M",stocklength*3.77953," 0 L",stocklength*3.77953," ",stockwidth*3.77953," L0 ",stockwidth*3.77953," L0 0 L",stocklength*3.77953," 0 Z ",chr(34)," stroke=",chr(34),"black",chr(34)," stroke-width=",chr(34),"1",chr(34)," fill=",chr(34),"none",chr(34)," /> "));
+%<gcpscad>     }
+%<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module opendxffile(fn) {
+%<gcpscad> if (generatedxf == true) {
+%<gcpscad> 	oopendxffile(str(fn,".dxf"));
+%<gcpscad> //    echo(fn);
+%<gcpscad>     dxfwriteone("0");
+%<gcpscad>     dxfwriteone("SECTION");
+%<gcpscad>     dxfwriteone("2");
+%<gcpscad>     dxfwriteone("ENTITIES");
+%<gcpscad>     dxfwriteone("0");
+%<gcpscad> if (large_ball_tool_no >  0) {	oopendxflgblfile(str(fn,".",large_ball_tool_no,".dxf"));
+%<gcpscad>     dxfpreamble(large_ball_tool_no);
+%<gcpscad> } 
+%<gcpscad> if (large_square_tool_no >  0) {	oopendxflgsqfile(str(fn,".",large_square_tool_no,".dxf"));
+%<gcpscad>     dxfpreamble(large_square_tool_no);
+%<gcpscad> } 
+%<gcpscad> if (large_V_tool_no >  0) {	oopendxflgVfile(str(fn,".",large_V_tool_no,".dxf"));
+%<gcpscad>     dxfpreamble(large_V_tool_no);
+%<gcpscad> } 
+%<gcpscad> if (small_ball_tool_no >  0) {	oopendxfsmblfile(str(fn,".",small_ball_tool_no,".dxf"));
+%<gcpscad>     dxfpreamble(small_ball_tool_no);
+%<gcpscad> } 
+%<gcpscad> if (small_square_tool_no >  0) {	oopendxfsmsqfile(str(fn,".",small_square_tool_no,".dxf"));
+%<gcpscad> //    echo(str("tool no",small_square_tool_no));
+%<gcpscad>     dxfpreamble(small_square_tool_no);
+%<gcpscad> } 
+%<gcpscad> if (small_V_tool_no >  0) {	oopendxfsmVfile(str(fn,".",small_V_tool_no,".dxf"));
+%<gcpscad>     dxfpreamble(small_V_tool_no);
+%<gcpscad> } 
+%<gcpscad> }
+%<gcpscad> }
+%<gcpscad> 
+%    \end{macrocode}
+% 
+% \DescribeRoutine{writedxf}\DescribeRoutine{writedxflgbl}\DescribeRoutine{writedxflgsq}
+% Once files have been opened they may be written to.
+% 
+%    \begin{macrocode}
+%<gcpy> def writedxf(*arguments):
+%<gcpy>     line_to_write = ""
+%<gcpy>     for element in arguments:
+%<gcpy>         line_to_write += element
+%<gcpy>     dxf.write(line_to_write)
+%<gcpy>     dxf.write("\n")
+%<gcpy> 
+%<gcpy> def writedxflgbl(*arguments):
+%<gcpy>     line_to_write = ""
+%<gcpy>     for element in arguments:
+%<gcpy>         line_to_write += element
+%<gcpy>     dxflgbl.write(line_to_write)
+%<gcpy>     print(line_to_write)
+%<gcpy>     dxflgbl.write("\n")
+%<gcpy> 
+%<gcpy> def writedxflgsq(*arguments):
+%<gcpy>     line_to_write = ""
+%<gcpy>     for element in arguments:
+%<gcpy>         line_to_write += element
+%<gcpy>     dxflgsq.write(line_to_write)
+%<gcpy>     print(line_to_write)
+%<gcpy>     dxflgsq.write("\n")
+%<gcpy> 
+%<gcpy> def writedxflgV(*arguments):
+%<gcpy>     line_to_write = ""
+%<gcpy>     for element in arguments:
+%<gcpy>         line_to_write += element
+%<gcpy>     dxflgV.write(line_to_write)
+%<gcpy>     print(line_to_write)
+%<gcpy>     dxflgV.write("\n")
+%<gcpy> 
+%<gcpy> def writedxfsmbl(*arguments):
+%<gcpy>     line_to_write = ""
+%<gcpy>     for element in arguments:
+%<gcpy>         line_to_write += element
+%<gcpy>     dxfsmbl.write(line_to_write)
+%<gcpy>     print(line_to_write)
+%<gcpy>     dxfsmbl.write("\n")
+%<gcpy> 
+%<gcpy> def writedxfsmsq(*arguments):
+%<gcpy>     line_to_write = ""
+%<gcpy>     for element in arguments:
+%<gcpy>         line_to_write += element
+%<gcpy>     dxfsmsq.write(line_to_write)
+%<gcpy>     print(line_to_write)
+%<gcpy>     dxfsmsq.write("\n")
+%<gcpy> 
+%<gcpy> def writedxfsmV(*arguments):
+%<gcpy>     line_to_write = ""
+%<gcpy>     for element in arguments:
+%<gcpy>         line_to_write += element
+%<gcpy>     dxfsmV.write(line_to_write)
+%<gcpy>     print(line_to_write)
+%<gcpy>     dxfsmV.write("\n")
+%<gcpy> 
+%<gcpy> def writesvg(*arguments):
+%<gcpy>     line_to_write = ""
+%<gcpy>     for element in arguments:
+%<gcpy>         line_to_write += element
+%<gcpy>     svg.write(line_to_write)
+%<gcpy>     print(line_to_write)
+%<gcpy> 
+%<gcpy> def pwritesvgline():
+%<gcpy>     svg.write("\n")
+%<gcpy> 
+%    \end{macrocode}
+% 
+% \DescribeRoutine{owritecomment}\DescribeRoutine{dxfwriteone}\DescribeRoutine{dxfwritelgbl}
+%    \begin{macrocode}
+%<pyscad> module owritecomment(comment) {
+%<pyscad> 	writeln("(",comment,")");
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module dxfwriteone(first) {
+%<pyscad> 	writedxf(first);
+%<pyscad> //	writeln(first);
+%<pyscad> //    echo(first);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module dxfwritelgbl(first) {
+%<pyscad> 	writedxflgbl(first);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module dxfwritelgsq(first) {
+%<pyscad> 	writedxflgsq(first);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module dxfwritelgV(first) {
+%<pyscad> 	writedxflgV(first);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module dxfwritesmbl(first) {
+%<pyscad> 	writedxfsmbl(first);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module dxfwritesmsq(first) {
+%<pyscad> 	writedxfsmsq(first);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module dxfwritesmV(first) {
+%<pyscad> 	writedxfsmV(first);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module svgwriteone(first) {
+%<pyscad> 	writesvg(first);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module writesvglineend(first) {
+%<pyscad> 	pwritesvgline();
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module owriteone(first) {
+%<pyscad> 	writeln(first);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module owritetwo(first, second) {
+%<pyscad> 	writeln(first, second);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module owritethree(first, second, third) {
+%<pyscad> 	writeln(first, second, third);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module owritefour(first, second, third, fourth) {
+%<pyscad> 	writeln(first, second, third, fourth);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module owritefive(first, second, third, fourth, fifth) {
+%<pyscad> 	writeln(first, second, third, fourth, fifth);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module owritesix(first, second, third, fourth, fifth, sixth) {
+%<pyscad> 	writeln(first, second, third, fourth, fifth, sixth);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module owriteseven(first, second, third, fourth, fifth, sixth, seventh) {
+%<pyscad> 	writeln(first, second, third, fourth, fifth, sixth, seventh);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module owriteeight(first, second, third, fourth, fifth, sixth, seventh,eighth) {
+%<pyscad> 	writeln(first, second, third, fourth, fifth, sixth, seventh,eighth);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module owritenine(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth) {
+%<pyscad> 	writeln(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module owriteten(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth) {
+%<pyscad> 	writeln(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module owriteeleven(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh) {
+%<pyscad> 	writeln(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module owritetwelve(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth) {
+%<pyscad> 	writeln(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module owritethirteen(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth, thirteenth) {
+%<pyscad> 	writeln(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth, thirteenth);
+%<pyscad> }
+%<pyscad> 
+%    \end{macrocode}
+% 
+% \DescribeRoutine{dxfwrite}\DescribeRoutine{dxfpreamble}\DescribeRoutine{writesvgline}
+%    \begin{macrocode}
+%<gcpscad> module dxfwrite(tn,arg) {
+%<gcpscad> if (tn == large_ball_tool_no) {
+%<gcpscad>     dxfwritelgbl(arg);}
+%<gcpscad> if (tn == large_square_tool_no) {
+%<gcpscad>     dxfwritelgsq(arg);}
+%<gcpscad> if (tn == large_V_tool_no) {
+%<gcpscad>     dxfwritelgV(arg);}
+%<gcpscad> if (tn == small_ball_tool_no) {
+%<gcpscad>     dxfwritesmbl(arg);}
+%<gcpscad> if (tn == small_square_tool_no) {
+%<gcpscad>     dxfwritesmsq(arg);}
+%<gcpscad> if (tn == small_V_tool_no) {
+%<gcpscad>     dxfwritesmV(arg);}
+%<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module dxfpreamble(tn) {
+%<gcpscad> //    echo(str("dxfpreamble",small_square_tool_no));
+%<gcpscad>     dxfwrite(tn,"0");
+%<gcpscad>     dxfwrite(tn,"SECTION");
+%<gcpscad>     dxfwrite(tn,"2");
+%<gcpscad>     dxfwrite(tn,"ENTITIES");
+%<gcpscad>     dxfwrite(tn,"0");
+%<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module writesvgline(bx,by,ex,ey) {
+%<gcpscad> if (generatesvg == true) {
+%<gcpscad>     svgwriteone(str("<path d=",chr(34),"M",bx*3.77953," ",by*3.77953," L",ex*3.77953," ",ey*3.77953," ",chr(34)," stroke=",chr(34),"black",chr(34)," stroke-width=",chr(34),"1",chr(34)," fill=",chr(34),"none",chr(34)," /> "));
+%<gcpscad>     }
+%<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module dxfbpl(tn,bx,by) {
+%<gcpscad>     dxfwrite(tn,"POLYLINE");
+%<gcpscad>     dxfwrite(tn,"8");
+%<gcpscad>     dxfwrite(tn,"default");
+%<gcpscad>     dxfwrite(tn,"66");
+%<gcpscad>     dxfwrite(tn,"1");
+%<gcpscad>     dxfwrite(tn,"70");
+%<gcpscad>     dxfwrite(tn,"0");
+%<gcpscad>     dxfwrite(tn,"0");
+%<gcpscad>     dxfwrite(tn,"VERTEX");
+%<gcpscad>     dxfwrite(tn,"8");
+%<gcpscad>     dxfwrite(tn,"default");
+%<gcpscad>     dxfwrite(tn,"70");
+%<gcpscad>     dxfwrite(tn,"32");
+%<gcpscad>     dxfwrite(tn,"10");
+%<gcpscad>     dxfwrite(tn,str(bx));
+%<gcpscad>     dxfwrite(tn,"20");
+%<gcpscad>     dxfwrite(tn,str(by));
+%<gcpscad>     dxfwrite(tn,"0");
+%<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module beginpolyline(bx,by,bz) {
+%<gcpscad> if (generatedxf == true) {
+%<gcpscad>     dxfwriteone("POLYLINE");
+%<gcpscad>     dxfwriteone("8");
+%<gcpscad>     dxfwriteone("default");
+%<gcpscad>     dxfwriteone("66");
+%<gcpscad>     dxfwriteone("1");
+%<gcpscad>     dxfwriteone("70");
+%<gcpscad>     dxfwriteone("0");
+%<gcpscad>     dxfwriteone("0");
+%<gcpscad>     dxfwriteone("VERTEX");
+%<gcpscad>     dxfwriteone("8");
+%<gcpscad>     dxfwriteone("default");
+%<gcpscad>     dxfwriteone("70");
+%<gcpscad>     dxfwriteone("32");
+%<gcpscad>     dxfwriteone("10");
+%<gcpscad>     dxfwriteone(str(bx));
+%<gcpscad>     dxfwriteone("20");
+%<gcpscad>     dxfwriteone(str(by));
+%<gcpscad>     dxfwriteone("0");
+%<gcpscad>     dxfbpl(current_tool(),bx,by);}
+%<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module dxfapl(tn,bx,by) {
+%<gcpscad>     dxfwrite(tn,"VERTEX");
+%<gcpscad>     dxfwrite(tn,"8");
+%<gcpscad>     dxfwrite(tn,"default");
+%<gcpscad>     dxfwrite(tn,"70");
+%<gcpscad>     dxfwrite(tn,"32");
+%<gcpscad>     dxfwrite(tn,"10");
+%<gcpscad>     dxfwrite(tn,str(bx));
+%<gcpscad>     dxfwrite(tn,"20");
+%<gcpscad>     dxfwrite(tn,str(by));
+%<gcpscad>     dxfwrite(tn,"0");
+%<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module addpolyline(bx,by,bz) {
+%<gcpscad> if (generatedxf == true) {
+%<gcpscad>     dxfwriteone("VERTEX");
+%<gcpscad>     dxfwriteone("8");
+%<gcpscad>     dxfwriteone("default");
+%<gcpscad>     dxfwriteone("70");
+%<gcpscad>     dxfwriteone("32");
+%<gcpscad>     dxfwriteone("10");
+%<gcpscad>     dxfwriteone(str(bx));
+%<gcpscad>     dxfwriteone("20");
+%<gcpscad>     dxfwriteone(str(by));
+%<gcpscad>     dxfwriteone("0");
+%<gcpscad>     dxfapl(current_tool(),bx,by);
+%<gcpscad>     }
+%<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module dxfcpl(tn) {
+%<gcpscad>     dxfwrite(tn,"SEQEND");
+%<gcpscad>     dxfwrite(tn,"0");
+%<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module closepolyline() {
+%<gcpscad> if (generatedxf == true) {
+%<gcpscad>     dxfwriteone("SEQEND");
+%<gcpscad>     dxfwriteone("0");
+%<gcpscad>     dxfcpl(current_tool());
+%<gcpscad>     }
+%<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module writecomment(comment) {
+%<gcpscad> if (generategcode == true) {
+%<gcpscad> 	owritecomment(comment);
+%<gcpscad> }
+%<gcpscad> }
+%<gcpscad> 
+%    \end{macrocode}
+% 
+% \DescribeRoutine{pclosegcodefile}\DescribeRoutine{pclosesvgfile}\DescribeRoutine{pclosedxffile}
+% At the end of the project it will be necessary to close each file. 
+% In some instances it will be necessary to write additional information,
+% depending on the file format.
+% 
+%    \begin{macrocode}
+%<gcpy> def pclosegcodefile():
+%<gcpy>     f.close()
+%<gcpy> 
+%<gcpy> def pclosesvgfile():
+%<gcpy>     svg.close()
+%<gcpy> 
+%<gcpy> def pclosedxffile():
+%<gcpy>     dxf.close()
+%<gcpy> 
+%<gcpy> def pclosedxflgblfile():
+%<gcpy>     dxflgbl.close()
+%<gcpy> 
+%<gcpy> def pclosedxflgsqfile():
+%<gcpy>     dxflgsq.close()
+%<gcpy> 
+%<gcpy> def pclosedxflgVfile():
+%<gcpy>     dxflgV.close()
+%<gcpy> 
+%<gcpy> def pclosedxfsmblfile():
+%<gcpy>     dxfsmbl.close()
+%<gcpy> 
+%<gcpy> def pclosedxfsmsqfile():
+%<gcpy>     dxfsmsq.close()
+%<gcpy> 
+%<gcpy> def pclosedxfsmVfile():
+%<gcpy>     dxfsmV.close()
+%<gcpy> 
+%    \end{macrocode}
+% 
+% \DescribeRoutine{oclosegcodefile}\DescribeRoutine{oclosedxffile}\DescribeRoutine{oclosedxflgblfile}
+%    \begin{macrocode}
+%<pyscad> module oclosegcodefile() {
+%<pyscad> 	pclosegcodefile();
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module oclosedxffile() {
+%<pyscad> 	pclosedxffile();
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module oclosedxflgblfile() {
+%<pyscad> 	pclosedxflgblfile();
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module oclosedxflgsqfile() {
+%<pyscad> 	pclosedxflgsqfile();
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module oclosedxflgVfile() {
+%<pyscad> 	pclosedxflgVfile();
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module oclosedxfsmblfile() {
+%<pyscad> 	pclosedxfsmblfile();
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module oclosedxfsmsqfile() {
+%<pyscad> 	pclosedxfsmsqfile();
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module oclosedxfsmVfile() {
+%<pyscad> 	pclosedxfsmVfile();
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module oclosesvgfile() {
+%<pyscad> 	pclosesvgfile();
+%<pyscad> }
+%<pyscad> 
+%    \end{macrocode}
+% 
+% \DescribeRoutine{closegcodefile}\DescribeRoutine{dxfpostamble}\DescribeRoutine{closedxffile}
+%    \begin{macrocode}
+%<gcpscad> module closegcodefile() {
+%<gcpscad> if (generategcode == true) {
+%<gcpscad>     owriteone("M05");
+%<gcpscad>     owriteone("M02");
+%<gcpscad> 	oclosegcodefile();
+%<gcpscad> }
+%<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module dxfpostamble(arg) {
+%<gcpscad>     dxfwrite(arg,"ENDSEC");
+%<gcpscad>     dxfwrite(arg,"0");
+%<gcpscad>     dxfwrite(arg,"EOF");
+%<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module closedxffile() {
+%<gcpscad> if (generatedxf == true) {
+%<gcpscad>     dxfwriteone("ENDSEC");
+%<gcpscad>     dxfwriteone("0");
+%<gcpscad>     dxfwriteone("EOF");
+%<gcpscad> 	oclosedxffile();
+%<gcpscad>     echo("CLOSING");
+%<gcpscad> if (large_ball_tool_no >  0) {	dxfpostamble(large_ball_tool_no);
+%<gcpscad>     oclosedxflgblfile();
+%<gcpscad> } 
+%<gcpscad> if (large_square_tool_no >  0) {	dxfpostamble(large_square_tool_no);
+%<gcpscad>     oclosedxflgsqfile();
+%<gcpscad> } 
+%<gcpscad> if (large_V_tool_no >  0) {	dxfpostamble(large_V_tool_no);
+%<gcpscad>     oclosedxflgVfile();
+%<gcpscad> } 
+%<gcpscad> if (small_ball_tool_no >  0) {	dxfpostamble(small_ball_tool_no);
+%<gcpscad>     oclosedxfsmblfile();
+%<gcpscad> } 
+%<gcpscad> if (small_square_tool_no >  0) {	dxfpostamble(small_square_tool_no);
+%<gcpscad>     oclosedxfsmsqfile();
+%<gcpscad> } 
+%<gcpscad> if (small_V_tool_no >  0) {	dxfpostamble(small_V_tool_no);
+%<gcpscad>     oclosedxfsmVfile();
+%<gcpscad> } 
+%<gcpscad>     }
+%<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module closesvgfile() {
+%<gcpscad> if (generatesvg == true) {
+%<gcpscad>     svgwriteone("</svg> ");
+%<gcpscad> 	oclosesvgfile();
+%<gcpscad>     echo("CLOSING SVG");
+%<gcpscad>     }
+%<gcpscad> }
+%<gcpscad> 
+%    \end{macrocode}
+% 
+% \subsection{Movement and Cutting}
+% 
+% \DescribeRoutine{otm}\DescribeRoutine{ocut}\DescribeRoutine{orapid}
+% With all the scaffolding in place, it is possible to model tool movement
+% and cutting and to write out files which represent the desired machine motions.
+% 
+%    \begin{macrocode}
+%<gcpscad> module otm(ex, ey, ez, r,g,b) {
+%<gcpscad> color([r,g,b]) hull(){
+%<gcpscad>     translate([xpos(), ypos(), zpos()]){
+%<gcpscad>       select_tool(current_tool());
+%<gcpscad>     }
+%<gcpscad>     translate([ex, ey, ez]){
+%<gcpscad>       select_tool(current_tool());
+%<gcpscad>     }
+%<gcpscad>   }
+%<gcpscad> oset(ex, ey, ez);
+%<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module ocut(ex, ey, ez) {
+%<gcpscad> //color([0.2,1,0.2]) hull(){
+%<gcpscad> otm(ex, ey, ez, 0.2,1,0.2);
+%<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module orapid(ex, ey, ez) {
+%<gcpscad> //color([0.93,0,0]) hull(){
+%<gcpscad> otm(ex, ey, ez, 0.93,0,0);
+%<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module rapidbx(bx, by, bz, ex, ey, ez) {
+%<gcpscad> //	writeln("G0 X",bx," Y", by, "Z", bz);
+%<gcpscad> if (generategcode == true) {
+%<gcpscad> 	writecomment("rapid");
+%<gcpscad> 	owritesix("G0 X",str(ex)," Y", str(ey), " Z", str(ez));
+%<gcpscad> }
+%<gcpscad>     orapid(ex, ey, ez);
+%<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module rapid(ex, ey, ez) {
+%<gcpscad> //	writeln("G0 X",bx," Y", by, "Z", bz);
+%<gcpscad> if (generategcode == true) {
+%<gcpscad> 	writecomment("rapid");
+%<gcpscad> 	owritesix("G0 X",str(ex)," Y", str(ey), " Z", str(ez));
+%<gcpscad> }
+%<gcpscad>     orapid(ex, ey, ez);
+%<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module movetosafez() {
+%<gcpscad> //this should be move to retract height
+%<gcpscad> if (generategcode == true) {
+%<gcpscad> 	writecomment("Move to safe Z to avoid workholding");
+%<gcpscad>     owriteone("G53G0Z-5.000");
+%<gcpscad> }
+%<gcpscad>     orapid(getxpos(), getypos(), retractheight+55);
+%<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module begintoolpath(bx,by,bz) {
+%<gcpscad> if (generategcode == true) {
+%<gcpscad> 	writecomment("PREPOSITION FOR RAPID PLUNGE");
+%<gcpscad>     owritefour("G0X", str(bx), "Y",str(by));
+%<gcpscad>     owritetwo("Z", str(bz));
+%<gcpscad>     }
+%<gcpscad>     orapid(bx,by,bz);
+%<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module movetosafeheight() {
+%<gcpscad> //this should be move to machine position
+%<gcpscad> if (generategcode == true) {
+%<gcpscad> //	writecomment("PREPOSITION FOR RAPID PLUNGE");Z25.650
+%<gcpscad> //G1Z24.663F381.0 ,"F",str(plunge)
+%<gcpscad> if (zeroheight == "Top") {
+%<gcpscad>     owritetwo("Z",str(retractheight));
+%<gcpscad> }
+%<gcpscad> }
+%<gcpscad>     orapid(getxpos(), getypos(), retractheight+55);
+%<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module cutoneaxis_setfeed(axis,depth,feed) {
+%<gcpscad> if (generategcode == true) {
+%<gcpscad> //	writecomment("PREPOSITION FOR RAPID PLUNGE");Z25.650
+%<gcpscad> //G1Z24.663F381.0 ,"F",str(plunge) G1Z7.612F381.0
+%<gcpscad> if (zeroheight == "Top") {
+%<gcpscad>     owritefive("G1",axis,str(depth),"F",str(feed));
+%<gcpscad> }
+%<gcpscad> }
+%<gcpscad> if (axis == "X") {setxpos(depth);}
+%<gcpscad> if (axis == "Y") {setypos(depth);}
+%<gcpscad> if (axis == "Z") {setzpos(depth);}
+%<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module cut(ex, ey, ez) {
+%<gcpscad> //	writeln("G0 X",bx," Y", by, "Z", bz);
+%<gcpscad> if (generategcode == true) {
+%<gcpscad> //	writecomment("rapid");
+%<gcpscad> 	owritesix("G1 X",str(ex)," Y", str(ey), " Z", str(ez));
+%<gcpscad> }
+%<gcpscad> if (generatesvg == true) {
+%<gcpscad> //	owritesix("G1 X",str(ex)," Y", str(ey), " Z", str(ez));
+%<gcpscad> //    orapid(getxpos(), getypos(), retractheight+5);
+%<gcpscad>     writesvgline(getxpos(),getypos(),ex,ey);
+%<gcpscad> }
+%<gcpscad> ocut(ex, ey, ez);
+%<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module cutwithfeed(ex, ey, ez, feed) {
+%<gcpscad> //	writeln("G0 X",bx," Y", by, "Z", bz);
+%<gcpscad> if (generategcode == true) {
+%<gcpscad> //	writecomment("rapid");
+%<gcpscad> 	owriteeight("G1 X",str(ex)," Y", str(ey), " Z", str(ez),"F",str(feed));
+%<gcpscad> }
+%<gcpscad> ocut(ex, ey, ez);
+%<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module endtoolpath() {
+%<gcpscad> if (generategcode == true) {
+%<gcpscad> //Z31.750
+%<gcpscad> //	owriteone("G53G0Z-5.000");
+%<gcpscad>     owritetwo("Z",str(retractheight));
+%<gcpscad> }
+%<gcpscad>     orapid(getxpos(),getypos(),retractheight);
+%<gcpscad> }
+%    \end{macrocode}
+% 
 % \bibliographystyle{alpha}
 %
 % \begin{thebibliography}{RS274}
@@ -195,6 +1281,9 @@
 %
 %
 % \Finale
+%
+% \DoNotIndex{\\\\,\\~,\n,\Users,\RapCAD}
+% 
 % \PrintIndex
 %
 \endinput
