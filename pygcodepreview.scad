@@ -1,196 +1,195 @@
-//!OpenSCAD
+ //!OpenSCAD
 
-module oopengcodefile(fn) {
-	popengcodefile(fn);
-}
+ module osetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin) {
+     psetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
+ }
 
-module oopensvgfile(fn) {
-	popensvgfile(fn);
-}
+ function getxpos() = xpos();
+ function getypos() = ypos();
+ function getzpos() = zpos();
 
-module oopendxffile(fn) {
-    echo(fn);
-	popendxffile(fn);
-}
+ module setxpos(newxpos) {
+ psetxpos(newxpos);
+ }
 
-module oopendxflgblfile(fn) {
-	popendxflgblfile(fn);
-}
+ module setypos(newypos) {
+ psetypos(newypos);
+ }
 
-module oopendxflgsqfile(fn) {
-	popendxflgsqfile(fn);
-}
+ module setzpos(newzpos) {
+ psetzpos(newzpos);
+ }
 
-module oopendxflgVfile(fn) {
-	popendxflgVfile(fn);
-}
+ module osettool(tn){
+ psettool(tn);}
 
-module oopendxfsmblfile(fn) {
-	popendxfsmblfile(fn);
-}
+ function current_tool() = pcurrent_tool();
 
-module oopendxfsmsqfile(fn) {
-    echo(fn);
-	popendxfsmsqfile(fn);
-}
+ module oopengcodefile(fn) {
+  popengcodefile(fn);
+ }
 
-module oopendxfsmVfile(fn) {
-	popendxfsmVfile(fn);
-}
+ module oopensvgfile(fn) {
+  popensvgfile(fn);
+ }
 
-module oclosegcodefile() {
-	pclosegcodefile();
-}
+ module oopendxffile(fn) {
+     echo(fn);
+  popendxffile(fn);
+ }
 
-module oclosedxffile() {
-	pclosedxffile();
-}
+ module oopendxflgblfile(fn) {
+  popendxflgblfile(fn);
+ }
 
-module oclosedxflgblfile() {
-	pclosedxflgblfile();
-}
+ module oopendxflgsqfile(fn) {
+  popendxflgsqfile(fn);
+ }
 
-module oclosedxflgsqfile() {
-	pclosedxflgsqfile();
-}
+ module oopendxflgVfile(fn) {
+  popendxflgVfile(fn);
+ }
 
-module oclosedxflgVfile() {
-	pclosedxflgVfile();
-}
+ module oopendxfsmblfile(fn) {
+  popendxfsmblfile(fn);
+ }
 
-module oclosedxfsmblfile() {
-	pclosedxfsmblfile();
-}
+ module oopendxfsmsqfile(fn) {
+     echo(fn);
+  popendxfsmsqfile(fn);
+ }
 
-module oclosedxfsmsqfile() {
-	pclosedxfsmsqfile();
-}
+ module oopendxfsmVfile(fn) {
+  popendxfsmVfile(fn);
+ }
 
-module oclosedxfsmVfile() {
-	pclosedxfsmVfile();
-}
+ module owritecomment(comment) {
+  writeln("(",comment,")");
+ }
 
-module oclosesvgfile() {
-	pclosesvgfile();
-}
+ module dxfwriteone(first) {
+  writedxf(first);
+ // writeln(first);
+ //    echo(first);
+ }
 
-module owritecomment(comment) {
-	writeln("(",comment,")");
-}
+ module dxfwritelgbl(first) {
+  writedxflgbl(first);
+ }
 
-module owriteone(first) {
-	writeln(first);
-}
+ module dxfwritelgsq(first) {
+  writedxflgsq(first);
+ }
 
-module dxfwriteone(first) {
-	writedxf(first);
-//	writeln(first);
-//    echo(first);
-}
+ module dxfwritelgV(first) {
+  writedxflgV(first);
+ }
 
-module dxfwritelgbl(first) {
-	writedxflgbl(first);
-}
+ module dxfwritesmbl(first) {
+  writedxfsmbl(first);
+ }
 
-module dxfwritelgsq(first) {
-	writedxflgsq(first);
-}
+ module dxfwritesmsq(first) {
+  writedxfsmsq(first);
+ }
 
-module dxfwritelgV(first) {
-	writedxflgV(first);
-}
+ module dxfwritesmV(first) {
+  writedxfsmV(first);
+ }
 
-module dxfwritesmbl(first) {
-	writedxfsmbl(first);
-}
+ module svgwriteone(first) {
+  writesvg(first);
+ }
 
-module dxfwritesmsq(first) {
-	writedxfsmsq(first);
-}
+ module writesvglineend(first) {
+  pwritesvgline();
+ }
 
-module dxfwritesmV(first) {
-	writedxfsmV(first);
-}
+ module owriteone(first) {
+  writeln(first);
+ }
 
-module svgwriteone(first) {
-	writesvg(first);
-}
+ module owritetwo(first, second) {
+  writeln(first, second);
+ }
 
-module writesvglineend(first) {
-	pwritesvgline();
-}
+ module owritethree(first, second, third) {
+  writeln(first, second, third);
+ }
 
-module owritetwo(first, second) {
-	writeln(first, second);
-}
+ module owritefour(first, second, third, fourth) {
+  writeln(first, second, third, fourth);
+ }
 
-module owritethree(first, second, third) {
-	writeln(first, second, third);
-}
+ module owritefive(first, second, third, fourth, fifth) {
+  writeln(first, second, third, fourth, fifth);
+ }
 
-module owritefour(first, second, third, fourth) {
-	writeln(first, second, third, fourth);
-}
+ module owritesix(first, second, third, fourth, fifth, sixth) {
+  writeln(first, second, third, fourth, fifth, sixth);
+ }
 
-module owritefive(first, second, third, fourth, fifth) {
-	writeln(first, second, third, fourth, fifth);
-}
+ module owriteseven(first, second, third, fourth, fifth, sixth, seventh) {
+  writeln(first, second, third, fourth, fifth, sixth, seventh);
+ }
 
-module owritesix(first, second, third, fourth, fifth, sixth) {
-	writeln(first, second, third, fourth, fifth, sixth);
-}
+ module owriteeight(first, second, third, fourth, fifth, sixth, seventh,eighth) {
+  writeln(first, second, third, fourth, fifth, sixth, seventh,eighth);
+ }
 
-module owriteseven(first, second, third, fourth, fifth, sixth, seventh) {
-	writeln(first, second, third, fourth, fifth, sixth, seventh);
-}
+ module owritenine(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth) {
+  writeln(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth);
+ }
 
-module owriteeight(first, second, third, fourth, fifth, sixth, seventh,eighth) {
-	writeln(first, second, third, fourth, fifth, sixth, seventh,eighth);
-}
+ module owriteten(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth) {
+  writeln(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth);
+ }
 
-module owritenine(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth) {
-	writeln(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth);
-}
+ module owriteeleven(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh) {
+  writeln(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh);
+ }
 
-module owriteten(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth) {
-	writeln(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth);
-}
+ module owritetwelve(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth) {
+  writeln(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth);
+ }
 
-module owriteeleven(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh) {
-	writeln(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh);
-}
+ module owritethirteen(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth, thirteenth) {
+  writeln(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth, thirteenth);
+ }
 
-module owritetwelve(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth) {
-	writeln(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth);
-}
+ module oclosegcodefile() {
+  pclosegcodefile();
+ }
 
-module owritethirteen(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth, thirteenth) {
-	writeln(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth, thirteenth);
-}
+ module oclosedxffile() {
+  pclosedxffile();
+ }
 
-module osetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin) {
-    psetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
-}
+ module oclosedxflgblfile() {
+  pclosedxflgblfile();
+ }
 
-//module osettool(tn){psettool(tn);}
+ module oclosedxflgsqfile() {
+  pclosedxflgsqfile();
+ }
 
-module osettool(tn){
-psettool(tn);}
+ module oclosedxflgVfile() {
+  pclosedxflgVfile();
+ }
 
-function current_tool() = pcurrent_tool();
+ module oclosedxfsmblfile() {
+  pclosedxfsmblfile();
+ }
 
-function getxpos() = xpos();
-function getypos() = ypos();
-function getzpos() = zpos();
+ module oclosedxfsmsqfile() {
+  pclosedxfsmsqfile();
+ }
 
-module setxpos(newxpos) {
-psetxpos(newxpos);
-}
+ module oclosedxfsmVfile() {
+  pclosedxfsmVfile();
+ }
 
-module setypos(newypos) {
-psetypos(newypos);
-}
+ module oclosesvgfile() {
+  pclosesvgfile();
+ }
 
-module setzpos(newzpos) {
-psetzpos(newzpos);
-}

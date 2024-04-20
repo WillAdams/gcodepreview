@@ -1,94 +1,105 @@
-# gcodepreview
-OpenSCAD library for moving a tool in lines and arcs so as to model how a part would be cut using G-Code, so as to allow OpenSCAD to function as a compleat CAD/CAM solution for subtractive CNC (mills and routers).
+ # gcodepreview
 
-![OpenSCAD Cut Joinery Module](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/openscad_cutjoinery.png?raw=true)
+ OpenSCAD library for moving a tool in lines and arcs so as to model how a part would be cut
+ using G-Code, so as to allow OpenSCAD to function as a compleat CAD/CAM solution for
+ subtractive CNC (mills and routers).
 
-Updated to make use of Python in OpenSCAD:
+ ![OpenSCAD Cut Joinery Module](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/openscad_cutjoinery.png?raw=true)
 
-http://www.guenther-sohler.net/openscad/
+ Updated to make use of Python in OpenSCAD:
 
-(previous versions had used RapCAD)
+ http://www.guenther-sohler.net/openscad/
 
-A BlockSCAD file for the main modules is available at:
+ (previous versions had used RapCAD)
 
-https://www.blockscad3d.com/community/projects/1244473
+ A BlockSCAD file for the main modules is available at:
 
-The project is discussed at:
+ https://www.blockscad3d.com/community/projects/1244473
 
-https://forum.makerforums.info/t/g-code-preview-using-openscad-rapcad/85729 
+ The project is discussed at:
 
-and
+ https://forum.makerforums.info/t/g-code-preview-using-openscad-rapcad/85729
 
-https://forum.makerforums.info/t/openscad-and-python-looking-to-finally-be-resolved/88171
+ and
 
-and
+ https://forum.makerforums.info/t/openscad-and-python-looking-to-finally-be-resolved/88171
 
-https://willadams.gitbook.io/design-into-3d/programming
+ and
 
-Usage is:
+ https://willadams.gitbook.io/design-into-3d/programming
 
-Place the file in C:\Users\\\~\Documents\OpenSCAD\libraries (C:\Users\\\~\Documents\RapCAD\libraries is deprecated since RapCAD is not longer needed since Python is now used for writing out files)
+ Usage is:
 
-(While it was updated for use w/ RapCAD, so as to take advantage of the writeln command, it was possible to write that in Python)
+ Place the file in C:\Users\\\~\Documents\OpenSCAD\libraries (C:\Users\\\~\Documents\RapCAD\libraries is
+ deprecated since RapCAD is not longer needed since Python is now used for writing out files)
 
-    use <gcodepreview.py>;
-    use <pygcodepreview.scad>;
-    include <gcodepreview.scad>;
+ (While it was updated for use w/ RapCAD, so as to take advantage of the writeln command,
+ it was possible to write that in Python)
 
-Note that it is necessary to use the first two files (this allows loading the Python commands and then wrapping them in OpenSCAD commands) and then include the last file (which allows using OpenSCAD variables to selectively implement the Python commands via their being wrapped in OpenSCAD modules)
+     use <gcodepreview.py>;
+     use <pygcodepreview.scad>;
+     include <gcodepreview.scad>;
 
-and define variables which match the project and then use commands such as:
+ Note that it is necessary to use the first two files (this allows loading
+ the Python commands and then wrapping them in OpenSCAD commands) and then
+ include the last file (which allows using OpenSCAD variables to selectively
+ implement the Python commands via their being wrapped in OpenSCAD modules)
 
-    opengcodefile(Gcode_filename);
-    opendxffile(DXF_filename);
-    
-    difference() {
-        setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
-    
-    movetosafez();
-    
-    toolchange(squaretoolno,speed * square_ratio);
-    
-    begintoolpath(0,0,0.25);
-    beginpolyline(0,0,0.25);
+ and define variables which match the project and then use commands such as:
 
-    cutoneaxis_setfeed("Z",-1,plunge*square_ratio);
-    addpolyline(stocklength/2,stockwidth/2,-stockthickness);
-    
-    cutwithfeed(stocklength/2,stockwidth/2,-stockthickness,feed);
-    
-    endtoolpath();
-    endpolyline();
-    
-    }
-    
-    closegcodefile();
-    closedxffile();
+     opengcodefile(Gcode_filename);
+     opendxffile(DXF_filename);
 
-Tool numbers match those of tooling sold by Carbide 3D (ob. discl., I work for them). Comments are included in the G-code to match those expected by CutViewer.
+     difference() {
+         setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
 
-A complete example file is: gcodepreview_template.scad another is openscad_gcodepreview_cutjoinery.tres.scad which is made from an OpenSCAD Graph Editor file:
+     movetosafez();
 
-![OpenSCAD Graph Editor Cut Joinery File](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/OSGE_cutjoinery.png?raw=true)
+     toolchange(squaretoolno,speed * square_ratio);
 
-Version 0.1 supports setting up stock, origin, rapid positioning, making cuts, and writing out matching G-code, and creating a DXF with polylines.
+     begintoolpath(0,0,0.25);
+     beginpolyline(0,0,0.25);
 
-Added features since initial upload:
+     cutoneaxis_setfeed("Z",-1,plunge*square_ratio);
+     addpolyline(stocklength/2,stockwidth/2,-stockthickness);
 
- - endpolyline(); --- this command allows ending one polyline so as to allow multiple lines in a DXF
- - separate dxf files are written out for each tool where tool is ball/square/V and small/large (10/31)
+     cutwithfeed(stocklength/2,stockwidth/2,-stockthickness,feed);
 
-Not quite working feature:
+     endtoolpath();
+     endpolyline();
 
- - exporting SVGs --- these are written out upside down due to coordinate differences between OpenSCAD/DXFs and SVGs
+     }
 
-Possible future improvements:
+     closegcodefile();
+     closedxffile();
 
- - G-code: support for G2/G3 arcs
- - DXF support for curves and the 3rd dimension
- - G-code: import external tool libraries and feeds and speeds from JSON or CSV files --- note that it is up to the user to implement Depth per Pass so as to not take a single full-depth pass
- - support for additional tooling shapes such as dovetail tools, or roundover tooling
- - general coding improvements --- current coding style is quite prosaic
- - documentation --- this will probably be at: https://willadams.gitbook.io/design-into-3d/programming
- - possibly re-writing as a literate program
- - generalized modules for cutting out various shapes/geometries --- a current one is to cut a rectangular area as vertical passes (the horizontal version will be developed presently)
+ Tool numbers match those of tooling sold by Carbide 3D (ob. discl., I work for them).
+ Comments are included in the G-code to match those expected by CutViewer.
+
+ A complete example file is: gcodepreview_template.scad another is
+ openscad_gcodepreview_cutjoinery.tres.scad which is made from an
+ OpenSCAD Graph Editor file:
+
+ ![OpenSCAD Graph Editor Cut Joinery File](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/OSGE_cutjoinery.png?raw=true)
+
+ Version 0.1 supports setting up stock, origin, rapid positioning, making cuts,
+ and writing out matching G-code, and creating a DXF with polylines.
+
+ Added features since initial upload:
+
+  - endpolyline(); --- this command allows ending one polyline so as to allow multiple lines in a DXF
+  - separate dxf files are written out for each tool where tool is ball/square/V and small/large (10/31/23)
+  - re-writing as a Literate Program using the LaTeX package docmfp (begun 4/12/24)
+
+ Not quite working feature:
+
+  - exporting SVGs --- these are written out upside down due to coordinate differences between OpenSCAD/DXFs and SVGs
+
+ Possible future improvements:
+
+  - G-code: support for G2/G3 arcs
+  - DXF support for curves and the 3rd dimension
+  - G-code: import external tool libraries and feeds and speeds from JSON or CSV files --- note that it is up to the user to implement Depth per Pass so as to not take a single full-depth pass
+  - support for additional tooling shapes such as dovetail tools, or roundover tooling
+  - general coding improvements --- current coding style is quite prosaic
+  - generalized modules for cutting out various shapes/geometries --- a current one is to cut a rectangular area as vertical passes (the horizontal version will be developed presently)

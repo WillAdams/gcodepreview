@@ -1,0 +1,21 @@
+(export.nc)
+(stockMin: -109.5, -75mm, -8.35mm)
+(stockMax:109.5mm, 75mm, 0.00mm)
+(STOCK/BLOCK, 219, 150, 8.35, 109.5, 75, 8.35)
+G90
+G21
+(Move to safe Z to avoid workholding)
+G53G0Z-5.000
+(Toolpath)
+M05
+(TOOL/MILL,3.17, 0.00, 0.00, 0.00)
+M6T102
+M03S16000
+(PREPOSITION FOR RAPID PLUNGE)
+G0X0Y0
+Z0.25
+G1Z-1F100
+G1 X109.5 Y75 Z-8.35F400
+Z9
+M05
+M02

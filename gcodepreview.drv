@@ -1,0 +1,33 @@
+%%
+%% This is file `gcodepreview.drv',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% gcodepreview.dtx  (with options: `driver')
+%%   Copyright 2021--24 William F. Adams, released under LGPL 2.1
+\documentclass[twoside]{ltxdoc}
+\usepackage{docmfp}
+\usepackage{url}
+\usepackage[draft=false,
+            plainpages=false,
+            pdfpagelabels,
+            bookmarksnumbered,
+            hyperindex=false
+           ]{hyperref}
+\makeatletter
+  \@mparswitchfalse
+\makeatother
+\renewcommand{\MakeUppercase}[1]{#1}
+\pagestyle{headings}
+\EnableCrossrefs
+\CodelineIndex
+\usepackage{makeidx}
+%%% \OnlyDescription
+\setcounter{StandardModuleDepth}{1}
+\begin{document}
+  \DocInput{gcodepreview.dtx}
+\end{document}
+\endinput
+%%
+%% End of file `gcodepreview.drv'.

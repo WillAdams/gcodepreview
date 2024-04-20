@@ -1,0 +1,1302 @@
+This is LuaHBTeX, Version 1.16.0 (MiKTeX 23.1) (format=lualatex 2023.12.13)  20 APR 2024 16:28
+ restricted system commands enabled.
+**gcodepreview.ins
+(./gcodepreview.ins
+LaTeX2e <2022-11-01> patch level 1
+Lua module: luaotfload 2022-10-03 3.23 Lua based OpenType font support
+Lua module: lualibs 2022-10-04 2.75 ConTeXt Lua standard libraries.
+Lua module: lualibs-extended 2022-10-04 2.75 ConTeXt Lua libraries -- extended c
+ollection.
+luaotfload | conf : Root cache directory is "C:/Users/willa/AppData/Local/MiKTeX
+/luatex-cache/generic/names".
+luaotfload | init : Loading fontloader "fontloader-2022-10-03.lua" from kpse-res
+olved path "C:/Users/willa/AppData/Local/Programs/MiKTeX/tex/luatex/luaotfload/f
+ontloader-2022-10-03.lua".
+Lua-only attribute luaotfload@noligature = 1
+luaotfload | init : Context OpenType loader version 3.120
+Inserting `luaotfload.node_processor' in `pre_linebreak_filter'.
+Inserting `luaotfload.node_processor' in `hpack_filter'.
+Inserting `luaotfload.glyph_stream' in `glyph_stream_provider'.
+Inserting `luaotfload.define_font' in `define_font'.
+Lua-only attribute luaotfload_color_attribute = 2
+luaotfload | conf : Root cache directory is "C:/Users/willa/AppData/Local/MiKTeX
+/luatex-cache/generic/names".
+Inserting `luaotfload.harf.strip_prefix' in `find_opentype_file'.
+Inserting `luaotfload.harf.strip_prefix' in `find_truetype_file'.
+Removing  `luaotfload.glyph_stream' from `glyph_stream_provider'.
+Inserting `luaotfload.harf.glyphstream' in `glyph_stream_provider'.
+Inserting `luaotfload.harf.finalize_vlist' in `post_linebreak_filter'.
+Inserting `luaotfload.harf.finalize_hlist' in `hpack_filter'.
+Inserting `luaotfload.cleanup_files' in `wrapup_run'.
+Inserting `luaotfload.harf.finalize_unicode' in `finish_pdffile'.
+Inserting `luaotfload.glyphinfo' in `glyph_info'.
+Lua-only attribute luaotfload.letterspace_done = 3
+Inserting `luaotfload.aux.set_sscale_dimens' in `luaotfload.patch_font'.
+Inserting `luaotfload.aux.set_font_index' in `luaotfload.patch_font'.
+Inserting `luaotfload.aux.patch_cambria_domh' in `luaotfload.patch_font'.
+Inserting `luaotfload.aux.fixup_fontdata' in `luaotfload.patch_font_unsafe'.
+Inserting `luaotfload.aux.set_capheight' in `luaotfload.patch_font'.
+Inserting `luaotfload.aux.set_xheight' in `luaotfload.patch_font'.
+Inserting `luaotfload.rewrite_fontname' in `luaotfload.patch_font'. L3 programm
+ing layer <2023-02-22>
+Inserting `tracingstacklevels' in `input_level_string'.
+(C:/Users/willa/AppData/Local/Programs/MiKTeX/tex/latex/base/docstrip.tex
+\blockLevel=\count183
+\emptyLines=\count184
+\processedLines=\count185
+\commentsRemoved=\count186
+\commentsPassed=\count187
+\codeLinesPassed=\count188
+\TotalprocessedLines=\count189
+\TotalcommentsRemoved=\count190
+\TotalcommentsPassed=\count191
+\TotalcodeLinesPassed=\count192
+\NumberOfFiles=\count193
+\inFile=\read2
+\inputcheck=\read3
+\off@0=\count194
+\off@1=\count195
+\off@2=\count196
+\off@3=\count197
+\off@4=\count198
+\off@5=\count199
+\off@6=\count266
+\off@7=\count267
+\off@8=\count268
+\off@9=\count269
+\off@10=\count270
+\off@11=\count271
+\off@12=\count272
+\off@13=\count273
+\off@14=\count274
+\off@15=\count275
+\@maxfiles=\count276
+\@maxoutfiles=\count277
+
+Utility: `docstrip' v2.6b <2022-09-03>
+English documentation    <2022-09-03>
+
+**********************************************************
+* This program converts documented macro-files into fast *
+* loadable files by stripping off (nearly) all comments! *
+**********************************************************
+
+********************************************************
+* No Configuration file found, using default settings. *
+********************************************************
+
+(./gcodepreview.ins
+File ./gcodepreview.drv already exists on the system.
+Overwrite it? [y/n]
+\answer =y
+
+Generating file(s) ./gcodepreview.drv 
+
+\openout0 = ./gcodepreview.drv
+
+Processing file gcodepreview.dtx (driver) -> gcodepreview.drv
+% % % % % % % % % % % % % % <*driver . . . . . . . . . . . . . . . . . % . . .
+. > % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > % % %
+% % % % % % % % % % % % % % <gcpy . > <gcpy . > % % % <pyscad . > <pyscad . >
+% % % <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > % % % % % % <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % %
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > % % % % <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % % % % <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % % % % <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > % % % % % % % % % % <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > % % % % <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > % % % % % % % % % <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % % %
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > % % % % %
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % % %
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > % % % % % % <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > %
+% % % <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > % % % % % % % % % % % % % <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % %
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > % % % % <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+% % % % % % <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > % % % % <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > % % % % <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % % % % % <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > % % % %
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > % % % % % % % % % <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % % <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > % % % % % % % % % % % % %
+% % % % % %
+File gcodepreview.dtx ended by \endinput.
+Lines  processed: 1388
+Comments removed: 269
+Comments  passed: 1
+Codelines passed: 21
+
+File ./readme.md already exists on the system.
+Overwrite it? [y/n]
+\answer =y
+
+Generating file(s) ./readme.md 
+
+\openout0 = ./readme.md
+
+Processing file gcodepreview.dtx (rdm) -> readme.md
+% % % % % % % % % % % % % % <*driver . . . . . . . . . . . . . . . . . % . . .
+. > % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > % % %
+% % % % % % % % % % % % % % <gcpy . > <gcpy . > % % % <pyscad . > <pyscad . >
+% % % <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > % % % % % % <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % %
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > % % % % <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % % % % <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % % % % <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > % % % % % % % % % % <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > % % % % <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > % % % % % % % % % <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % % %
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > % % % % %
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % % %
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > % % % % % % <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > %
+% % % <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > % % % % % % % % % % % % % <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % %
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > % % % % <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+% % % % % % <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > % % % % <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > % % % % <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % % % % % <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > % % % %
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > % % % % % % % % % <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % % <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > % % % % % % % % % % % % %
+% % % % % %
+File gcodepreview.dtx ended by \endinput.
+Lines  processed: 1388
+Comments removed: 269
+Comments  passed: 1
+Codelines passed: 21
+
+File ./gcodepreview.py already exists on the system.
+Overwrite it? [y/n]
+\answer =y
+
+Generating file(s) ./gcodepreview.py 
+
+\openout0 = ./gcodepreview.py
+
+Processing file gcodepreview.dtx (gcpy) -> gcodepreview.py
+% % % % % % % % % % % % % % <*driver . . . . . . . . . . . . . . . . . % . . .
+. > % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > % % %
+% % % % % % % % % % % % % % <gcpy . > <gcpy . > % % % <pyscad . > <pyscad . >
+% % % <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > % % % % % % <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % %
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > % % % % <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % % % % <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % % % % <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > % % % % % % % % % % <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > % % % % <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > % % % % % % % % % <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % % %
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > % % % % %
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % % %
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > % % % % % % <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > %
+% % % <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > % % % % % % % % % % % % % <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % %
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > % % % % <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+% % % % % % <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > % % % % <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > % % % % <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % % % % % <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > % % % %
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > % % % % % % % % % <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % % <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > % % % % % % % % % % % % %
+% % % % % %
+File gcodepreview.dtx ended by \endinput.
+Lines  processed: 1388
+Comments removed: 269
+Comments  passed: 1
+Codelines passed: 21
+
+File ./pygcodepreview.scad already exists on the system.
+Overwrite it? [y/n]
+\answer =y
+
+Generating file(s) ./pygcodepreview.scad 
+
+\openout0 = ./pygcodepreview.scad
+
+Processing file gcodepreview.dtx (pyscad) -> pygcodepreview.scad
+% % % % % % % % % % % % % % <*driver . . . . . . . . . . . . . . . . . % . . .
+. > % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > % % %
+% % % % % % % % % % % % % % <gcpy . > <gcpy . > % % % <pyscad . > <pyscad . >
+% % % <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > % % % % % % <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % %
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > % % % % <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % % % % <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % % % % <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > % % % % % % % % % % <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > % % % % <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > % % % % % % % % % <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % % %
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > % % % % %
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % % %
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > % % % % % % <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > %
+% % % <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > % % % % % % % % % % % % % <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % %
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > % % % % <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+% % % % % % <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > % % % % <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > % % % % <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % % % % % <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > % % % %
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > % % % % % % % % % <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % % <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > % % % % % % % % % % % % %
+% % % % % %
+File gcodepreview.dtx ended by \endinput.
+Lines  processed: 1388
+Comments removed: 269
+Comments  passed: 1
+Codelines passed: 21
+
+File ./gcodepreview.scad already exists on the system.
+Overwrite it? [y/n]
+\answer =y
+
+Generating file(s) ./gcodepreview.scad 
+
+\openout0 = ./gcodepreview.scad
+
+Processing file gcodepreview.dtx (gcpscad) -> gcodepreview.scad
+% % % % % % % % % % % % % % <*driver . . . . . . . . . . . . . . . . . % . . .
+. > % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > % % %
+% % % % % % % % % % % % % % <gcpy . > <gcpy . > % % % <pyscad . > <pyscad . >
+% % % <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > % % % % % % <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % %
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > % % % % <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % % % % <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % % % % <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > % % % % % % % % % % <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > % % % % <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > % % % % % % % % % <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % % %
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > % % % % %
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % % %
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > % % % % % % <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > %
+% % % <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > % % % % % % % % % % % % % <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % %
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > % % % % <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+% % % % % % <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > % % % % <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > % % % % <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % % % % % <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > % % % %
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > % % % % % % % % % <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % % <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > % % % % % % % % % % % % %
+% % % % % %
+File gcodepreview.dtx ended by \endinput.
+Lines  processed: 1388
+Comments removed: 269
+Comments  passed: 1
+Codelines passed: 21
+
+
+File ./gcodepreview_template.scad already exists on the system.
+Overwrite it? [y/n]
+\answer =y
+
+Generating file(s) ./gcodepreview_template.scad 
+
+\openout0 = ./gcodepreview_template.scad
+
+Processing file gcodepreview.dtx (gcptmpl) -> gcodepreview_template.scad
+% % % % % % % % % % % % % % <*driver . . . . . . . . . . . . . . . . . % . . .
+. > % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . >
+<rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > <rdm . > % % %
+% % % % % % % % % % % % % % <gcpy . > <gcpy . > % % % <pyscad . > <pyscad . >
+% % % <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > % % % % % % <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % %
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > % % % % <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % % % % <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % % % % <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > % % % % % % % % % % <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > % % % % <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > % % % % % % % % % <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % % %
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > % % % % %
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % % %
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > % % % % % % <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > %
+% % % <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > % % % % % % % % % % % % % <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % %
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > % % % % <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+% % % % % % <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > % % % % <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > % % % % <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % % % % % <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . >
+<gcpy . > <gcpy . > <gcpy . > <gcpy . > <gcpy . > % % % % <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . >
+<pyscad . > <pyscad . > <pyscad . > <pyscad . > <pyscad . > % % % %
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > % % % % % % % % % <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . >
+<gcpscad . > <gcpscad . > <gcpscad . > <gcpscad . > % % % % % <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . >
+<gcptmpl . > <gcptmpl . > <gcptmpl . > <gcptmpl . > % % % % % % % % % % % % %
+% % % % % %
+File gcodepreview.dtx ended by \endinput.
+Lines  processed: 1388
+Comments removed: 269
+Comments  passed: 1
+Codelines passed: 21
+
+)
+Overall statistics:
+Files  processed: 6
+Lines  processed: 8328
+Comments removed: 1614
+Comments  passed: 6
+Codelines passed: 126
+))
+
+Here is how much of LuaTeX's memory you used:
+ 429 strings out of 478287
+ 100000,1977958 words of node,token memory allocated
+ 296 words of node memory still in use:
+   1 hlist, 3 kern, 1 glyph, 1 attribute, 39 glue_spec, 1 attribute_list nodes
+   avail lists: 2:11,3:3,4:1,5:1
+ 20690 multiletter control sequences out of 65536+600000
+ 14 fonts using 591679 bytes
+ 16i,0n,18p,447b,106s stack positions out of 10000i,1000n,20000p,200000b,200000s
+
+warning  (pdf backend): no pages of output.
+
+PDF statistics: 0 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 131072)
+ 1 words of extra memory for PDF output out of 10000 (max. 100000000)
+

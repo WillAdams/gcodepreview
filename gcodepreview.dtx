@@ -189,8 +189,8 @@
 % Each file will begin with a suitable comment indicating the file type:
 %
 %    \begin{macrocode}
-%<gcpy> #!/usr/bin/env python
-%<gcpy> 
+%<gcpy>#!/usr/bin/env python
+%<gcpy>
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -213,12 +213,12 @@
 % this command is easily re-created in Python:
 %
 %    \begin{macrocode}
-%<gcpy> def writeln(*arguments):
-%<gcpy>     line_to_write = ""
-%<gcpy>     for element in arguments:
-%<gcpy>         line_to_write += element
-%<gcpy>     f.write(line_to_write)
-%<gcpy>     f.write("\n")
+%<gcpy>def writeln(*arguments):
+%<gcpy>    line_to_write = ""
+%<gcpy>    for element in arguments:
+%<gcpy>        line_to_write += element
+%<gcpy>    f.write(line_to_write)
+%<gcpy>    f.write("\n")
 %    \end{macrocode}
 %
 % \noindent which command will accept a series of arguments and then write them out to a file object.
@@ -253,16 +253,16 @@
 % initializations. \DescribeRoutine{psetupstock}
 % 
 %    \begin{macrocode}
-%<gcpy> def psetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin):
-%<gcpy>     global mpx
-%<gcpy>     mpx = float(0)
-%<gcpy>     global mpy
-%<gcpy>     mpy = float(0)
-%<gcpy>     global mpz
-%<gcpy>     mpz = float(0)
-%<gcpy>     global currenttool
-%<gcpy>     currenttool = 102
-%<gcpy> 
+%<gcpy>def psetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin):
+%<gcpy>    global mpx
+%<gcpy>    mpx = float(0)
+%<gcpy>    global mpy
+%<gcpy>    mpy = float(0)
+%<gcpy>    global mpz
+%<gcpy>    mpz = float(0)
+%<gcpy>    global currenttool
+%<gcpy>    currenttool = 102
+%<gcpy>
 %    \end{macrocode}
 %
 % \DescribeRoutine{osetupstock}
@@ -383,18 +383,18 @@
 % machine position in Cartesian coordinates: 
 %
 %    \begin{macrocode}
-%<gcpy> def xpos():
-%<gcpy>     global mpx
-%<gcpy>     return mpx
-%<gcpy> 
-%<gcpy> def ypos():
-%<gcpy>     global mpy
-%<gcpy>     return mpy
-%<gcpy> 
-%<gcpy> def zpos():
-%<gcpy>     global mpz
-%<gcpy>     return mpz
-%<gcpy> 
+%<gcpy>def xpos():
+%<gcpy>    global mpx
+%<gcpy>    return mpx
+%<gcpy>
+%<gcpy>def ypos():
+%<gcpy>    global mpy
+%<gcpy>    return mpy
+%<gcpy>
+%<gcpy>def zpos():
+%<gcpy>    global mpz
+%<gcpy>    return mpz
+%<gcpy>
 %    \end{macrocode}
 %
 % \noindent and in turn, functions which set the positions: \DescribeRoutine{psetxpos}
@@ -402,18 +402,18 @@
 %  \DescribeRoutine{psetzpos}
 %
 %    \begin{macrocode}
-%<gcpy> def psetxpos(newxpos):
-%<gcpy>     global mpx
-%<gcpy>     mpx = newxpos
+%<gcpy>def psetxpos(newxpos):
+%<gcpy>    global mpx
+%<gcpy>    mpx = newxpos
+%<gcpy>
+%<gcpy>def psetypos(newypos):
+%<gcpy>    global mpy
+%<gcpy>    mpy = newypos
+%<gcpy>
+%<gcpy>def psetzpos(newzpos):
+%<gcpy>    global mpz
+%<gcpy>    mpz = newzpos
 %<gcpy> 
-%<gcpy> def psetypos(newypos):
-%<gcpy>     global mpy
-%<gcpy>     mpy = newypos
-%<gcpy> 
-%<gcpy> def psetzpos(newzpos):
-%<gcpy>     global mpz
-%<gcpy>     mpz = newzpos
-%<gcpy>  
 %    \end{macrocode}
 % 
 % \noindent and as noted above, there will need to be matching OpenSCAD versions: \DescribeRoutine{getxpos}
@@ -459,14 +459,14 @@
 % \DescribeRoutine{pcurrenttool}
 % 
 %    \begin{macrocode}
-%<gcpy> def psettool(tn):
-%<gcpy>     global currenttool
-%<gcpy>     currenttool = tn
-%<gcpy> 
-%<gcpy> def pcurrent_tool():
-%<gcpy>     global currenttool
-%<gcpy>     return currenttool
-%<gcpy> 
+%<gcpy>def psettool(tn):
+%<gcpy>    global currenttool
+%<gcpy>    currenttool = tn
+%<gcpy>
+%<gcpy>def pcurrent_tool():
+%<gcpy>    global currenttool
+%<gcpy>    return currenttool
+%<gcpy>
 %    \end{macrocode}
 % 
 % \noindent and matching OpenSCAD modules set and return the current tool: \DescribeRoutine{osettool}
@@ -515,7 +515,7 @@
 %    \end{macrocode}
 % 
 % There must also be a module for selecting tools: \texttt{select\_tool}:\DescribeRoutine{selecttool}
-% \DescribeVariable{tool_number}
+% \DescribeVariable{tool number}
 % 
 %    \begin{macrocode}
 %<gcpscad> module select_tool(tool_number) {
@@ -541,7 +541,7 @@
 % 
 % Each tool must be modeled in 3D using an OpenSCAD module:
 % 
-% \DescribeRoutine{gcp_endmill_square}
+% \DescribeRoutine{gcp endmill square}
 %    \begin{macrocode}
 %<gcpscad> module gcp_endmill_square(es_diameter, es_flute_length) {
 %<gcpscad>   cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=es_flute_length, center=false);
@@ -549,7 +549,7 @@
 %<gcpscad> 
 %    \end{macrocode}
 % 
-% \DescribeRoutine{gcp_endmill_ball}
+% \DescribeRoutine{gcp endmill ball}
 %    \begin{macrocode}
 %<gcpscad> module gcp_endmill_ball(es_diameter, es_flute_length) {
 %<gcpscad>   translate([0, 0, (es_diameter / 2)]){
@@ -562,7 +562,7 @@
 %<gcpscad> 
 %    \end{macrocode}
 % 
-% \DescribeRoutine{gcp_endmill_v}
+% \DescribeRoutine{gcp endmill v}
 %    \begin{macrocode}
 %<gcpscad> module gcp_endmill_v(es_v_angle, es_diameter) {
 %<gcpscad>   union(){
@@ -586,42 +586,42 @@
 % \DescribeRoutine{popendxfsmsqfile}\DescribeRoutine{popendxfsmVfile}\DescribeRoutine{popensvgfile}
 % 
 %    \begin{macrocode}
-%<gcpy> def popengcodefile(fn):
-%<gcpy>     global f
-%<gcpy>     f = open(fn, "w")
-%<gcpy> 
-%<gcpy> def popendxffile(fn):
-%<gcpy>     global dxf
-%<gcpy>     dxf = open(fn, "w")
-%<gcpy> 
-%<gcpy> def popendxlgblffile(fn):
-%<gcpy>     global dxflgbl
-%<gcpy>     dxflgbl = open(fn, "w")
-%<gcpy> 
-%<gcpy> def popendxflgsqfile(fn):
-%<gcpy>     global dxfldsq
-%<gcpy>     dxflgsq = open(fn, "w")
-%<gcpy> 
-%<gcpy> def popendxflgVfile(fn):
-%<gcpy>     global dxflgV
-%<gcpy>     dxflgV = open(fn, "w")
-%<gcpy> 
-%<gcpy> def popendxfsmblfile(fn):
-%<gcpy>     global dxfsmbl
-%<gcpy>     dxfsmbl = open(fn, "w")
-%<gcpy> 
-%<gcpy> def popendxfsmsqfile(fn):
-%<gcpy>     global dxfsmsq
-%<gcpy>     dxfsmsq = open(fn, "w")
-%<gcpy> 
-%<gcpy> def popendxfsmVfile(fn):
-%<gcpy>     global dxfsmV
-%<gcpy>     dxfsmV = open(fn, "w")
-%<gcpy> 
-%<gcpy> def popensvgfile(fn):
-%<gcpy>     global svg
-%<gcpy>     svg = open(fn, "w")
-%<gcpy> 
+%<gcpy>def popengcodefile(fn):
+%<gcpy>    global f
+%<gcpy>    f = open(fn, "w")
+%<gcpy>
+%<gcpy>def popendxffile(fn):
+%<gcpy>    global dxf
+%<gcpy>    dxf = open(fn, "w")
+%<gcpy>
+%<gcpy>def popendxlgblffile(fn):
+%<gcpy>    global dxflgbl
+%<gcpy>    dxflgbl = open(fn, "w")
+%<gcpy>
+%<gcpy>def popendxflgsqfile(fn):
+%<gcpy>    global dxfldsq
+%<gcpy>    dxflgsq = open(fn, "w")
+%<gcpy>
+%<gcpy>def popendxflgVfile(fn):
+%<gcpy>    global dxflgV
+%<gcpy>    dxflgV = open(fn, "w")
+%<gcpy>
+%<gcpy>def popendxfsmblfile(fn):
+%<gcpy>    global dxfsmbl
+%<gcpy>    dxfsmbl = open(fn, "w")
+%<gcpy>
+%<gcpy>def popendxfsmsqfile(fn):
+%<gcpy>    global dxfsmsq
+%<gcpy>    dxfsmsq = open(fn, "w")
+%<gcpy>
+%<gcpy>def popendxfsmVfile(fn):
+%<gcpy>    global dxfsmV
+%<gcpy>    dxfsmV = open(fn, "w")
+%<gcpy>
+%<gcpy>def popensvgfile(fn):
+%<gcpy>    global svg
+%<gcpy>    svg = open(fn, "w")
+%<gcpy>
 %    \end{macrocode}
 % 
 % \DescribeRoutine{oopengcodefile}\DescribeRoutine{oopensvgfile}\DescribeRoutine{oopendxffile}
@@ -726,71 +726,71 @@
 % Once files have been opened they may be written to.
 % 
 %    \begin{macrocode}
-%<gcpy> def writedxf(*arguments):
-%<gcpy>     line_to_write = ""
-%<gcpy>     for element in arguments:
-%<gcpy>         line_to_write += element
-%<gcpy>     dxf.write(line_to_write)
-%<gcpy>     dxf.write("\n")
-%<gcpy> 
-%<gcpy> def writedxflgbl(*arguments):
-%<gcpy>     line_to_write = ""
-%<gcpy>     for element in arguments:
-%<gcpy>         line_to_write += element
-%<gcpy>     dxflgbl.write(line_to_write)
-%<gcpy>     print(line_to_write)
-%<gcpy>     dxflgbl.write("\n")
-%<gcpy> 
-%<gcpy> def writedxflgsq(*arguments):
-%<gcpy>     line_to_write = ""
-%<gcpy>     for element in arguments:
-%<gcpy>         line_to_write += element
-%<gcpy>     dxflgsq.write(line_to_write)
-%<gcpy>     print(line_to_write)
-%<gcpy>     dxflgsq.write("\n")
-%<gcpy> 
-%<gcpy> def writedxflgV(*arguments):
-%<gcpy>     line_to_write = ""
-%<gcpy>     for element in arguments:
-%<gcpy>         line_to_write += element
-%<gcpy>     dxflgV.write(line_to_write)
-%<gcpy>     print(line_to_write)
-%<gcpy>     dxflgV.write("\n")
-%<gcpy> 
-%<gcpy> def writedxfsmbl(*arguments):
-%<gcpy>     line_to_write = ""
-%<gcpy>     for element in arguments:
-%<gcpy>         line_to_write += element
-%<gcpy>     dxfsmbl.write(line_to_write)
-%<gcpy>     print(line_to_write)
-%<gcpy>     dxfsmbl.write("\n")
-%<gcpy> 
-%<gcpy> def writedxfsmsq(*arguments):
-%<gcpy>     line_to_write = ""
-%<gcpy>     for element in arguments:
-%<gcpy>         line_to_write += element
-%<gcpy>     dxfsmsq.write(line_to_write)
-%<gcpy>     print(line_to_write)
-%<gcpy>     dxfsmsq.write("\n")
-%<gcpy> 
-%<gcpy> def writedxfsmV(*arguments):
-%<gcpy>     line_to_write = ""
-%<gcpy>     for element in arguments:
-%<gcpy>         line_to_write += element
-%<gcpy>     dxfsmV.write(line_to_write)
-%<gcpy>     print(line_to_write)
-%<gcpy>     dxfsmV.write("\n")
-%<gcpy> 
-%<gcpy> def writesvg(*arguments):
-%<gcpy>     line_to_write = ""
-%<gcpy>     for element in arguments:
-%<gcpy>         line_to_write += element
-%<gcpy>     svg.write(line_to_write)
-%<gcpy>     print(line_to_write)
-%<gcpy> 
-%<gcpy> def pwritesvgline():
-%<gcpy>     svg.write("\n")
-%<gcpy> 
+%<gcpy>def writedxf(*arguments):
+%<gcpy>    line_to_write = ""
+%<gcpy>    for element in arguments:
+%<gcpy>        line_to_write += element
+%<gcpy>    dxf.write(line_to_write)
+%<gcpy>    dxf.write("\n")
+%<gcpy>
+%<gcpy>def writedxflgbl(*arguments):
+%<gcpy>    line_to_write = ""
+%<gcpy>    for element in arguments:
+%<gcpy>        line_to_write += element
+%<gcpy>    dxflgbl.write(line_to_write)
+%<gcpy>    print(line_to_write)
+%<gcpy>    dxflgbl.write("\n")
+%<gcpy>
+%<gcpy>def writedxflgsq(*arguments):
+%<gcpy>    line_to_write = ""
+%<gcpy>    for element in arguments:
+%<gcpy>        line_to_write += element
+%<gcpy>    dxflgsq.write(line_to_write)
+%<gcpy>    print(line_to_write)
+%<gcpy>    dxflgsq.write("\n")
+%<gcpy>
+%<gcpy>def writedxflgV(*arguments):
+%<gcpy>    line_to_write = ""
+%<gcpy>    for element in arguments:
+%<gcpy>        line_to_write += element
+%<gcpy>    dxflgV.write(line_to_write)
+%<gcpy>    print(line_to_write)
+%<gcpy>    dxflgV.write("\n")
+%<gcpy>
+%<gcpy>def writedxfsmbl(*arguments):
+%<gcpy>    line_to_write = ""
+%<gcpy>    for element in arguments:
+%<gcpy>        line_to_write += element
+%<gcpy>    dxfsmbl.write(line_to_write)
+%<gcpy>    print(line_to_write)
+%<gcpy>    dxfsmbl.write("\n")
+%<gcpy>
+%<gcpy>def writedxfsmsq(*arguments):
+%<gcpy>    line_to_write = ""
+%<gcpy>    for element in arguments:
+%<gcpy>        line_to_write += element
+%<gcpy>    dxfsmsq.write(line_to_write)
+%<gcpy>    print(line_to_write)
+%<gcpy>    dxfsmsq.write("\n")
+%<gcpy>
+%<gcpy>def writedxfsmV(*arguments):
+%<gcpy>    line_to_write = ""
+%<gcpy>    for element in arguments:
+%<gcpy>        line_to_write += element
+%<gcpy>    dxfsmV.write(line_to_write)
+%<gcpy>    print(line_to_write)
+%<gcpy>    dxfsmV.write("\n")
+%<gcpy>
+%<gcpy>def writesvg(*arguments):
+%<gcpy>    line_to_write = ""
+%<gcpy>    for element in arguments:
+%<gcpy>        line_to_write += element
+%<gcpy>    svg.write(line_to_write)
+%<gcpy>    print(line_to_write)
+%<gcpy>
+%<gcpy>def pwritesvgline():
+%<gcpy>    svg.write("\n")
+%<gcpy>
 %    \end{macrocode}
 % 
 % \DescribeRoutine{owritecomment}\DescribeRoutine{dxfwriteone}\DescribeRoutine{dxfwritelgbl}
@@ -1023,33 +1023,33 @@
 % depending on the file format.
 % 
 %    \begin{macrocode}
-%<gcpy> def pclosegcodefile():
-%<gcpy>     f.close()
-%<gcpy> 
-%<gcpy> def pclosesvgfile():
-%<gcpy>     svg.close()
-%<gcpy> 
-%<gcpy> def pclosedxffile():
-%<gcpy>     dxf.close()
-%<gcpy> 
-%<gcpy> def pclosedxflgblfile():
-%<gcpy>     dxflgbl.close()
-%<gcpy> 
-%<gcpy> def pclosedxflgsqfile():
-%<gcpy>     dxflgsq.close()
-%<gcpy> 
-%<gcpy> def pclosedxflgVfile():
-%<gcpy>     dxflgV.close()
-%<gcpy> 
-%<gcpy> def pclosedxfsmblfile():
-%<gcpy>     dxfsmbl.close()
-%<gcpy> 
-%<gcpy> def pclosedxfsmsqfile():
-%<gcpy>     dxfsmsq.close()
-%<gcpy> 
-%<gcpy> def pclosedxfsmVfile():
-%<gcpy>     dxfsmV.close()
-%<gcpy> 
+%<gcpy>def pclosegcodefile():
+%<gcpy>    f.close()
+%<gcpy>
+%<gcpy>def pclosesvgfile():
+%<gcpy>    svg.close()
+%<gcpy>
+%<gcpy>def pclosedxffile():
+%<gcpy>    dxf.close()
+%<gcpy>
+%<gcpy>def pclosedxflgblfile():
+%<gcpy>    dxflgbl.close()
+%<gcpy>
+%<gcpy>def pclosedxflgsqfile():
+%<gcpy>    dxflgsq.close()
+%<gcpy>
+%<gcpy>def pclosedxflgVfile():
+%<gcpy>    dxflgV.close()
+%<gcpy>
+%<gcpy>def pclosedxfsmblfile():
+%<gcpy>    dxfsmbl.close()
+%<gcpy>
+%<gcpy>def pclosedxfsmsqfile():
+%<gcpy>    dxfsmsq.close()
+%<gcpy>
+%<gcpy>def pclosedxfsmVfile():
+%<gcpy>    dxfsmV.close()
+%<gcpy>
 %    \end{macrocode}
 % 
 % \DescribeRoutine{oclosegcodefile}\DescribeRoutine{oclosedxffile}\DescribeRoutine{oclosedxflgblfile}
@@ -1366,7 +1366,8 @@
 %<gcptmpl> }
 %<gcptmpl> 
 %<gcptmpl> closegcodefile();
-%<gcptmpl> closedxffile();%    \end{macrocode}
+%<gcptmpl> closedxffile();
+%    \end{macrocode}
 % 
 % \bibliographystyle{alpha}
 %
