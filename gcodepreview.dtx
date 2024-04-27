@@ -69,9 +69,11 @@
 %    \begin{macrocode}
 %<rdm> # gcodepreview
 %<rdm> 
-%<rdm> OpenSCAD library for moving a tool in lines and arcs so as to model how a part would be cut 
-%<rdm> using G-Code, so as to allow OpenSCAD to function as a compleat CAD/CAM solution for 
-%<rdm> subtractive CNC (mills and routers).
+%<rdm> OpenSCAD library for moving a tool in lines and arcs so as to model how a part would be  
+%<rdm> cut using G-Code, so as to allow OpenSCAD to function as a compleat CAD/CAM solution for 
+%<rdm> subtractive CNC (mills and routers) and to write out DXF files which may be imported
+%<rdm> into a traditional CAM program to create toolpaths (in some cases toolpaths which 
+%<rdm> would not normally be feasible).
 %<rdm> 
 %<rdm> ![OpenSCAD Cut Joinery Module](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/openscad_cutjoinery.png?raw=true)
 %<rdm> 
@@ -99,11 +101,12 @@
 %<rdm> 
 %<rdm> Usage is:
 %<rdm> 
-%<rdm> Place the file in C:\Users\\\~\Documents\OpenSCAD\libraries (C:\Users\\\~\Documents\RapCAD\libraries is 
-%<rdm> deprecated since RapCAD is not longer needed since Python is now used for writing out files)
+%<rdm> Place the file in C:\Users\\\~\Documents\OpenSCAD\libraries 
+%<rdm> (C:\Users\\\~\Documents\RapCAD\libraries is deprecated since RapCAD is no longer 
+%<rdm> needed since Python is now used for writing out files)
 %<rdm> 
-%<rdm> (While it was updated for use w/ RapCAD, so as to take advantage of the writeln command, 
-%<rdm> it was possible to write that in Python)
+%<rdm> (While it was updated for use w/ RapCAD, so as to take advantage of the writeln  
+%<rdm> command, it was possible to write that in Python)
 %<rdm> 
 %<rdm>     use <gcodepreview.py>;
 %<rdm>     use <pygcodepreview.scad>;
@@ -113,7 +116,6 @@
 %<rdm> the Python commands and then wrapping them in OpenSCAD commands) and then 
 %<rdm> include the last file (which allows using OpenSCAD variables to selectively 
 %<rdm> implement the Python commands via their being wrapped in OpenSCAD modules)
-%<rdm> 
 %<rdm> and define variables which match the project and then use commands such as:
 %<rdm> 
 %<rdm>     opengcodefile(Gcode_filename);
@@ -142,7 +144,8 @@
 %<rdm>     closegcodefile();
 %<rdm>     closedxffile();
 %<rdm> 
-%<rdm> Tool numbers match those of tooling sold by Carbide 3D (ob. discl., I work for them). 
+%<rdm> Tool numbers match those of tooling sold by Carbide 3D (ob. discl., 
+%<rdm> I work for them). 
 %<rdm> Comments are included in the G-code to match those expected by CutViewer.
 %<rdm> 
 %<rdm> A complete example file is: gcodepreview_template.scad another is 
@@ -156,22 +159,31 @@
 %<rdm> 
 %<rdm> Added features since initial upload:
 %<rdm> 
-%<rdm>  - endpolyline(); --- this command allows ending one polyline so as to allow multiple lines in a DXF
-%<rdm>  - separate dxf files are written out for each tool where tool is ball/square/V and small/large (10/31/23)
+%<rdm>  - endpolyline(); --- this command allows ending one polyline so as to 
+%<rdm>                       allow multiple lines in a DXF
+%<rdm>  - separate dxf files are written out for each tool where tool is 
+%<rdm>    ball/square/V and small/large (10/31/23)
 %<rdm>  - re-writing as a Literate Program using the LaTeX package docmfp (begun 4/12/24) 
 %<rdm> 
 %<rdm> Not quite working feature:
 %<rdm> 
-%<rdm>  - exporting SVGs --- these are written out upside down due to coordinate differences between OpenSCAD/DXFs and SVGs
+%<rdm>  - exporting SVGs --- these are written out upside down due to coordinate 
+%<rdm>    differences between OpenSCAD/DXFs and SVGs
 %<rdm> 
 %<rdm> Possible future improvements:
 %<rdm> 
+%<rdm>  - Specialty toolpaths such as Keyhole which may be used for dovetail as well as
+%<rdm>    keyhole cutters
 %<rdm>  - G-code: support for G2/G3 arcs
 %<rdm>  - DXF support for curves and the 3rd dimension
-%<rdm>  - G-code: import external tool libraries and feeds and speeds from JSON or CSV files --- note that it is up to the user to implement Depth per Pass so as to not take a single full-depth pass
+%<rdm>  - G-code: import external tool libraries and feeds and speeds from JSON or CSV files ---
+%<rdm>    note that it is up to the user to implement Depth per Pass so as to not take a single
+%<rdm>    full-depth pass
 %<rdm>  - support for additional tooling shapes such as dovetail tools, or roundover tooling
 %<rdm>  - general coding improvements --- current coding style is quite prosaic
-%<rdm>  - generalized modules for cutting out various shapes/geometries --- a current one is to cut a rectangular area as vertical passes (the horizontal version will be developed presently)
+%<rdm>  - generalized modules for cutting out various shapes/geometries --- a current one 
+%<rdm>    is to cut a rectangular area as vertical passes (the horizontal version 
+%<rdm>    will be developed presently)
 %
 %    \end{macrocode}
 %
@@ -221,14 +233,17 @@
 %<gcpy>    f.write("\n")
 %    \end{macrocode}
 %
-% \noindent which command will accept a series of arguments and then write them out to a file object.
+% \noindent which command will accept a series of arguments and then write them out to a file 
+% object.
 %
 % \subsection{Position and Variables}
 % 
 % In modeling the machine motion and G-code it will be necessary to have the machine track 
-% several variables. This will be done using paired functions (which will return the matching variable)
-% and a matching (global) variable, as well as additional functions for setting the matching variable.
+% several variables. This will be done using paired functions (which will return the matching 
+% variable) and a matching (global) variable, as well as additional functions for setting the 
+% matching variable.
 %
+% \begin{samepage}
 % The first such variables are for XYZ position:
 %
 % \begin{itemize}
@@ -236,18 +251,28 @@
 %  \item \texttt{mpy} \DescribeVariable{mpy}
 %  \item \texttt{mpz} \DescribeVariable{mpz}
 % \end{itemize}
+% \end{samepage}
 %
+% \begin{samepage}
 % It will further be necessary to have a variable for the current tool:
 %
 % \begin{itemize}
 %  \item \texttt{currenttool} \DescribeVariable{currenttool}
 % \end{itemize}
+% \end{samepage}
 %
 % For each command it will be necessary to implement an appropriate aspect in each file. 
-% The Python file wil manage the Python variables and handle things which can only be done in Python,
-% while there will be two OpenSCAD files as noted above, one which calls the Python code (thjs 
-% will be \texttt{use}d), while the other will be \texttt{include}d and will be able to access
+% The Python file will manage the Python variables and handle things which can only be done in 
+% Python, while there will be two OpenSCAD files as noted above, one which calls the Python code 
+% (this will be \texttt{use}d), while the other will be \texttt{include}d and will be able to access
 % and use OpenSCAD variables, as well as implement Customizer options.
+% 
+% Note that as a convention, where it is necessary for a module to coordinate between
+% Python and OpenSCAD, it will be necessary for there to be three separate divisions:
+% a \texttt{p}<foo> Python definition for the manipulation of Python variables and
+% any file routines, a \texttt{o}<foo> OpenSCAD module which will wrap up the Python
+% function call, and lastly a <foo> OpenSCAD module which will be \texttt{<include>}d 
+% so as to be able to make use of OpenSCAD variables.
 % 
 % The first such routine will be appropriately enough, to set up the stock, and perform other
 % initializations. \DescribeRoutine{psetupstock}
@@ -581,8 +606,10 @@
 % 
 % \DescribeRoutine{popengcodefile}\DescribeRoutine{popendxffile}\DescribeRoutine{popendxlgblffile}
 % \DescribeRoutine{popendxflgsqfile}\DescribeRoutine{popendxflgVfile}\DescribeRoutine{popendxfsmblfile}
-% There is a separate function for each type of file, and for DXFs, there are multiple file instances, 
-% one for each type of different type and size of tool which it is expected a project will work with.
+% There is a separate function for each type of file, and for DXFs, there are multiple file
+% instances, 
+% one for each combination of different type and size of tool which it is expected 
+% a project will work with. Each such file will be suffixed with the tool number.
 % \DescribeRoutine{popendxfsmsqfile}\DescribeRoutine{popendxfsmVfile}\DescribeRoutine{popensvgfile}
 % 
 %    \begin{macrocode}
@@ -1148,7 +1175,7 @@
 % 
 % \subsection{Movement and Cutting}
 % 
-% \DescribeRoutine{otm}\DescribeRoutine{ocut}\DescribeRoutine{orapid}
+% \DescribeRoutine{otm}\DescribeRoutine{ocut}\DescribeRoutine{orapid}%
 % With all the scaffolding in place, it is possible to model tool movement
 % and cutting and to write out files which represent the desired machine motions.
 % 
@@ -1271,6 +1298,10 @@
 % 
 % \section{gcodepreview\_template.scad}
 % 
+% The commands may then be put together using a template which will ensure that
+% the various files are used/included as necessary, that files are opened before
+% being written to, and that they are closed at the end.
+% 
 %    \begin{macrocode}
 %<gcptmpl> //!OpenSCAD
 %<gcptmpl> 
@@ -1290,8 +1321,8 @@
 %<gcptmpl> /* [Export] */
 %<gcptmpl> generategcode = true; 
 %<gcptmpl> 
-%<gcptmpl> /* [Export] */
-%<gcptmpl> generatesvg = false; 
+%<gcptmpl> ///* [Export] */
+%<gcptmpl> //generatesvg = false; 
 %<gcptmpl> 
 %<gcptmpl> /* [CAM] */
 %<gcptmpl> toolradius = 1.5875;
@@ -1341,7 +1372,7 @@
 %<gcptmpl> 
 %<gcptmpl> filename_gcode = str(Base_filename, ".nc");
 %<gcptmpl> filename_dxf = str(Base_filename);
-%<gcptmpl> filename_svg = str(Base_filename, ".svg");
+%<gcptmpl> //filename_svg = str(Base_filename, ".svg");
 %<gcptmpl> 
 %<gcptmpl> opengcodefile(filename_gcode);
 %<gcptmpl> opendxffile(filename_dxf);
@@ -1369,6 +1400,42 @@
 %<gcptmpl> closedxffile();
 %    \end{macrocode}
 % 
+% \begin{samepage}
+% \section{cut2Dshapes}
+% 
+% A basic requirement will be to define two-dimensional regions so as to cut them out.
+% The program Carbide Create has toolpath types and options which are as follows:
+% 
+% \begin{itemize}
+%  \item Contour --- No Offset --- the default, this is already supported in the existing code
+%  \item Contour --- Outside Offset
+%  \item Contour --- Inside Offset
+%  \item (Rectangular) Pocket --- such toolpaths/geometry should include the rounding of the tool 
+%        at the corners 
+%  \item Drill
+%  \item Keyhole --- a nice feature for this would be to include/model the areas which should be
+%        cleared for the sake of reducing wear on the tool and ensuring chip clearance
+% \end{itemize}
+% \end{samepage}
+% 
+% Some further considerations:
+% 
+% \begin{itemize}
+%  \item relationship of geometry to toolpath --- arguably there should be an option for each
+%        toolpath (we will use Carbide Create as a reference implementation) which is to be 
+%        supported
+%  \item tool geometry --- it should be possible to include support for specialty tooling 
+%        such as dovetail cutters and to get an accurate 3D model
+%  \item feeds and speeds --- if outputting G-code it would be nice to be able to import feeds 
+%        and speeds from external files such as the .csv files used for user tool libraries in
+%        Carbide Create
+%  \item Starting and Max Depth --- are there CAD programs which will make use of Z-axis information 
+%        in a DXF? --- would it be possible/necessary to further differentiate the DXF geometry?
+%        (currently  written out separately for each toolpath in addition to one combined file)
+% \end{itemize}
+%
+% 
+%
 % \bibliographystyle{alpha}
 %
 % \begin{thebibliography}{RS274}
