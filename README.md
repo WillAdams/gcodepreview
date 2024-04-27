@@ -114,4 +114,4 @@
   - general coding improvements --- current coding style is quite prosaic
   - generalized modules for cutting out various shapes/geometries --- a current one
     is to cut a rectangular area as vertical passes (the horizontal version
-    will be developed presently)
+    will be developed presently) 
