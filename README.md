@@ -1,10 +1,10 @@
  # gcodepreview
 
- OpenSCAD library for moving a tool in lines and arcs so as to model how a part would be
- cut using G-Code, so as to allow OpenSCAD to function as a compleat CAD/CAM solution for
- subtractive CNC (mills and routers) and to write out DXF files which may be imported
- into a traditional CAM program to create toolpaths (in some cases toolpaths which
- would not normally be feasible).
+ OpenSCAD library for moving a tool in lines and arcs so as to model how a part would
+ be cut using G-Code, so as to allow OpenSCAD to function as a compleat CAD/CAM solution
+ for subtractive CNC (mills and routers) by writing out G-code (in some cases
+ toolpaths which would not normally be feasible), and to write out DXF files
+ which may be imported into a traditional CAM program to create toolpaths.
 
  ![OpenSCAD Cut Joinery Module](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/openscad_cutjoinery.png?raw=true)
 
@@ -75,6 +75,19 @@
      closegcodefile();
      closedxffile();
 
+ which makes a G-code file:
+
+ ![OpenSCAD template G-code file](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/gcodepreview_template.png?raw=true)
+
+ but one which could only be sent to a machine to so as to cut the softest and most
+ yielding of materials, and of course has a matching DXF which may be imported into
+ a CAM tool --- but which it is not directly possible to assign a toolpath in readily
+ available CAM tools.
+
+ Importing this DXF and actually cutting it is discussed at:
+
+ https://forum.makerforums.info/t/rewriting-gcodepreview-with-python/88617/14
+
  Tool numbers match those of tooling sold by Carbide 3D (ob. discl.,
  I work for them).
  Comments are included in the G-code to match those expected by CutViewer.
@@ -114,4 +127,4 @@
   - general coding improvements --- current coding style is quite prosaic
   - generalized modules for cutting out various shapes/geometries --- a current one
     is to cut a rectangular area as vertical passes (the horizontal version
-    will be developed presently) 
+    will be developed presently)
