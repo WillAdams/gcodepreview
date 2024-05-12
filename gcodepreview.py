@@ -80,6 +80,14 @@ def popendxfsmVfile(fn):
     global dxfsmV
     dxfsmV = open(fn, "w")
 
+def popendxfKHfile(fn):
+    global dxfKH
+    dxfKH = open(fn, "w")
+
+def popendxDTfile(fn):
+    global dxfDT
+    dxfDT = open(fn, "w")
+
 def popensvgfile(fn):
     global svg
     svg = open(fn, "w")
@@ -138,6 +146,22 @@ def writedxfsmV(*arguments):
     dxfsmV.write(line_to_write)
     print(line_to_write)
     dxfsmV.write("\n")
+
+def writedxfKH(*arguments):
+    line_to_write = ""
+    for element in arguments:
+        line_to_write += element
+    dxfKH.write(line_to_write)
+    print(line_to_write)
+    dxfKH.write("\n")
+
+def writedxfDT(*arguments):
+    line_to_write = ""
+    for element in arguments:
+        line_to_write += element
+    dxfDT.write(line_to_write)
+    print(line_to_write)
+    dxfDT.write("\n")
 
 def writesvg(*arguments):
     line_to_write = ""

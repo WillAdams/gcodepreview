@@ -10,7 +10,7 @@
 
  Updated to make use of Python in OpenSCAD:
 
- http://www.guenther-sohler.net/openscad/
+ https://pythonscad.org/ (previously this was http://www.guenther-sohler.net/openscad/ )
 
  (previous versions had used RapCAD)
 
@@ -108,6 +108,7 @@
   - separate dxf files are written out for each tool where tool is
     ball/square/V and small/large (10/31/23)
   - re-writing as a Literate Program using the LaTeX package docmfp (begun 4/12/24)
+  - support for additional tooling shapes such as dovetail and keyhole tools
 
  Not quite working feature:
 
@@ -118,13 +119,13 @@
 
   - Specialty toolpaths such as Keyhole which may be used for dovetail as well as
     keyhole cutters
-  - G-code: support for G2/G3 arcs
+  - DXF/G-code: support for G2/G3 arcs and circles
   - DXF support for curves and the 3rd dimension
   - G-code: import external tool libraries and feeds and speeds from JSON or CSV files ---
     note that it is up to the user to implement Depth per Pass so as to not take a single
     full-depth pass
-  - support for additional tooling shapes such as dovetail tools, or roundover tooling
+  - support for additional tooling shapes such as roundover tooling
   - general coding improvements --- current coding style is quite prosaic
-  - generalized modules for cutting out various shapes/geometries --- a current one
+  - generalized modules for cutting out various shapes/geometries --- an in-process one
     is to cut a rectangular area as vertical passes (the horizontal version
     will be developed presently)

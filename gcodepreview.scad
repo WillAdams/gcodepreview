@@ -16,7 +16,6 @@
      translate([0, 0, (-stockthickness)]){
      cube([stocklength, stockwidth, stockthickness], center=false);
  if (generategcode == true) {
- // owriteone("(setupstock)");
  owritethree("(stockMin:0.00mm, 0.00mm, -",str(stockthickness),"mm)");
  owritefive("(stockMax:",str(stocklength),"mm, ",str(stockwidth),"mm, 0.00mm)");
      owritenine("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", 0.00, 0.00, ",str(stockthickness),")");
@@ -27,7 +26,6 @@
      translate([0, (-stockwidth / 2), -stockthickness]){
        cube([stocklength, stockwidth, stockthickness], center=false);
      if (generategcode == true) {
- // owriteone("(setupstock)");
  owritefive("(stockMin:0.00mm, -",str(stockwidth/2),"mm, -",str(stockthickness),"mm)");
  owritefive("(stockMax:",str(stocklength),"mm, ",str(stockwidth/2),"mm, 0.00mm)");
      owriteeleven("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", 0.00, ",str(stockwidth/2),", ",str(stockthickness),")");
@@ -37,7 +35,6 @@
      translate([0, (-stockwidth), -stockthickness]){
        cube([stocklength, stockwidth, stockthickness], center=false);
  if (generategcode == true) {
- // owriteone("(setupstock)");
  owritefive("(stockMin:0.00mm, -",str(stockwidth),"mm, -",str(stockthickness),"mm)");
  owritethree("(stockMax:",str(stocklength),"mm, 0.00mm, 0.00mm)");
  owriteeleven("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", 0.00, ",str(stockwidth),", ",str(stockthickness),")");
@@ -49,7 +46,6 @@
      translate([(-stocklength / 2), (-stockwidth / 2), -stockthickness]){
        cube([stocklength, stockwidth, stockthickness], center=false);
  if (generategcode == true) {
- // owriteone("(setupstock)");
  owriteseven("(stockMin: -",str(stocklength/2),", -",str(stockwidth/2),"mm, -",str(stockthickness),"mm)");
  owritefive("(stockMax:",str(stocklength/2),"mm, ",str(stockwidth/2),"mm, 0.00mm)");
  owritethirteen("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", ",str(stocklength/2),", ", str(stockwidth/2),", ",str(stockthickness),")");
@@ -61,7 +57,6 @@
      if (stockorigin == "Lower-Left") {
      cube([stocklength, stockwidth, stockthickness], center=false);
  if (generategcode == true) {
- // owriteone("(setupstock)");
  owriteone("(stockMin:0.00mm, 0.00mm, 0.00mm)");
  owriteseven("(stockMax:",str(stocklength),"mm, ",str(stockwidth),"mm, ",str(stockthickness),"mm)");
  owriteseven("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),",0.00, 0.00, 0.00)");
@@ -70,7 +65,6 @@
      translate([0, (-stockwidth / 2), 0]){
        cube([stocklength, stockwidth, stockthickness], center=false);
  if (generategcode == true) {
- // owriteone("(setupstock)");
  owritethree("(stockMin:0.00mm, -",str(stockwidth/2),"mm, 0.00mm)");
  owriteseven("(stockMax:",str(stocklength),"mm, ",str(stockwidth/2),"mm, ",str(stockthickness),"mm)");
  owritenine("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),",0.00, ",str(stockwidth/2),", 0.00)");
@@ -81,7 +75,6 @@
        cube([stocklength, stockwidth, stockthickness], center=false);
      }
  if (generategcode == true) {
- // owriteone("(setupstock)");
  owritethree("(stockMin:0.00mm, -",str(stockwidth),"mm, 0.00mm)");
  owritefive("(stockMax:",str(stocklength),"mm, 0.00mm, ",str(stockthickness),"mm)");
  owritenine("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", 0.00, ", str(stockwidth),", 0.00)");
@@ -91,7 +84,6 @@
        cube([stocklength, stockwidth, stockthickness], center=false);
      }
  if (generategcode == true) {
- // owriteone("(setupstock)");
  owritefive("(stockMin:-",str(stocklength/2),", -",str(stockwidth/2),"mm, 0.00mm)");
  owriteseven("(stockMax:",str(stocklength/2),"mm, ",str(stockwidth/2),"mm, ",str(stockthickness),"mm)");
  owriteeleven("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", ",str(stocklength/2),", ", str(stockwidth/2),", 0.00)");
@@ -135,6 +127,10 @@
   writecommment("TOOL/MILL,0.03, 0.00, 10.998, 30.00");
    } else if (tool_number == 390) {
   writecomment("TOOL/MILL,0.03, 0.00, 1.5875, 45.00");
+   } else if (tool_number == 375) {
+  writecomment("TOOL/MILL,9.53, 0.00, 3.17, 0.00");
+   } else if (tool_number == 814) {
+  writecomment("TOOL/MILL,12.7, 6.367, 12.7, 0.00");
    }
      select_tool(tool_number);
   owritetwo("M6T",str(tool_number));
@@ -158,11 +154,23 @@
      gcp_endmill_v(60, 12.7);
    } else if (tool_number == 390) {
      gcp_endmill_v(90, 3.175);
+   } else if (tool_number == 375) {
+     gcp_keyhole(9.525, 3.175);
+   } else if (tool_number == 814) {
+     gcp_dovetail(12.7, 6.367, 12.7, 14);
    }
  }
 
  module gcp_endmill_square(es_diameter, es_flute_length) {
    cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=es_flute_length, center=false);
+ }
+
+ module gcp_keyhole(es_diameter, es_flute_length) {
+   cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=es_flute_length, center=false);
+ }
+
+ module gcp_dovetail(dt_bottomdiameter, dt_topdiameter, dt_height, dt_angle) {
+   cylinder(r1=(dt_bottomdiameter / 2), r2=(dt_topdiameter / 2), h= dt_height, center=false);
  }
 
  module gcp_endmill_ball(es_diameter, es_flute_length) {
@@ -231,6 +239,12 @@
  if (small_V_tool_no >  0) { oopendxfsmVfile(str(fn,".",small_V_tool_no,".dxf"));
      dxfpreamble(small_V_tool_no);
  }
+ if (KH_tool_no >  0) { oopendxfKHfile(str(fn,".",KH_tool_no,".dxf"));
+     dxfpreamble(KH_tool_no);
+ }
+ if (DT_tool_no >  0) { oopendxfDTfile(str(fn,".",DT_tool_no,".dxf"));
+     dxfpreamble(DT_tool_no);
+ }
  }
  }
 
@@ -265,6 +279,7 @@
  }
 
  module dxfbpl(tn,bx,by) {
+     dxfwrite(tn,"0");
      dxfwrite(tn,"POLYLINE");
      dxfwrite(tn,"8");
      dxfwrite(tn,"default");
@@ -282,11 +297,11 @@
      dxfwrite(tn,str(bx));
      dxfwrite(tn,"20");
      dxfwrite(tn,str(by));
-     dxfwrite(tn,"0");
  }
 
  module beginpolyline(bx,by,bz) {
  if (generatedxf == true) {
+     dxfwrite(tn,"0");
      dxfwriteone("POLYLINE");
      dxfwriteone("8");
      dxfwriteone("default");
@@ -304,11 +319,11 @@
      dxfwriteone(str(bx));
      dxfwriteone("20");
      dxfwriteone(str(by));
-     dxfwriteone("0");
      dxfbpl(current_tool(),bx,by);}
  }
 
  module dxfapl(tn,bx,by) {
+     dxfwriteone("0");
      dxfwrite(tn,"VERTEX");
      dxfwrite(tn,"8");
      dxfwrite(tn,"default");
@@ -318,11 +333,11 @@
      dxfwrite(tn,str(bx));
      dxfwrite(tn,"20");
      dxfwrite(tn,str(by));
-     dxfwrite(tn,"0");
  }
 
  module addpolyline(bx,by,bz) {
  if (generatedxf == true) {
+     dxfwrite(tn,"0");
      dxfwriteone("VERTEX");
      dxfwriteone("8");
      dxfwriteone("default");
@@ -332,7 +347,6 @@
      dxfwriteone(str(bx));
      dxfwriteone("20");
      dxfwriteone(str(by));
-     dxfwriteone("0");
      dxfapl(current_tool(),bx,by);
      }
  }
@@ -344,8 +358,8 @@
 
  module closepolyline() {
  if (generatedxf == true) {
-     dxfwriteone("SEQEND");
      dxfwriteone("0");
+     dxfwriteone("SEQEND");
      dxfcpl(current_tool());
      }
  }
@@ -365,6 +379,7 @@
  }
 
  module dxfpostamble(arg) {
+     dxfwrite(arg,"0");
      dxfwrite(arg,"ENDSEC");
      dxfwrite(arg,"0");
      dxfwrite(arg,"EOF");
@@ -372,6 +387,7 @@
 
  module closedxffile() {
  if (generatedxf == true) {
+     dxfwrite(arg,"0");
      dxfwriteone("ENDSEC");
      dxfwriteone("0");
      dxfwriteone("EOF");

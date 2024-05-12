@@ -27,6 +27,7 @@
 \makeatother
 \renewcommand{\MakeUppercase}[1]{#1}
 \pagestyle{headings}
+\setcounter{secnumdepth}{5}
 \EnableCrossrefs
 \CodelineIndex
 \usepackage{makeidx} 
@@ -69,17 +70,17 @@
 %    \begin{macrocode}
 %<rdm> # gcodepreview
 %<rdm> 
-%<rdm> OpenSCAD library for moving a tool in lines and arcs so as to model how a part would be  
-%<rdm> cut using G-Code, so as to allow OpenSCAD to function as a compleat CAD/CAM solution for 
-%<rdm> subtractive CNC (mills and routers) and to write out DXF files which may be imported
-%<rdm> into a traditional CAM program to create toolpaths (in some cases toolpaths which 
-%<rdm> would not normally be feasible).
+%<rdm> OpenSCAD library for moving a tool in lines and arcs so as to model how a part would   
+%<rdm> be cut using G-Code, so as to allow OpenSCAD to function as a compleat CAD/CAM solution  
+%<rdm> for subtractive CNC (mills and routers) by writing out G-code (in some cases
+%<rdm> toolpaths which would not normally be feasible), and to write out DXF files 
+%<rdm> which may be imported into a traditional CAM program to create toolpaths.
 %<rdm> 
 %<rdm> ![OpenSCAD Cut Joinery Module](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/openscad_cutjoinery.png?raw=true)
 %<rdm> 
 %<rdm> Updated to make use of Python in OpenSCAD:
 %<rdm> 
-%<rdm> http://www.guenther-sohler.net/openscad/
+%<rdm> https://pythonscad.org/ (previously this was http://www.guenther-sohler.net/openscad/ )
 %<rdm> 
 %<rdm> (previous versions had used RapCAD)
 %<rdm> 
@@ -144,6 +145,19 @@
 %<rdm>     closegcodefile();
 %<rdm>     closedxffile();
 %<rdm> 
+%<rdm> which makes a G-code file:
+%<rdm> 
+%<rdm> ![OpenSCAD template G-code file](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/gcodepreview_template.png?raw=true)
+%<rdm> 
+%<rdm> but one which could only be sent to a machine to so as to cut the softest and most 
+%<rdm> yielding of materials, and of course has a matching DXF which may be imported into 
+%<rdm> a CAM tool --- but which it is not directly possible to assign a toolpath in readily
+%<rdm> available CAM tools. 
+%<rdm> 
+%<rdm> Importing this DXF and actually cutting it is discussed at:
+%<rdm> 
+%<rdm> https://forum.makerforums.info/t/rewriting-gcodepreview-with-python/88617/14
+%<rdm> 
 %<rdm> Tool numbers match those of tooling sold by Carbide 3D (ob. discl., 
 %<rdm> I work for them). 
 %<rdm> Comments are included in the G-code to match those expected by CutViewer.
@@ -164,6 +178,7 @@
 %<rdm>  - separate dxf files are written out for each tool where tool is 
 %<rdm>    ball/square/V and small/large (10/31/23)
 %<rdm>  - re-writing as a Literate Program using the LaTeX package docmfp (begun 4/12/24) 
+%<rdm>  - support for additional tooling shapes such as dovetail and keyhole tools
 %<rdm> 
 %<rdm> Not quite working feature:
 %<rdm> 
@@ -174,14 +189,14 @@
 %<rdm> 
 %<rdm>  - Specialty toolpaths such as Keyhole which may be used for dovetail as well as
 %<rdm>    keyhole cutters
-%<rdm>  - G-code: support for G2/G3 arcs
+%<rdm>  - DXF/G-code: support for G2/G3 arcs and circles
 %<rdm>  - DXF support for curves and the 3rd dimension
 %<rdm>  - G-code: import external tool libraries and feeds and speeds from JSON or CSV files ---
 %<rdm>    note that it is up to the user to implement Depth per Pass so as to not take a single
 %<rdm>    full-depth pass
-%<rdm>  - support for additional tooling shapes such as dovetail tools, or roundover tooling
+%<rdm>  - support for additional tooling shapes such as roundover tooling
 %<rdm>  - general coding improvements --- current coding style is quite prosaic
-%<rdm>  - generalized modules for cutting out various shapes/geometries --- a current one 
+%<rdm>  - generalized modules for cutting out various shapes/geometries --- an in-process one 
 %<rdm>    is to cut a rectangular area as vertical passes (the horizontal version 
 %<rdm>    will be developed presently)
 %
@@ -270,7 +285,7 @@
 % Note that as a convention, where it is necessary for a module to coordinate between
 % Python and OpenSCAD, it will be necessary for there to be three separate divisions:
 % a \texttt{p}<foo> Python definition for the manipulation of Python variables and
-% any file routines, a \texttt{o}<foo> OpenSCAD module which will wrap up the Python
+% any file routines, an \texttt{o}<foo> OpenSCAD module which will wrap up the Python
 % function call, and lastly a <foo> OpenSCAD module which will be \texttt{<include>}d 
 % so as to be able to make use of OpenSCAD variables.
 % 
@@ -310,7 +325,6 @@
 %<gcpscad>     translate([0, 0, (-stockthickness)]){
 %<gcpscad>     cube([stocklength, stockwidth, stockthickness], center=false);
 %<gcpscad> if (generategcode == true) {
-%<gcpscad> //	owriteone("(setupstock)");
 %<gcpscad> owritethree("(stockMin:0.00mm, 0.00mm, -",str(stockthickness),"mm)");
 %<gcpscad> owritefive("(stockMax:",str(stocklength),"mm, ",str(stockwidth),"mm, 0.00mm)");
 %<gcpscad>     owritenine("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", 0.00, 0.00, ",str(stockthickness),")");
@@ -321,7 +335,6 @@
 %<gcpscad>     translate([0, (-stockwidth / 2), -stockthickness]){
 %<gcpscad>       cube([stocklength, stockwidth, stockthickness], center=false);
 %<gcpscad>     if (generategcode == true) {
-%<gcpscad> //	owriteone("(setupstock)");
 %<gcpscad> owritefive("(stockMin:0.00mm, -",str(stockwidth/2),"mm, -",str(stockthickness),"mm)");
 %<gcpscad> owritefive("(stockMax:",str(stocklength),"mm, ",str(stockwidth/2),"mm, 0.00mm)");
 %<gcpscad>     owriteeleven("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", 0.00, ",str(stockwidth/2),", ",str(stockthickness),")");
@@ -331,7 +344,6 @@
 %<gcpscad>     translate([0, (-stockwidth), -stockthickness]){
 %<gcpscad>       cube([stocklength, stockwidth, stockthickness], center=false);
 %<gcpscad> if (generategcode == true) {
-%<gcpscad> //	owriteone("(setupstock)");
 %<gcpscad> owritefive("(stockMin:0.00mm, -",str(stockwidth),"mm, -",str(stockthickness),"mm)");
 %<gcpscad> owritethree("(stockMax:",str(stocklength),"mm, 0.00mm, 0.00mm)");
 %<gcpscad> owriteeleven("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", 0.00, ",str(stockwidth),", ",str(stockthickness),")");
@@ -343,7 +355,6 @@
 %<gcpscad>     translate([(-stocklength / 2), (-stockwidth / 2), -stockthickness]){
 %<gcpscad>       cube([stocklength, stockwidth, stockthickness], center=false);
 %<gcpscad> if (generategcode == true) {
-%<gcpscad> //	owriteone("(setupstock)");
 %<gcpscad> owriteseven("(stockMin: -",str(stocklength/2),", -",str(stockwidth/2),"mm, -",str(stockthickness),"mm)");
 %<gcpscad> owritefive("(stockMax:",str(stocklength/2),"mm, ",str(stockwidth/2),"mm, 0.00mm)");
 %<gcpscad> owritethirteen("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", ",str(stocklength/2),", ", str(stockwidth/2),", ",str(stockthickness),")");
@@ -355,7 +366,6 @@
 %<gcpscad>     if (stockorigin == "Lower-Left") {
 %<gcpscad>     cube([stocklength, stockwidth, stockthickness], center=false);
 %<gcpscad> if (generategcode == true) {
-%<gcpscad> //	owriteone("(setupstock)");
 %<gcpscad> owriteone("(stockMin:0.00mm, 0.00mm, 0.00mm)");
 %<gcpscad> owriteseven("(stockMax:",str(stocklength),"mm, ",str(stockwidth),"mm, ",str(stockthickness),"mm)");
 %<gcpscad> owriteseven("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),",0.00, 0.00, 0.00)");
@@ -364,7 +374,6 @@
 %<gcpscad>     translate([0, (-stockwidth / 2), 0]){
 %<gcpscad>       cube([stocklength, stockwidth, stockthickness], center=false);
 %<gcpscad> if (generategcode == true) {
-%<gcpscad> //	owriteone("(setupstock)");
 %<gcpscad> owritethree("(stockMin:0.00mm, -",str(stockwidth/2),"mm, 0.00mm)");
 %<gcpscad> owriteseven("(stockMax:",str(stocklength),"mm, ",str(stockwidth/2),"mm, ",str(stockthickness),"mm)");
 %<gcpscad> owritenine("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),",0.00, ",str(stockwidth/2),", 0.00)");
@@ -375,7 +384,6 @@
 %<gcpscad>       cube([stocklength, stockwidth, stockthickness], center=false);
 %<gcpscad>     }
 %<gcpscad> if (generategcode == true) {
-%<gcpscad> //	owriteone("(setupstock)");
 %<gcpscad> owritethree("(stockMin:0.00mm, -",str(stockwidth),"mm, 0.00mm)");
 %<gcpscad> owritefive("(stockMax:",str(stocklength),"mm, 0.00mm, ",str(stockthickness),"mm)");
 %<gcpscad> owritenine("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", 0.00, ", str(stockwidth),", 0.00)");
@@ -385,7 +393,6 @@
 %<gcpscad>       cube([stocklength, stockwidth, stockthickness], center=false);
 %<gcpscad>     }
 %<gcpscad> if (generategcode == true) {
-%<gcpscad> //	owriteone("(setupstock)");
 %<gcpscad> owritefive("(stockMin:-",str(stocklength/2),", -",str(stockwidth/2),"mm, 0.00mm)");
 %<gcpscad> owriteseven("(stockMax:",str(stocklength/2),"mm, ",str(stockwidth/2),"mm, ",str(stockthickness),"mm)");
 %<gcpscad> owriteeleven("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", ",str(stocklength/2),", ", str(stockwidth/2),", 0.00)");
@@ -505,7 +512,18 @@
 %<pyscad> 
 %    \end{macrocode}
 % 
-% \noindent and apply the appropriate commands for a \texttt{toolchange}.\DescribeRoutine{toolchange}
+% \subsubsection{toolchange}
+% \noindent and apply the appropriate commands for a \texttt{toolchange}.
+% \label{subsubsec:toolchange}\DescribeRoutine{toolchange}
+% Note that it is expected that this subsubsection will be updated as needed when new tooling
+% is introduced as additional modules which require specific tooling are added below.
+% 
+% Note that the comments written out in G-code correspond to that used by the G-code previewing tool 
+% CutViewer (which is unfortunately, no longer readiily available).
+% 
+% It is possible that rather than hard-coding the tool definitions, a future update will instead
+% read them in from an external file --- the .csv format used for tool libraries in Carbide Create
+% seems a likely candidate and worth exploring.
 % 
 %    \begin{macrocode}
 %<gcpscad> module toolchange(tool_number,speed) {
@@ -530,6 +548,46 @@
 %<gcpscad> 	writecommment("TOOL/MILL,0.03, 0.00, 10.998, 30.00");
 %<gcpscad>   } else if (tool_number == 390) {
 %<gcpscad> 	writecomment("TOOL/MILL,0.03, 0.00, 1.5875, 45.00");
+%    \end{macrocode}
+% 
+% \paragraph{Tooling for Keyhole Toolpaths}
+% 
+% \label{para:undercuttooling} Keyhole toolpaths (see: subsection~\ref{subsec:keyholetoolpaths} 
+% are intended for use with tooling which projects beyond the the narrower shaft and so
+% will cut usefully underneath the visible surface.
+% 
+% \begin{samepage}
+% There are several notable candidates for such tooling:
+% 
+% \begin{itemize}
+% \item Keyhole tools --- intended to cut slots for retaining hardware used for picture
+%                         hanging, they may be used to create slots for other purposes
+% \item Dovetail cutters --- used for the joinery of the same name, they cut a large
+%                            area at the bottom which slants up to a narrower region
+%                            at a defined angle
+% \item Lollipop cutters --- normally used for 3D work, as their name suggests they are
+%                            essentially a (cutting) ball on a narrow stick (the tool shaft),
+%                            they are mentioned here only for compleatness' sake and are not
+%                            (at this time) implemented
+% \end{itemize}
+% \end{samepage}
+% 
+%    \begin{macrocode}
+%<gcpscad>   } else if (tool_number == 375) {
+%<gcpscad> 	writecomment("TOOL/MILL,9.53, 0.00, 3.17, 0.00");
+%    \end{macrocode}
+% 
+%    \begin{macrocode}
+%<gcpscad>   } else if (tool_number == 814) {
+%<gcpscad> 	writecomment("TOOL/MILL,12.7, 6.367, 12.7, 0.00");
+%    \end{macrocode}
+% 
+% Note that it will be necessary to to define modules (see below) for each tool shape.
+% 
+% With the tools delineated, the module is closed out and the tooling information written into
+% the G-code.
+% 
+%    \begin{macrocode}
 %<gcpscad>   }
 %<gcpscad>     select_tool(tool_number);
 %<gcpscad> 	owritetwo("M6T",str(tool_number));
@@ -539,7 +597,9 @@
 %<gcpscad> 
 %    \end{macrocode}
 % 
-% There must also be a module for selecting tools: \texttt{select\_tool}:\DescribeRoutine{selecttool}
+% There must also be a module for selecting tools: \texttt{select\_tool} which will
+% \DescribeRoutine{selecttool} select the matching module for 3D modeling and pass the 
+% appropriate parameters to that module:
 % \DescribeVariable{tool number}
 % 
 %    \begin{macrocode}
@@ -559,6 +619,23 @@
 %<gcpscad>     gcp_endmill_v(60, 12.7);
 %<gcpscad>   } else if (tool_number == 390) {
 %<gcpscad>     gcp_endmill_v(90, 3.175);
+%    \end{macrocode}
+% 
+% For a keyhole tool:
+% 
+%    \begin{macrocode}
+%<gcpscad>   } else if (tool_number == 375) {
+%<gcpscad>     gcp_keyhole(9.525, 3.175);
+%    \end{macrocode}
+% 
+% and dovetail tool:
+% 
+%    \begin{macrocode}
+%<gcpscad>   } else if (tool_number == 814) {
+%<gcpscad>     gcp_dovetail(12.7, 6.367, 12.7, 14);
+%    \end{macrocode}
+% 
+%    \begin{macrocode}
 %<gcpscad>   }
 %<gcpscad> }
 %<gcpscad> 
@@ -570,6 +647,22 @@
 %    \begin{macrocode}
 %<gcpscad> module gcp_endmill_square(es_diameter, es_flute_length) {
 %<gcpscad>   cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=es_flute_length, center=false);
+%<gcpscad> }
+%<gcpscad> 
+%    \end{macrocode}
+% 
+% \DescribeRoutine{gcp keyhole}
+%    \begin{macrocode}
+%<gcpscad> module gcp_keyhole(es_diameter, es_flute_length) {
+%<gcpscad>   cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=es_flute_length, center=false);
+%<gcpscad> }
+%<gcpscad> 
+%    \end{macrocode}
+% 
+% \DescribeRoutine{gcp dovetail}
+%    \begin{macrocode}
+%<gcpscad> module gcp_dovetail(dt_bottomdiameter, dt_topdiameter, dt_height, dt_angle) {
+%<gcpscad>   cylinder(r1=(dt_bottomdiameter / 2), r2=(dt_topdiameter / 2), h= dt_height, center=false);
 %<gcpscad> }
 %<gcpscad> 
 %    \end{macrocode}
@@ -645,6 +738,14 @@
 %<gcpy>    global dxfsmV
 %<gcpy>    dxfsmV = open(fn, "w")
 %<gcpy>
+%<gcpy>def popendxfKHfile(fn):
+%<gcpy>    global dxfKH
+%<gcpy>    dxfKH = open(fn, "w")
+%<gcpy>
+%<gcpy>def popendxDTfile(fn):
+%<gcpy>    global dxfDT
+%<gcpy>    dxfDT = open(fn, "w")
+%<gcpy>
 %<gcpy>def popensvgfile(fn):
 %<gcpy>    global svg
 %<gcpy>    svg = open(fn, "w")
@@ -692,6 +793,14 @@
 %<pyscad> 	popendxfsmVfile(fn);
 %<pyscad> }
 %<pyscad> 
+%<pyscad> module oopendxfKHfile(fn) {
+%<pyscad> 	popendxfKHfile(fn);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module oopendxfDTfile(fn) {
+%<pyscad> 	popendxfDTfile(fn);
+%<pyscad> }
+%<pyscad> 
 %    \end{macrocode}
 % 
 % \DescribeRoutine{opengcodefile}\DescribeRoutine{opensvgfile}\DescribeRoutine{opendxffile}
@@ -734,7 +843,7 @@
 %<gcpscad> if (large_V_tool_no >  0) {	oopendxflgVfile(str(fn,".",large_V_tool_no,".dxf"));
 %<gcpscad>     dxfpreamble(large_V_tool_no);
 %<gcpscad> } 
-%<gcpscad> if (small_ball_tool_no >  0) {	oopendxfsmblfile(str(fn,".",small_ball_tool_no,".dxf"));
+%<gcpscad> if (small_ball_tool_no >  0) { oopendxfsmblfile(str(fn,".",small_ball_tool_no,".dxf"));
 %<gcpscad>     dxfpreamble(small_ball_tool_no);
 %<gcpscad> } 
 %<gcpscad> if (small_square_tool_no >  0) {	oopendxfsmsqfile(str(fn,".",small_square_tool_no,".dxf"));
@@ -743,6 +852,12 @@
 %<gcpscad> } 
 %<gcpscad> if (small_V_tool_no >  0) {	oopendxfsmVfile(str(fn,".",small_V_tool_no,".dxf"));
 %<gcpscad>     dxfpreamble(small_V_tool_no);
+%<gcpscad> } 
+%<gcpscad> if (KH_tool_no >  0) {	oopendxfKHfile(str(fn,".",KH_tool_no,".dxf"));
+%<gcpscad>     dxfpreamble(KH_tool_no);
+%<gcpscad> } 
+%<gcpscad> if (DT_tool_no >  0) {	oopendxfDTfile(str(fn,".",DT_tool_no,".dxf"));
+%<gcpscad>     dxfpreamble(DT_tool_no);
 %<gcpscad> } 
 %<gcpscad> }
 %<gcpscad> }
@@ -808,6 +923,22 @@
 %<gcpy>    print(line_to_write)
 %<gcpy>    dxfsmV.write("\n")
 %<gcpy>
+%<gcpy>def writedxfKH(*arguments):
+%<gcpy>    line_to_write = ""
+%<gcpy>    for element in arguments:
+%<gcpy>        line_to_write += element
+%<gcpy>    dxfKH.write(line_to_write)
+%<gcpy>    print(line_to_write)
+%<gcpy>    dxfKH.write("\n")
+%<gcpy>
+%<gcpy>def writedxfDT(*arguments):
+%<gcpy>    line_to_write = ""
+%<gcpy>    for element in arguments:
+%<gcpy>        line_to_write += element
+%<gcpy>    dxfDT.write(line_to_write)
+%<gcpy>    print(line_to_write)
+%<gcpy>    dxfDT.write("\n")
+%<gcpy>
 %<gcpy>def writesvg(*arguments):
 %<gcpy>    line_to_write = ""
 %<gcpy>    for element in arguments:
@@ -821,6 +952,12 @@
 %    \end{macrocode}
 % 
 % \DescribeRoutine{owritecomment}\DescribeRoutine{dxfwriteone}\DescribeRoutine{dxfwritelgbl}
+% \DescribeRoutine{dxfwritelgsq}\DescribeRoutine{dxfwritelgV}\DescribeRoutine{dxfwritesmbl}
+% \DescribeRoutine{dxfwritesmsq}\DescribeRoutine{dxfwritesmV}
+% Separate OpenSCAD modules will be used for either writing out comments in G-code (.nc) files
+% or adding to a DXF file --- for each different tool in a file there will be a matching
+% module to write to it.
+% 
 %    \begin{macrocode}
 %<pyscad> module owritecomment(comment) {
 %<pyscad> 	writeln("(",comment,")");
@@ -829,7 +966,7 @@
 %<pyscad> module dxfwriteone(first) {
 %<pyscad> 	writedxf(first);
 %<pyscad> //	writeln(first);
-%<pyscad> //    echo(first);
+%<pyscad> //	echo(first);
 %<pyscad> }
 %<pyscad> 
 %<pyscad> module dxfwritelgbl(first) {
@@ -856,6 +993,14 @@
 %<pyscad> 	writedxfsmV(first);
 %<pyscad> }
 %<pyscad> 
+%<pyscad> module dxfwriteKH(first) {
+%<pyscad> 	writedxfKH(first);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module dxfwriteDT(first) {
+%<pyscad> 	writedxfDT(first);
+%<pyscad> }
+%<pyscad> 
 %<pyscad> module svgwriteone(first) {
 %<pyscad> 	writesvg(first);
 %<pyscad> }
@@ -864,6 +1009,13 @@
 %<pyscad> 	pwritesvgline();
 %<pyscad> }
 %<pyscad> 
+%    \end{macrocode}
+% 
+% Since it is not convenient to stitch together and then write out multiple elements,
+% the most expedient thing to do is to have discrete commands for each possible number
+% of arguments, one through thirteen.
+% 
+%    \begin{macrocode}
 %<pyscad> module owriteone(first) {
 %<pyscad> 	writeln(first);
 %<pyscad> }
@@ -919,6 +1071,9 @@
 %    \end{macrocode}
 % 
 % \DescribeRoutine{dxfwrite}\DescribeRoutine{dxfpreamble}\DescribeRoutine{writesvgline}
+% The dxfwrite module requires that the tool number be passed in, and that value will be used
+% to write out to the appropriate file.
+% 
 %    \begin{macrocode}
 %<gcpscad> module dxfwrite(tn,arg) {
 %<gcpscad> if (tn == large_ball_tool_no) {
@@ -950,7 +1105,16 @@
 %<gcpscad>     }
 %<gcpscad> }
 %<gcpscad> 
+%    \end{macrocode}
+% 
+% \DescribeRoutine{beginpolyline}\DescribeRoutine{dxfbpl}
+% Similarly, each each element which may be written to a DXF file will have a user module
+% as well as an internal module which will be called by it so as to write to the file
+% for the current tool.
+% 
+%    \begin{macrocode}
 %<gcpscad> module dxfbpl(tn,bx,by) {
+%<gcpscad>     dxfwrite(tn,"0");
 %<gcpscad>     dxfwrite(tn,"POLYLINE");
 %<gcpscad>     dxfwrite(tn,"8");
 %<gcpscad>     dxfwrite(tn,"default");
@@ -968,11 +1132,11 @@
 %<gcpscad>     dxfwrite(tn,str(bx));
 %<gcpscad>     dxfwrite(tn,"20");
 %<gcpscad>     dxfwrite(tn,str(by));
-%<gcpscad>     dxfwrite(tn,"0");
 %<gcpscad> }
 %<gcpscad> 
 %<gcpscad> module beginpolyline(bx,by,bz) {
 %<gcpscad> if (generatedxf == true) {
+%<gcpscad>     dxfwrite(tn,"0");
 %<gcpscad>     dxfwriteone("POLYLINE");
 %<gcpscad>     dxfwriteone("8");
 %<gcpscad>     dxfwriteone("default");
@@ -990,11 +1154,11 @@
 %<gcpscad>     dxfwriteone(str(bx));
 %<gcpscad>     dxfwriteone("20");
 %<gcpscad>     dxfwriteone(str(by));
-%<gcpscad>     dxfwriteone("0");
 %<gcpscad>     dxfbpl(current_tool(),bx,by);}
 %<gcpscad> }
 %<gcpscad> 
 %<gcpscad> module dxfapl(tn,bx,by) {
+%<gcpscad>     dxfwriteone("0");
 %<gcpscad>     dxfwrite(tn,"VERTEX");
 %<gcpscad>     dxfwrite(tn,"8");
 %<gcpscad>     dxfwrite(tn,"default");
@@ -1004,11 +1168,11 @@
 %<gcpscad>     dxfwrite(tn,str(bx));
 %<gcpscad>     dxfwrite(tn,"20");
 %<gcpscad>     dxfwrite(tn,str(by));
-%<gcpscad>     dxfwrite(tn,"0");
 %<gcpscad> }
 %<gcpscad> 
 %<gcpscad> module addpolyline(bx,by,bz) {
 %<gcpscad> if (generatedxf == true) {
+%<gcpscad>     dxfwrite(tn,"0");
 %<gcpscad>     dxfwriteone("VERTEX");
 %<gcpscad>     dxfwriteone("8");
 %<gcpscad>     dxfwriteone("default");
@@ -1018,7 +1182,6 @@
 %<gcpscad>     dxfwriteone(str(bx));
 %<gcpscad>     dxfwriteone("20");
 %<gcpscad>     dxfwriteone(str(by));
-%<gcpscad>     dxfwriteone("0");
 %<gcpscad>     dxfapl(current_tool(),bx,by);
 %<gcpscad>     }
 %<gcpscad> }
@@ -1030,8 +1193,8 @@
 %<gcpscad> 
 %<gcpscad> module closepolyline() {
 %<gcpscad> if (generatedxf == true) {
-%<gcpscad>     dxfwriteone("SEQEND");
 %<gcpscad>     dxfwriteone("0");
+%<gcpscad>     dxfwriteone("SEQEND");
 %<gcpscad>     dxfcpl(current_tool());
 %<gcpscad>     }
 %<gcpscad> }
@@ -1130,6 +1293,7 @@
 %<gcpscad> }
 %<gcpscad> 
 %<gcpscad> module dxfpostamble(arg) {
+%<gcpscad>     dxfwrite(arg,"0");
 %<gcpscad>     dxfwrite(arg,"ENDSEC");
 %<gcpscad>     dxfwrite(arg,"0");
 %<gcpscad>     dxfwrite(arg,"EOF");
@@ -1137,6 +1301,7 @@
 %<gcpscad> 
 %<gcpscad> module closedxffile() {
 %<gcpscad> if (generatedxf == true) {
+%<gcpscad>     dxfwrite(arg,"0");
 %<gcpscad>     dxfwriteone("ENDSEC");
 %<gcpscad>     dxfwriteone("0");
 %<gcpscad>     dxfwriteone("EOF");
@@ -1326,6 +1491,7 @@
 %<gcptmpl> 
 %<gcptmpl> /* [CAM] */
 %<gcptmpl> toolradius = 1.5875;
+%<gcptmpl> 
 %<gcptmpl> /* [CAM] */
 %<gcptmpl> large_ball_tool_no = 0; // [0:0,111:111,101:101,202:202]
 %<gcptmpl> 
@@ -1344,29 +1510,45 @@
 %<gcptmpl> /* [CAM] */
 %<gcptmpl> small_V_tool_no = 0; // [0:0,390:390,301:301]
 %<gcptmpl> 
+%<gcptmpl> /* [CAM] */
+%<gcptmpl> KH_tool_no = 0; // [0:0,375:375]
+%<gcptmpl> 
+%<gcptmpl> /* [CAM] */
+%<gcptmpl> DT_tool_no = 0; // [0:0,814:814]
+%<gcptmpl> 
 %<gcptmpl> /* [Feeds and Speeds] */
 %<gcptmpl> plunge = 100;
+%<gcptmpl> 
 %<gcptmpl> /* [Feeds and Speeds] */
 %<gcptmpl> feed = 400;
+%<gcptmpl> 
 %<gcptmpl> /* [Feeds and Speeds] */
 %<gcptmpl> speed = 16000;
+%<gcptmpl> 
 %<gcptmpl> /* [Feeds and Speeds] */
 %<gcptmpl> square_ratio = 1.0; // [0.25:2]
+%<gcptmpl> 
 %<gcptmpl> /* [Feeds and Speeds] */
 %<gcptmpl> small_V_ratio = 0.75; // [0.25:2]
+%<gcptmpl> 
 %<gcptmpl> /* [Feeds and Speeds] */
 %<gcptmpl> large_V_ratio = 0.875; // [0.25:2]
 %<gcptmpl> 
 %<gcptmpl> /* [Stock] */
 %<gcptmpl> stocklength = 219;
+%<gcptmpl> 
 %<gcptmpl> /* [Stock] */
 %<gcptmpl> stockwidth = 150;
+%<gcptmpl> 
 %<gcptmpl> /* [Stock] */
 %<gcptmpl> stockthickness = 8.35;
+%<gcptmpl> 
 %<gcptmpl> /* [Stock] */
 %<gcptmpl> zeroheight = "Top"; // [Top, Bottom]
+%<gcptmpl> 
 %<gcptmpl> /* [Stock] */
 %<gcptmpl> stockorigin = "Center"; // [Lower-Left, Center-Left, Top-Left, Center]
+%<gcptmpl> 
 %<gcptmpl> /* [Stock] */
 %<gcptmpl> retractheight = 9;
 %<gcptmpl> 
@@ -1387,7 +1569,7 @@
 %<gcptmpl> begintoolpath(0,0,0.25);
 %<gcptmpl> beginpolyline(0,0,0.25);
 %<gcptmpl> 
-%<gcptmpl> cutoneaxis_setfeed("Z",-1,plunge*square_ratio);
+%<gcptmpl> cutoneaxis_setfeed("Z",0,plunge*square_ratio);
 %<gcptmpl> 
 %<gcptmpl> cutwithfeed(stocklength/2,stockwidth/2,-stockthickness,feed);
 %<gcptmpl> addpolyline(stocklength/2,stockwidth/2,-stockthickness);
@@ -1401,9 +1583,26 @@
 %    \end{macrocode}
 % 
 % \begin{samepage}
-% \section{cut2Dshapes}
+% \section{cut2Dshapes and expansion}
+% 
+% New features will be tried out in a file such as \texttt{cut2Dshapes.scad} insofar as the 
+% file structures will allow (tool definitions for example will need to consolidated in 
+% \ref{subsubsec:toolchange} which will need
+% to be included in the projects which will make use of said features until such time
+% as they are added into the main \texttt{gcodepreview.scad} file.
 % 
 % A basic requirement will be to define two-dimensional regions so as to cut them out.
+% Two different geometric treatments will be necessary: modeling the geometry which 
+% defines the region to be cut out (output as a DXF); and modeling the movement of the
+% tool, the toolpath which will be use in creating the 3D model and outputting the 
+% G-code.
+% 
+% In the TUG presentation/paper: \url{http://tug.org/TUGboat/tb40-2/tb125adams-3d.pdf}
+% a list of 2D shapes was put forward --- which of these will need to be created,
+% or if some more general solution will be put forward is uncertain. For the time
+% being, shapes will be implemented on an as-needed basis, as modified by the
+% interaction with the requirements of toolpaths.
+% 
 % The program Carbide Create has toolpath types and options which are as follows:
 % 
 % \begin{itemize}
@@ -1412,9 +1611,11 @@
 %  \item Contour --- Inside Offset
 %  \item (Rectangular) Pocket --- such toolpaths/geometry should include the rounding of the tool 
 %        at the corners 
-%  \item Drill
-%  \item Keyhole --- a nice feature for this would be to include/model the areas which should be
-%        cleared for the sake of reducing wear on the tool and ensuring chip clearance
+%  \item Drill --- note that this is implemented as the plunging of a tool centered on a circle
+%                  and normally that circle is the same diameter as the tool which is used.
+%  \item Keyhole --- also beginning from a circle, a nice feature for this would be to 
+%                    include/model the areas which should be cleared for the sake of reducing wear
+%                    on the tool and ensuring chip clearance
 % \end{itemize}
 % \end{samepage}
 % 
@@ -1425,7 +1626,8 @@
 %        toolpath (we will use Carbide Create as a reference implementation) which is to be 
 %        supported
 %  \item tool geometry --- it should be possible to include support for specialty tooling 
-%        such as dovetail cutters and to get an accurate 3D model
+%        such as dovetail cutters and to get an accurate 3D model, esp. for tooling which
+%        undercuts since they cannot be modeled in Carbide Create.
 %  \item feeds and speeds --- if outputting G-code it would be nice to be able to import feeds 
 %        and speeds from external files such as the .csv files used for user tool libraries in
 %        Carbide Create
@@ -1434,6 +1636,40 @@
 %        (currently  written out separately for each toolpath in addition to one combined file)
 % \end{itemize}
 %
+% A further consideration here is that G-code supports arcs in addition to the lines and
+% polylines already implemented. Implementing arcs wants at least the following options 
+% for quadrant and direction:
+% 
+% \begin{itemize}
+% \item cutarcNWCWdxf --- cut the upper-left quadrant of a circle moving clockwise
+% \item cutarcNWCCdxf --- upper-left quadrant counter-clockwise
+% \item cutarcNECWdxf
+% \item cutarcNECCdxf
+% \item cutarcSECWdxf
+% \item cutarcSECCdxf
+% \item cutarcNECWdxf
+% \item cutarcNECCdxf
+% \item cutcircleCWdxf --- while it won’t matter for generating a DXF, when G-code is implemented
+%                          direction of cut will be a consideration for that
+% \item cutcircleCCdxf
+% \end{itemize}
+% 
+% \subsection{Keyhole toolpath and undercut tooling}
+% 
+% \label{subsec:keyholetoolpaths}
+% The most topologically interesting toolpath is ``Keyhole'' --- where other toolpaths have a 
+% direct correspondence between the associated geometry and the area cut, that Keyhole toolpaths
+% may be used with tooling which undercuts will result in the creation of two different physical
+% physical regions: the visible surface matching the union of the tool perimeter at the entry point
+% and the linear movement of the shaft and the larger region of the tool perimeter at the depth
+% which the tool is plunged to and moved along.
+% 
+% Tooling for such toolpaths is defined at paragraph~\ref{para:undercuttooling}
+% 
+%    \begin{macrocode}
+%<cut2D>  //!OpenSCAD
+%    \end{macrocode}
+% 
 % 
 %
 % \bibliographystyle{alpha}

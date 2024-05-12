@@ -63,6 +63,14 @@
   popendxfsmVfile(fn);
  }
 
+ module oopendxfKHfile(fn) {
+  popendxfKHfile(fn);
+ }
+
+ module oopendxfDTfile(fn) {
+  popendxfDTfile(fn);
+ }
+
  module owritecomment(comment) {
   writeln("(",comment,")");
  }
@@ -70,7 +78,7 @@
  module dxfwriteone(first) {
   writedxf(first);
  // writeln(first);
- //    echo(first);
+ // echo(first);
  }
 
  module dxfwritelgbl(first) {
@@ -95,6 +103,14 @@
 
  module dxfwritesmV(first) {
   writedxfsmV(first);
+ }
+
+ module dxfwriteKH(first) {
+  writedxfKH(first);
+ }
+
+ module dxfwriteDT(first) {
+  writedxfDT(first);
  }
 
  module svgwriteone(first) {
