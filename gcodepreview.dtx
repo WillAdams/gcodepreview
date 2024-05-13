@@ -803,7 +803,7 @@
 %<pyscad> 
 %    \end{macrocode}
 % 
-% \DescribeRoutine{opengcodefile}\DescribeRoutine{opensvgfile}\DescribeRoutine{opendxffile}
+% \DescribeRoutine{opengcodefile}\DescribeRoutine{opensvgfile}
 %    \begin{macrocode}
 %<gcpscad> module opengcodefile(fn) {
 %<gcpscad> if (generategcode == true) {
@@ -825,6 +825,11 @@
 %<gcpscad>     }
 %<gcpscad> }
 %<gcpscad> 
+%    \end{macrocode}
+%
+% For each DXF file there will need to be a Preamble\DescribeRoutine{opendxffile}
+%
+%    \begin{macrocode}
 %<gcpscad> module opendxffile(fn) {
 %<gcpscad> if (generatedxf == true) {
 %<gcpscad> 	oopendxffile(str(fn,".dxf"));
@@ -833,7 +838,6 @@
 %<gcpscad>     dxfwriteone("SECTION");
 %<gcpscad>     dxfwriteone("2");
 %<gcpscad>     dxfwriteone("ENTITIES");
-%<gcpscad>     dxfwriteone("0");
 %<gcpscad> if (large_ball_tool_no >  0) {	oopendxflgblfile(str(fn,".",large_ball_tool_no,".dxf"));
 %<gcpscad>     dxfpreamble(large_ball_tool_no);
 %<gcpscad> } 
@@ -864,8 +868,8 @@
 %<gcpscad> 
 %    \end{macrocode}
 % 
-% \DescribeRoutine{writedxf}\DescribeRoutine{writedxflgbl}\DescribeRoutine{writedxflgsq}
-% Once files have been opened they may be written to.
+% \DescribeRoutine{writedxf}
+% Once files have been opened they may be written to. There is a base command:
 % 
 %    \begin{macrocode}
 %<gcpy>def writedxf(*arguments):
@@ -875,6 +879,14 @@
 %<gcpy>    dxf.write(line_to_write)
 %<gcpy>    dxf.write("\n")
 %<gcpy>
+%    \end{macrocode}
+%
+% \DescribeRoutine{writedxflgbl}\DescribeRoutine{writedxflgsq}\DescribeRoutine{writedxflgV}
+% \DescribeRoutine{writedxfsmbl}\DescribeRoutine{writedxfsmsq}\DescribeRoutine{writedxfsmV}
+% \DescribeRoutine{writedxfKH}\DescribeRoutine{writedxfDT}
+% \noindent and for each tool/size combination, an appropriate command:
+% 
+%    \begin{macrocode}
 %<gcpy>def writedxflgbl(*arguments):
 %<gcpy>    line_to_write = ""
 %<gcpy>    for element in arguments:
@@ -1088,6 +1100,10 @@
 %<gcpscad>     dxfwritesmsq(arg);}
 %<gcpscad> if (tn == small_V_tool_no) {
 %<gcpscad>     dxfwritesmV(arg);}
+%<gcpscad> if (tn == DT_tool_no) {
+%<gcpscad>     dxfwriteDT(arg);}
+%<gcpscad> if (tn == KH_tool_no) {
+%<gcpscad>     dxfwriteKH(arg);}
 %<gcpscad> }
 %<gcpscad> 
 %<gcpscad> module dxfpreamble(tn) {
@@ -1096,7 +1112,6 @@
 %<gcpscad>     dxfwrite(tn,"SECTION");
 %<gcpscad>     dxfwrite(tn,"2");
 %<gcpscad>     dxfwrite(tn,"ENTITIES");
-%<gcpscad>     dxfwrite(tn,"0");
 %<gcpscad> }
 %<gcpscad> 
 %<gcpscad> module writesvgline(bx,by,ex,ey) {
@@ -1111,6 +1126,65 @@
 % Similarly, each each element which may be written to a DXF file will have a user module
 % as well as an internal module which will be called by it so as to write to the file
 % for the current tool.
+% 
+% There are two notable elements which may be written to a DXF:
+% 
+% \begin{itemize}
+%  \item a line: LWPOLYLINE is one possible implementation
+%  \item ARC --- a notable option would be for the arc to close on itself, creating a circle
+% \end{itemize}
+% 
+% A further refinement would be to connect multiple line segments/arcs into a larger polyline, 
+% but since most CAM tools implicitly join elements on import, that is not necessary.
+% 
+% There are three possible interactions for DXF elements and toolpaths:
+% 
+% \begin{itemize}
+%  \item describe the motion of the tool
+%  \item define a perimeter of an area which will be cut by a tool
+%  \item define a centerpoint for a specialty toolpath such as Drill or Keyhhole
+% \end{itemize}
+% 
+% \noindent and it is possible that multiple such elements could be instantiated for
+% a given toolpath.
+% 
+%    \begin{macrocode}
+%<gcpscad> module dxfpolyline(tn,xbegin,ybegin,xend,yend) {
+%<gcpscad> if (generatedxf == true) {
+%<gcpscad>     dxfwrite(tn,"0");
+%<gcpscad>     dxfwrite(tn,"LWPOLYLINE");
+%<gcpscad>     dxfwrite(tn,"90");
+%<gcpscad>     dxfwrite(tn,"2");
+%<gcpscad>     dxfwrite(tn,"70");
+%<gcpscad>     dxfwrite(tn,"0");
+%<gcpscad>     dxfwrite(tn,"43");
+%<gcpscad>     dxfwrite(tn,"0");
+%<gcpscad>     dxfwrite(tn,"10");
+%<gcpscad>     dxfwrite(tn,str(xbegin));
+%<gcpscad>     dxfwrite(tn,"20");
+%<gcpscad>     dxfwrite(tn,str(ybegin));
+%<gcpscad>     dxfwrite(tn,"10");
+%<gcpscad>     dxfwrite(tn,str(xend));
+%<gcpscad>     dxfwrite(tn,"20");
+%<gcpscad>     dxfwrite(tn,str(yend));
+%<gcpscad> }
+%<gcpscad> }
+%<gcpscad> 
+%    \end{macrocode}
+% 
+%    \begin{macrocode}
+%<gcpscad> module dxfarc(tn,xcenter,ycenter,radius,anglebegin,endangle) {
+%<gcpscad> if (generatedxf == true) {
+%<gcpscad>     dxfwrite(tn,"ARC");
+%<gcpscad>     dxfwrite(tn,str(xcenter));
+%<gcpscad>     dxfwrite(tn,str(ycenter));
+%<gcpscad>     dxfwrite(tn,str(radius));
+%<gcpscad>     dxfwrite(tn,str(anglebegin));
+%<gcpscad>     dxfwrite(tn,str(endangle));
+%<gcpscad> }
+%<gcpscad> }
+%<gcpscad> 
+%    \end{macrocode}
 % 
 %    \begin{macrocode}
 %<gcpscad> module dxfbpl(tn,bx,by) {
@@ -1136,7 +1210,7 @@
 %<gcpscad> 
 %<gcpscad> module beginpolyline(bx,by,bz) {
 %<gcpscad> if (generatedxf == true) {
-%<gcpscad>     dxfwrite(tn,"0");
+%<gcpscad>     dxfwriteone("0");
 %<gcpscad>     dxfwriteone("POLYLINE");
 %<gcpscad>     dxfwriteone("8");
 %<gcpscad>     dxfwriteone("default");
@@ -1187,8 +1261,8 @@
 %<gcpscad> }
 %<gcpscad> 
 %<gcpscad> module dxfcpl(tn) {
-%<gcpscad>     dxfwrite(tn,"SEQEND");
 %<gcpscad>     dxfwrite(tn,"0");
+%<gcpscad>     dxfwrite(tn,"SEQEND");
 %<gcpscad> }
 %<gcpscad> 
 %<gcpscad> module closepolyline() {
@@ -1301,7 +1375,7 @@
 %<gcpscad> 
 %<gcpscad> module closedxffile() {
 %<gcpscad> if (generatedxf == true) {
-%<gcpscad>     dxfwrite(arg,"0");
+%<gcpscad>     dxfwriteone("0");
 %<gcpscad>     dxfwriteone("ENDSEC");
 %<gcpscad>     dxfwriteone("0");
 %<gcpscad>     dxfwriteone("EOF");

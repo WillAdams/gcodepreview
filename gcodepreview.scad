@@ -219,7 +219,6 @@
      dxfwriteone("SECTION");
      dxfwriteone("2");
      dxfwriteone("ENTITIES");
-     dxfwriteone("0");
  if (large_ball_tool_no >  0) { oopendxflgblfile(str(fn,".",large_ball_tool_no,".dxf"));
      dxfpreamble(large_ball_tool_no);
  }
@@ -261,6 +260,10 @@
      dxfwritesmsq(arg);}
  if (tn == small_V_tool_no) {
      dxfwritesmV(arg);}
+ if (tn == DT_tool_no) {
+     dxfwriteDT(arg);}
+ if (tn == KH_tool_no) {
+     dxfwriteKH(arg);}
  }
 
  module dxfpreamble(tn) {
@@ -269,13 +272,44 @@
      dxfwrite(tn,"SECTION");
      dxfwrite(tn,"2");
      dxfwrite(tn,"ENTITIES");
-     dxfwrite(tn,"0");
  }
 
  module writesvgline(bx,by,ex,ey) {
  if (generatesvg == true) {
      svgwriteone(str("<path d=",chr(34),"M",bx*3.77953," ",by*3.77953," L",ex*3.77953," ",ey*3.77953," ",chr(34)," stroke=",chr(34),"black",chr(34)," stroke-width=",chr(34),"1",chr(34)," fill=",chr(34),"none",chr(34)," /> "));
      }
+ }
+
+ module dxfpolyline(tn,xbegin,ybegin,xend,yend) {
+ if (generatedxf == true) {
+     dxfwrite(tn,"0");
+     dxfwrite(tn,"LWPOLYLINE");
+     dxfwrite(tn,"90");
+     dxfwrite(tn,"2");
+     dxfwrite(tn,"70");
+     dxfwrite(tn,"0");
+     dxfwrite(tn,"43");
+     dxfwrite(tn,"0");
+     dxfwrite(tn,"10");
+     dxfwrite(tn,str(xbegin));
+     dxfwrite(tn,"20");
+     dxfwrite(tn,str(ybegin));
+     dxfwrite(tn,"10");
+     dxfwrite(tn,str(xend));
+     dxfwrite(tn,"20");
+     dxfwrite(tn,str(yend));
+ }
+ }
+
+ module dxfarc(tn,xcenter,ycenter,radius,anglebegin,endangle) {
+ if (generatedxf == true) {
+     dxfwrite(tn,"ARC");
+     dxfwrite(tn,str(xcenter));
+     dxfwrite(tn,str(ycenter));
+     dxfwrite(tn,str(radius));
+     dxfwrite(tn,str(anglebegin));
+     dxfwrite(tn,str(endangle));
+ }
  }
 
  module dxfbpl(tn,bx,by) {
@@ -301,7 +335,7 @@
 
  module beginpolyline(bx,by,bz) {
  if (generatedxf == true) {
-     dxfwrite(tn,"0");
+     dxfwriteone("0");
      dxfwriteone("POLYLINE");
      dxfwriteone("8");
      dxfwriteone("default");
@@ -352,8 +386,8 @@
  }
 
  module dxfcpl(tn) {
-     dxfwrite(tn,"SEQEND");
      dxfwrite(tn,"0");
+     dxfwrite(tn,"SEQEND");
  }
 
  module closepolyline() {
@@ -387,7 +421,7 @@
 
  module closedxffile() {
  if (generatedxf == true) {
-     dxfwrite(arg,"0");
+     dxfwriteone("0");
      dxfwriteone("ENDSEC");
      dxfwriteone("0");
      dxfwriteone("EOF");
