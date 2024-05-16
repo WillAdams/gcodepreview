@@ -205,6 +205,14 @@
   pclosedxfsmVfile();
  }
 
+ module oclosedxfDTfile() {
+  pclosedxfsmVfile();
+ }
+
+ module oclosedxfKHfile() {
+  pclosedxfsmVfile();
+ }
+
  module oclosesvgfile() {
   pclosesvgfile();
  }

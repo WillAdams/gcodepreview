@@ -1134,6 +1134,17 @@
 %  \item ARC --- a notable option would be for the arc to close on itself, creating a circle
 % \end{itemize}
 % 
+% Note that arcs of greater than 90 degrees are not rendered accurately, so, for the sake of
+% precision, they should be limited to a swing of 90 degrees or less. Further note that 4 arcs
+% may be stitched together to make a circle:
+% 
+% \begin{verbatim}
+% dxfarc(small\_square\_tool\_no,10,10,5,0,90);
+% dxfarc(small\_square\_tool\_no,10,10,5,90,180);
+% dxfarc(small\_square\_tool\_no,10,10,5,180,270);
+% dxfarc(small\_square\_tool\_no,10,10,5,270,360);
+% \end{verbatim}
+% 
 % A further refinement would be to connect multiple line segments/arcs into a larger polyline, 
 % but since most CAM tools implicitly join elements on import, that is not necessary.
 % 
@@ -1149,8 +1160,7 @@
 % a given toolpath.
 % 
 %    \begin{macrocode}
-%<gcpscad> module dxfpolyline(tn,xbegin,ybegin,xend,yend) {
-%<gcpscad> if (generatedxf == true) {
+%<gcpscad> module dxfpl(tn,xbegin,ybegin,xend,yend) {
 %<gcpscad>     dxfwrite(tn,"0");
 %<gcpscad>     dxfwrite(tn,"LWPOLYLINE");
 %<gcpscad>     dxfwrite(tn,"90");
@@ -1168,23 +1178,68 @@
 %<gcpscad>     dxfwrite(tn,"20");
 %<gcpscad>     dxfwrite(tn,str(yend));
 %<gcpscad> }
+%<gcpscad> 
+%<gcpscad> module dxfpolyline(tn,xbegin,ybegin,xend,yend) {
+%<gcpscad> if (generatedxf == true) {
+%<gcpscad>     dxfwriteone("0");
+%<gcpscad>     dxfwriteone("LWPOLYLINE");
+%<gcpscad>     dxfwriteone("90");
+%<gcpscad>     dxfwriteone("2");
+%<gcpscad>     dxfwriteone("70");
+%<gcpscad>     dxfwriteone("0");
+%<gcpscad>     dxfwriteone("43");
+%<gcpscad>     dxfwriteone("0");
+%<gcpscad>     dxfwriteone("10");
+%<gcpscad>     dxfwriteone(str(xbegin));
+%<gcpscad>     dxfwriteone("20");
+%<gcpscad>     dxfwriteone(str(ybegin));
+%<gcpscad>     dxfwriteone("10");
+%<gcpscad>     dxfwriteone(str(xend));
+%<gcpscad>     dxfwriteone("20");
+%<gcpscad>     dxfwriteone(str(yend));
+%<gcpscad>     dxfpl(tn,xbegin,ybegin,xend,yend);
+%<gcpscad> }
 %<gcpscad> }
 %<gcpscad> 
 %    \end{macrocode}
 % 
 %    \begin{macrocode}
+%<gcpscad> module dxfa(tn,xcenter,ycenter,radius,anglebegin,endangle) {
+%<gcpscad>     dxfwrite(tn,"0");
+%<gcpscad>     dxfwrite(tn,"ARC");
+%<gcpscad>     dxfwrite(tn,"10");
+%<gcpscad>     dxfwrite(tn,str(xcenter));
+%<gcpscad>     dxfwrite(tn,"20");
+%<gcpscad>     dxfwrite(tn,str(ycenter));
+%<gcpscad>     dxfwrite(tn,"40");
+%<gcpscad>     dxfwrite(tn,str(radius));
+%<gcpscad>     dxfwrite(tn,"50");
+%<gcpscad>     dxfwrite(tn,str(anglebegin));
+%<gcpscad>     dxfwrite(tn,"51");
+%<gcpscad>     dxfwrite(tn,str(endangle));
+%<gcpscad> }
+%<gcpscad> 
 %<gcpscad> module dxfarc(tn,xcenter,ycenter,radius,anglebegin,endangle) {
 %<gcpscad> if (generatedxf == true) {
-%<gcpscad>     dxfwrite(tn,"ARC");
-%<gcpscad>     dxfwrite(tn,str(xcenter));
-%<gcpscad>     dxfwrite(tn,str(ycenter));
-%<gcpscad>     dxfwrite(tn,str(radius));
-%<gcpscad>     dxfwrite(tn,str(anglebegin));
-%<gcpscad>     dxfwrite(tn,str(endangle));
+%<gcpscad>     dxfwriteone("0");
+%<gcpscad>     dxfwriteone("ARC");
+%<gcpscad>     dxfwriteone("10");
+%<gcpscad>     dxfwriteone(str(xcenter));
+%<gcpscad>     dxfwriteone("20");
+%<gcpscad>     dxfwriteone(str(ycenter));
+%<gcpscad>     dxfwriteone("40");
+%<gcpscad>     dxfwriteone(str(radius));
+%<gcpscad>     dxfwriteone("50");
+%<gcpscad>     dxfwriteone(str(anglebegin));
+%<gcpscad>     dxfwriteone("51");
+%<gcpscad>     dxfwriteone(str(endangle));
+%<gcpscad> 	dxfa(tn,xcenter,ycenter,radius,anglebegin,endangle);
 %<gcpscad> }
 %<gcpscad> }
 %<gcpscad> 
 %    \end{macrocode}
+% 
+% The original implementation of polylines worked, but may be removed.
 % 
 %    \begin{macrocode}
 %<gcpscad> module dxfbpl(tn,bx,by) {
@@ -1314,6 +1369,12 @@
 %<gcpy>def pclosedxfsmVfile():
 %<gcpy>    dxfsmV.close()
 %<gcpy>
+%<gcpy>def pclosedxfDTfile():
+%<gcpy>    dxfsmV.close()
+%<gcpy>
+%<gcpy>def pclosedxfKHfile():
+%<gcpy>    dxfsmV.close()
+%<gcpy>
 %    \end{macrocode}
 % 
 % \DescribeRoutine{oclosegcodefile}\DescribeRoutine{oclosedxffile}\DescribeRoutine{oclosedxflgblfile}
@@ -1347,6 +1408,14 @@
 %<pyscad> }
 %<pyscad> 
 %<pyscad> module oclosedxfsmVfile() {
+%<pyscad> 	pclosedxfsmVfile();
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module oclosedxfDTfile() {
+%<pyscad> 	pclosedxfsmVfile();
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module oclosedxfKHfile() {
 %<pyscad> 	pclosedxfsmVfile();
 %<pyscad> }
 %<pyscad> 
@@ -1398,6 +1467,12 @@
 %<gcpscad> } 
 %<gcpscad> if (small_V_tool_no >  0) {	dxfpostamble(small_V_tool_no);
 %<gcpscad>     oclosedxfsmVfile();
+%<gcpscad> } 
+%<gcpscad> if (DT_tool_no >  0) {	dxfpostamble(DT_tool_no);
+%<gcpscad>     oclosedxfDTfile();
+%<gcpscad> } 
+%<gcpscad> if (KH_tool_no >  0) {	dxfpostamble(KH_tool_no);
+%<gcpscad>     oclosedxfKHfile();
 %<gcpscad> } 
 %<gcpscad>     }
 %<gcpscad> }

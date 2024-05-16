@@ -280,8 +280,7 @@
      }
  }
 
- module dxfpolyline(tn,xbegin,ybegin,xend,yend) {
- if (generatedxf == true) {
+ module dxfpl(tn,xbegin,ybegin,xend,yend) {
      dxfwrite(tn,"0");
      dxfwrite(tn,"LWPOLYLINE");
      dxfwrite(tn,"90");
@@ -299,16 +298,59 @@
      dxfwrite(tn,"20");
      dxfwrite(tn,str(yend));
  }
+
+ module dxfpolyline(tn,xbegin,ybegin,xend,yend) {
+ if (generatedxf == true) {
+     dxfwriteone("0");
+     dxfwriteone("LWPOLYLINE");
+     dxfwriteone("90");
+     dxfwriteone("2");
+     dxfwriteone("70");
+     dxfwriteone("0");
+     dxfwriteone("43");
+     dxfwriteone("0");
+     dxfwriteone("10");
+     dxfwriteone(str(xbegin));
+     dxfwriteone("20");
+     dxfwriteone(str(ybegin));
+     dxfwriteone("10");
+     dxfwriteone(str(xend));
+     dxfwriteone("20");
+     dxfwriteone(str(yend));
+     dxfpl(tn,xbegin,ybegin,xend,yend);
+ }
+ }
+
+ module dxfa(tn,xcenter,ycenter,radius,anglebegin,endangle) {
+     dxfwrite(tn,"0");
+     dxfwrite(tn,"ARC");
+     dxfwrite(tn,"10");
+     dxfwrite(tn,str(xcenter));
+     dxfwrite(tn,"20");
+     dxfwrite(tn,str(ycenter));
+     dxfwrite(tn,"40");
+     dxfwrite(tn,str(radius));
+     dxfwrite(tn,"50");
+     dxfwrite(tn,str(anglebegin));
+     dxfwrite(tn,"51");
+     dxfwrite(tn,str(endangle));
  }
 
  module dxfarc(tn,xcenter,ycenter,radius,anglebegin,endangle) {
  if (generatedxf == true) {
-     dxfwrite(tn,"ARC");
-     dxfwrite(tn,str(xcenter));
-     dxfwrite(tn,str(ycenter));
-     dxfwrite(tn,str(radius));
-     dxfwrite(tn,str(anglebegin));
-     dxfwrite(tn,str(endangle));
+     dxfwriteone("0");
+     dxfwriteone("ARC");
+     dxfwriteone("10");
+     dxfwriteone(str(xcenter));
+     dxfwriteone("20");
+     dxfwriteone(str(ycenter));
+     dxfwriteone("40");
+     dxfwriteone(str(radius));
+     dxfwriteone("50");
+     dxfwriteone(str(anglebegin));
+     dxfwriteone("51");
+     dxfwriteone(str(endangle));
+  dxfa(tn,xcenter,ycenter,radius,anglebegin,endangle);
  }
  }
 
@@ -444,6 +486,12 @@
  }
  if (small_V_tool_no >  0) { dxfpostamble(small_V_tool_no);
      oclosedxfsmVfile();
+ }
+ if (DT_tool_no >  0) { dxfpostamble(DT_tool_no);
+     oclosedxfDTfile();
+ }
+ if (KH_tool_no >  0) { dxfpostamble(KH_tool_no);
+     oclosedxfKHfile();
  }
      }
  }

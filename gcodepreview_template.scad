@@ -16,11 +16,12 @@
  /* [Export] */
  generategcode = true;
 
- /* [Export] */
- generatesvg = false;
+ ///* [Export] */
+ //generatesvg = false;
 
  /* [CAM] */
  toolradius = 1.5875;
+
  /* [CAM] */
  large_ball_tool_no = 0; // [0:0,111:111,101:101,202:202]
 
@@ -39,35 +40,51 @@
  /* [CAM] */
  small_V_tool_no = 0; // [0:0,390:390,301:301]
 
+ /* [CAM] */
+ KH_tool_no = 0; // [0:0,375:375]
+
+ /* [CAM] */
+ DT_tool_no = 0; // [0:0,814:814]
+
  /* [Feeds and Speeds] */
  plunge = 100;
+
  /* [Feeds and Speeds] */
  feed = 400;
+
  /* [Feeds and Speeds] */
  speed = 16000;
+
  /* [Feeds and Speeds] */
  square_ratio = 1.0; // [0.25:2]
+
  /* [Feeds and Speeds] */
  small_V_ratio = 0.75; // [0.25:2]
+
  /* [Feeds and Speeds] */
  large_V_ratio = 0.875; // [0.25:2]
 
  /* [Stock] */
  stocklength = 219;
+
  /* [Stock] */
  stockwidth = 150;
+
  /* [Stock] */
  stockthickness = 8.35;
+
  /* [Stock] */
  zeroheight = "Top"; // [Top, Bottom]
+
  /* [Stock] */
  stockorigin = "Center"; // [Lower-Left, Center-Left, Top-Left, Center]
+
  /* [Stock] */
  retractheight = 9;
 
  filename_gcode = str(Base_filename, ".nc");
  filename_dxf = str(Base_filename);
- filename_svg = str(Base_filename, ".svg");
+ //filename_svg = str(Base_filename, ".svg");
 
  opengcodefile(filename_gcode);
  opendxffile(filename_dxf);
@@ -82,7 +99,7 @@
  begintoolpath(0,0,0.25);
  beginpolyline(0,0,0.25);
 
- cutoneaxis_setfeed("Z",-1,plunge*square_ratio);
+ cutoneaxis_setfeed("Z",0,plunge*square_ratio);
 
  cutwithfeed(stocklength/2,stockwidth/2,-stockthickness,feed);
  addpolyline(stocklength/2,stockwidth/2,-stockthickness);
