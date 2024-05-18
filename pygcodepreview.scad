@@ -206,11 +206,11 @@
  }
 
  module oclosedxfDTfile() {
-  pclosedxfsmVfile();
+  pclosedxfDTfile();
  }
 
  module oclosedxfKHfile() {
-  pclosedxfsmVfile();
+  pclosedxfKHfile();
  }
 
  module oclosesvgfile() {

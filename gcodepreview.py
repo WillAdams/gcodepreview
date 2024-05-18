@@ -200,3 +200,9 @@ def pclosedxfsmsqfile():
 def pclosedxfsmVfile():
     dxfsmV.close()
 
+def pclosedxfDTfile():
+    dxfDT.close()
+
+def pclosedxfKHfile():
+    dxfKH.close()
+

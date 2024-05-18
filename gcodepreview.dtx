@@ -100,6 +100,14 @@
 %<rdm> 
 %<rdm> https://willadams.gitbook.io/design-into-3d/programming
 %<rdm> 
+%<rdm> The files are:
+%<rdm> 
+%<rdm>  - gcodepreview.py (gcpy)
+%<rdm>  - pygcodepreview.scad (pyscad)
+%<rdm>  - gcodepreview.scad(gcpscad)
+%<rdm>  - gcodepreview_template.scad (gcptmpl) 
+%<rdm>  - cut2Dshapes.scad (cut2D)
+%<rdm> 
 %<rdm> Usage is:
 %<rdm> 
 %<rdm> Place the file in C:\Users\\\~\Documents\OpenSCAD\libraries 
@@ -196,10 +204,10 @@
 %<rdm>    full-depth pass
 %<rdm>  - support for additional tooling shapes such as roundover tooling
 %<rdm>  - general coding improvements --- current coding style is quite prosaic
-%<rdm>  - generalized modules for cutting out various shapes/geometries --- an in-process one 
-%<rdm>    is to cut a rectangular area as vertical passes (the horizontal version 
-%<rdm>    will be developed presently)
-%
+%<rdm>  - generalized modules for cutting out various shapes/geometries --- 
+%<rdm>    an in-process one is to cut a rectangular area as vertical passes 
+%<rdm>    (the horizontal version will be developed presently)
+%<rdm>
 %    \end{macrocode}
 %
 % \section{gcodepreview}
@@ -289,8 +297,8 @@
 % function call, and lastly a <foo> OpenSCAD module which will be \texttt{<include>}d 
 % so as to be able to make use of OpenSCAD variables.
 % 
-% The first such routine will be appropriately enough, to set up the stock, and perform other
-% initializations. \DescribeRoutine{psetupstock}
+% \DescribeRoutine{psetupstock}The first such routine will be appropriately enough, 
+% to set up the stock, and perform other initializations. 
 % 
 %    \begin{macrocode}
 %<gcpy>def psetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin):
@@ -305,7 +313,7 @@
 %<gcpy>
 %    \end{macrocode}
 %
-% \DescribeRoutine{osetupstock}
+% \DescribeRoutine{osetupstock}The intermediary OpenSCAD code simply calls the Python version. 
 %    \begin{macrocode}
 %<pyscad> module osetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin) {
 %<pyscad>     psetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
@@ -313,7 +321,9 @@
 %<pyscad> 
 %    \end{macrocode}
 %
-% \DescribeRoutine{setupstock}
+% \DescribeRoutine{setupstock}The OpenSCAD code which is called will set comments if writing
+% out G-code which set the stock dimensions.
+% 
 %    \begin{macrocode}
 %<gcpscad> module setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin) {
 %<gcpscad>   osetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
@@ -486,9 +496,9 @@
 % 
 % \subsection{Tools and Changes}
 % 
+% \DescribeRoutine{pcurrenttool}%
 % Similarly Python functions and variables will be used to track and
 % set and return the current tool: \DescribeRoutine{psettool}
-% \DescribeRoutine{pcurrenttool}
 % 
 %    \begin{macrocode}
 %<gcpy>def psettool(tn):
@@ -501,7 +511,8 @@
 %<gcpy>
 %    \end{macrocode}
 % 
-% \noindent and matching OpenSCAD modules set and return the current tool: \DescribeRoutine{osettool}
+% \noindent and matching OpenSCAD modules set and return the current tool: 
+% \DescribeRoutine{osettool}
 % \DescribeRoutine{currenttool}
 % 
 %    \begin{macrocode}
@@ -1370,10 +1381,10 @@
 %<gcpy>    dxfsmV.close()
 %<gcpy>
 %<gcpy>def pclosedxfDTfile():
-%<gcpy>    dxfsmV.close()
+%<gcpy>    dxfDT.close()
 %<gcpy>
 %<gcpy>def pclosedxfKHfile():
-%<gcpy>    dxfsmV.close()
+%<gcpy>    dxfKH.close()
 %<gcpy>
 %    \end{macrocode}
 % 
@@ -1412,11 +1423,11 @@
 %<pyscad> }
 %<pyscad> 
 %<pyscad> module oclosedxfDTfile() {
-%<pyscad> 	pclosedxfsmVfile();
+%<pyscad> 	pclosedxfDTfile();
 %<pyscad> }
 %<pyscad> 
 %<pyscad> module oclosedxfKHfile() {
-%<pyscad> 	pclosedxfsmVfile();
+%<pyscad> 	pclosedxfKHfile();
 %<pyscad> }
 %<pyscad> 
 %<pyscad> module oclosesvgfile() {
