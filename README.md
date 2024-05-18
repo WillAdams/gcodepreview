@@ -30,6 +30,14 @@
 
  https://willadams.gitbook.io/design-into-3d/programming
 
+ The files are:
+
+  - gcodepreview.py (gcpy)
+  - pygcodepreview.scad (pyscad)
+  - gcodepreview.scad(gcpscad)
+  - gcodepreview_template.scad (gcptmpl)
+  - cut2Dshapes.scad (cut2D)
+
  Usage is:
 
  Place the file in C:\Users\\\~\Documents\OpenSCAD\libraries
@@ -126,6 +134,7 @@
     full-depth pass
   - support for additional tooling shapes such as roundover tooling
   - general coding improvements --- current coding style is quite prosaic
-  - generalized modules for cutting out various shapes/geometries --- an in-process one
-    is to cut a rectangular area as vertical passes (the horizontal version
-    will be developed presently)
+  - generalized modules for cutting out various shapes/geometries ---
+    an in-process one is to cut a rectangular area as vertical passes
+    (the horizontal version will be developed presently)
+
