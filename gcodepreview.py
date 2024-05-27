@@ -48,6 +48,38 @@ def pcurrent_tool():
     global currenttool
     return currenttool
 
+def ptool_diameter(ptd_tool, ptd_depth):
+    if ptd_tool == 201:
+        return 6.35
+    if ptd_tool == 202:
+        if ptd_depth > 3.175:
+            return 6.35
+        else:
+            return 0
+    if ptd_tool == 102:
+        return 3.175
+    if ptd_tool == 101:
+        if ptd_depth > 1.5875:
+            return 3.175
+        else:
+            return 0
+    if ptd_tool == 301:
+        return 0
+    if ptd_tool == 302:
+        return 0
+    if ptd_tool == 390:
+        return 0
+    if ptd_tool == 375:
+        if ptd_depth < 6.35:
+            return 9.525
+        else:
+            return 6.35
+    if ptd_tool == 814:
+        if ptd_depth > 12.7:
+            return 6.35
+        else:
+            return 12.7
+
 def popengcodefile(fn):
     global f
     f = open(fn, "w")
@@ -205,4 +237,5 @@ def pclosedxfDTfile():
 
 def pclosedxfKHfile():
     dxfKH.close()
+
 

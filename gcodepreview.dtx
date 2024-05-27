@@ -82,7 +82,8 @@
 %<rdm> 
 %<rdm> https://pythonscad.org/ (previously this was http://www.guenther-sohler.net/openscad/ )
 %<rdm> 
-%<rdm> (previous versions had used RapCAD)
+%<rdm> (previous versions had used RapCAD, so as to take advantage of the writeln  
+%<rdm> command, that was re-written in Python)
 %<rdm> 
 %<rdm> A BlockSCAD file for the main modules is available at:
 %<rdm> 
@@ -113,9 +114,6 @@
 %<rdm> Place the file in C:\Users\\\~\Documents\OpenSCAD\libraries 
 %<rdm> (C:\Users\\\~\Documents\RapCAD\libraries is deprecated since RapCAD is no longer 
 %<rdm> needed since Python is now used for writing out files)
-%<rdm> 
-%<rdm> (While it was updated for use w/ RapCAD, so as to take advantage of the writeln  
-%<rdm> command, it was possible to write that in Python)
 %<rdm> 
 %<rdm>     use <gcodepreview.py>;
 %<rdm>     use <pygcodepreview.scad>;
@@ -170,7 +168,7 @@
 %<rdm> I work for them). 
 %<rdm> Comments are included in the G-code to match those expected by CutViewer.
 %<rdm> 
-%<rdm> A complete example file is: gcodepreview_template.scad another is 
+%<rdm> A complete example file is: gcodepreview_template.scad another example is 
 %<rdm> openscad_gcodepreview_cutjoinery.tres.scad which is made from an 
 %<rdm> OpenSCAD Graph Editor file:
 %<rdm> 
@@ -187,17 +185,18 @@
 %<rdm>    ball/square/V and small/large (10/31/23)
 %<rdm>  - re-writing as a Literate Program using the LaTeX package docmfp (begun 4/12/24) 
 %<rdm>  - support for additional tooling shapes such as dovetail and keyhole tools
+%<rdm>  - DXF: support for arcs and circles
 %<rdm> 
 %<rdm> Not quite working feature:
 %<rdm> 
 %<rdm>  - exporting SVGs --- these are written out upside down due to coordinate 
-%<rdm>    differences between OpenSCAD/DXFs and SVGs
+%<rdm>    differences between OpenSCAD/DXFs and SVGs (it is likely that METAPOST will be used instead for future versions)
 %<rdm> 
 %<rdm> Possible future improvements:
 %<rdm> 
 %<rdm>  - Specialty toolpaths such as Keyhole which may be used for dovetail as well as
 %<rdm>    keyhole cutters
-%<rdm>  - DXF/G-code: support for G2/G3 arcs and circles
+%<rdm>  - G-code: support for G2/G3 arcs and circles
 %<rdm>  - DXF support for curves and the 3rd dimension
 %<rdm>  - G-code: import external tool libraries and feeds and speeds from JSON or CSV files ---
 %<rdm>    note that it is up to the user to implement Depth per Pass so as to not take a single
@@ -262,9 +261,9 @@
 % \subsection{Position and Variables}
 % 
 % In modeling the machine motion and G-code it will be necessary to have the machine track 
-% several variables. This will be done using paired functions (which will return the matching 
-% variable) and a matching (global) variable, as well as additional functions for setting the 
-% matching variable.
+% several variables. This will be done using paired functions (which will set and return the  
+% matching variable) and a matching (global) variable, as well as additional functions for 
+% setting the matching variable.
 %
 % \begin{samepage}
 % The first such variables are for XYZ position:
@@ -284,7 +283,7 @@
 % \end{itemize}
 % \end{samepage}
 %
-% For each command it will be necessary to implement an appropriate aspect in each file. 
+% For each intended command it will be necessary to implement an appropriate aspect in each file. 
 % The Python file will manage the Python variables and handle things which can only be done in 
 % Python, while there will be two OpenSCAD files as noted above, one which calls the Python code 
 % (this will be \texttt{use}d), while the other will be \texttt{include}d and will be able to access
@@ -321,8 +320,9 @@
 %<pyscad> 
 %    \end{macrocode}
 %
-% \DescribeRoutine{setupstock}The OpenSCAD code which is called will set comments if writing
-% out G-code which set the stock dimensions.
+% \DescribeRoutine{setupstock}The OpenSCAD code which is called has parameters for the user to
+% to set will create comments in the G-code which set the stock dimensions and its position
+% relative to the origin.
 % 
 %    \begin{macrocode}
 %<gcpscad> module setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin) {
@@ -458,12 +458,15 @@
 %<gcpy> 
 %    \end{macrocode}
 % 
-% \noindent and as noted above, there will need to be matching OpenSCAD versions: \DescribeRoutine{getxpos}
+% \noindent and as noted above, there will need to be matching OpenSCAD versions. \DescribeRoutine{getxpos}
 % \DescribeRoutine{getypos}
 % \DescribeRoutine{getzpos}
 % \DescribeRoutine{setxpos}
 % \DescribeRoutine{setypos}
 % \DescribeRoutine{setzpos}
+% Note that for routines where the variable is directly passed from OpenSCAD to Python
+% it is possible to have OpenSCAD directly call the matching Python module with no need
+% to use an intermediary OpenSCAD command.
 % 
 %    \begin{macrocode}
 %<pyscad> function getxpos() = xpos();
@@ -704,6 +707,72 @@
 %<gcpscad> 
 %    \end{macrocode}
 % 
+% \subsubsection{tooldiameter}
+% 
+% It will also be necessary to be able to provide the diameter of the current tool.
+% Arguably, this would be much easier using an object-oriented programming style/dot notation.
+% 
+% One aspect of tool parameters which will need to be supported is shapes which create
+% different profiles based on how deeply the tool is cutting into the surface of the 
+% material at a given point. To accommodate this, it will be necessary to either track
+% the thickness of uncut material at any given point, or, to specify the depth of cut 
+% as a parameter which is what the initial version will implement.
+%
+% \DescribeRoutine{tool diameter}
+% The public-facing OpenSCAD code simply calls the matching OpenSCAD module which wraps the Python code:
+% 
+%    \begin{macrocode}
+%<gcpscad>  function tool_diameter(td_tool, td_depth) = otool_diameter(td_tool, td_depth);
+%    \end{macrocode}
+% 
+% \noindent the matching OpenSCAD function calls the Python function:
+% \DescribeRoutine{otool diameter}
+% 
+%    \begin{macrocode}
+%<pyscad>  function otool_diameter(td_tool, td_depth) = ptool_diameter(td_tool, td_depth);
+%    \end{macrocode}
+% 
+% \noindent the Python code returns appropriate values 
+% \DescribeRoutine{ptool diameter}
+% based on the specified tool number and depth:
+% 
+%    \begin{macrocode}
+%<gcpy>def ptool_diameter(ptd_tool, ptd_depth):
+%<gcpy>    if ptd_tool == 201:
+%<gcpy>        return 6.35
+%<gcpy>    if ptd_tool == 202:
+%<gcpy>        if ptd_depth > 3.175:
+%<gcpy>            return 6.35
+%<gcpy>        else:
+%<gcpy>            return 0
+%<gcpy>    if ptd_tool == 102:
+%<gcpy>        return 3.175
+%<gcpy>    if ptd_tool == 101:
+%<gcpy>        if ptd_depth > 1.5875:
+%<gcpy>            return 3.175
+%<gcpy>        else:
+%<gcpy>            return 0
+%<gcpy>    if ptd_tool == 301:
+%<gcpy>        return 0
+%<gcpy>    if ptd_tool == 302:
+%<gcpy>        return 0
+%<gcpy>    if ptd_tool == 390:
+%<gcpy>        return 0
+%<gcpy>    if ptd_tool == 375:
+%<gcpy>        if ptd_depth < 6.35:
+%<gcpy>            return 9.525
+%<gcpy>        else:
+%<gcpy>            return 6.35
+%<gcpy>    if ptd_tool == 814:
+%<gcpy>        if ptd_depth > 12.7:
+%<gcpy>            return 6.35
+%<gcpy>        else:
+%<gcpy>            return 12.7
+%<gcpy>
+%    \end{macrocode}
+% 
+% (Note that 0 values will need to bre replaced with appropriate code.)
+% 
 % \subsection{File Handling}
 % 
 % For writing to files it will be necessary to have commands for each step of working with the files. 
@@ -815,6 +884,8 @@
 %    \end{macrocode}
 % 
 % \DescribeRoutine{opengcodefile}\DescribeRoutine{opensvgfile}
+% Which have Matching OpenSCAD commands:
+% 
 %    \begin{macrocode}
 %<gcpscad> module opengcodefile(fn) {
 %<gcpscad> if (generategcode == true) {
@@ -838,7 +909,8 @@
 %<gcpscad> 
 %    \end{macrocode}
 %
-% For each DXF file there will need to be a Preamble\DescribeRoutine{opendxffile}
+% For each DXF file, in addition to opening the file in the file system there will need to be 
+% a Preamble\DescribeRoutine{opendxffile}
 %
 %    \begin{macrocode}
 %<gcpscad> module opendxffile(fn) {
@@ -1825,20 +1897,178 @@
 % which the tool is plunged to and moved along.
 % 
 % Tooling for such toolpaths is defined at paragraph~\ref{para:undercuttooling}
+%
+% Due to the possibility of rotation, for the in-between positions there are more cases 
+% than one would think — for each quadrant there are the following possibilities:
+% 
+% \begin{itemize}
+% \item one node on the clockwise side is outside of the quadrant
+% \item two nodes on the clockwise side are outside of the quadrant
+% \item all nodes are w/in the quadrant
+% \item one node on the counter-clockwise side is outside of the quadrant
+% \item two nodes on the counter-clockwise side are outside of the quadrant
+% \end{itemize}
+% 
+% Supporting all of these would require trigonometric comparisons in the If else blocks, 
+% so only the 4 quadrants, N, W, S, and E will be supported in the initial version. 
+% This will be done by wrapping the command with a version which only accepts those options: 
 % 
 %    \begin{macrocode}
-%<cut2D>  //!OpenSCAD
+%<cut2D> //!OpenSCAD
+%<cut2D> 
+%<cut2D> module keyhole_toolpath(kh_tool_no, kh_start_depth, kh_max_depth, kht_angle, kh_length) {   
+%<cut2D> if (kht_angle == "N") {
+%<cut2D>   keyhole_toolpath_degrees(kh_tool_no, kh_start_depth, kh_max_depth, 90, kh_length);
+%<cut2D>     } else if (kht_angle == "S") {
+%<cut2D>   keyhole_toolpath_degrees(kh_tool_no, kh_start_depth, kh_max_depth, 270, kh_length);
+%<cut2D>     } else if (kht_angle == "E") {
+%<cut2D>   keyhole_toolpath_degrees(kh_tool_no, kh_start_depth, kh_max_depth, 0, kh_length);
+%<cut2D>     } else if (kht_angle == "W") {
+%<cut2D>   keyhole_toolpath_degrees(kh_tool_no, kh_start_depth, kh_max_depth, 180, kh_length);
+%<cut2D>     }
+%<cut2D> }
 %    \end{macrocode}
 % 
+% The original version of the command is renamed and called by that. Note that code is still
+% present for the partial calculation of one quadrant (for the case of all nodes within the
+% quadrant).
+% 
+% The first task is to place a circle at the origin which is invariant of angle:
+% 
+%    \begin{macrocode}
+%<cut2D> module keyhole_toolpath_degrees(kh_tool_no, kh_start_depth, kh_max_depth, kh_angle, kh_length) {
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90);
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,90,180);
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,180,270);
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360);
+%    \end{macrocode}
+%
+% Then it will be necessary to test for each possible case in a series of If Else blocks:
+% 
+%    \begin{macrocode}
+%<cut2D>   if (kh_angle == 0) {
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180,270);
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90,180);
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),90);
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270,360-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)));
+%<cut2D> dxfarc(KH_tool_no,getxpos()+kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90);
+%<cut2D> dxfarc(KH_tool_no,getxpos()+kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360);
+%<cut2D> dxfpolyline(KH_tool_no,
+%<cut2D>  getxpos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),
+%<cut2D>  getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,
+%<cut2D>  getxpos()+kh_length,
+%<cut2D>  getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2);
+%<cut2D> dxfpolyline(KH_tool_no,
+%<cut2D>  getxpos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),
+%<cut2D>  getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,
+%<cut2D>  getxpos()+kh_length,
+%<cut2D>  getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2);
+%<cut2D> dxfpolyline(KH_tool_no,getxpos(),getypos(),getxpos()+kh_length,getypos());
+%<cut2D>  cutwithfeed(getxpos()+kh_length,getypos(),-kh_max_depth,feed);
+%<cut2D>  setxpos(getxpos()-kh_length);
+%<cut2D>   } else if (kh_angle > 0 && kh_angle < 90) {
+%<cut2D> echo(kh_angle);
+%<cut2D>   dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90+kh_angle,180+kh_angle);
+%<cut2D>   dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180+kh_angle,270+kh_angle);
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,kh_angle+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),90+kh_angle);
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270+kh_angle,360+kh_angle-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)));
+%<cut2D> dxfarc(KH_tool_no,
+%<cut2D>   getxpos()+(kh_length*cos(kh_angle)),
+%<cut2D>   getypos()+(kh_length*sin(kh_angle)),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0+kh_angle,90+kh_angle);
+%<cut2D> dxfarc(KH_tool_no,getxpos()+(kh_length*cos(kh_angle)),getypos()+(kh_length*sin(kh_angle)),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270+kh_angle,360+kh_angle);
+%<cut2D> dxfpolyline(KH_tool_no,
+%<cut2D>  getxpos()+tool_diameter(KH_tool_no, (kh_max_depth))/2*cos(kh_angle+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2))),
+%<cut2D>  getypos()+tool_diameter(KH_tool_no, (kh_max_depth))/2*sin(kh_angle+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2))),
+%<cut2D>  getxpos()+(kh_length*cos(kh_angle))-((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)*sin(kh_angle)),
+%<cut2D>  getypos()+(kh_length*sin(kh_angle))+((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)*cos(kh_angle)));
+%<cut2D> echo("a",tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2);
+%<cut2D> echo("c",tool_diameter(KH_tool_no, (kh_max_depth))/2);
+%<cut2D> echo("Aangle",asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)));
+%<cut2D> echo(kh_angle);
+%<cut2D>  cutwithfeed(getxpos()+(kh_length*cos(kh_angle)),getypos()+(kh_length*sin(kh_angle)),-kh_max_depth,feed);
+%<cut2D>  setxpos(getxpos()-(kh_length*cos(kh_angle)));
+%<cut2D>  setypos(getypos()-(kh_length*sin(kh_angle)));
+%<cut2D>   } else if (kh_angle == 90) {
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180,270);
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270,360);
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,0,90-asin(
+%<cut2D>     (tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)));
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90+asin(
+%<cut2D>     (tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),180);
+%<cut2D>  dxfpolyline(KH_tool_no,getxpos(),getypos(),getxpos(),getypos()+kh_length);
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos()+kh_length,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90);
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos()+kh_length,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,90,180);
+%<cut2D>  dxfpolyline(KH_tool_no,getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+kh_length);
+%<cut2D>  dxfpolyline(KH_tool_no,getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+kh_length);
+%<cut2D>  cutwithfeed(getxpos(),getypos()+kh_length,-kh_max_depth,feed);
+%<cut2D>  setypos(getypos()-kh_length);
+%<cut2D>   } else if (kh_angle == 180) {
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,0,90);
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270,360);
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90,180-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)));
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),270);
+%<cut2D> dxfarc(KH_tool_no,getxpos()-kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,90,180);
+%<cut2D> dxfarc(KH_tool_no,getxpos()-kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,180,270);
+%<cut2D> dxfpolyline(KH_tool_no,
+%<cut2D>  getxpos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),
+%<cut2D>  getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,
+%<cut2D>  getxpos()-kh_length,
+%<cut2D>  getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2);
+%<cut2D> dxfpolyline(KH_tool_no,
+%<cut2D>  getxpos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),
+%<cut2D>  getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,
+%<cut2D>  getxpos()-kh_length,
+%<cut2D>  getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2);
+%<cut2D>  dxfpolyline(KH_tool_no,getxpos(),getypos(),getxpos()-kh_length,getypos());
+%<cut2D>  cutwithfeed(getxpos()-kh_length,getypos(),-kh_max_depth,feed);
+%<cut2D>  setxpos(getxpos()+kh_length);
+%<cut2D>   } else if (kh_angle == 270) {
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,0,90);
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90,180);
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),360);
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180, 270-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)));
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos()-kh_length,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,180,270);
+%<cut2D> dxfarc(KH_tool_no,getxpos(),getypos()-kh_length,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360);
+%<cut2D>  dxfpolyline(KH_tool_no,getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-kh_length);
+%<cut2D>  dxfpolyline(KH_tool_no,getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-kh_length);
+%<cut2D>  dxfpolyline(KH_tool_no,getxpos(),getypos(),getxpos(),getypos()-kh_length);
+%<cut2D>  cutwithfeed(getxpos(),getypos()-kh_length,-kh_max_depth,feed);
+%<cut2D>  setypos(getypos()+kh_length);
+%<cut2D>   }
+%<cut2D> }
+
+%    \end{macrocode}
 % 
 %
 % \bibliographystyle{alpha}
 %
 % \begin{thebibliography}{RS274}
 %
+% \bibitem[ConstGeom]{WALMSLEY81}
+% Walmsley, Brian. \emph{Construction Geometry}. 2d ed., Centennial College Press, 1981.
+% 
+% \bibitem[MkCalc]{HORVATH22}
+% Horvath, Joan, and Rich Cameron. 
+% \emph{Make: Calculus: Build models to learn, visualize, and explore}. First edition., 
+% Make: Community LLC, 2022.
+% 
+% \bibitem[MkGeom]{HORVATH21}
+% Horvath, Joan, and Rich Cameron. 
+% \emph{Make: Geometry: Learn by 3D Printing, Coding and Exploring}. First edition., 
+% Make: Community LLC, 2021.
+% 
+% \bibitem[MkTrig]{HORVATH23}
+% Horvath, Joan, and Rich Cameron. 
+% \emph{Make: Trigonometry: Build your way from triangles to analytic geometry}. First edition., 
+% Make: Community LLC, 2023.
+% 
+% \bibitem[PractShopMath]{BEGNAL18}
+% Begnal, Tom. \emph{Practical Shop Math: Simple Solutions to Workshop Fractions, Formulas + Geometric Shapes}. Updated edition, Spring House Press, 2018.
+% 
 % \bibitem[RS274]{KRAMER00}
 % Thomas R. Kramer, Frederick M. Proctor, Elena R. Messina.\\
-% \url{https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=823374}
+% \mbox{\url{https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=823374}}\\
+% \url{https://www.nist.gov/publications/nist-rs274ngc-interpreter-version-3}
 %
 % \end{thebibliography}
 %

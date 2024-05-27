@@ -191,6 +191,7 @@
    }
  }
 
+  function tool_diameter(td_tool, td_depth) = otool_diameter(td_tool, td_depth);
  module opengcodefile(fn) {
  if (generategcode == true) {
   oopengcodefile(fn);
@@ -618,3 +619,4 @@
  }
      orapid(getxpos(),getypos(),retractheight);
  }
+

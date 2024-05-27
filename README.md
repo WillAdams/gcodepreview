@@ -12,7 +12,8 @@
 
  https://pythonscad.org/ (previously this was http://www.guenther-sohler.net/openscad/ )
 
- (previous versions had used RapCAD)
+ (previous versions had used RapCAD, so as to take advantage of the writeln
+ command, that was re-written in Python)
 
  A BlockSCAD file for the main modules is available at:
 
@@ -43,9 +44,6 @@
  Place the file in C:\Users\\\~\Documents\OpenSCAD\libraries
  (C:\Users\\\~\Documents\RapCAD\libraries is deprecated since RapCAD is no longer
  needed since Python is now used for writing out files)
-
- (While it was updated for use w/ RapCAD, so as to take advantage of the writeln
- command, it was possible to write that in Python)
 
      use <gcodepreview.py>;
      use <pygcodepreview.scad>;
@@ -100,7 +98,7 @@
  I work for them).
  Comments are included in the G-code to match those expected by CutViewer.
 
- A complete example file is: gcodepreview_template.scad another is
+ A complete example file is: gcodepreview_template.scad another example is
  openscad_gcodepreview_cutjoinery.tres.scad which is made from an
  OpenSCAD Graph Editor file:
 
@@ -117,17 +115,18 @@
     ball/square/V and small/large (10/31/23)
   - re-writing as a Literate Program using the LaTeX package docmfp (begun 4/12/24)
   - support for additional tooling shapes such as dovetail and keyhole tools
+  - DXF: support for arcs and circles
 
  Not quite working feature:
 
   - exporting SVGs --- these are written out upside down due to coordinate
-    differences between OpenSCAD/DXFs and SVGs
+    differences between OpenSCAD/DXFs and SVGs (it is likely that METAPOST will be used instead for future versions)
 
  Possible future improvements:
 
   - Specialty toolpaths such as Keyhole which may be used for dovetail as well as
     keyhole cutters
-  - DXF/G-code: support for G2/G3 arcs and circles
+  - G-code: support for G2/G3 arcs and circles
   - DXF support for curves and the 3rd dimension
   - G-code: import external tool libraries and feeds and speeds from JSON or CSV files ---
     note that it is up to the user to implement Depth per Pass so as to not take a single
@@ -137,4 +136,5 @@
   - generalized modules for cutting out various shapes/geometries ---
     an in-process one is to cut a rectangular area as vertical passes
     (the horizontal version will be developed presently)
+
 

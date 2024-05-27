@@ -25,6 +25,7 @@
 
  function current_tool() = pcurrent_tool();
 
+  function otool_diameter(td_tool, td_depth) = ptool_diameter(td_tool, td_depth);
  module oopengcodefile(fn) {
   popengcodefile(fn);
  }
@@ -216,4 +217,5 @@
  module oclosesvgfile() {
   pclosesvgfile();
  }
+
 
