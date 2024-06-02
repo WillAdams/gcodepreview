@@ -15,7 +15,7 @@
  (previous versions had used RapCAD, so as to take advantage of the writeln
  command, that was re-written in Python)
 
- A BlockSCAD file for the main modules is available at:
+ A BlockSCAD file for the initial verison of the main modules is available at:
 
  https://www.blockscad3d.com/community/projects/1244473
 
@@ -41,7 +41,7 @@
 
  Usage is:
 
- Place the file in C:\Users\\\~\Documents\OpenSCAD\libraries
+ Place the files in C:\Users\\\~\Documents\OpenSCAD\libraries
  (C:\Users\\\~\Documents\RapCAD\libraries is deprecated since RapCAD is no longer
  needed since Python is now used for writing out files)
 
@@ -85,8 +85,8 @@
 
  ![OpenSCAD template G-code file](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/gcodepreview_template.png?raw=true)
 
- but one which could only be sent to a machine to so as to cut the softest and most
- yielding of materials, and of course has a matching DXF which may be imported into
+ but one which could only be sent to a machine so as to cut only the softest and most
+ yielding of materials, and of which has a matching DXF which may be imported into
  a CAM tool --- but which it is not directly possible to assign a toolpath in readily
  available CAM tools.
 
@@ -115,26 +115,34 @@
     ball/square/V and small/large (10/31/23)
   - re-writing as a Literate Program using the LaTeX package docmfp (begun 4/12/24)
   - support for additional tooling shapes such as dovetail and keyhole tools
-  - DXF: support for arcs and circles
 
- Not quite working feature:
+ Version 0.2 adds support for arcs
 
-  - exporting SVGs --- these are written out upside down due to coordinate
-    differences between OpenSCAD/DXFs and SVGs (it is likely that METAPOST will be used instead for future versions)
+  - DXF: support for arcs (which may be used to make circles) (6/1/24)
+  - Specialty toolpaths such as Keyhole which may be used for dovetail as well as
+    keyhole cutters
+
+ Deprecated feature:
+
+  - exporting SVGs --- while this was begun, it turns out that
+    these are written out upside down due to coordinate
+    differences between OpenSCAD/DXFs and SVGs (it is possible that METAPOST
+    will be used instead for future versions)
 
  Possible future improvements:
 
-  - Specialty toolpaths such as Keyhole which may be used for dovetail as well as
-    keyhole cutters
+  - Support for curves along the 3rd dimension --- this will require measuring
+    the difference between the current Z-position and the specified ending Z-axis
+    depth and apportioning it out over the course of the movement along the arc
   - G-code: support for G2/G3 arcs and circles
-  - DXF support for curves and the 3rd dimension
   - G-code: import external tool libraries and feeds and speeds from JSON or CSV files ---
-    note that it is up to the user to implement Depth per Pass so as to not take a single
-    full-depth pass
   - support for additional tooling shapes such as roundover tooling
   - general coding improvements --- current coding style is quite prosaic
   - generalized modules for cutting out various shapes/geometries ---
     an in-process one is to cut a rectangular area as vertical passes
     (the horizontal version will be developed presently)
+
+ Note for G-code generation that it is up to the user to implement Depth per Pass
+ so as to not take a single full-depth pass.
 
 
