@@ -594,11 +594,11 @@
  // writecomment("rapid");
   owritesix("G1 X",str(ex)," Y", str(ey), " Z", str(ez));
  }
- if (generatesvg == true) {
+ //if (generatesvg == true) {
  // owritesix("G1 X",str(ex)," Y", str(ey), " Z", str(ez));
  //    orapid(getxpos(), getypos(), retractheight+5);
-     writesvgline(getxpos(),getypos(),ex,ey);
- }
+ //    writesvgline(getxpos(),getypos(),ex,ey);
+ //}
  ocut(ex, ey, ez);
  }
 

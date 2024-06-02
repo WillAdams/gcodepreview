@@ -1,5 +1,77 @@
  //!OpenSCAD
 
+ module cutarcNECCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
+   dxfarc(tn,xcenter,ycenter,radius,0,90);
+   for (i = [1 : abs(1) : 90]) {
+         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
+     setxpos(xcenter + radius * cos(i));
+     setypos(ycenter + radius * sin(i));
+   }
+ }
+
+ module cutarcNWCCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
+         dxfarc(tn,xcenter,ycenter,radius,90,180);
+   for (i = [91 : abs(1) : 180]) {
+         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
+     setxpos(xcenter + radius * cos(i));
+     setypos(ycenter + radius * sin(i));
+   }
+ }
+
+ module cutarcSWCCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
+         dxfarc(tn,xcenter,ycenter,radius,180,270);
+   for (i = [181 : abs(1) : 270]) {
+         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
+     setxpos(xcenter + radius * cos(i));
+     setypos(ycenter + radius * sin(i));
+   }
+ }
+
+ module cutarcSECCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
+         dxfarc(tn,xcenter,ycenter,radius,270,360);
+   for (i = [271 : abs(1) : 360]) {
+         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
+     setxpos(xcenter + radius * cos(i));
+     setypos(ycenter + radius * sin(i));
+   }
+ }
+
+ module cutarcNECWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
+         dxfarc(tn,xcenter,ycenter,radius,0,90);
+   for (i = [89 : -1 : 0]) {
+         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
+     setxpos(xcenter + radius * cos(i));
+     setypos(ycenter + radius * sin(i));
+   }
+ }
+
+ module cutarcSECWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
+         dxfarc(tn,xcenter,ycenter,radius,270,360);
+   for (i = [359 : -1 : 270]) {
+         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
+     setxpos(xcenter + radius * cos(i));
+     setypos(ycenter + radius * sin(i));
+   }
+ }
+
+ module cutarcSWCWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
+         dxfarc(tn,xcenter,ycenter,radius,180,270);
+   for (i = [269 : -1 : 180]) {
+         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
+     setxpos(xcenter + radius * cos(i));
+     setypos(ycenter + radius * sin(i));
+   }
+ }
+
+ module cutarcNWCWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
+         dxfarc(tn,xcenter,ycenter,radius,90,180);
+   for (i = [179 : -1 : 90]) {
+         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
+     setxpos(xcenter + radius * cos(i));
+     setypos(ycenter + radius * sin(i));
+   }
+ }
+
  module keyhole_toolpath(kh_tool_no, kh_start_depth, kh_max_depth, kht_angle, kh_length) {
  if (kht_angle == "N") {
    keyhole_toolpath_degrees(kh_tool_no, kh_start_depth, kh_max_depth, 90, kh_length);

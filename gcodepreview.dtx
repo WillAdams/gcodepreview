@@ -85,7 +85,7 @@
 %<rdm> (previous versions had used RapCAD, so as to take advantage of the writeln  
 %<rdm> command, that was re-written in Python)
 %<rdm> 
-%<rdm> A BlockSCAD file for the main modules is available at:
+%<rdm> A BlockSCAD file for the initial verison of the main modules is available at:
 %<rdm> 
 %<rdm> https://www.blockscad3d.com/community/projects/1244473
 %<rdm> 
@@ -111,7 +111,7 @@
 %<rdm> 
 %<rdm> Usage is:
 %<rdm> 
-%<rdm> Place the file in C:\Users\\\~\Documents\OpenSCAD\libraries 
+%<rdm> Place the files in C:\Users\\\~\Documents\OpenSCAD\libraries 
 %<rdm> (C:\Users\\\~\Documents\RapCAD\libraries is deprecated since RapCAD is no longer 
 %<rdm> needed since Python is now used for writing out files)
 %<rdm> 
@@ -155,8 +155,8 @@
 %<rdm> 
 %<rdm> ![OpenSCAD template G-code file](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/gcodepreview_template.png?raw=true)
 %<rdm> 
-%<rdm> but one which could only be sent to a machine to so as to cut the softest and most 
-%<rdm> yielding of materials, and of course has a matching DXF which may be imported into 
+%<rdm> but one which could only be sent to a machine so as to cut only the softest and most 
+%<rdm> yielding of materials, and of which has a matching DXF which may be imported into 
 %<rdm> a CAM tool --- but which it is not directly possible to assign a toolpath in readily
 %<rdm> available CAM tools. 
 %<rdm> 
@@ -185,27 +185,35 @@
 %<rdm>    ball/square/V and small/large (10/31/23)
 %<rdm>  - re-writing as a Literate Program using the LaTeX package docmfp (begun 4/12/24) 
 %<rdm>  - support for additional tooling shapes such as dovetail and keyhole tools
-%<rdm>  - DXF: support for arcs and circles
 %<rdm> 
-%<rdm> Not quite working feature:
+%<rdm> Version 0.2 adds support for arcs 
 %<rdm> 
-%<rdm>  - exporting SVGs --- these are written out upside down due to coordinate 
-%<rdm>    differences between OpenSCAD/DXFs and SVGs (it is likely that METAPOST will be used instead for future versions)
+%<rdm>  - DXF: support for arcs (which may be used to make circles) (6/1/24)
+%<rdm>  - Specialty toolpaths such as Keyhole which may be used for dovetail as well as
+%<rdm>    keyhole cutters
+%<rdm> 
+%<rdm> Deprecated feature:
+%<rdm> 
+%<rdm>  - exporting SVGs --- while this was begun, it turns out that
+%<rdm>    these are written out upside down due to coordinate 
+%<rdm>    differences between OpenSCAD/DXFs and SVGs (it is possible that METAPOST 
+%<rdm>    will be used instead for future versions)
 %<rdm> 
 %<rdm> Possible future improvements:
 %<rdm> 
-%<rdm>  - Specialty toolpaths such as Keyhole which may be used for dovetail as well as
-%<rdm>    keyhole cutters
+%<rdm>  - Support for curves along the 3rd dimension --- this will require measuring 
+%<rdm>    the difference between the current Z-position and the specified ending Z-axis
+%<rdm>    depth and apportioning it out over the course of the movement along the arc
 %<rdm>  - G-code: support for G2/G3 arcs and circles
-%<rdm>  - DXF support for curves and the 3rd dimension
 %<rdm>  - G-code: import external tool libraries and feeds and speeds from JSON or CSV files ---
-%<rdm>    note that it is up to the user to implement Depth per Pass so as to not take a single
-%<rdm>    full-depth pass
 %<rdm>  - support for additional tooling shapes such as roundover tooling
 %<rdm>  - general coding improvements --- current coding style is quite prosaic
 %<rdm>  - generalized modules for cutting out various shapes/geometries --- 
 %<rdm>    an in-process one is to cut a rectangular area as vertical passes 
 %<rdm>    (the horizontal version will be developed presently)
+%<rdm>
+%<rdm> Note for G-code generation that it is up to the user to implement Depth per Pass 
+%<rdm> so as to not take a single full-depth pass.
 %<rdm>
 %    \end{macrocode}
 %
@@ -1666,11 +1674,11 @@
 %<gcpscad> //	writecomment("rapid");
 %<gcpscad> 	owritesix("G1 X",str(ex)," Y", str(ey), " Z", str(ez));
 %<gcpscad> }
-%<gcpscad> if (generatesvg == true) {
+%<gcpscad> //if (generatesvg == true) {
 %<gcpscad> //	owritesix("G1 X",str(ex)," Y", str(ey), " Z", str(ez));
 %<gcpscad> //    orapid(getxpos(), getypos(), retractheight+5);
-%<gcpscad>     writesvgline(getxpos(),getypos(),ex,ey);
-%<gcpscad> }
+%<gcpscad> //    writesvgline(getxpos(),getypos(),ex,ey);
+%<gcpscad> //}
 %<gcpscad> ocut(ex, ey, ez);
 %<gcpscad> }
 %<gcpscad> 
@@ -1856,7 +1864,8 @@
 % \begin{itemize}
 %  \item relationship of geometry to toolpath --- arguably there should be an option for each
 %        toolpath (we will use Carbide Create as a reference implementation) which is to be 
-%        supported
+%        supported. Note that there are several possibilities: modeling the tool movement,
+%        describing the outline which the tool will cut, modeling a reference shape for the toolpath
 %  \item tool geometry --- it should be possible to include support for specialty tooling 
 %        such as dovetail cutters and to get an accurate 3D model, esp. for tooling which
 %        undercuts since they cannot be modeled in Carbide Create.
@@ -1868,23 +1877,151 @@
 %        (currently  written out separately for each toolpath in addition to one combined file)
 % \end{itemize}
 %
+% \subsection{Arcs for toolpaths and DXFs}
+% 
 % A further consideration here is that G-code supports arcs in addition to the lines and
 % polylines already implemented. Implementing arcs wants at least the following options 
 % for quadrant and direction:
 % 
 % \begin{itemize}
-% \item cutarcNWCWdxf --- cut the upper-left quadrant of a circle moving clockwise
-% \item cutarcNWCCdxf --- upper-left quadrant counter-clockwise
-% \item cutarcNECWdxf
-% \item cutarcNECCdxf
-% \item cutarcSECWdxf
-% \item cutarcSECCdxf
-% \item cutarcNECWdxf
-% \item cutarcNECCdxf
-% \item cutcircleCWdxf --- while it won’t matter for generating a DXF, when G-code is implemented
+% \item cutarcNWCW --- cut the upper-left quadrant of a circle moving clockwise
+% \item cutarcNWCC --- upper-left quadrant counter-clockwise
+% \item cutarcNECW
+% \item cutarcNECC
+% \item cutarcSECW
+% \item cutarcSECC
+% \item cutarcNECW
+% \item cutarcNECC
+% \item cutcircleCW --- while it won’t matter for generating a DXF, when G-code is implemented
 %                          direction of cut will be a consideration for that
 % \item cutcircleCCdxf
 % \end{itemize}
+% 
+% It will be necessary to have two separate representations of arcs --- the DXF may be easily 
+% and directly supported with a single command, but representing the matching tool movement
+% in OpenSCAD will require a series of short line movements which approximate the arc. 
+% At this time, the current version of Carbide Create only imports circles in DXF as curves,
+% any other example is converted into polylines --- unfortunately, the implementation of this
+% is not such as would allow directly matching that representation. A work-around to import
+% a DXF as curves is to convert the arc into a reasonable number of line segments so as to
+% approximate the arc.
+% 
+% \begin{samepage}
+% Note that there are the following representations/interfaces for representing an arc:
+% 
+% \begin{itemize}
+% \item G-code --- G2 (clockwise) and G3 (counter-clockwise) arcs may be specified, and since 
+%       the endpoint is the positional requirement, it is most likely best to use the offset 
+%       to the center (I and J), rather than the radius parameter (K) \texttt{G2/3 ...} 
+% \item DXF --- \texttt{dxfarc(tn,xcenter,ycenter,radius,anglebegin,endangle)}
+% \item approximation of arc using lines (OpenSCAD) --- note that this may also be used 
+%       in DXF so as to sidestep the question of how many line segments there would be
+%       for a given arc representation 
+% \end{itemize}
+% \end{samepage}
+% 
+% Cutting the quadrant arcs will greatly simplify the calculation and interface for the modules.
+% A full set of 8 will be necessary, then circles may either be stitched together manually or
+% a pair of modules made for them.
+% 
+% At this time, despite what the module names imply (\texttt{cutarcNWCWdxf}, \&c.), only cutting  
+% and DXF generation is supported. Adding support for G-code will be done at a later time.
+% Since these modules will ultimately support G-code, the interface will assume the stored
+% \texttt{xpos} and \texttt{ypos} as the origin. Parameters which will need to be passed in are:
+% 
+% \begin{itemize}
+% \item \texttt{tn}
+% \item \texttt{ex}
+% \item \texttt{ey}
+% \item \texttt{ez} --- allowing a different Z position will make possible threading and
+%       similar helical toolpaths
+% \item \texttt{xcenter} --- the center position will be specified as an absolute position
+%       which will require calculating the offset when it is used for G-code's \texttt{IJ},
+%       for which \texttt{xctr/yctr} are suggested 
+% \item \texttt{ycenter}
+% \item \texttt{radius} --- while this could be calculated, passing it in as a parameter
+%       is both convenient and acts as a check on the other parameters
+% \end{itemize}
+% 
+% 
+%    \begin{macrocode}
+%<cut2D> //!OpenSCAD
+%<cut2D> 
+%<cut2D> module cutarcNECCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
+%<cut2D>   dxfarc(tn,xcenter,ycenter,radius,0,90);
+%<cut2D>   for (i = [1 : abs(1) : 90]) {
+%<cut2D>         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
+%<cut2D>     setxpos(xcenter + radius * cos(i));
+%<cut2D>     setypos(ycenter + radius * sin(i));
+%<cut2D>   }
+%<cut2D> }
+%<cut2D> 
+%<cut2D> module cutarcNWCCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
+%<cut2D>         dxfarc(tn,xcenter,ycenter,radius,90,180);
+%<cut2D>   for (i = [91 : abs(1) : 180]) {
+%<cut2D>         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
+%<cut2D>     setxpos(xcenter + radius * cos(i));
+%<cut2D>     setypos(ycenter + radius * sin(i));
+%<cut2D>   }
+%<cut2D> }
+%<cut2D> 
+%<cut2D> module cutarcSWCCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
+%<cut2D>         dxfarc(tn,xcenter,ycenter,radius,180,270);
+%<cut2D>   for (i = [181 : abs(1) : 270]) {
+%<cut2D>         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
+%<cut2D>     setxpos(xcenter + radius * cos(i));
+%<cut2D>     setypos(ycenter + radius * sin(i));
+%<cut2D>   }
+%<cut2D> }
+%<cut2D> 
+%<cut2D> module cutarcSECCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
+%<cut2D>         dxfarc(tn,xcenter,ycenter,radius,270,360);
+%<cut2D>   for (i = [271 : abs(1) : 360]) {
+%<cut2D>         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
+%<cut2D>     setxpos(xcenter + radius * cos(i));
+%<cut2D>     setypos(ycenter + radius * sin(i));
+%<cut2D>   }
+%<cut2D> }
+%<cut2D> 
+%<cut2D> module cutarcNECWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
+%<cut2D>         dxfarc(tn,xcenter,ycenter,radius,0,90);
+%<cut2D>   for (i = [89 : -1 : 0]) {
+%<cut2D>         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
+%<cut2D>     setxpos(xcenter + radius * cos(i));
+%<cut2D>     setypos(ycenter + radius * sin(i));
+%<cut2D>   }
+%<cut2D> }
+%<cut2D> 
+%<cut2D> module cutarcSECWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
+%<cut2D>         dxfarc(tn,xcenter,ycenter,radius,270,360);
+%<cut2D>   for (i = [359 : -1 : 270]) {
+%<cut2D>         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
+%<cut2D>     setxpos(xcenter + radius * cos(i));
+%<cut2D>     setypos(ycenter + radius * sin(i));
+%<cut2D>   }
+%<cut2D> }
+%<cut2D> 
+%<cut2D> module cutarcSWCWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
+%<cut2D>         dxfarc(tn,xcenter,ycenter,radius,180,270);
+%<cut2D>   for (i = [269 : -1 : 180]) {
+%<cut2D>         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
+%<cut2D>     setxpos(xcenter + radius * cos(i));
+%<cut2D>     setypos(ycenter + radius * sin(i));
+%<cut2D>   }
+%<cut2D> }
+%<cut2D> 
+%<cut2D> module cutarcNWCWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
+%<cut2D>         dxfarc(tn,xcenter,ycenter,radius,90,180);
+%<cut2D>   for (i = [179 : -1 : 90]) {
+%<cut2D>         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
+%<cut2D>     setxpos(xcenter + radius * cos(i));
+%<cut2D>     setypos(ycenter + radius * sin(i));
+%<cut2D>   }
+%<cut2D> }
+%<cut2D> 
+%    \end{macrocode}
+% 
+% 
 % 
 % \subsection{Keyhole toolpath and undercut tooling}
 % 
@@ -1914,8 +2051,6 @@
 % This will be done by wrapping the command with a version which only accepts those options: 
 % 
 %    \begin{macrocode}
-%<cut2D> //!OpenSCAD
-%<cut2D> 
 %<cut2D> module keyhole_toolpath(kh_tool_no, kh_start_depth, kh_max_depth, kht_angle, kh_length) {   
 %<cut2D> if (kht_angle == "N") {
 %<cut2D>   keyhole_toolpath_degrees(kh_tool_no, kh_start_depth, kh_max_depth, 90, kh_length);
@@ -2039,7 +2174,19 @@
 
 %    \end{macrocode}
 % 
-%
+% \subsection{Bézier curves in 3 dimensions}
+% 
+% One question is how many Bézier curves would it be necessary to have to define movement
+% in 3 dimensions --- in theory, just 2 should work and would map well to the motion of the
+% machine: 
+% 
+% \begin{itemize}
+% \item An overhead view for position along X and Y
+% \item A side (or front?) view for motion along Z
+% \end{itemize}
+% 
+% \subsection{Shapes and tool movement}
+% 
 % \bibliographystyle{alpha}
 %
 % \begin{thebibliography}{RS274}
