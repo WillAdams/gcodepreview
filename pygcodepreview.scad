@@ -7,6 +7,7 @@
  function getxpos() = xpos();
  function getypos() = ypos();
  function getzpos() = zpos();
+ function gettzpos() = tzpos();
 
  module setxpos(newxpos) {
  psetxpos(newxpos);
@@ -18,6 +19,10 @@
 
  module setzpos(newzpos) {
  psetzpos(newzpos);
+ }
+
+ module settzpos(newtzpos) {
+ psettzpos(newtzpos);
  }
 
  module osettool(tn){

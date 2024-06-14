@@ -105,6 +105,10 @@
  setzpos(ez);
  }
 
+ module osettz(tz) {
+ settzpos(tz);
+ }
+
  module toolchange(tool_number,speed) {
     osettool(tool_number);
  if (generategcode == true) {

@@ -1,75 +1,73 @@
  //!OpenSCAD
 
- module cutarcNECCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-   dxfarc(tn,xcenter,ycenter,radius,0,90);
-   for (i = [1 : abs(1) : 90]) {
-         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
+ module arcloop(barc,earc, xcenter, ycenter, radius) {
+   for (i = [barc : abs(1) : earc]) {
+         cut(xcenter + radius * cos(i),
+         ycenter + radius * sin(i),
+         getzpos()-(gettzpos())
+         );
      setxpos(xcenter + radius * cos(i));
      setypos(ycenter + radius * sin(i));
    }
+ }
+
+ module narcloop(barc,earc, xcenter, ycenter, radius) {
+   for (i = [barc : -1 : earc]) {
+         cut(xcenter + radius * cos(i),
+         ycenter + radius * sin(i),
+         getzpos()-(gettzpos())
+         );
+     setxpos(xcenter + radius * cos(i));
+     setypos(ycenter + radius * sin(i));
+   }
+ }
+
+ module cutarcNECCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
+   dxfarc(tn,xcenter,ycenter,radius,0,90);
+   settzpos((getzpos()-ez)/90);
+     arcloop(1,90, xcenter, ycenter, radius);
  }
 
  module cutarcNWCCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-         dxfarc(tn,xcenter,ycenter,radius,90,180);
-   for (i = [91 : abs(1) : 180]) {
-         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
-     setxpos(xcenter + radius * cos(i));
-     setypos(ycenter + radius * sin(i));
-   }
+   dxfarc(tn,xcenter,ycenter,radius,90,180);
+   settzpos((getzpos()-ez)/90);
+     arcloop(91,180, xcenter, ycenter, radius);
  }
 
  module cutarcSWCCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-         dxfarc(tn,xcenter,ycenter,radius,180,270);
-   for (i = [181 : abs(1) : 270]) {
-         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
-     setxpos(xcenter + radius * cos(i));
-     setypos(ycenter + radius * sin(i));
-   }
+   dxfarc(tn,xcenter,ycenter,radius,180,270);
+   settzpos((getzpos()-ez)/90);
+     arcloop(181,270, xcenter, ycenter, radius);
  }
 
  module cutarcSECCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-         dxfarc(tn,xcenter,ycenter,radius,270,360);
-   for (i = [271 : abs(1) : 360]) {
-         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
-     setxpos(xcenter + radius * cos(i));
-     setypos(ycenter + radius * sin(i));
-   }
+   dxfarc(tn,xcenter,ycenter,radius,270,360);
+   settzpos((getzpos()-ez)/90);
+     arcloop(271,360, xcenter, ycenter, radius);
  }
 
  module cutarcNECWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-         dxfarc(tn,xcenter,ycenter,radius,0,90);
-   for (i = [89 : -1 : 0]) {
-         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
-     setxpos(xcenter + radius * cos(i));
-     setypos(ycenter + radius * sin(i));
-   }
+   dxfarc(tn,xcenter,ycenter,radius,0,90);
+   settzpos((getzpos()-ez)/90);
+     narcloop(89,0, xcenter, ycenter, radius);
  }
 
  module cutarcSECWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-         dxfarc(tn,xcenter,ycenter,radius,270,360);
-   for (i = [359 : -1 : 270]) {
-         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
-     setxpos(xcenter + radius * cos(i));
-     setypos(ycenter + radius * sin(i));
-   }
+   dxfarc(tn,xcenter,ycenter,radius,270,360);
+   settzpos((getzpos()-ez)/90);
+     narcloop(359,270, xcenter, ycenter, radius);
  }
 
  module cutarcSWCWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-         dxfarc(tn,xcenter,ycenter,radius,180,270);
-   for (i = [269 : -1 : 180]) {
-         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
-     setxpos(xcenter + radius * cos(i));
-     setypos(ycenter + radius * sin(i));
-   }
+   dxfarc(tn,xcenter,ycenter,radius,180,270);
+   settzpos((getzpos()-ez)/90);
+     narcloop(269,180, xcenter, ycenter, radius);
  }
 
  module cutarcNWCWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-         dxfarc(tn,xcenter,ycenter,radius,90,180);
-   for (i = [179 : -1 : 90]) {
-         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
-     setxpos(xcenter + radius * cos(i));
-     setypos(ycenter + radius * sin(i));
-   }
+   dxfarc(tn,xcenter,ycenter,radius,90,180);
+   settzpos((getzpos()-ez)/90);
+     narcloop(179,90, xcenter, ycenter, radius);
  }
 
  module keyhole_toolpath(kh_tool_no, kh_start_depth, kh_max_depth, kht_angle, kh_length) {

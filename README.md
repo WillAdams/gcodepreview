@@ -1,10 +1,11 @@
  # gcodepreview
 
- OpenSCAD library for moving a tool in lines and arcs so as to model how a part would
- be cut using G-Code, so as to allow OpenSCAD to function as a compleat CAD/CAM solution
- for subtractive CNC (mills and routers) by writing out G-code (in some cases
- toolpaths which would not normally be feasible), and to write out DXF files
- which may be imported into a traditional CAM program to create toolpaths.
+ OpenSCAD library for moving a tool in lines and arcs so as to model
+ how a part would be cut using G-Code, so as to allow OpenSCAD to function
+ as a compleat CAD/CAM solution for subtractive CNC (mills and routers)
+ by writing out G-code (in some cases toolpaths which would not normally
+ be feasible), and to write out DXF files which may be imported into a
+ traditional CAM program to create toolpaths.
 
  ![OpenSCAD Cut Joinery Module](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/openscad_cutjoinery.png?raw=true)
 
@@ -13,9 +14,9 @@
  https://pythonscad.org/ (previously this was http://www.guenther-sohler.net/openscad/ )
 
  (previous versions had used RapCAD, so as to take advantage of the writeln
- command, that was re-written in Python)
+ command, which has since been re-written in Python)
 
- A BlockSCAD file for the initial verison of the main modules is available at:
+ A BlockSCAD file for the initial version of the main modules is available at:
 
  https://www.blockscad3d.com/community/projects/1244473
 
@@ -86,9 +87,10 @@
  ![OpenSCAD template G-code file](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/gcodepreview_template.png?raw=true)
 
  but one which could only be sent to a machine so as to cut only the softest and most
- yielding of materials, and of which has a matching DXF which may be imported into
- a CAM tool --- but which it is not directly possible to assign a toolpath in readily
- available CAM tools.
+ yielding of materials since it makes a single full-depth pass, and of which has a
+ matching DXF which may be imported into a CAM tool --- but which it is not directly
+ possible to assign a toolpath in readily available CAM tools (since it varies in depth
+ from beginning-to-end).
 
  Importing this DXF and actually cutting it is discussed at:
 
@@ -96,9 +98,10 @@
 
  Tool numbers match those of tooling sold by Carbide 3D (ob. discl.,
  I work for them).
+
  Comments are included in the G-code to match those expected by CutViewer.
 
- A complete example file is: gcodepreview_template.scad another example is
+ A complete example file is: gcodepreview_template.scad and another example is
  openscad_gcodepreview_cutjoinery.tres.scad which is made from an
  OpenSCAD Graph Editor file:
 
@@ -121,6 +124,7 @@
   - DXF: support for arcs (which may be used to make circles) (6/1/24)
   - Specialty toolpaths such as Keyhole which may be used for dovetail as well as
     keyhole cutters
+  - Support for curves along the 3rd dimension
 
  Deprecated feature:
 
@@ -131,9 +135,6 @@
 
  Possible future improvements:
 
-  - Support for curves along the 3rd dimension --- this will require measuring
-    the difference between the current Z-position and the specified ending Z-axis
-    depth and apportioning it out over the course of the movement along the arc
   - G-code: support for G2/G3 arcs and circles
   - G-code: import external tool libraries and feeds and speeds from JSON or CSV files ---
   - support for additional tooling shapes such as roundover tooling
@@ -143,6 +144,7 @@
     (the horizontal version will be developed presently)
 
  Note for G-code generation that it is up to the user to implement Depth per Pass
- so as to not take a single full-depth pass.
+ so as to not take a single full-depth pass. Working from a DXF of course allows
+ one to off-load such considerations to a specialized CAM tool.
 
 

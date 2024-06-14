@@ -70,11 +70,12 @@
 %    \begin{macrocode}
 %<rdm> # gcodepreview
 %<rdm> 
-%<rdm> OpenSCAD library for moving a tool in lines and arcs so as to model how a part would   
-%<rdm> be cut using G-Code, so as to allow OpenSCAD to function as a compleat CAD/CAM solution  
-%<rdm> for subtractive CNC (mills and routers) by writing out G-code (in some cases
-%<rdm> toolpaths which would not normally be feasible), and to write out DXF files 
-%<rdm> which may be imported into a traditional CAM program to create toolpaths.
+%<rdm> OpenSCAD library for moving a tool in lines and arcs so as to model 
+%<rdm> how a part would be cut using G-Code, so as to allow OpenSCAD to function 
+%<rdm> as a compleat CAD/CAM solution for subtractive CNC (mills and routers) 
+%<rdm> by writing out G-code (in some cases toolpaths which would not normally 
+%<rdm> be feasible), and to write out DXF files which may be imported into a 
+%<rdm> traditional CAM program to create toolpaths.
 %<rdm> 
 %<rdm> ![OpenSCAD Cut Joinery Module](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/openscad_cutjoinery.png?raw=true)
 %<rdm> 
@@ -83,9 +84,9 @@
 %<rdm> https://pythonscad.org/ (previously this was http://www.guenther-sohler.net/openscad/ )
 %<rdm> 
 %<rdm> (previous versions had used RapCAD, so as to take advantage of the writeln  
-%<rdm> command, that was re-written in Python)
+%<rdm> command, which has since been re-written in Python)
 %<rdm> 
-%<rdm> A BlockSCAD file for the initial verison of the main modules is available at:
+%<rdm> A BlockSCAD file for the initial version of the main modules is available at:
 %<rdm> 
 %<rdm> https://www.blockscad3d.com/community/projects/1244473
 %<rdm> 
@@ -156,9 +157,10 @@
 %<rdm> ![OpenSCAD template G-code file](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/gcodepreview_template.png?raw=true)
 %<rdm> 
 %<rdm> but one which could only be sent to a machine so as to cut only the softest and most 
-%<rdm> yielding of materials, and of which has a matching DXF which may be imported into 
-%<rdm> a CAM tool --- but which it is not directly possible to assign a toolpath in readily
-%<rdm> available CAM tools. 
+%<rdm> yielding of materials since it makes a single full-depth pass, and of which has a 
+%<rdm> matching DXF which may be imported into a CAM tool --- but which it is not directly 
+%<rdm> possible to assign a toolpath in readily available CAM tools (since it varies in depth
+%<rdm> from beginning-to-end). 
 %<rdm> 
 %<rdm> Importing this DXF and actually cutting it is discussed at:
 %<rdm> 
@@ -166,9 +168,10 @@
 %<rdm> 
 %<rdm> Tool numbers match those of tooling sold by Carbide 3D (ob. discl., 
 %<rdm> I work for them). 
+%<rdm> 
 %<rdm> Comments are included in the G-code to match those expected by CutViewer.
 %<rdm> 
-%<rdm> A complete example file is: gcodepreview_template.scad another example is 
+%<rdm> A complete example file is: gcodepreview_template.scad and another example is 
 %<rdm> openscad_gcodepreview_cutjoinery.tres.scad which is made from an 
 %<rdm> OpenSCAD Graph Editor file:
 %<rdm> 
@@ -191,6 +194,7 @@
 %<rdm>  - DXF: support for arcs (which may be used to make circles) (6/1/24)
 %<rdm>  - Specialty toolpaths such as Keyhole which may be used for dovetail as well as
 %<rdm>    keyhole cutters
+%<rdm>  - Support for curves along the 3rd dimension
 %<rdm> 
 %<rdm> Deprecated feature:
 %<rdm> 
@@ -201,9 +205,6 @@
 %<rdm> 
 %<rdm> Possible future improvements:
 %<rdm> 
-%<rdm>  - Support for curves along the 3rd dimension --- this will require measuring 
-%<rdm>    the difference between the current Z-position and the specified ending Z-axis
-%<rdm>    depth and apportioning it out over the course of the movement along the arc
 %<rdm>  - G-code: support for G2/G3 arcs and circles
 %<rdm>  - G-code: import external tool libraries and feeds and speeds from JSON or CSV files ---
 %<rdm>  - support for additional tooling shapes such as roundover tooling
@@ -213,7 +214,8 @@
 %<rdm>    (the horizontal version will be developed presently)
 %<rdm>
 %<rdm> Note for G-code generation that it is up to the user to implement Depth per Pass 
-%<rdm> so as to not take a single full-depth pass.
+%<rdm> so as to not take a single full-depth pass. Working from a DXF of course allows
+%<rdm> one to off-load such considerations to a specialized CAM tool.
 %<rdm>
 %    \end{macrocode}
 %
@@ -223,8 +225,9 @@
 % store and access variables, and to write out files. Doing so requires a total of three files:
 %
 % \begin{itemize}
-%  \item A Python file: gcodepreview.py (gcpy)
-%  \item An OpenSCAD file: gcodepreview.scad (gcpscad)
+%  \item A Python file: gcodepreview.py (gcpy) --- this will have variables in the traditional sense
+%        which may be used for tracking machine position and so forth
+%  \item An OpenSCAD file: gcodepreview.scad (gcpscad) --- which wraps the Python code in OpenSCAD
 %  \item An OpenSCAD file which connects the other two files: pygcodepreview.scad (pyscad)
 % \end{itemize}
 %
@@ -284,6 +287,15 @@
 % \end{samepage}
 %
 % \begin{samepage}
+% Similarly, for some toolpaths it will be necessary to track the depth along the Z-axis
+% as the toolpath is cut out:
+% 
+% \begin{itemize}
+%  \item \texttt{tpz} \DescribeVariable{tpz}
+% \end{itemize}
+% \end{samepage}
+%
+% \begin{samepage}
 % It will further be necessary to have a variable for the current tool:
 %
 % \begin{itemize}
@@ -315,6 +327,8 @@
 %<gcpy>    mpy = float(0)
 %<gcpy>    global mpz
 %<gcpy>    mpz = float(0)
+%<gcpy>    global tpz
+%<gcpy>    tpz = float(0)
 %<gcpy>    global currenttool
 %<gcpy>    currenttool = 102
 %<gcpy>
@@ -445,11 +459,16 @@
 %<gcpy>    global mpz
 %<gcpy>    return mpz
 %<gcpy>
+%<gcpy>def tzpos():
+%<gcpy>    global tpz
+%<gcpy>    return tpz
+%<gcpy>
 %    \end{macrocode}
 %
 % \noindent and in turn, functions which set the positions: \DescribeRoutine{psetxpos}
 %  \DescribeRoutine{psetypos}
 %  \DescribeRoutine{psetzpos}
+%  \DescribeRoutine{psettzpos}
 %
 %    \begin{macrocode}
 %<gcpy>def psetxpos(newxpos):
@@ -464,14 +483,20 @@
 %<gcpy>    global mpz
 %<gcpy>    mpz = newzpos
 %<gcpy> 
+%<gcpy>def psettzpos(newtzpos):
+%<gcpy>    global tpz
+%<gcpy>    tpz = newtzpos
+%<gcpy> 
 %    \end{macrocode}
 % 
 % \noindent and as noted above, there will need to be matching OpenSCAD versions. \DescribeRoutine{getxpos}
 % \DescribeRoutine{getypos}
 % \DescribeRoutine{getzpos}
+% \DescribeRoutine{gettzpos}
 % \DescribeRoutine{setxpos}
 % \DescribeRoutine{setypos}
 % \DescribeRoutine{setzpos}
+% \DescribeRoutine{settzpos}
 % Note that for routines where the variable is directly passed from OpenSCAD to Python
 % it is possible to have OpenSCAD directly call the matching Python module with no need
 % to use an intermediary OpenSCAD command.
@@ -480,6 +505,7 @@
 %<pyscad> function getxpos() = xpos();
 %<pyscad> function getypos() = ypos();
 %<pyscad> function getzpos() = zpos();
+%<pyscad> function gettzpos() = tzpos();
 %<pyscad> 
 %<pyscad> module setxpos(newxpos) {
 %<pyscad> psetxpos(newxpos);
@@ -491,6 +517,10 @@
 %<pyscad> 
 %<pyscad> module setzpos(newzpos) {
 %<pyscad> psetzpos(newzpos);
+%<pyscad> }
+%<pyscad> 
+%<pyscad> module settzpos(newtzpos) {
+%<pyscad> psettzpos(newtzpos);
 %<pyscad> }
 %<pyscad> 
 %    \end{macrocode}
@@ -505,6 +535,14 @@
 %<gcpscad> 
 %    \end{macrocode}
 % 
+% \DescribeRoutine{osettz}
+%    \begin{macrocode}
+%<gcpscad> module osettz(tz) {
+%<gcpscad> settzpos(tz);
+%<gcpscad> }
+%<gcpscad> 
+%    \end{macrocode}
+%
 % \subsection{Tools and Changes}
 % 
 % \DescribeRoutine{pcurrenttool}%
@@ -1943,80 +1981,86 @@
 %       is both convenient and acts as a check on the other parameters
 % \end{itemize}
 % 
-% 
+% Adding a simple loop to handle the processing of the \texttt{cut()} toolpaths affords 
+% a single point of control for adding additional features such as allowing the depth to 
+% vary as one cuts along an arc (two when the need to have a version which steps down):
+%
 %    \begin{macrocode}
 %<cut2D> //!OpenSCAD
 %<cut2D> 
-%<cut2D> module cutarcNECCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-%<cut2D>   dxfarc(tn,xcenter,ycenter,radius,0,90);
-%<cut2D>   for (i = [1 : abs(1) : 90]) {
-%<cut2D>         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
+%<cut2D> module arcloop(barc,earc, xcenter, ycenter, radius) {
+%<cut2D>   for (i = [barc : abs(1) : earc]) {
+%<cut2D>         cut(xcenter + radius * cos(i),
+%<cut2D>         ycenter + radius * sin(i),
+%<cut2D>         getzpos()-(gettzpos())
+%<cut2D>         );
 %<cut2D>     setxpos(xcenter + radius * cos(i));
 %<cut2D>     setypos(ycenter + radius * sin(i));
 %<cut2D>   }
+%<cut2D> }
+%<cut2D> 
+%<cut2D> module narcloop(barc,earc, xcenter, ycenter, radius) {
+%<cut2D>   for (i = [barc : -1 : earc]) {
+%<cut2D>         cut(xcenter + radius * cos(i),
+%<cut2D>         ycenter + radius * sin(i),
+%<cut2D>         getzpos()-(gettzpos())
+%<cut2D>         );
+%<cut2D>     setxpos(xcenter + radius * cos(i));
+%<cut2D>     setypos(ycenter + radius * sin(i));
+%<cut2D>   }
+%<cut2D> }
+%<cut2D> 
+%    \end{macrocode}
+% 
+% The various textual versions are quite obvious:
+%
+%    \begin{macrocode}
+%<cut2D> module cutarcNECCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
+%<cut2D>   dxfarc(tn,xcenter,ycenter,radius,0,90);
+%<cut2D>   settzpos((getzpos()-ez)/90);
+%<cut2D>     arcloop(1,90, xcenter, ycenter, radius);
 %<cut2D> }
 %<cut2D> 
 %<cut2D> module cutarcNWCCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-%<cut2D>         dxfarc(tn,xcenter,ycenter,radius,90,180);
-%<cut2D>   for (i = [91 : abs(1) : 180]) {
-%<cut2D>         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
-%<cut2D>     setxpos(xcenter + radius * cos(i));
-%<cut2D>     setypos(ycenter + radius * sin(i));
-%<cut2D>   }
+%<cut2D>   dxfarc(tn,xcenter,ycenter,radius,90,180);
+%<cut2D>   settzpos((getzpos()-ez)/90);
+%<cut2D>     arcloop(91,180, xcenter, ycenter, radius);
 %<cut2D> }
 %<cut2D> 
 %<cut2D> module cutarcSWCCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-%<cut2D>         dxfarc(tn,xcenter,ycenter,radius,180,270);
-%<cut2D>   for (i = [181 : abs(1) : 270]) {
-%<cut2D>         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
-%<cut2D>     setxpos(xcenter + radius * cos(i));
-%<cut2D>     setypos(ycenter + radius * sin(i));
-%<cut2D>   }
+%<cut2D>   dxfarc(tn,xcenter,ycenter,radius,180,270);
+%<cut2D>   settzpos((getzpos()-ez)/90);
+%<cut2D>     arcloop(181,270, xcenter, ycenter, radius);
 %<cut2D> }
 %<cut2D> 
 %<cut2D> module cutarcSECCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-%<cut2D>         dxfarc(tn,xcenter,ycenter,radius,270,360);
-%<cut2D>   for (i = [271 : abs(1) : 360]) {
-%<cut2D>         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
-%<cut2D>     setxpos(xcenter + radius * cos(i));
-%<cut2D>     setypos(ycenter + radius * sin(i));
-%<cut2D>   }
+%<cut2D>   dxfarc(tn,xcenter,ycenter,radius,270,360);
+%<cut2D>   settzpos((getzpos()-ez)/90);
+%<cut2D>     arcloop(271,360, xcenter, ycenter, radius);
 %<cut2D> }
 %<cut2D> 
 %<cut2D> module cutarcNECWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-%<cut2D>         dxfarc(tn,xcenter,ycenter,radius,0,90);
-%<cut2D>   for (i = [89 : -1 : 0]) {
-%<cut2D>         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
-%<cut2D>     setxpos(xcenter + radius * cos(i));
-%<cut2D>     setypos(ycenter + radius * sin(i));
-%<cut2D>   }
+%<cut2D>   dxfarc(tn,xcenter,ycenter,radius,0,90);
+%<cut2D>   settzpos((getzpos()-ez)/90);
+%<cut2D>     narcloop(89,0, xcenter, ycenter, radius);
 %<cut2D> }
 %<cut2D> 
 %<cut2D> module cutarcSECWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-%<cut2D>         dxfarc(tn,xcenter,ycenter,radius,270,360);
-%<cut2D>   for (i = [359 : -1 : 270]) {
-%<cut2D>         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
-%<cut2D>     setxpos(xcenter + radius * cos(i));
-%<cut2D>     setypos(ycenter + radius * sin(i));
-%<cut2D>   }
+%<cut2D>   dxfarc(tn,xcenter,ycenter,radius,270,360);
+%<cut2D>   settzpos((getzpos()-ez)/90);
+%<cut2D>     narcloop(359,270, xcenter, ycenter, radius);
 %<cut2D> }
 %<cut2D> 
 %<cut2D> module cutarcSWCWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-%<cut2D>         dxfarc(tn,xcenter,ycenter,radius,180,270);
-%<cut2D>   for (i = [269 : -1 : 180]) {
-%<cut2D>         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
-%<cut2D>     setxpos(xcenter + radius * cos(i));
-%<cut2D>     setypos(ycenter + radius * sin(i));
-%<cut2D>   }
+%<cut2D>   dxfarc(tn,xcenter,ycenter,radius,180,270);
+%<cut2D>   settzpos((getzpos()-ez)/90);
+%<cut2D>     narcloop(269,180, xcenter, ycenter, radius);
 %<cut2D> }
 %<cut2D> 
 %<cut2D> module cutarcNWCWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-%<cut2D>         dxfarc(tn,xcenter,ycenter,radius,90,180);
-%<cut2D>   for (i = [179 : -1 : 90]) {
-%<cut2D>         cut(xcenter + radius * cos(i),ycenter + radius * sin(i),ez);
-%<cut2D>     setxpos(xcenter + radius * cos(i));
-%<cut2D>     setypos(ycenter + radius * sin(i));
-%<cut2D>   }
+%<cut2D>   dxfarc(tn,xcenter,ycenter,radius,90,180);
+%<cut2D>   settzpos((getzpos()-ez)/90);
+%<cut2D>     narcloop(179,90, xcenter, ycenter, radius);
 %<cut2D> }
 %<cut2D> 
 %    \end{macrocode}
@@ -2177,13 +2221,38 @@
 % \subsection{Bézier curves in 3 dimensions}
 % 
 % One question is how many Bézier curves would it be necessary to have to define movement
-% in 3 dimensions --- in theory, just 2 should work and would map well to the motion of the
-% machine: 
+% in 3 dimensions. Attributes are desirable/necessary:
 % 
 % \begin{itemize}
-% \item An overhead view for position along X and Y
-% \item A side (or front?) view for motion along Z
+% \item concise --- a given Bézier curve should be represented by just the point coordinates, 
+%       so two on-curve points, two off-curve points, each with a pair of coordinates
+% \item For a given shape/region it will need to be possible to have a matching definition 
+%       exactly match up with it so that one could piece together a larger more complex shape 
+%       from smaller/simpler regions
+% \item similarly it will be necessary for it to be possible to sub-divide a defined region --- 
+%       for example it should be possible if one had 4 adjacent regions, then the four quadrants 
+%       at the intersection of the four regions could be used to construct a new region --- is it
+%       possible to derive a new Bézier curve from half of two other curves?
 % \end{itemize}
+%
+% For the three planes:
+%
+% \begin{itemize}
+% \item XY
+% \item XZ
+% \item ZY
+% \end{itemize}
+% 
+% \noindent it should be possible to have three Bézier curves (left-most/right-most or front-back or 
+% top/bottom for two, and a mid-line for the third), so any given region should be definable by:
+% 
+% \begin{verbatim}
+% 3 planes * 3 Béziers * (2 on-curve + 2 off-curve points) == 36 coordinate pairs
+% \end{verbatim}
+% 
+% \noindent which is a marked contrast to representations such as:
+% 
+% \url{https://github.com/DavidPhillipOster/Teapot}
 % 
 % \subsection{Shapes and tool movement}
 % 

@@ -13,6 +13,8 @@ def psetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin
     mpy = float(0)
     global mpz
     mpz = float(0)
+    global tpz
+    tpz = float(0)
     global currenttool
     currenttool = 102
 
@@ -28,6 +30,10 @@ def zpos():
     global mpz
     return mpz
 
+def tzpos():
+    global tpz
+    return tpz
+
 def psetxpos(newxpos):
     global mpx
     mpx = newxpos
@@ -39,6 +45,10 @@ def psetypos(newypos):
 def psetzpos(newzpos):
     global mpz
     mpz = newzpos
+
+def psettzpos(newtzpos):
+    global tpz
+    tpz = newtzpos
 
 def psettool(tn):
     global currenttool
