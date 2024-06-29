@@ -125,19 +125,14 @@
   - Specialty toolpaths such as Keyhole which may be used for dovetail as well as
     keyhole cutters
   - Support for curves along the 3rd dimension
-
- Deprecated feature:
-
-  - exporting SVGs --- while this was begun, it turns out that
-    these are written out upside down due to coordinate
-    differences between OpenSCAD/DXFs and SVGs (it is possible that METAPOST
-    will be used instead for future versions)
+  - support for roundover tooling
 
  Possible future improvements:
 
+  - support for additional tooling shapes such as tapered ball-nose tools
+    or lollipop cutters or thread-cutting tools
   - G-code: support for G2/G3 arcs and circles
   - G-code: import external tool libraries and feeds and speeds from JSON or CSV files ---
-  - support for additional tooling shapes such as roundover tooling
   - general coding improvements --- current coding style is quite prosaic
   - generalized modules for cutting out various shapes/geometries ---
     an in-process one is to cut a rectangular area as vertical passes
@@ -147,4 +142,10 @@
  so as to not take a single full-depth pass. Working from a DXF of course allows
  one to off-load such considerations to a specialized CAM tool.
 
+ Deprecated feature:
+
+  - exporting SVGs --- while this was begun, it turns out that
+    these are written out upside down due to coordinate system differences
+    between OpenSCAD/DXFs and SVGs (it is possible that METAPOST will be used
+    instead for future versions)
 

@@ -195,6 +195,53 @@
    }
  }
 
+ module radiuscut(bx, by, bz, ex, ey, ez, radiustn) {
+     if (radiustn == 56125) {
+         radiuscuttool(bx, by, bz, ex, ey, ez, 0.508/2, 1.531);
+     } else if (radiustn == 56142) {
+         radiuscuttool(bx, by, bz, ex, ey, ez, 0.508/2, 2.921);
+     } else if (radiustn == 312) {
+         radiuscuttool(bx, by, bz, ex, ey, ez, 1.524/2, 3.175);
+     } else if (radiustn == 1570) {
+         radiuscuttool(bx, by, bz, ex, ey, ez, 0.507/2, 4.509);
+     }
+ }
+
+ module radiuscuttool(bx, by, bz, ex, ey, ez, tool_radius_tip, tool_radius_width) {
+ n = 90 + $fn*3;
+ step = 360/n;
+
+ hull(){
+     translate([bx,by,bz])
+     cylinder(step,tool_radius_tip,tool_radius_tip);
+     translate([ex,ey,ez])
+     cylinder(step,tool_radius_tip,tool_radius_tip);
+     }
+
+ hull(){
+ translate([bx,by,bz+tool_radius_width])
+ cylinder(tool_radius_width*2,tool_radius_tip+tool_radius_width,tool_radius_tip+tool_radius_width);
+
+ translate([ex,ey,ez+tool_radius_width])
+   cylinder(tool_radius_width*2,tool_radius_tip+tool_radius_width,tool_radius_tip+tool_radius_width);
+     }
+
+ for (i=[0:step:90]) {
+     angle = i;
+     dx = tool_radius_width*cos(angle);
+     dxx = tool_radius_width*cos(angle+step);
+     dzz = tool_radius_width*sin(angle);
+     dz = tool_radius_width*sin(angle+step);
+     dh = dz-dzz;
+     hull(){
+     translate([bx,by,bz+dz])
+        cylinder(dh,tool_radius_tip+tool_radius_width-dx,tool_radius_tip+tool_radius_width-dxx);
+     translate([ex,ey,ez+dz])
+        cylinder(dh,tool_radius_tip+tool_radius_width-dx,tool_radius_tip+tool_radius_width-dxx);
+         }
+     }
+ }
+
   function tool_diameter(td_tool, td_depth) = otool_diameter(td_tool, td_depth);
  module opengcodefile(fn) {
  if (generategcode == true) {
@@ -623,4 +670,3 @@
  }
      orapid(getxpos(),getypos(),retractheight);
  }
-

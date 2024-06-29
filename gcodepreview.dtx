@@ -28,12 +28,14 @@
 \renewcommand{\MakeUppercase}[1]{#1}
 \pagestyle{headings}
 \setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{5}
 \EnableCrossrefs
 \CodelineIndex
 \usepackage{makeidx} 
 %\usepackage[columns=1]{idxlayout}
 %%% \OnlyDescription
 \setcounter{StandardModuleDepth}{1}
+\usepackage{fancyvrb} % for "\Verb" macro
 \begin{document}
   \DocInput{gcodepreview.dtx}
 \end{document}
@@ -195,19 +197,14 @@
 %<rdm>  - Specialty toolpaths such as Keyhole which may be used for dovetail as well as
 %<rdm>    keyhole cutters
 %<rdm>  - Support for curves along the 3rd dimension
-%<rdm> 
-%<rdm> Deprecated feature:
-%<rdm> 
-%<rdm>  - exporting SVGs --- while this was begun, it turns out that
-%<rdm>    these are written out upside down due to coordinate 
-%<rdm>    differences between OpenSCAD/DXFs and SVGs (it is possible that METAPOST 
-%<rdm>    will be used instead for future versions)
+%<rdm>  - support for roundover tooling
 %<rdm> 
 %<rdm> Possible future improvements:
 %<rdm> 
+%<rdm>  - support for additional tooling shapes such as tapered ball-nose tools
+%<rdm>    or lollipop cutters or thread-cutting tools
 %<rdm>  - G-code: support for G2/G3 arcs and circles
 %<rdm>  - G-code: import external tool libraries and feeds and speeds from JSON or CSV files ---
-%<rdm>  - support for additional tooling shapes such as roundover tooling
 %<rdm>  - general coding improvements --- current coding style is quite prosaic
 %<rdm>  - generalized modules for cutting out various shapes/geometries --- 
 %<rdm>    an in-process one is to cut a rectangular area as vertical passes 
@@ -217,6 +214,13 @@
 %<rdm> so as to not take a single full-depth pass. Working from a DXF of course allows
 %<rdm> one to off-load such considerations to a specialized CAM tool.
 %<rdm>
+%<rdm> Deprecated feature:
+%<rdm> 
+%<rdm>  - exporting SVGs --- while this was begun, it turns out that
+%<rdm>    these are written out upside down due to coordinate system differences
+%<rdm>    between OpenSCAD/DXFs and SVGs (it is possible that METAPOST will be used 
+%<rdm>    instead for future versions)
+%<rdm> 
 %    \end{macrocode}
 %
 % \section{gcodepreview}
@@ -585,6 +589,30 @@
 % read them in from an external file --- the .csv format used for tool libraries in Carbide Create
 % seems a likely candidate and worth exploring.
 % 
+% Note that there are many varieties of tooling and not all will be implemented in the initial 
+% version of this project
+% 
+% \begin{samepage}
+% \paragraph{Normal Tooling}
+% 
+% \label{para:normaltooling} Most tooling has quite standard shapes 
+% and are defined by their profile:
+% 
+% \begin{itemize}
+% \item Square (\#201 and 102) --- able to cut a flat bottom, perpendicular side and right angle
+%                                  their simple and easily understood geometry makes them a 
+%                                  standard choice (a radiused form with a flat bottom, often
+%                                  described as a ``bowl bit'' is not implemented in this version)
+% \item Ballnose (\#202 and 101) --- rounded, they are the standard choice for rounded and 
+%                                    organic shapes
+% \item V tooling (\#301, 302 and 390) --- pointed at the tip, they are available in a variety
+%                                          angles and diameters and may be used for decorative
+%                                          V carving, or for chamfering or cutting specific angles
+%                                          (note that the commonly available radiused form
+%                                          is not implemented at this time, see \#501 and 502)
+% \end{itemize}
+% \end{samepage}
+% 
 %    \begin{macrocode}
 %<gcpscad> module toolchange(tool_number,speed) {
 %<gcpscad>    osettool(tool_number); 
@@ -614,7 +642,8 @@
 % 
 % \label{para:undercuttooling} Keyhole toolpaths (see: subsection~\ref{subsec:keyholetoolpaths} 
 % are intended for use with tooling which projects beyond the the narrower shaft and so
-% will cut usefully underneath the visible surface.
+% will cut usefully underneath the visible surface. Also described as ``undercut'' tooling,
+% but see below.
 % 
 % \begin{samepage}
 % There are several notable candidates for such tooling:
@@ -642,6 +671,13 @@
 %<gcpscad> 	writecomment("TOOL/MILL,12.7, 6.367, 12.7, 0.00");
 %    \end{macrocode}
 % 
+% \paragraph{Thread mills}
+% 
+% \label{para:threadmills} The implementation of arcs cutting along the Z-axis raises the 
+% possibility of cutting threads using ``thread mills''. 
+% See: \url{https://community.carbide3d.com/t/thread-milling-in-metal-on-the-shapeoko-3/5332}
+% 
+%
 % Note that it will be necessary to to define modules (see below) for each tool shape.
 % 
 % With the tools delineated, the module is closed out and the tooling information written into
@@ -657,6 +693,15 @@
 %<gcpscad> 
 %    \end{macrocode}
 % 
+% 
+% \paragraph{Roundover tooling}
+% 
+% \label{para:roundover} It is not possible to represent all tools using tool changes 
+% as coded above which require using a \texttt{hull} operation between 3D representations
+% of the tools at the beginning and end points.  
+%
+% \paragraph{Selecting Tools}
+%
 % There must also be a module for selecting tools: \texttt{select\_tool} which will
 % \DescribeRoutine{selecttool} select the matching module for 3D modeling and pass the 
 % appropriate parameters to that module:
@@ -701,7 +746,14 @@
 %<gcpscad> 
 %    \end{macrocode}
 % 
-% Each tool must be modeled in 3D using an OpenSCAD module:
+% \subsubsection{3D Shapes for Tools}
+% 
+% Each tool must be modeled in 3D using an OpenSCAD module. 
+% 
+% \paragraph{Normal toolshapes}
+% 
+% Most tools are easily implemented with concise 3D descriptions which may be connected with
+% a simple \texttt{hull} operation:
 % 
 % \DescribeRoutine{gcp endmill square}
 %    \begin{macrocode}
@@ -753,6 +805,82 @@
 %<gcpscad> 
 %    \end{macrocode}
 % 
+% \paragraph{Concave toolshapes}
+% 
+% While normal tooling may be represented with a single \texttt{hull} operation betwixt two
+% 3D toolshapes, concave tooling such as roundover/radius tooling require multiple slices
+% of the tool shape which are then \texttt{hull}ed together. Something of this can be seen
+% in the manual work-around for previewing them: 
+% \url{https://community.carbide3d.com/t/using-unsupported-tooling-in-carbide-create-roundover-cove-radius-bits/43723}.
+% 
+% Ideally, it would be possible to simply identify such tooling using the tool \# in the
+% code used for normal toolshapes as above, but the most expedient option is to simply
+% use a specific command for this. Since such tooling is quite limited in its use and 
+% normally only used at the surface of the part along an edge, this separation is 
+% easily justified.
+% 
+% Because it is necessary to divide the tooling into vertical slices and call the hull operation 
+% for each slice the tool definitions are tightly coupled with the module. Note that there are 
+% two different modules, the public-facing version which includes the tool number:
+% \DescribeRoutine{radiuscut}
+% 
+%    \begin{macrocode}
+%<gcpscad> module radiuscut(bx, by, bz, ex, ey, ez, radiustn) {
+%<gcpscad>     if (radiustn == 56125) {
+%<gcpscad>         radiuscuttool(bx, by, bz, ex, ey, ez, 0.508/2, 1.531);
+%<gcpscad>     } else if (radiustn == 56142) {
+%<gcpscad>         radiuscuttool(bx, by, bz, ex, ey, ez, 0.508/2, 2.921);
+%<gcpscad>     } else if (radiustn == 312) {
+%<gcpscad>         radiuscuttool(bx, by, bz, ex, ey, ez, 1.524/2, 3.175);
+%<gcpscad>     } else if (radiustn == 1570) {
+%<gcpscad>         radiuscuttool(bx, by, bz, ex, ey, ez, 0.507/2, 4.509);
+%<gcpscad>     }
+%<gcpscad> }
+%<gcpscad> 
+%    \end{macrocode}
+%
+% \noindent which then calls the actual \texttt{radiuscuttool} module  
+% passing in the tip radius and the radius of the rounding. Note that this
+% module sets its quality relative to the value of \verb|$fn|.
+%
+%    \begin{macrocode}
+%<gcpscad> module radiuscuttool(bx, by, bz, ex, ey, ez, tool_radius_tip, tool_radius_width) {
+%<gcpscad> n = 90 + $fn*3;
+%<gcpscad> step = 360/n;
+%<gcpscad> 
+%<gcpscad> hull(){
+%<gcpscad>     translate([bx,by,bz])
+%<gcpscad>     cylinder(step,tool_radius_tip,tool_radius_tip);
+%<gcpscad>     translate([ex,ey,ez])
+%<gcpscad>     cylinder(step,tool_radius_tip,tool_radius_tip);
+%<gcpscad>     }
+%<gcpscad> 
+%<gcpscad> hull(){
+%<gcpscad> translate([bx,by,bz+tool_radius_width])
+%<gcpscad> cylinder(tool_radius_width*2,tool_radius_tip+tool_radius_width,tool_radius_tip+tool_radius_width);
+%<gcpscad> 
+%<gcpscad> translate([ex,ey,ez+tool_radius_width])
+%<gcpscad>   cylinder(tool_radius_width*2,tool_radius_tip+tool_radius_width,tool_radius_tip+tool_radius_width);
+%<gcpscad>     }
+%<gcpscad> 
+%<gcpscad> for (i=[0:step:90]) {
+%<gcpscad>     angle = i;
+%<gcpscad>     dx = tool_radius_width*cos(angle);
+%<gcpscad>     dxx = tool_radius_width*cos(angle+step);
+%<gcpscad>     dzz = tool_radius_width*sin(angle);
+%<gcpscad>     dz = tool_radius_width*sin(angle+step);
+%<gcpscad>     dh = dz-dzz;
+%<gcpscad>     hull(){
+%<gcpscad>     translate([bx,by,bz+dz])
+%<gcpscad>        cylinder(dh,tool_radius_tip+tool_radius_width-dx,tool_radius_tip+tool_radius_width-dxx);
+%<gcpscad>     translate([ex,ey,ez+dz])
+%<gcpscad>        cylinder(dh,tool_radius_tip+tool_radius_width-dx,tool_radius_tip+tool_radius_width-dxx);
+%<gcpscad>         }
+%<gcpscad>     }
+%<gcpscad> }
+%<gcpscad> 
+%    \end{macrocode}
+%
 % \subsubsection{tooldiameter}
 % 
 % It will also be necessary to be able to provide the diameter of the current tool.
@@ -2215,13 +2343,12 @@
 %<cut2D>  setypos(getypos()+kh_length);
 %<cut2D>   }
 %<cut2D> }
-
 %    \end{macrocode}
 % 
 % \subsection{Bézier curves in 3 dimensions}
 % 
-% One question is how many Bézier curves would it be necessary to have to define movement
-% in 3 dimensions. Attributes are desirable/necessary:
+% One question is how many Bézier curves would it be necessary to have to define a surface
+% in 3 dimensions. Attributes for this which are desirable/necessary:
 % 
 % \begin{itemize}
 % \item concise --- a given Bézier curve should be represented by just the point coordinates, 

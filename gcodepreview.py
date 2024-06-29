@@ -248,4 +248,3 @@ def pclosedxfDTfile():
 def pclosedxfKHfile():
     dxfKH.close()
 
-
