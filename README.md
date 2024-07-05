@@ -9,12 +9,12 @@
 
  ![OpenSCAD Cut Joinery Module](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/openscad_cutjoinery.png?raw=true)
 
- Updated to make use of Python in OpenSCAD:
+ Updated to make use of Python in OpenSCAD:[^rapcad]
+
+ [^rapcad:] Previous versions had used RapCAD, so as to take advantage of the writeln
+ command, which has since been re-written in Python.
 
  https://pythonscad.org/ (previously this was http://www.guenther-sohler.net/openscad/ )
-
- (previous versions had used RapCAD, so as to take advantage of the writeln
- command, which has since been re-written in Python)
 
  A BlockSCAD file for the initial version of the main modules is available at:
 
@@ -32,18 +32,21 @@
 
  https://willadams.gitbook.io/design-into-3d/programming
 
- The files are:
+ Since it is now programmed using Literate Programming (.dtx) there is a PDF:
+ https://github.com/WillAdams/gcodepreview/blob/main/gcodepreview.pdf
+ which includes all of the source code with formatted commentary.
 
-  - gcodepreview.py (gcpy)
-  - pygcodepreview.scad (pyscad)
-  - gcodepreview.scad(gcpscad)
-  - gcodepreview_template.scad (gcptmpl)
-  - cut2Dshapes.scad (cut2D)
+ The files for this library are:
 
- Usage is:
+  - gcodepreview.py (gcpy) --- the Python core
+  - pygcodepreview.scad (pyscad) --- the Python functions wrapped in OpenSCAD
+  - gcodepreview.scad(gcpscad) --- OpenSCAD modules and variables
+  - gcodepreview_template.scad (gcptmpl) --- example file
+  - cut2Dshapes.scad (cut2D) --- code for cutting 2D shapes
 
- Place the files in C:\Users\\\~\Documents\OpenSCAD\libraries
- (C:\Users\\\~\Documents\RapCAD\libraries is deprecated since RapCAD is no longer
+ Place the files in C:\Users\\\~\Documents\OpenSCAD\libraries and call as:[^libraries]
+
+ [^libraries:] C:\Users\\\~\Documents\RapCAD\libraries is deprecated since RapCAD is no longer
  needed since Python is now used for writing out files)
 
      use <gcodepreview.py>;
