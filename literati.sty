@@ -1,0 +1,222 @@
+%\chapterstyle{bringhurst}
+\usepackage[T1]{fontenc}
+\usepackage[lighttt]{lmodern}
+%\renewcommand{\ttdefault}{pcr}
+\usepackage[sc,osf]{mathpazo} % add possibly `sc` and `osf` options
+\usepackage[euler-digits]{eulervm}
+\usepackage{ifthen}
+
+%\documentclass{article}
+
+\usepackage{url}
+\usepackage[draft=false,
+            plainpages=false,
+            pdfpagelabels,
+            bookmarksnumbered,
+            hyperindex=false
+           ]{hyperref}
+\makeatletter
+  \@mparswitchfalse
+\makeatother
+\renewcommand{\MakeUppercase}[1]{#1}
+\pagestyle{headings}
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{5}
+%\EnableCrossrefs
+\usepackage{makeidx} 
+\usepackage{graphicx}
+\usepackage{calc}
+
+
+%\usepackage[T1]{fontenc}
+
+%https://tex.stackexchange.com/questions/722886/how-to-write-out-multiple-text-files-from-multiple-instances-of-latex-environmen?noredirect=1#comment1799252_722886
+\usepackage{xsimverb}
+\usepackage{xparse}
+%https://tex.stackexchange.com/questions/37792/write-environment-body-verbatim-to-a-file
+\makeatletter
+\RequirePackage{listings}
+\lst@RequireAspects{writefile}
+
+\lstnewenvironment{readme}{%
+  \noindent\includegraphics[page=2, width=\linewidth/3]{readme.pdf}%
+  \noindent\includegraphics[page=3, width=\linewidth/3]{readme.pdf}%
+  \noindent\includegraphics[page=4, width=\linewidth/3]{readme.pdf}%
+  % some code before
+  % including \lstset{..}
+  % Write file to given filename
+%  \lst@BeginWriteFile{readme.md}%
+}%
+{%
+%  \lst@EndWriteFile% closes output file
+\lstset{basicstyle=\scriptsize\ttfamily,breaklines=true}%
+%\lstinputlisting{readme.md}%
+}
+\makeatother
+
+\newcommand{\lstprompt}{\ rdme}
+\renewcommand*\thelstnumber{{\the\value{lstnumber}}\lstprompt}
+
+%\lstalias{scad}{c}
+
+\lstdefinelanguage{scad} {morekeywords={assert, children, circle, concat, cube, cylinder, difference, echo, else, for, function, hull, if, import, include, let, minkowski, mirror, module, offset, projection, render, resize, return, rotate, scale, sphere, square, translate, union, use}}
+ 
+\newcounter{gcpy}
+\newcounter{pyscad}
+\newcounter{gcpscad}
+\newcounter{gcptmpl}
+\newcounter{cuttwod}
+\newcounter{rdme}
+\setcounter{rdme}{0}
+
+\makeatletter
+\newcommand{\updatelineno}[1]{%
+%  \ExpandArgs{ne}\newcommand{#1}{\the\lst@lineno}%
+%\ifthenelse{{\value{rdme}}\equals{0}}{\setcounter{rdme}{1}}{\setcounter{#1}{\lst@lineno}}
+\ifnum\therdme=0
+    \setcounter{rdme}{1}
+    \setcounter{gcpy}{2}
+\else
+\ExpandArgs{ne}\setcounter{#1}{\the\lst@lineno}
+\stepcounter{#1}
+%    \setcounter{#1}{\the\lst@lineno}
+\fi
+Last line was \the\lst@lineno\ for #1\ gcpy\ \thegcpy\ pyscad\ \thepyscad\ gcpscad\ \thegcpscad 
+}
+\makeatother
+
+\ExplSyntaxOn
+
+\cs_new:Npn \doc_copy_file_content:nN  #1#2
+{
+    \ior_open:Nn \g_tmpa_ior {#1}
+    \ior_str_map_inline:Nn \g_tmpa_ior
+    {
+        \iow_now:Nn #2 {##1}
+    }
+    \ior_close:N \g_tmpa_ior
+}
+
+
+\prop_new:N \g_doc_counter_lut_prop
+\tl_new:N \l_doc_counter_tl
+
+\NewDocumentEnvironment{writecode}{mmm}
+{
+    \str_case:nnF {#2}
+    {
+        {gcodepreview.py}
+        {
+            \renewcommand{\lstprompt}{\ gcpy}
+%            \lstset{firstnumber=\thegcpy}
+        }
+        {pygcodepreview.scad}
+        {
+            \renewcommand{\lstprompt}{\ pyscad}
+%            \lstset{firstnumber=\thepyscad}
+        }
+        {gcodepreview.scad}
+        {
+            \renewcommand{\lstprompt}{\ gcpscad}
+%            \lstset{firstnumber=\thegcpscad}
+        }
+        {gcodepreviewtemplate.scad}
+        {
+            \renewcommand{\lstprompt}{\ gcptmpl}
+        }
+        {cut2Dshapes.scad}
+        {
+            \renewcommand{\lstprompt}{\ cut2D}
+        }
+    }
+    {
+        \GenericError{}{unknown~filename~"#1"}{}{}
+    }
+    \XSIMfilewritestart{\jobname-writecode.vrb}
+}
+{
+    % firstly, we write the verbatim body to a temporary file
+    \XSIMfilewritestop
+    % then, we do different things based on mode
+    
+    \str_case:nnF {#1}
+    {
+        {w}
+        {
+            % reset counter
+            \prop_gput:Nnn \g_doc_counter_lut_prop {#2} {1}
+            \iow_open:Nn \g_tmpa_iow {#2-1.vrb}
+            \doc_copy_file_content:nN {\jobname-writecode.vrb} \g_tmpa_iow
+            \iow_close:N \g_tmpa_iow
+            
+        }
+        {a}
+        {
+            % append mode
+            % get and increment counter
+            \prop_get:NnNF \g_doc_counter_lut_prop {#2} \l_doc_counter_tl
+            {
+                \GenericError{}{invalid~filename~to~append~("#2")}{}{}
+            }
+            \tl_set:Nx \l_doc_counter_tl {\int_eval:n {\l_doc_counter_tl + 1}}
+            \prop_gput:NnV \g_doc_counter_lut_prop {#2} \l_doc_counter_tl
+
+            % write current content to output
+            \exp_args:NNx \iow_open:Nn \g_tmpa_iow {#2-\l_doc_counter_tl.vrb}
+            \doc_copy_file_content:nN {\jobname-writecode.vrb} \g_tmpa_iow
+            \iow_close:N \g_tmpa_iow
+        }
+    }
+    {
+        \GenericError{}{unknown~mode~"#1"}{}{}
+    }
+%    \str_case:nnF {#2}
+%    {
+%        {gcodepreview.py}
+%        {
+%            \setcounter{gcpy}{\the\lst@lineno}
+%        }
+%        {pygcodepreview.scad}
+%        {
+%            \updatelineno{pyscad}
+%        }
+%        {gcodepreview.scad}
+%        {
+%            \updatelineno{gcpscad}
+%        }
+%    }
+%    {
+%        \GenericError{}{unknown~filename~"#1"}{}{}
+%    }
+    
+    \lstinputlisting[language={#3}]{\jobname-writecode.vrb}
+}
+
+
+% call this function to merge all subfiles to one file
+\cs_new:Npn  \MergeAllFiles #1
+{
+    \prop_get:NnNF \g_doc_counter_lut_prop {#1} \l_doc_counter_tl
+    {
+        \GenericError{}{invalid~filename~("#1")}{}{}
+    }
+    \iow_open:Nn \g_tmpa_iow {#1}
+    \int_step_inline:nn {\l_doc_counter_tl}
+    {
+        \doc_copy_file_content:nN {#1-##1.vrb} \g_tmpa_iow
+    }
+    \iow_close:N \g_tmpa_iow
+}
+
+\ExplSyntaxOff
+
+\newlength{\listingsindent}
+\setlength{\listingsindent}{48bp}
+
+\newlength{\listingswidth}
+\setlength{\listingswidth}{\textwidth-\listingsindent}
+
+
+\lstset{numbers=left, numberstyle=\footnotesize\ttfamily, stepnumber=1, numbersep=5pt, frame=lines, basicstyle=\small\ttfamily, breaklines=true, aboveskip=\baselineskip, belowskip=\baselineskip, linewidth=\listingswidth, xleftmargin=\listingsindent, xrightmargin=-\listingsindent}
+%, name=gcodepreview.py
+\usepackage{upquote}
