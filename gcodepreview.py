@@ -6,6 +6,7 @@ def writeln(*arguments):
         line_to_write += element
     f.write(line_to_write)
     f.write("\n")
+
 def psetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin):
     global mpx
     mpx = float(0)
@@ -130,14 +131,10 @@ def popendxDTfile(fn):
     global dxfDT
     dxfDT = open(fn, "w")
 
-def popensvgfile(fn):
-    global svg
-    svg = open(fn, "w")
-
 def writedxf(*arguments):
     line_to_write = ""
     for element in arguments:
-        line_to_write += element
+       line_to_write += element
     dxf.write(line_to_write)
     dxf.write("\n")
 
@@ -204,16 +201,6 @@ def writedxfDT(*arguments):
     dxfDT.write(line_to_write)
     print(line_to_write)
     dxfDT.write("\n")
-
-def writesvg(*arguments):
-    line_to_write = ""
-    for element in arguments:
-        line_to_write += element
-    svg.write(line_to_write)
-    print(line_to_write)
-
-def pwritesvgline():
-    svg.write("\n")
 
 def pclosegcodefile():
     f.close()
