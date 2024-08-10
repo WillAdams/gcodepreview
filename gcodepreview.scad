@@ -1,6 +1,6 @@
 //!OpenSCAD
 
-//gcodepreview 0.3
+//gcodepreview 0.4
 //
 //used via use <gcodepreview.py>;
 //         use <pygcodepreview.scad>;
@@ -8,45 +8,45 @@
 //
 
 module oset(ex, ey, ez) {
-setxpos(ex);
-setypos(ey);
-setzpos(ez);
+    setxpos(ex);
+    setypos(ey);
+    setzpos(ez);
 }
 
 module osettz(tz) {
-settzpos(tz);
+    settzpos(tz);
 }
 
 module toolchange(tool_number,speed) {
    osettool(tool_number);
 if (generategcode == true) {
-	writecomment("Toolpath");
-	owriteone("M05");
-//	writecomment("Move to safe Z to avoid workholding");
-//	owriteone("G53G0Z-5.000");
+    writecomment("Toolpath");
+    owriteone("M05");
+//    writecomment("Move to safe Z to avoid workholding");
+//    owriteone("G53G0Z-5.000");
 //    writecomment("Begin toolpath");
-  if (tool_number == 201) {
-	writecomment("TOOL/MILL,6.35, 0.00, 0.00, 0.00");
-  } else if (tool_number == 202) {
-	writecomment("TOOL/MILL,6.35, 3.17, 0.00, 0.00");
-  } else if (tool_number == 102) {
-	writecomment("TOOL/MILL,3.17, 0.00, 0.00, 0.00");
-  } else if (tool_number == 101) {
-	writecomment("TOOL/MILL,3.17, 1.58, 0.00, 0.00");
-  } else if (tool_number == 301) {
-	writecomment("TOOL/MILL,0.03, 0.00, 6.35, 45.00");
-  } else if (tool_number == 302) {
-	writecommment("TOOL/MILL,0.03, 0.00, 10.998, 30.00");
-  } else if (tool_number == 390) {
-	writecomment("TOOL/MILL,0.03, 0.00, 1.5875, 45.00");
+    if (tool_number == 201) {
+      writecomment("TOOL/MILL,6.35, 0.00, 0.00, 0.00");
+    } else if (tool_number == 202) {
+      writecomment("TOOL/MILL,6.35, 3.17, 0.00, 0.00");
+    } else if (tool_number == 102) {
+      writecomment("TOOL/MILL,3.17, 0.00, 0.00, 0.00");
+    } else if (tool_number == 101) {
+      writecomment("TOOL/MILL,3.17, 1.58, 0.00, 0.00");
+    } else if (tool_number == 301) {
+      writecomment("TOOL/MILL,0.03, 0.00, 6.35, 45.00");
+    } else if (tool_number == 302) {
+      writecommment("TOOL/MILL,0.03, 0.00, 10.998, 30.00");
+    } else if (tool_number == 390) {
+      writecomment("TOOL/MILL,0.03, 0.00, 1.5875, 45.00");
    } else if (tool_number == 375) {
-	writecomment("TOOL/MILL,9.53, 0.00, 3.17, 0.00");
+     writecomment("TOOL/MILL,9.53, 0.00, 3.17, 0.00");
    } else if (tool_number == 814) {
-	writecomment("TOOL/MILL,12.7, 6.367, 12.7, 0.00");
+     writecomment("TOOL/MILL,12.7, 6.367, 12.7, 0.00");
    }
-    select_tool(tool_number);
-    owritetwo("M6T",str(tool_number));
-    owritetwo("M03S",str(speed));
+     select_tool(tool_number);
+     owritetwo("M6T",str(tool_number));
+     owritetwo("M03S",str(speed));
  }
 }
 
@@ -124,7 +124,7 @@ hull(){
     cylinder(step,tool_radius_tip,tool_radius_tip);
     translate([ex,ey,ez])
     cylinder(step,tool_radius_tip,tool_radius_tip);
-    }
+}
 
 hull(){
 translate([bx,by,bz+tool_radius_width])
@@ -132,7 +132,7 @@ cylinder(tool_radius_width*2,tool_radius_tip+tool_radius_width,tool_radius_tip+t
 
 translate([ex,ey,ez+tool_radius_width])
   cylinder(tool_radius_width*2,tool_radius_tip+tool_radius_width,tool_radius_tip+tool_radius_width);
-    }
+}
 
 for (i=[0:step:90]) {
     angle = i;
@@ -142,60 +142,60 @@ for (i=[0:step:90]) {
     dz = tool_radius_width*sin(angle+step);
     dh = dz-dzz;
     hull(){
-    translate([bx,by,bz+dz])
-       cylinder(dh,tool_radius_tip+tool_radius_width-dx,tool_radius_tip+tool_radius_width-dxx);
-    translate([ex,ey,ez+dz])
-       cylinder(dh,tool_radius_tip+tool_radius_width-dx,tool_radius_tip+tool_radius_width-dxx);
+        translate([bx,by,bz+dz])
+            cylinder(dh,tool_radius_tip+tool_radius_width-dx,tool_radius_tip+tool_radius_width-dxx);
+        translate([ex,ey,ez+dz])
+            cylinder(dh,tool_radius_tip+tool_radius_width-dx,tool_radius_tip+tool_radius_width-dxx);
         }
     }
 }
 
 function tool_diameter(td_tool, td_depth) = otool_diameter(td_tool, td_depth);
 
-function otool_diameter(td_tool, td_depth) = ptool_diameter(td_tool, td_depth);
+function tool_radius(td_tool, td_depth) = otool_diameter(td_tool, td_depth)/2;
 
 module opengcodefile(fn) {
 if (generategcode == true) {
-	oopengcodefile(fn);
+    oopengcodefile(fn);
     echo(fn);
     owritecomment(fn);
     }
 }
 
 module opendxffile(fn) {
-if (generatedxf == true) {
-	oopendxffile(str(fn,".dxf"));
+  if (generatedxf == true) {
+      oopendxffile(str(fn,".dxf"));
 //    echo(fn);
-    dxfwriteone("0");
-    dxfwriteone("SECTION");
-    dxfwriteone("2");
-    dxfwriteone("ENTITIES");
-if (large_ball_tool_no >  0) {	oopendxflgblfile(str(fn,".",large_ball_tool_no,".dxf"));
-    dxfpreamble(large_ball_tool_no);
-}
-if (large_square_tool_no >  0) {	oopendxflgsqfile(str(fn,".",large_square_tool_no,".dxf"));
-    dxfpreamble(large_square_tool_no);
-}
-if (large_V_tool_no >  0) {	oopendxflgVfile(str(fn,".",large_V_tool_no,".dxf"));
-    dxfpreamble(large_V_tool_no);
-}
-if (small_ball_tool_no >  0) { oopendxfsmblfile(str(fn,".",small_ball_tool_no,".dxf"));
-    dxfpreamble(small_ball_tool_no);
-}
-if (small_square_tool_no >  0) {	oopendxfsmsqfile(str(fn,".",small_square_tool_no,".dxf"));
+      dxfwriteone("0");
+      dxfwriteone("SECTION");
+      dxfwriteone("2");
+      dxfwriteone("ENTITIES");
+    if (large_ball_tool_no >  0) {    oopendxflgblfile(str(fn,".",large_ball_tool_no,".dxf"));
+      dxfpreamble(large_ball_tool_no);
+    }
+    if (large_square_tool_no >  0) {    oopendxflgsqfile(str(fn,".",large_square_tool_no,".dxf"));
+      dxfpreamble(large_square_tool_no);
+    }
+    if (large_V_tool_no >  0) {    oopendxflgVfile(str(fn,".",large_V_tool_no,".dxf"));
+      dxfpreamble(large_V_tool_no);
+    }
+    if (small_ball_tool_no >  0) { oopendxfsmblfile(str(fn,".",small_ball_tool_no,".dxf"));
+      dxfpreamble(small_ball_tool_no);
+    }
+    if (small_square_tool_no >  0) {    oopendxfsmsqfile(str(fn,".",small_square_tool_no,".dxf"));
 //    echo(str("tool no",small_square_tool_no));
-    dxfpreamble(small_square_tool_no);
-}
-if (small_V_tool_no >  0) {	oopendxfsmVfile(str(fn,".",small_V_tool_no,".dxf"));
-    dxfpreamble(small_V_tool_no);
-}
-if (KH_tool_no >  0) {	oopendxfKHfile(str(fn,".",KH_tool_no,".dxf"));
-    dxfpreamble(KH_tool_no);
-}
-if (DT_tool_no >  0) {	oopendxfDTfile(str(fn,".",DT_tool_no,".dxf"));
-    dxfpreamble(DT_tool_no);
-}
-}
+      dxfpreamble(small_square_tool_no);
+    }
+    if (small_V_tool_no >  0) {    oopendxfsmVfile(str(fn,".",small_V_tool_no,".dxf"));
+      dxfpreamble(small_V_tool_no);
+    }
+    if (KH_tool_no >  0) {    oopendxfKHfile(str(fn,".",KH_tool_no,".dxf"));
+      dxfpreamble(KH_tool_no);
+    }
+    if (DT_tool_no >  0) {    oopendxfDTfile(str(fn,".",DT_tool_no,".dxf"));
+      dxfpreamble(DT_tool_no);
+    }
+  }
 }
 
 module dxfwrite(tn,arg) {
@@ -263,7 +263,7 @@ if (generatedxf == true) {
     dxfwriteone("20");
     dxfwriteone(str(yend));
     dxfpl(tn,xbegin,ybegin,xend,yend);
-}
+    }
 }
 
 module dxfa(tn,xcenter,ycenter,radius,anglebegin,endangle) {
@@ -295,8 +295,8 @@ if (generatedxf == true) {
     dxfwriteone(str(anglebegin));
     dxfwriteone("51");
     dxfwriteone(str(endangle));
-	dxfa(tn,xcenter,ycenter,radius,anglebegin,endangle);
-}
+    dxfa(tn,xcenter,ycenter,radius,anglebegin,endangle);
+    }
 }
 
 module dxfbpl(tn,bx,by) {
@@ -378,25 +378,25 @@ module dxfcpl(tn) {
 }
 
 module closepolyline() {
-if (generatedxf == true) {
+  if (generatedxf == true) {
     dxfwriteone("0");
     dxfwriteone("SEQEND");
     dxfcpl(current_tool());
-    }
+  }
 }
 
 module writecomment(comment) {
-if (generategcode == true) {
-	owritecomment(comment);
-}
+  if (generategcode == true) {
+    owritecomment(comment);
+  }
 }
 
 module closegcodefile() {
-if (generategcode == true) {
+  if (generategcode == true) {
     owriteone("M05");
     owriteone("M02");
-	oclosegcodefile();
-}
+    oclosegcodefile();
+  }
 }
 
 module dxfpostamble(arg) {
@@ -407,46 +407,38 @@ module dxfpostamble(arg) {
 }
 
 module closedxffile() {
-if (generatedxf == true) {
+  if (generatedxf == true) {
     dxfwriteone("0");
     dxfwriteone("ENDSEC");
     dxfwriteone("0");
     dxfwriteone("EOF");
-	oclosedxffile();
+    oclosedxffile();
     echo("CLOSING");
-if (large_ball_tool_no >  0) {	dxfpostamble(large_ball_tool_no);
-    oclosedxflgblfile();
-}
-if (large_square_tool_no >  0) {	dxfpostamble(large_square_tool_no);
-    oclosedxflgsqfile();
-}
-if (large_V_tool_no >  0) {	dxfpostamble(large_V_tool_no);
-    oclosedxflgVfile();
-}
-if (small_ball_tool_no >  0) {	dxfpostamble(small_ball_tool_no);
-    oclosedxfsmblfile();
-}
-if (small_square_tool_no >  0) {	dxfpostamble(small_square_tool_no);
-    oclosedxfsmsqfile();
-}
-if (small_V_tool_no >  0) {	dxfpostamble(small_V_tool_no);
-    oclosedxfsmVfile();
-}
-if (DT_tool_no >  0) {	dxfpostamble(DT_tool_no);
-    oclosedxfDTfile();
-}
-if (KH_tool_no >  0) {	dxfpostamble(KH_tool_no);
-    oclosedxfKHfile();
-}
+    if (large_ball_tool_no >  0) {    dxfpostamble(large_ball_tool_no);
+      oclosedxflgblfile();
     }
-}
-
-module closesvgfile() {
-if (generatesvg == true) {
-    svgwriteone("</svg> ");
-	oclosesvgfile();
-    echo("CLOSING SVG");
+    if (large_square_tool_no >  0) {    dxfpostamble(large_square_tool_no);
+      oclosedxflgsqfile();
     }
+    if (large_V_tool_no >  0) {    dxfpostamble(large_V_tool_no);
+      oclosedxflgVfile();
+    }
+    if (small_ball_tool_no >  0) {    dxfpostamble(small_ball_tool_no);
+      oclosedxfsmblfile();
+    }
+    if (small_square_tool_no >  0) {    dxfpostamble(small_square_tool_no);
+      oclosedxfsmsqfile();
+    }
+    if (small_V_tool_no >  0) {    dxfpostamble(small_V_tool_no);
+      oclosedxfsmVfile();
+    }
+    if (DT_tool_no >  0) {    dxfpostamble(DT_tool_no);
+      oclosedxfDTfile();
+    }
+    if (KH_tool_no >  0) {    dxfpostamble(KH_tool_no);
+      oclosedxfKHfile();
+    }
+  }
 }
 
 module otm(ex, ey, ez, r,g,b) {
@@ -462,107 +454,109 @@ oset(ex, ey, ez);
 }
 
 module ocut(ex, ey, ez) {
-//color([0.2,1,0.2]) hull(){
-otm(ex, ey, ez, 0.2,1,0.2);
+  //color([0.2,1,0.2]) hull(){
+  otm(ex, ey, ez, 0.2,1,0.2);
 }
 
 module orapid(ex, ey, ez) {
-//color([0.93,0,0]) hull(){
-otm(ex, ey, ez, 0.93,0,0);
+  //color([0.93,0,0]) hull(){
+  otm(ex, ey, ez, 0.93,0,0);
 }
 
 module rapidbx(bx, by, bz, ex, ey, ez) {
-//	writeln("G0 X",bx," Y", by, "Z", bz);
-if (generategcode == true) {
-	writecomment("rapid");
-	owritesix("G0 X",str(ex)," Y", str(ey), " Z", str(ez));
-}
+  //    writeln("G0 X",bx," Y", by, "Z", bz);
+  if (generategcode == true) {
+    writecomment("rapid");
+    owritesix("G0 X",str(ex)," Y", str(ey), " Z", str(ez));
+  }
     orapid(ex, ey, ez);
 }
 
 module rapid(ex, ey, ez) {
-//	writeln("G0 X",bx," Y", by, "Z", bz);
-if (generategcode == true) {
-	writecomment("rapid");
-	owritesix("G0 X",str(ex)," Y", str(ey), " Z", str(ez));
-}
-    orapid(ex, ey, ez);
+  //    writeln("G0 X",bx," Y", by, "Z", bz);
+  if (generategcode == true) {
+      writecomment("rapid");
+      owritesix("G0 X",str(ex)," Y", str(ey), " Z", str(ez));
+  }
+  orapid(ex, ey, ez);
 }
 
 module movetosafez() {
-//this should be move to retract height
-if (generategcode == true) {
-	writecomment("Move to safe Z to avoid workholding");
-    owriteone("G53G0Z-5.000");
-}
-    orapid(getxpos(), getypos(), retractheight+55);
+  //this should be move to retract height
+  if (generategcode == true) {
+      writecomment("Move to safe Z to avoid workholding");
+      owriteone("G53G0Z-5.000");
+  }
+  orapid(getxpos(), getypos(), retractheight+55);
 }
 
 module begintoolpath(bx,by,bz) {
-if (generategcode == true) {
-	writecomment("PREPOSITION FOR RAPID PLUNGE");
+  if (generategcode == true) {
+    writecomment("PREPOSITION FOR RAPID PLUNGE");
     owritefour("G0X", str(bx), "Y",str(by));
     owritetwo("Z", str(bz));
-    }
-    orapid(bx,by,bz);
+  }
+  orapid(bx,by,bz);
 }
 
 module movetosafeheight() {
-//this should be move to machine position
-if (generategcode == true) {
-//	writecomment("PREPOSITION FOR RAPID PLUNGE");Z25.650
-//G1Z24.663F381.0 ,"F",str(plunge)
-if (zeroheight == "Top") {
-    owritetwo("Z",str(retractheight));
-}
-}
+  //this should be move to machine position
+  if (generategcode == true) {
+  //    writecomment("PREPOSITION FOR RAPID PLUNGE");Z25.650
+  //G1Z24.663F381.0 ,"F",str(plunge)
+    if (zeroheight == "Top") {
+      owritetwo("Z",str(retractheight));
+    }
+  }
     orapid(getxpos(), getypos(), retractheight+55);
 }
 
 module cutoneaxis_setfeed(axis,depth,feed) {
-if (generategcode == true) {
-//	writecomment("PREPOSITION FOR RAPID PLUNGE");Z25.650
-//G1Z24.663F381.0 ,"F",str(plunge) G1Z7.612F381.0
-if (zeroheight == "Top") {
-    owritefive("G1",axis,str(depth),"F",str(feed));
-}
-}
-if (axis == "X") {setxpos(depth);
-ocut(depth, getypos(), getzpos());}
-if (axis == "Y") {setypos(depth);
-ocut(getxpos(), depth, getzpos());}
-if (axis == "Z") {setzpos(depth);
-ocut(getxpos(), getypos(), depth);}
+  if (generategcode == true) {
+  //    writecomment("PREPOSITION FOR RAPID PLUNGE");Z25.650
+  //G1Z24.663F381.0 ,"F",str(plunge) G1Z7.612F381.0
+    if (zeroheight == "Top") {
+      owritefive("G1",axis,str(depth),"F",str(feed));
+    }
+  }
+  if (axis == "X") {setxpos(depth);
+    ocut(depth, getypos(), getzpos());}
+    if (axis == "Y") {setypos(depth);
+      ocut(getxpos(), depth, getzpos());
+    }
+      if (axis == "Z") {setzpos(depth);
+        ocut(getxpos(), getypos(), depth);
+      }
 }
 
 module cut(ex, ey, ez) {
-//	writeln("G0 X",bx," Y", by, "Z", bz);
-if (generategcode == true) {
-	owritesix("G1 X",str(ex)," Y", str(ey), " Z", str(ez));
-}
-//if (generatesvg == true) {
-//	owritesix("G1 X",str(ex)," Y", str(ey), " Z", str(ez));
-//    orapid(getxpos(), getypos(), retractheight+5);
-//    writesvgline(getxpos(),getypos(),ex,ey);
-//}
-ocut(ex, ey, ez);
+  //    writeln("G0 X",bx," Y", by, "Z", bz);
+  if (generategcode == true) {
+     owritesix("G1 X",str(ex)," Y", str(ey), " Z", str(ez));
+  }
+  //if (generatesvg == true) {
+  //    owritesix("G1 X",str(ex)," Y", str(ey), " Z", str(ez));
+  //    orapid(getxpos(), getypos(), retractheight+5);
+  //    writesvgline(getxpos(),getypos(),ex,ey);
+  //}
+  ocut(ex, ey, ez);
 }
 
 module cutwithfeed(ex, ey, ez, feed) {
-//	writeln("G0 X",bx," Y", by, "Z", bz);
-if (generategcode == true) {
-//	writecomment("rapid");
-	owriteeight("G1 X",str(ex)," Y", str(ey), " Z", str(ez),"F",str(feed));
-}
-ocut(ex, ey, ez);
+  //    writeln("G0 X",bx," Y", by, "Z", bz);
+  if (generategcode == true) {
+  //    writecomment("rapid");
+    owriteeight("G1 X",str(ex)," Y", str(ey), " Z", str(ez),"F",str(feed));
+  }
+  ocut(ex, ey, ez);
 }
 
 module endtoolpath() {
-if (generategcode == true) {
-//Z31.750
-//	owriteone("G53G0Z-5.000");
+  if (generategcode == true) {
+  //Z31.750
+  //    owriteone("G53G0Z-5.000");
     owritetwo("Z",str(retractheight));
-}
-    orapid(getxpos(),getypos(),retractheight);
+  }
+  orapid(getxpos(),getypos(),retractheight);
 }
 

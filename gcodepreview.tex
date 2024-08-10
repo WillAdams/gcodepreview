@@ -13,14 +13,12 @@
 \documentclass{ltxdoc}
 %https://tex.stackexchange.com/questions/722886/how-to-write-out-multiple-text-files-from-multiple-instances-of-latex-environmen
 \usepackage{literati}
-\usepackage[paper=legalpaper,left=1.5in,right=1in,top=1in,bottom=1in]{geometry}
+\usepackage[paper=legalpaper,left=1.75in,right=0.75in,top=1in,bottom=1in]{geometry}
 \usepackage{docmfp}
 \begin{document}
 
 %\DoNotIndex{\bullet}
 
-\enlargethispage{\baselineskip}
- 
 %\changes{v0.4}{2024/07/28}{Literary re-write}
 \def\fileversion{v0.4} \def\filedate{2024/07/28}
 
@@ -28,7 +26,7 @@
 %\def\fileversion{v0.3} \def\filedate{2024/07/01}
 
 %\changes{v0.2}{2024/04/12}{Initial conversion to DTX}
-\def\dtxfile{gcodepreview.dtx}
+%\def\dtxfile{gcodepreview.dtx}
 
 \title{The gcodepreview OpenSCAD library\thanks{This
         file (\texttt{\jobname}) has version number \fileversion, last revised
@@ -197,6 +195,7 @@ Version 0.3
 Version 0.4
 
  - Rewrite using literati documentclass, suppression of SVG code
+ - dxfrectangle (without G-code support)
 
 Possible future improvements:
 
@@ -204,7 +203,7 @@ Possible future improvements:
  - G-code: support for G2/G3 arcs and circles
  - G-code: import external tool libraries and feeds and speeds from JSON or CSV files ---
  - general coding improvements --- current coding style is quite prosaic
- - generalized modules for cutting out various shapes/geometries --- an in-process one is to cut a rectangular area as vertical passes (the horizontal version will be developed presently)
+ - additional generalized modules for cutting out various shapes/geometries
 
 Note for G-code generation that it is up to the user 
 to implement Depth per Pass so as to not take a 
@@ -218,6 +217,7 @@ Deprecated feature:
 
 \end{readme}
 
+\clearpage
 \section{gcodepreview}
 
 As noted above, this library works by using Python code as a back-end so as to persistently
@@ -243,7 +243,7 @@ Each file will begin with a suitable comment indicating the file type and suitab
 \begin{writecode}{w}{pygcodepreview.scad}{scad}
 //!OpenSCAD
  
-//gcodepreview 0.3
+//gcodepreview 0.4
 
 \end{writecode}
 \addtocounter{pyscad}{5}
@@ -251,7 +251,7 @@ Each file will begin with a suitable comment indicating the file type and suitab
 \begin{writecode}{w}{gcodepreview.scad}{scad}
 //!OpenSCAD
  
-//gcodepreview 0.3
+//gcodepreview 0.4
 //
 //used via use <gcodepreview.py>;
 //         use <pygcodepreview.scad>;
@@ -389,7 +389,7 @@ owritefive("(stockMin:0.00mm, -",str(stockwidth/2),"mm, -",str(stockthickness),"
 owritefive("(stockMax:",str(stocklength),"mm, ",str(stockwidth/2),"mm, 0.00mm)");
     owriteeleven("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", 0.00, ",str(stockwidth/2),", ",str(stockthickness),")");
     }
-    }
+  }
     } else if (stockorigin == "Top-Left") {
     translate([0, (-stockwidth), -stockthickness]){
       cube([stocklength, stockwidth, stockthickness], center=false);
@@ -398,9 +398,9 @@ owritefive("(stockMin:0.00mm, -",str(stockwidth),"mm, -",str(stockthickness),"mm
 owritethree("(stockMax:",str(stocklength),"mm, 0.00mm, 0.00mm)");
 owriteeleven("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", 0.00, ",str(stockwidth),", ",str(stockthickness),")");
     }
+  }
     }
-    }
-	else if (stockorigin == "Center") {
+    else if (stockorigin == "Center") {
 //owritecomment("Center");
     translate([(-stocklength / 2), (-stockwidth / 2), -stockthickness]){
       cube([stocklength, stockwidth, stockthickness], center=false);
@@ -408,9 +408,9 @@ if (generategcode == true) {
 owriteseven("(stockMin: -",str(stocklength/2),", -",str(stockwidth/2),"mm, -",str(stockthickness),"mm)");
 owritefive("(stockMax:",str(stocklength/2),"mm, ",str(stockwidth/2),"mm, 0.00mm)");
 owritethirteen("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", ",str(stocklength/2),", ", str(stockwidth/2),", ",str(stockthickness),")");
-}
-}
-}
+      }
+    }
+  }
 } else if (zeroheight == "Bottom") {
 //owritecomment("Bottom");
     if (stockorigin == "Lower-Left") {
@@ -420,7 +420,7 @@ owriteone("(stockMin:0.00mm, 0.00mm, 0.00mm)");
 owriteseven("(stockMax:",str(stocklength),"mm, ",str(stockwidth),"mm, ",str(stockthickness),"mm)");
 owriteseven("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),",0.00, 0.00, 0.00)");
     }
-}	else if (stockorigin == "Center-Left") {
+}    else if (stockorigin == "Center-Left") {
     translate([0, (-stockwidth / 2), 0]){
       cube([stocklength, stockwidth, stockthickness], center=false);
 if (generategcode == true) {
@@ -428,8 +428,8 @@ owritethree("(stockMin:0.00mm, -",str(stockwidth/2),"mm, 0.00mm)");
 owriteseven("(stockMax:",str(stocklength),"mm, ",str(stockwidth/2),"mm, ",str(stockthickness),"mm)");
 owritenine("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),",0.00, ",str(stockwidth/2),", 0.00)");
     }
-    } 
-	} else if (stockorigin == "Top-Left") {
+  } 
+    } else if (stockorigin == "Top-Left") {
     translate([0, (-stockwidth), 0]){
       cube([stocklength, stockwidth, stockthickness], center=false);
     }
@@ -437,8 +437,8 @@ if (generategcode == true) {
 owritethree("(stockMin:0.00mm, -",str(stockwidth),"mm, 0.00mm)");
 owritefive("(stockMax:",str(stocklength),"mm, 0.00mm, ",str(stockthickness),"mm)");
 owritenine("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", 0.00, ", str(stockwidth),", 0.00)");
-}
-}	else if (stockorigin == "Center") {
+  }
+}    else if (stockorigin == "Center") {
     translate([(-stocklength / 2), (-stockwidth / 2), 0]){
       cube([stocklength, stockwidth, stockthickness], center=false);
     }
@@ -446,15 +446,15 @@ if (generategcode == true) {
 owritefive("(stockMin:-",str(stocklength/2),", -",str(stockwidth/2),"mm, 0.00mm)");
 owriteseven("(stockMax:",str(stocklength/2),"mm, ",str(stockwidth/2),"mm, ",str(stockthickness),"mm)");
 owriteeleven("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", ",str(stocklength/2),", ", str(stockwidth/2),", 0.00)");
-}
-}
+    }
+  }
 }
 if (generategcode == true) {
-	owriteone("G90");
-	owriteone("G21");
-//	owriteone("(Move to safe Z to avoid workholding)");
-//	owriteone("G53G0Z-5.000");
-}
+    owriteone("G90");
+    owriteone("G21");
+//    owriteone("(Move to safe Z to avoid workholding)");
+//    owriteone("G53G0Z-5.000");
+  }
 //owritecomment("ENDSETUP");
 }
 
@@ -534,19 +534,19 @@ function getzpos() = zpos();
 function gettzpos() = tzpos();
 
 module setxpos(newxpos) {
-psetxpos(newxpos);
+    psetxpos(newxpos);
 }
 
 module setypos(newypos) {
-psetypos(newypos);
+    psetypos(newypos);
 }
 
 module setzpos(newzpos) {
-psetzpos(newzpos);
+    psetzpos(newzpos);
 }
 
 module settzpos(newtzpos) {
-psettzpos(newtzpos);
+    psettzpos(newtzpos);
 }
 
 \end{writecode}
@@ -556,9 +556,9 @@ psettzpos(newtzpos);
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
 module oset(ex, ey, ez) {
-setxpos(ex);
-setypos(ey);
-setzpos(ez);
+    setxpos(ex);
+    setypos(ey);
+    setzpos(ez);
 }
 
 \end{writecode}
@@ -568,7 +568,7 @@ setzpos(ez);
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
 module osettz(tz) {
-settzpos(tz);
+    settzpos(tz);
 }
 
 \end{writecode}
@@ -600,12 +600,13 @@ def pcurrent_tool():
 \lstset{firstnumber=\thepyscad}
 \begin{writecode}{a}{pygcodepreview.scad}{scad}
 module osettool(tn){
-psettool(tn);}
+    psettool(tn);
+}
 
 function current_tool() = pcurrent_tool();
 
 \end{writecode}
-\addtocounter{pyscad}{5}
+\addtocounter{pyscad}{6}
  
 \subsubsection{toolchange}
 \noindent and apply the appropriate commands for a \texttt{toolchange}.
@@ -629,6 +630,10 @@ version of this project
 \label{para:normaltooling} Most tooling has quite standard shapes 
 and are defined by their profile:
 
+  \noindent\includegraphics[width=\linewidth/3]{images/tool_square_201.png}%
+           \includegraphics[width=\linewidth/3]{images/tool_ball_202.png}%
+           \includegraphics[width=\linewidth/3]{images/tool_V_301.png}%
+
 \begin{itemize}
 \item Square (\#201 and 102) --- able to cut a flat bottom, perpendicular side and right angle
                                  their simple and easily understood geometry makes them a 
@@ -640,7 +645,7 @@ and are defined by their profile:
                                          angles and diameters and may be used for decorative
                                          V carving, or for chamfering or cutting specific angles
                                          (note that the commonly available radiused form
-                                         is not implemented at this time, see \#501 and 502)
+                                         is not implemented at this time, \emph{e.g.},~\#501 and 502)
 \end{itemize}
 \end{samepage}
 
@@ -649,25 +654,25 @@ and are defined by their profile:
 module toolchange(tool_number,speed) {
    osettool(tool_number); 
 if (generategcode == true) {
-	writecomment("Toolpath");
-	owriteone("M05");
-//	writecomment("Move to safe Z to avoid workholding");
-//	owriteone("G53G0Z-5.000");
+    writecomment("Toolpath");
+    owriteone("M05");
+//    writecomment("Move to safe Z to avoid workholding");
+//    owriteone("G53G0Z-5.000");
 //    writecomment("Begin toolpath");
-  if (tool_number == 201) {
-	writecomment("TOOL/MILL,6.35, 0.00, 0.00, 0.00");
-  } else if (tool_number == 202) {
-	writecomment("TOOL/MILL,6.35, 3.17, 0.00, 0.00");
-  } else if (tool_number == 102) {
-	writecomment("TOOL/MILL,3.17, 0.00, 0.00, 0.00");
-  } else if (tool_number == 101) {
-	writecomment("TOOL/MILL,3.17, 1.58, 0.00, 0.00");
-  } else if (tool_number == 301) {
-	writecomment("TOOL/MILL,0.03, 0.00, 6.35, 45.00");
-  } else if (tool_number == 302) {
-	writecommment("TOOL/MILL,0.03, 0.00, 10.998, 30.00");
-  } else if (tool_number == 390) {
-	writecomment("TOOL/MILL,0.03, 0.00, 1.5875, 45.00");
+    if (tool_number == 201) {
+      writecomment("TOOL/MILL,6.35, 0.00, 0.00, 0.00");
+    } else if (tool_number == 202) {
+      writecomment("TOOL/MILL,6.35, 3.17, 0.00, 0.00");
+    } else if (tool_number == 102) {
+      writecomment("TOOL/MILL,3.17, 0.00, 0.00, 0.00");
+    } else if (tool_number == 101) {
+      writecomment("TOOL/MILL,3.17, 1.58, 0.00, 0.00");
+    } else if (tool_number == 301) {
+      writecomment("TOOL/MILL,0.03, 0.00, 6.35, 45.00");
+    } else if (tool_number == 302) {
+      writecommment("TOOL/MILL,0.03, 0.00, 10.998, 30.00");
+    } else if (tool_number == 390) {
+      writecomment("TOOL/MILL,0.03, 0.00, 1.5875, 45.00");
 \end{writecode}
 \addtocounter{gcpscad}{22}
 
@@ -697,14 +702,14 @@ There are several notable candidates for such tooling:
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
    } else if (tool_number == 375) {
-	writecomment("TOOL/MILL,9.53, 0.00, 3.17, 0.00");
+     writecomment("TOOL/MILL,9.53, 0.00, 3.17, 0.00");
 \end{writecode}
 \addtocounter{gcpscad}{2}
  
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
    } else if (tool_number == 814) {
-	writecomment("TOOL/MILL,12.7, 6.367, 12.7, 0.00");
+     writecomment("TOOL/MILL,12.7, 6.367, 12.7, 0.00");
 \end{writecode}
 \addtocounter{gcpscad}{2}
  
@@ -722,9 +727,9 @@ the G-code.
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
    }
-    select_tool(tool_number);
-    owritetwo("M6T",str(tool_number));
-    owritetwo("M03S",str(speed));
+     select_tool(tool_number);
+     owritetwo("M6T",str(tool_number));
+     owritetwo("M03S",str(speed));
  }
 }
 
@@ -735,7 +740,7 @@ the G-code.
 
 \label{para:roundover} It is not possible to represent all tools using tool changes 
 as coded above which require using a \texttt{hull} operation between 3D representations
-of the tools at the beginning and end points.  
+of the tools at the beginning and end points. Tooling which cannot be so represented will be implemented separately below, see paragraph~\ref{para:concavetoolshapes}.
 
 \paragraph{Selecting Tools}
 
@@ -774,7 +779,7 @@ For a keyhole tool:
 \end{writecode}
 \addtocounter{gcpscad}{2}
  
-and dovetail tool:
+\noindent and dovetail tool:
  
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -782,6 +787,8 @@ and dovetail tool:
     gcp_dovetail(12.7, 6.367, 12.7, 14);
 \end{writecode}
 \addtocounter{gcpscad}{2}
+
+Once all tools have been defined the if statement and module may be closed:
  
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -796,7 +803,6 @@ and dovetail tool:
 Each tool must be modeled in 3D using an OpenSCAD module. 
 
 \paragraph{Normal toolshapes}
-
 Most tools are easily implemented with concise 3D descriptions which may be connected with
 a simple \texttt{hull} operation:
 
@@ -861,7 +867,7 @@ module gcp_endmill_v(es_v_angle, es_diameter) {
 \addtocounter{gcpscad}{9}
  
 \paragraph{Concave toolshapes}
-
+\label{para:concavetoolshapes} 
 While normal tooling may be represented with a single \texttt{hull} operation betwixt two
 3D toolshapes, concave tooling such as roundover/radius tooling require multiple slices
 of the tool shape which are then \texttt{hull}ed together. Something of this can be seen
@@ -911,7 +917,7 @@ hull(){
     cylinder(step,tool_radius_tip,tool_radius_tip);
     translate([ex,ey,ez])
     cylinder(step,tool_radius_tip,tool_radius_tip);
-    }
+}
 
 hull(){
 translate([bx,by,bz+tool_radius_width])
@@ -919,7 +925,7 @@ cylinder(tool_radius_width*2,tool_radius_tip+tool_radius_width,tool_radius_tip+t
 
 translate([ex,ey,ez+tool_radius_width])
   cylinder(tool_radius_width*2,tool_radius_tip+tool_radius_width,tool_radius_tip+tool_radius_width);
-    }
+}
 
 for (i=[0:step:90]) {
     angle = i;
@@ -929,10 +935,10 @@ for (i=[0:step:90]) {
     dz = tool_radius_width*sin(angle+step);
     dh = dz-dzz;
     hull(){
-    translate([bx,by,bz+dz])
-       cylinder(dh,tool_radius_tip+tool_radius_width-dx,tool_radius_tip+tool_radius_width-dxx);
-    translate([ex,ey,ez+dz])
-       cylinder(dh,tool_radius_tip+tool_radius_width-dx,tool_radius_tip+tool_radius_width-dxx);
+        translate([bx,by,bz+dz])
+            cylinder(dh,tool_radius_tip+tool_radius_width-dx,tool_radius_tip+tool_radius_width-dxx);
+        translate([ex,ey,ez+dz])
+            cylinder(dh,tool_radius_tip+tool_radius_width-dx,tool_radius_tip+tool_radius_width-dxx);
         }
     }
 }
@@ -964,12 +970,12 @@ function tool_diameter(td_tool, td_depth) = otool_diameter(td_tool, td_depth);
 \noindent the matching OpenSCAD function calls the Python function:
 \DescribeRoutine{otool diameter}
 
-\lstset{firstnumber=\thegcpscad}
-\begin{writecode}{a}{gcodepreview.scad}{scad}
+\lstset{firstnumber=\thepyscad}
+\begin{writecode}{a}{pygcodepreview.scad}{scad}
 function otool_diameter(td_tool, td_depth) = ptool_diameter(td_tool, td_depth);
 
 \end{writecode}
-\addtocounter{gcpscad}{2}
+\addtocounter{pyscad}{2}
  
 \noindent the Python code returns appropriate values 
 \DescribeRoutine{ptool diameter}
@@ -1012,6 +1018,16 @@ def ptool_diameter(ptd_tool, ptd_depth):
 \end{writecode}
 \addtocounter{gcpy}{32}
 
+\DescribeRoutine{tool radius}
+Since it is often necessary to utilise the radius of the tool, an additional command to return
+this value is worthwhile:
+ 
+\lstset{firstnumber=\thegcpscad}
+\begin{writecode}{a}{gcodepreview.scad}{scad}
+function tool_radius(td_tool, td_depth) = otool_diameter(td_tool, td_depth)/2;
+
+\end{writecode}
+\addtocounter{gcpscad}{2}
  
 (Note that zero (0) values will need to be replaced with appropriate code.)
  
@@ -1081,54 +1097,52 @@ There will need to be matching OpenSCAD modules for the Python functions.
 \lstset{firstnumber=\thepyscad}
 \begin{writecode}{a}{pygcodepreview.scad}{scad}
 module oopengcodefile(fn) {
-	popengcodefile(fn);
+    popengcodefile(fn);
 }
 
 module oopendxffile(fn) {
     echo(fn);
-	popendxffile(fn);
+    popendxffile(fn);
 }
 
 module oopendxflgblfile(fn) {
-	popendxflgblfile(fn);
+    popendxflgblfile(fn);
 }
 
 module oopendxflgsqfile(fn) {
-	popendxflgsqfile(fn);
+    popendxflgsqfile(fn);
 }
 
 module oopendxflgVfile(fn) {
-	popendxflgVfile(fn);
+    popendxflgVfile(fn);
 }
 
 module oopendxfsmblfile(fn) {
-	popendxfsmblfile(fn);
+    popendxfsmblfile(fn);
 }
 
 module oopendxfsmsqfile(fn) {
     echo(fn);
-	popendxfsmsqfile(fn);
+    popendxfsmsqfile(fn);
 }
 
 module oopendxfsmVfile(fn) {
-	popendxfsmVfile(fn);
+    popendxfsmVfile(fn);
 }
 
 module oopendxfKHfile(fn) {
-	popendxfKHfile(fn);
+    popendxfKHfile(fn);
 }
 
 module oopendxfDTfile(fn) {
-	popendxfDTfile(fn);
+    popendxfDTfile(fn);
 }
 
 \end{writecode}
 \addtocounter{pyscad}{42}
 %module oopensvgfile(fn) {
-%	popensvgfile(fn);
+%    popensvgfile(fn);
 %}
-
-
 
 \DescribeRoutine{opengcodefile}%\DescribeRoutine{opensvgfile}
 Which has matching OpenSCAD commands:
@@ -1137,7 +1151,7 @@ Which has matching OpenSCAD commands:
 \begin{writecode}{a}{gcodepreview.scad}{scad}
 module opengcodefile(fn) {
 if (generategcode == true) {
-	oopengcodefile(fn);
+    oopengcodefile(fn);
     echo(fn);
     owritecomment(fn);
     }
@@ -1147,10 +1161,10 @@ if (generategcode == true) {
 \addtocounter{gcpscad}{8}
 %module opensvgfile(fn) {
 %if (generatesvg == true) {
-%	oopensvgfile(fn);
+%    oopensvgfile(fn);
 %    echo(fn);
 %    svgwriteone(str("<?xml version=",chr(34),"1.0",chr(34)," encoding=",chr(34),"UTF-8",chr(34)," standalone=",chr(34),"no",chr(34),"?> "));
-%//	writesvglineend();
+%//    writesvglineend();
 %svgwriteone(str("<svg  version=",chr(34),"1.1",chr(34)," xmlns=",chr(34),"http://www.w3.org/2000/svg",chr(34)," width=",chr(34),stocklength*3.77953,"px",chr(34)," height=",chr(34),stockwidth*3.77953,"px",chr(34),"> "));
 %//<path d="M755.906 0 L755.906 377.953 L0 377.953 L0 0 L755.906 0 Z " stroke="black" stroke-width="1" fill="none" /> 
 %svgwriteone(str("<path d=",chr(34),"M",stocklength*3.77953," 0 L",stocklength*3.77953," ",stockwidth*3.77953," L0 ",stockwidth*3.77953," L0 0 L",stocklength*3.77953," 0 Z ",chr(34)," stroke=",chr(34),"black",chr(34)," stroke-width=",chr(34),"1",chr(34)," fill=",chr(34),"none",chr(34)," /> "));
@@ -1163,43 +1177,45 @@ a Preamble\DescribeRoutine{opendxffile}
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
 module opendxffile(fn) {
-if (generatedxf == true) {
-	oopendxffile(str(fn,".dxf"));
+  if (generatedxf == true) {
+      oopendxffile(str(fn,".dxf"));
 //    echo(fn);
-    dxfwriteone("0");
-    dxfwriteone("SECTION");
-    dxfwriteone("2");
-    dxfwriteone("ENTITIES");
-if (large_ball_tool_no >  0) {	oopendxflgblfile(str(fn,".",large_ball_tool_no,".dxf"));
-    dxfpreamble(large_ball_tool_no);
-} 
-if (large_square_tool_no >  0) {	oopendxflgsqfile(str(fn,".",large_square_tool_no,".dxf"));
-    dxfpreamble(large_square_tool_no);
-} 
-if (large_V_tool_no >  0) {	oopendxflgVfile(str(fn,".",large_V_tool_no,".dxf"));
-    dxfpreamble(large_V_tool_no);
-} 
-if (small_ball_tool_no >  0) { oopendxfsmblfile(str(fn,".",small_ball_tool_no,".dxf"));
-    dxfpreamble(small_ball_tool_no);
-} 
-if (small_square_tool_no >  0) {	oopendxfsmsqfile(str(fn,".",small_square_tool_no,".dxf"));
+      dxfwriteone("0");
+      dxfwriteone("SECTION");
+      dxfwriteone("2");
+      dxfwriteone("ENTITIES");
+    if (large_ball_tool_no >  0) {    oopendxflgblfile(str(fn,".",large_ball_tool_no,".dxf"));
+      dxfpreamble(large_ball_tool_no);
+    } 
+    if (large_square_tool_no >  0) {    oopendxflgsqfile(str(fn,".",large_square_tool_no,".dxf"));
+      dxfpreamble(large_square_tool_no);
+    } 
+    if (large_V_tool_no >  0) {    oopendxflgVfile(str(fn,".",large_V_tool_no,".dxf"));
+      dxfpreamble(large_V_tool_no);
+    } 
+    if (small_ball_tool_no >  0) { oopendxfsmblfile(str(fn,".",small_ball_tool_no,".dxf"));
+      dxfpreamble(small_ball_tool_no);
+    } 
+    if (small_square_tool_no >  0) {    oopendxfsmsqfile(str(fn,".",small_square_tool_no,".dxf"));
 //    echo(str("tool no",small_square_tool_no));
-    dxfpreamble(small_square_tool_no);
-} 
-if (small_V_tool_no >  0) {	oopendxfsmVfile(str(fn,".",small_V_tool_no,".dxf"));
-    dxfpreamble(small_V_tool_no);
-} 
-if (KH_tool_no >  0) {	oopendxfKHfile(str(fn,".",KH_tool_no,".dxf"));
-    dxfpreamble(KH_tool_no);
-} 
-if (DT_tool_no >  0) {	oopendxfDTfile(str(fn,".",DT_tool_no,".dxf"));
-    dxfpreamble(DT_tool_no);
-} 
-}
+      dxfpreamble(small_square_tool_no);
+    } 
+    if (small_V_tool_no >  0) {    oopendxfsmVfile(str(fn,".",small_V_tool_no,".dxf"));
+      dxfpreamble(small_V_tool_no);
+    } 
+    if (KH_tool_no >  0) {    oopendxfKHfile(str(fn,".",KH_tool_no,".dxf"));
+      dxfpreamble(KH_tool_no);
+    } 
+    if (DT_tool_no >  0) {    oopendxfDTfile(str(fn,".",DT_tool_no,".dxf"));
+      dxfpreamble(DT_tool_no);
+    } 
+  }
 }
 
 \end{writecode}
 \addtocounter{gcpscad}{36}
+
+\subsubsection{Writing to files}
  
 \DescribeRoutine{writedxf}
 Once files have been opened they may be written to. There is a base command:
@@ -1216,20 +1232,17 @@ def writedxf(*arguments):
 \end{writecode}
 \addtocounter{gcpy}{7}
 
-\DescribeRoutine{writedxflgbl}\DescribeRoutine{writedxflgsq}\DescribeRoutine{writedxflgV}
-\DescribeRoutine{writedxfsmbl}\DescribeRoutine{writedxfsmsq}\DescribeRoutine{writedxfsmV}
-\DescribeRoutine{writedxfKH}\DescribeRoutine{writedxfDT}
 \noindent and for each tool/size combination, an appropriate command:
 
 \begin{itemize}
-\item Ball nose, large (lgbl)
-\item Ball nose, small (smbl)
-\item Square, large (lgsq)
-\item Square, small (smsq)
-\item V, large (lgV)
-\item V, small (smV)
-\item Keyhole (KH)
-\item Dovetail (DT)
+\item Ball nose, large (lgbl)\DescribeRoutine{writedxflgbl}
+\item Ball nose, small (smbl)\DescribeRoutine{writedxfsmbl}
+\item Square, large (lgsq)\DescribeRoutine{writedxflgsq}
+\item Square, small (smsq)\DescribeRoutine{writedxfsmsq}
+\item V, large (lgV)\DescribeRoutine{writedxflgV}
+\item V, small (smV)\DescribeRoutine{writedxfsmV}
+\item Keyhole (KH)\DescribeRoutine{writedxfKH}
+\item Dovetail (DT)\DescribeRoutine{writedxfDT}
 \end{itemize}
  
 \lstset{firstnumber=\thegcpy}
@@ -1310,9 +1323,9 @@ def writedxfDT(*arguments):
 %def pwritesvgline():
 %    svg.write("\n")
  
-\DescribeRoutine{owritecomment}\DescribeRoutine{dxfwriteone}\DescribeRoutine{dxfwritelgbl}
-\DescribeRoutine{dxfwritelgsq}\DescribeRoutine{dxfwritelgV}\DescribeRoutine{dxfwritesmbl}
-\DescribeRoutine{dxfwritesmsq}\DescribeRoutine{dxfwritesmV}
+\DescribeRoutine{owritecomment}\DescribeRoutine{dxfwriteone}\DescribeRoutine{dxfwritelgbl}%
+\DescribeRoutine{dxfwritelgsq}\DescribeRoutine{dxfwritelgV}\DescribeRoutine{dxfwritesmbl}%
+\DescribeRoutine{dxfwritesmsq}\DescribeRoutine{dxfwritesmV}%
 Separate OpenSCAD modules will be used for either writing out comments in G-code (.nc) files
 or adding to a DXF file --- for each different tool in a file there will be a matching
 module to write to it.
@@ -1320,55 +1333,55 @@ module to write to it.
 \lstset{firstnumber=\thepyscad}
 \begin{writecode}{a}{pygcodepreview.scad}{scad}
 module owritecomment(comment) {
-	writeln("(",comment,")");
+    writeln("(",comment,")");
 }
 
 module dxfwriteone(first) {
-	writedxf(first);
-//	writeln(first);
-//	echo(first);
+    writedxf(first);
+//    writeln(first);
+//    echo(first);
 }
 
 module dxfwritelgbl(first) {
-	writedxflgbl(first);
+    writedxflgbl(first);
 }
 
 module dxfwritelgsq(first) {
-	writedxflgsq(first);
+    writedxflgsq(first);
 }
 
 module dxfwritelgV(first) {
-	writedxflgV(first);
+    writedxflgV(first);
 }
 
 module dxfwritesmbl(first) {
-	writedxfsmbl(first);
+    writedxfsmbl(first);
 }
 
 module dxfwritesmsq(first) {
-	writedxfsmsq(first);
+    writedxfsmsq(first);
 }
 
 module dxfwritesmV(first) {
-	writedxfsmV(first);
+    writedxfsmV(first);
 }
 
 module dxfwriteKH(first) {
-	writedxfKH(first);
+    writedxfKH(first);
 }
 
 module dxfwriteDT(first) {
-	writedxfDT(first);
+    writedxfDT(first);
 }
 
 \end{writecode}
 \addtocounter{pyscad}{42}
 %module svgwriteone(first) {
-%	writesvg(first);
+%    writesvg(first);
 %}
 %
 %module writesvglineend(first) {
-%	pwritesvgline();
+%    pwritesvgline();
 %}
 
 Since it is not convenient to stitch together and then write out multiple elements,
@@ -1378,63 +1391,63 @@ of arguments, one through thirteen.
 \lstset{firstnumber=\thepyscad}
 \begin{writecode}{a}{pygcodepreview.scad}{scad}
 module owriteone(first) {
-	writeln(first);
+    writeln(first);
 }
 
 module owritetwo(first, second) {
-	writeln(first, second);
+    writeln(first, second);
 }
 
 module owritethree(first, second, third) {
-	writeln(first, second, third);
+    writeln(first, second, third);
 }
 
 module owritefour(first, second, third, fourth) {
-	writeln(first, second, third, fourth);
+    writeln(first, second, third, fourth);
 }
 
 module owritefive(first, second, third, fourth, fifth) {
-	writeln(first, second, third, fourth, fifth);
+    writeln(first, second, third, fourth, fifth);
 }
 
 module owritesix(first, second, third, fourth, fifth, sixth) {
-	writeln(first, second, third, fourth, fifth, sixth);
+    writeln(first, second, third, fourth, fifth, sixth);
 }
 
 module owriteseven(first, second, third, fourth, fifth, sixth, seventh) {
-	writeln(first, second, third, fourth, fifth, sixth, seventh);
+    writeln(first, second, third, fourth, fifth, sixth, seventh);
 }
 
 module owriteeight(first, second, third, fourth, fifth, sixth, seventh,eighth) {
-	writeln(first, second, third, fourth, fifth, sixth, seventh,eighth);
+    writeln(first, second, third, fourth, fifth, sixth, seventh,eighth);
 }
 
 module owritenine(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth) {
-	writeln(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth);
+    writeln(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth);
 }
 
 module owriteten(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth) {
-	writeln(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth);
+    writeln(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth);
 }
 
 module owriteeleven(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh) {
-	writeln(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh);
+    writeln(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh);
 }
 
 module owritetwelve(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth) {
-	writeln(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth);
+    writeln(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth);
 }
 
 module owritethirteen(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth, thirteenth) {
-	writeln(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth, thirteenth);
+    writeln(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth, thirteenth);
 }
 
 \end{writecode}
 \addtocounter{pyscad}{52}
  
-\DescribeRoutine{dxfwrite}\DescribeRoutine{dxfpreamble}%\DescribeRoutine{writesvgline}
+\paragraph{Beginning Writing to DXFs}\DescribeRoutine{dxfwrite}\DescribeRoutine{dxfpreamble}%\DescribeRoutine{writesvgline}
 The dxfwrite module requires that the tool number be passed in, and that value will be used
-to write out to the appropriate file.
+to write out to the appropriate file with a series of \texttt{if} statements.
  
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -1474,7 +1487,7 @@ module dxfpreamble(tn) {
 %}
 
  
-\DescribeRoutine{beginpolyline}\DescribeRoutine{dxfbpl}
+\paragraph{DXF Lines and Arcs}\DescribeRoutine{beginpolyline}\DescribeRoutine{dxfbpl}%
 Similarly, each each element which may be written to a DXF file will have a user module
 as well as an internal module which will be called by it so as to write to the file
 for the current tool.
@@ -1486,15 +1499,19 @@ There are two notable elements which may be written to a DXF:
  \item ARC --- a notable option would be for the arc to close on itself, creating a circle
 \end{itemize}
  
+DXF orders arcs counter-clockwise:
+
+\noindent\includegraphics[width=\linewidth]{images/arcs_circle_degrees.pdf}%
+
 Note that arcs of greater than 90 degrees are not rendered accurately, so, for the sake of
 precision, they should be limited to a swing of 90 degrees or less. Further note that 4 arcs
 may be stitched together to make a circle:
  
 \begin{verbatim}
-           dxfarc(small\_square\_tool\_no,10,10,5,0,90);
-           dxfarc(small\_square\_tool\_no,10,10,5,90,180);
-           dxfarc(small\_square\_tool\_no,10,10,5,180,270);
-           dxfarc(small\_square\_tool\_no,10,10,5,270,360);
+           dxfarc(small_square_tool_no,10,10,5,0,90);
+           dxfarc(small_square_tool_no,10,10,5,90,180);
+           dxfarc(small_square_tool_no,10,10,5,180,270);
+           dxfarc(small_square_tool_no,10,10,5,270,360);
 \end{verbatim}
  
 A further refinement would be to connect multiple line segments/arcs into a larger polyline, 
@@ -1551,11 +1568,16 @@ if (generatedxf == true) {
     dxfwriteone("20");
     dxfwriteone(str(yend));
     dxfpl(tn,xbegin,ybegin,xend,yend);
-}
+    }
 }
 
 \end{writecode}
 \addtocounter{gcpscad}{41}
+
+\DescribeRoutine{dxfa}\DescribeRoutine{dxfarc}%
+As for other files, we have two versions, one which accepts a \texttt{tn} (tool number),
+writing only to it, while a publicly facing version writes to the main DXF file \emph{and}
+writes to the specific DXF file for the specified tool.
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -1588,8 +1610,8 @@ if (generatedxf == true) {
     dxfwriteone(str(anglebegin));
     dxfwriteone("51");
     dxfwriteone(str(endangle));
-	dxfa(tn,xcenter,ycenter,radius,anglebegin,endangle);
-}
+    dxfa(tn,xcenter,ycenter,radius,anglebegin,endangle);
+    }
 }
 
 \end{writecode}
@@ -1678,23 +1700,23 @@ module dxfcpl(tn) {
 }
 
 module closepolyline() {
-if (generatedxf == true) {
+  if (generatedxf == true) {
     dxfwriteone("0");
     dxfwriteone("SEQEND");
     dxfcpl(current_tool());
-    }
+  }
 }
 
 module writecomment(comment) {
-if (generategcode == true) {
-	owritecomment(comment);
-}
+  if (generategcode == true) {
+    owritecomment(comment);
+  }
 }
 
 \end{writecode}
 \addtocounter{gcpscad}{92}
  
-\DescribeRoutine{pclosegcodefile}\DescribeRoutine{pclosesvgfile}\DescribeRoutine{pclosedxffile}
+\DescribeRoutine{pclosegcodefile}\DescribeRoutine{pclosedxffile}%\DescribeRoutine{pclosesvgfile}
 At the end of the project it will be necessary to close each file. 
 In some instances it will be necessary to write additional information,
 depending on the file format.
@@ -1703,9 +1725,6 @@ depending on the file format.
 \begin{writecode}{a}{gcodepreview.py}{python}
 def pclosegcodefile():
     f.close()
-
-def pclosesvgfile():
-    svg.close()
 
 def pclosedxffile():
     dxf.close()
@@ -1735,67 +1754,70 @@ def pclosedxfKHfile():
     dxfKH.close()
 
 \end{writecode}
-\addtocounter{gcpy}{33}
- 
+\addtocounter{gcpy}{30}
+%def pclosesvgfile():
+%    svg.close()
+%
+
 \DescribeRoutine{oclosegcodefile}\DescribeRoutine{oclosedxffile}\DescribeRoutine{oclosedxflgblfile}
 \lstset{firstnumber=\thepyscad}
 \begin{writecode}{a}{pygcodepreview.scad}{scad}
 module oclosegcodefile() {
-	pclosegcodefile();
+    pclosegcodefile();
 }
 
 module oclosedxffile() {
-	pclosedxffile();
+    pclosedxffile();
 }
 
 module oclosedxflgblfile() {
-	pclosedxflgblfile();
+    pclosedxflgblfile();
 }
 
 module oclosedxflgsqfile() {
-	pclosedxflgsqfile();
+    pclosedxflgsqfile();
 }
 
 module oclosedxflgVfile() {
-	pclosedxflgVfile();
+    pclosedxflgVfile();
 }
 
 module oclosedxfsmblfile() {
-	pclosedxfsmblfile();
+    pclosedxfsmblfile();
 }
 
 module oclosedxfsmsqfile() {
-	pclosedxfsmsqfile();
+    pclosedxfsmsqfile();
 }
 
 module oclosedxfsmVfile() {
-	pclosedxfsmVfile();
+    pclosedxfsmVfile();
 }
 
 module oclosedxfDTfile() {
-	pclosedxfDTfile();
+    pclosedxfDTfile();
 }
 
 module oclosedxfKHfile() {
-	pclosedxfKHfile();
-}
-
-module oclosesvgfile() {
-	pclosesvgfile();
+    pclosedxfKHfile();
 }
 
 \end{writecode}
-\addtocounter{pyscad}{44}
+\addtocounter{pyscad}{40}
+%module oclosesvgfile() {
+%    pclosesvgfile();
+%}
+%
 
 \DescribeRoutine{closegcodefile}\DescribeRoutine{dxfpostamble}\DescribeRoutine{closedxffile}
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
 module closegcodefile() {
-if (generategcode == true) {
+  if (generategcode == true) {
     owriteone("M05");
     owriteone("M02");
-	oclosegcodefile();
-}
+    oclosegcodefile();
+  }
 }
 
 module dxfpostamble(arg) {
@@ -1806,50 +1828,55 @@ module dxfpostamble(arg) {
 }
 
 module closedxffile() {
-if (generatedxf == true) {
+  if (generatedxf == true) {
     dxfwriteone("0");
     dxfwriteone("ENDSEC");
     dxfwriteone("0");
     dxfwriteone("EOF");
-	oclosedxffile();
+    oclosedxffile();
     echo("CLOSING");
-if (large_ball_tool_no >  0) {	dxfpostamble(large_ball_tool_no);
-    oclosedxflgblfile();
-} 
-if (large_square_tool_no >  0) {	dxfpostamble(large_square_tool_no);
-    oclosedxflgsqfile();
-} 
-if (large_V_tool_no >  0) {	dxfpostamble(large_V_tool_no);
-    oclosedxflgVfile();
-} 
-if (small_ball_tool_no >  0) {	dxfpostamble(small_ball_tool_no);
-    oclosedxfsmblfile();
-} 
-if (small_square_tool_no >  0) {	dxfpostamble(small_square_tool_no);
-    oclosedxfsmsqfile();
-} 
-if (small_V_tool_no >  0) {	dxfpostamble(small_V_tool_no);
-    oclosedxfsmVfile();
-} 
-if (DT_tool_no >  0) {	dxfpostamble(DT_tool_no);
-    oclosedxfDTfile();
-} 
-if (KH_tool_no >  0) {	dxfpostamble(KH_tool_no);
-    oclosedxfKHfile();
-} 
-    }
-}
-
-module closesvgfile() {
-if (generatesvg == true) {
-    svgwriteone("</svg> ");
-	oclosesvgfile();
-    echo("CLOSING SVG");
-    }
+    if (large_ball_tool_no >  0) {    dxfpostamble(large_ball_tool_no);
+      oclosedxflgblfile();
+    } 
+    if (large_square_tool_no >  0) {    dxfpostamble(large_square_tool_no);
+      oclosedxflgsqfile();
+    } 
+    if (large_V_tool_no >  0) {    dxfpostamble(large_V_tool_no);
+      oclosedxflgVfile();
+    } 
+    if (small_ball_tool_no >  0) {    dxfpostamble(small_ball_tool_no);
+      oclosedxfsmblfile();
+    } 
+    if (small_square_tool_no >  0) {    dxfpostamble(small_square_tool_no);
+      oclosedxfsmsqfile();
+    } 
+    if (small_V_tool_no >  0) {    dxfpostamble(small_V_tool_no);
+      oclosedxfsmVfile();
+    } 
+    if (DT_tool_no >  0) {    dxfpostamble(DT_tool_no);
+      oclosedxfDTfile();
+    } 
+    if (KH_tool_no >  0) {    dxfpostamble(KH_tool_no);
+      oclosedxfKHfile();
+    } 
+  }
 }
 
 \end{writecode}
-\addtocounter{gcpscad}{58}
+\addtocounter{gcpscad}{50}
+
+%\lstset{firstnumber=\thegcpscad}
+%\begin{writecode}{a}{gcodepreview.scad}{scad}
+%module closesvgfile() {
+%if (generatesvg == true) {
+%    svgwriteone("</svg> ");
+%    oclosesvgfile();
+%    echo("CLOSING SVG");
+%    }
+%}
+%
+%\end{writecode}
+%\addtocounter{gcpscad}{8}
  
 \subsection{Movement and Cutting}
 
@@ -1872,112 +1899,114 @@ oset(ex, ey, ez);
 }
 
 module ocut(ex, ey, ez) {
-//color([0.2,1,0.2]) hull(){
-otm(ex, ey, ez, 0.2,1,0.2);
+  //color([0.2,1,0.2]) hull(){
+  otm(ex, ey, ez, 0.2,1,0.2);
 }
 
 module orapid(ex, ey, ez) {
-//color([0.93,0,0]) hull(){
-otm(ex, ey, ez, 0.93,0,0);
+  //color([0.93,0,0]) hull(){
+  otm(ex, ey, ez, 0.93,0,0);
 }
 
 module rapidbx(bx, by, bz, ex, ey, ez) {
-//	writeln("G0 X",bx," Y", by, "Z", bz);
-if (generategcode == true) {
-	writecomment("rapid");
-	owritesix("G0 X",str(ex)," Y", str(ey), " Z", str(ez));
-}
+  //    writeln("G0 X",bx," Y", by, "Z", bz);
+  if (generategcode == true) {
+    writecomment("rapid");
+    owritesix("G0 X",str(ex)," Y", str(ey), " Z", str(ez));
+  }
     orapid(ex, ey, ez);
 }
 
 module rapid(ex, ey, ez) {
-//	writeln("G0 X",bx," Y", by, "Z", bz);
-if (generategcode == true) {
-	writecomment("rapid");
-	owritesix("G0 X",str(ex)," Y", str(ey), " Z", str(ez));
-}
-    orapid(ex, ey, ez);
+  //    writeln("G0 X",bx," Y", by, "Z", bz);
+  if (generategcode == true) {
+      writecomment("rapid");
+      owritesix("G0 X",str(ex)," Y", str(ey), " Z", str(ez));
+  }
+  orapid(ex, ey, ez);
 }
 
 module movetosafez() {
-//this should be move to retract height
-if (generategcode == true) {
-	writecomment("Move to safe Z to avoid workholding");
-    owriteone("G53G0Z-5.000");
-}
-    orapid(getxpos(), getypos(), retractheight+55);
+  //this should be move to retract height
+  if (generategcode == true) {
+      writecomment("Move to safe Z to avoid workholding");
+      owriteone("G53G0Z-5.000");
+  }
+  orapid(getxpos(), getypos(), retractheight+55);
 }
 
 module begintoolpath(bx,by,bz) {
-if (generategcode == true) {
-	writecomment("PREPOSITION FOR RAPID PLUNGE");
+  if (generategcode == true) {
+    writecomment("PREPOSITION FOR RAPID PLUNGE");
     owritefour("G0X", str(bx), "Y",str(by));
     owritetwo("Z", str(bz));
-    }
-    orapid(bx,by,bz);
+  }
+  orapid(bx,by,bz);
 }
 
 module movetosafeheight() {
-//this should be move to machine position
-if (generategcode == true) {
-//	writecomment("PREPOSITION FOR RAPID PLUNGE");Z25.650
-//G1Z24.663F381.0 ,"F",str(plunge)
-if (zeroheight == "Top") {
-    owritetwo("Z",str(retractheight));
-}
-}
+  //this should be move to machine position
+  if (generategcode == true) {
+  //    writecomment("PREPOSITION FOR RAPID PLUNGE");Z25.650
+  //G1Z24.663F381.0 ,"F",str(plunge)
+    if (zeroheight == "Top") {
+      owritetwo("Z",str(retractheight));
+    }
+  }
     orapid(getxpos(), getypos(), retractheight+55);
 }
 
 module cutoneaxis_setfeed(axis,depth,feed) {
-if (generategcode == true) {
-//	writecomment("PREPOSITION FOR RAPID PLUNGE");Z25.650
-//G1Z24.663F381.0 ,"F",str(plunge) G1Z7.612F381.0
-if (zeroheight == "Top") {
-    owritefive("G1",axis,str(depth),"F",str(feed));
-}
-}
-if (axis == "X") {setxpos(depth);
-ocut(depth, getypos(), getzpos());}
-if (axis == "Y") {setypos(depth);
-ocut(getxpos(), depth, getzpos());}
-if (axis == "Z") {setzpos(depth);
-ocut(getxpos(), getypos(), depth);}
+  if (generategcode == true) {
+  //    writecomment("PREPOSITION FOR RAPID PLUNGE");Z25.650
+  //G1Z24.663F381.0 ,"F",str(plunge) G1Z7.612F381.0
+    if (zeroheight == "Top") {
+      owritefive("G1",axis,str(depth),"F",str(feed));
+    }
+  }
+  if (axis == "X") {setxpos(depth);
+    ocut(depth, getypos(), getzpos());}
+    if (axis == "Y") {setypos(depth);
+      ocut(getxpos(), depth, getzpos());
+    }
+      if (axis == "Z") {setzpos(depth);
+        ocut(getxpos(), getypos(), depth);
+      }
 }
 
 module cut(ex, ey, ez) {
-//	writeln("G0 X",bx," Y", by, "Z", bz);
-if (generategcode == true) {
-	owritesix("G1 X",str(ex)," Y", str(ey), " Z", str(ez));
-}
-//if (generatesvg == true) {
-//	owritesix("G1 X",str(ex)," Y", str(ey), " Z", str(ez));
-//    orapid(getxpos(), getypos(), retractheight+5);
-//    writesvgline(getxpos(),getypos(),ex,ey);
-//}
-ocut(ex, ey, ez);
+  //    writeln("G0 X",bx," Y", by, "Z", bz);
+  if (generategcode == true) {
+     owritesix("G1 X",str(ex)," Y", str(ey), " Z", str(ez));
+  }
+  //if (generatesvg == true) {
+  //    owritesix("G1 X",str(ex)," Y", str(ey), " Z", str(ez));
+  //    orapid(getxpos(), getypos(), retractheight+5);
+  //    writesvgline(getxpos(),getypos(),ex,ey);
+  //}
+  ocut(ex, ey, ez);
 }
 
 module cutwithfeed(ex, ey, ez, feed) {
-//	writeln("G0 X",bx," Y", by, "Z", bz);
-if (generategcode == true) {
-//	writecomment("rapid");
-	owriteeight("G1 X",str(ex)," Y", str(ey), " Z", str(ez),"F",str(feed));
-}
-ocut(ex, ey, ez);
+  //    writeln("G0 X",bx," Y", by, "Z", bz);
+  if (generategcode == true) {
+  //    writecomment("rapid");
+    owriteeight("G1 X",str(ex)," Y", str(ey), " Z", str(ez),"F",str(feed));
+  }
+  ocut(ex, ey, ez);
 }
 
 module endtoolpath() {
-if (generategcode == true) {
-//Z31.750
-//	owriteone("G53G0Z-5.000");
+  if (generategcode == true) {
+  //Z31.750
+  //    owriteone("G53G0Z-5.000");
     owritetwo("Z",str(retractheight));
-}
-    orapid(getxpos(),getypos(),retractheight);
+  }
+  orapid(getxpos(),getypos(),retractheight);
 }
 
 \end{writecode}
-\addtocounter{gcpscad}{117}
+\addtocounter{gcpscad}{119}
  
 \section{gcodepreviewtemplate.scad}
 
@@ -2160,8 +2189,9 @@ Some further considerations:
 \subsection{Arcs for toolpaths and DXFs}
  
 A further consideration here is that G-code supports arcs in addition to the lines and
-polylines already implemented. Implementing arcs wants at least the following options 
-for quadrant and direction:
+polylines already implemented. 
+
+Implementing arcs wants at least the following options for quadrant and direction:
  
 \begin{itemize}
 \item cutarcNWCW --- cut the upper-left quadrant of a circle moving clockwise
@@ -2309,7 +2339,7 @@ module cutarcNWCWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
 }
 
 \end{writecode}
-\addtocounter{cuttwod}{48}
+\addtocounter{cuttwod}{40}
  
 \subsection{Keyhole toolpath and undercut tooling}
  
@@ -2383,19 +2413,11 @@ dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/
 dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270,360-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)));
 dxfarc(KH_tool_no,getxpos()+kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90);
 dxfarc(KH_tool_no,getxpos()+kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360);
-dxfpolyline(KH_tool_no,
- getxpos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),
- getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,
- getxpos()+kh_length,
- getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2);
-dxfpolyline(KH_tool_no,
- getxpos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),
- getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,
- getxpos()+kh_length,
- getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2);
+dxfpolyline(KH_tool_no, getxpos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2), getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, getxpos()+kh_length, getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2);
+dxfpolyline(KH_tool_no, getxpos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2), getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, getxpos()+kh_length, getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2);
 dxfpolyline(KH_tool_no,getxpos(),getypos(),getxpos()+kh_length,getypos());
- cutwithfeed(getxpos()+kh_length,getypos(),-kh_max_depth,feed);
- setxpos(getxpos()-kh_length);
+cutwithfeed(getxpos()+kh_length,getypos(),-kh_max_depth,feed);
+setxpos(getxpos()-kh_length);
   } else if (kh_angle > 0 && kh_angle < 90) {
 echo(kh_angle);
   dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90+kh_angle,180+kh_angle);
@@ -2490,7 +2512,7 @@ The first command will need to allow the machine to rapid to the beginning point
 and then rapid down to the surface of the stock, and then plunge down to the depth of the cut.
 The implementation will need to allow for a hook where the Depth per Pass is applied to the 
 plunge operation so that multiple passes are made.
-% 
+
 \DescribeRoutine{begincutdxf} The first module will ensure that the tool is safely up above
 the stock and will rapid to the position specified at the retract height (moving to that 
 position as an initial step, then will \texttt{cutwithfeed} to the specified position
@@ -2516,7 +2538,118 @@ module continuecutdxf(ex, ey, ez, fr) {
 
 \end{writecode}
 \addtocounter{cuttwod}{4}
+
+\paragraph{Rectangles}
+
+Cutting rectangles while writing out their perimeter in the DXF files (so that they may
+be assigned a matching toolpath in a traditional CAM program upon import) will require
+the origin coordinates, height and width and depth of the pocket, and the tool \# so
+that the corners may have a radius equal to the tool which is used.
+
+A further consideration is that cut orientation as an option should be accounted for
+if writing out G-code, as well as stepover, and the nature of initial
+entry (whether ramping in would be implemented, and if so at what angle). Advanced 
+toolpath strategies such as trochoidal milling could also be implemented.
+
+\DescribeRoutine{cutrectangledxf}%
+The initial version would work as a beginning point for vertical cutting if the \texttt{hull()}
+operation was removed and the loop was uncommented:
  
+\lstset{firstnumber=\thecuttwod}
+\begin{writecode}{a}{cut2Dshapes.scad}{scad}
+module cutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {//passes
+  movetosafez();
+  hull(){
+    //  for (i = [0 : abs(1) : passes]) {
+    //      rapid(bx+tool_radius(rtn)+i*(rwidth-tool_diameter(current_tool()))/passes,bx+tool_radius(rtn),1);
+    //      cutwithfeed(bx+tool_radius(rtn)+i*(rwidth-tool_diameter(current_tool()))/passes,by+tool_radius(rtn),bz-rdepth,feed);
+    //      cutwithfeed(bx+tool_radius(rtn)+i*(rwidth-tool_diameter(current_tool()))/passes,by+rheight-tool_radius(rtn),bz-rdepth,feed);
+  
+    cutwithfeed(bx+tool_radius(rtn),by+tool_radius(rtn),bz-rdepth,feed);
+    cutwithfeed(bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),bz-rdepth,feed);
+    cutwithfeed(bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),bz-rdepth,feed);
+    cutwithfeed(bx+tool_radius(rtn),by+rheight-tool_radius(rtn),bz-rdepth,feed);
+  }
+  //dxfarc(tn,xcenter,ycenter,radius,anglebegin,endangle)
+  dxfarc(rtn,bx+tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),180,270);
+  //dxfpolyline(tn,xbegin,ybegin,xend,yend)
+  dxfpolyline(rtn,bx,by+tool_radius(rtn),bx,by+rheight-tool_radius(rtn));
+  dxfarc(rtn,bx+tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),90,180);
+  dxfpolyline(rtn,bx+tool_radius(rtn),by+rheight,bx+rwidth-tool_radius(rtn),by+rheight);
+  dxfarc(rtn,bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),0,90);
+  dxfpolyline(rtn,bx+rwidth,by+rheight-tool_radius(rtn),bx+rwidth,by+tool_radius(rtn));
+  dxfarc(rtn,bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),270,360);
+  dxfpolyline(rtn,bx+rwidth-tool_radius(rtn),by,bx+tool_radius(rtn),by);
+}
+
+\end{writecode}
+\addtocounter{cuttwod}{25}
+
+\DescribeRoutine{cutrectangleoutlinedxf}%
+Cutting the outline of a rounded rectangle is a simplification of the above:
+
+\lstset{firstnumber=\thecuttwod}
+\begin{writecode}{a}{cut2Dshapes.scad}{scad}
+module cutrectangleoutlinedxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {//passes
+  movetosafez();
+  cutwithfeed(bx+tool_radius(rtn),by+tool_radius(rtn),bz-rdepth,feed);
+  cutwithfeed(bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),bz-rdepth,feed);
+  cutwithfeed(bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),bz-rdepth,feed);
+  cutwithfeed(bx+tool_radius(rtn),by+rheight-tool_radius(rtn),bz-rdepth,feed);
+  dxfarc(rtn,bx+tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),180,270);
+  dxfpolyline(rtn,bx,by+tool_radius(rtn),bx,by+rheight-tool_radius(rtn));
+  dxfarc(rtn,bx+tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),90,180);
+  dxfpolyline(rtn,bx+tool_radius(rtn),by+rheight,bx+rwidth-tool_radius(rtn),by+rheight);
+  dxfarc(rtn,bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),0,90);
+  dxfpolyline(rtn,bx+rwidth,by+rheight-tool_radius(rtn),bx+rwidth,by+tool_radius(rtn));
+  dxfarc(rtn,bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),270,360);
+  dxfpolyline(rtn,bx+rwidth-tool_radius(rtn),by,bx+tool_radius(rtn),by);
+}
+
+\end{writecode}
+\addtocounter{cuttwod}{16}
+
+\DescribeRoutine{rectangleoutlinedxf}%
+Which suggests a further command for simply adding a rectangle which could be used in
+Job Setup to add the stock outline to DXFs to assist in registration of jobs with
+multiple tools:
+
+\lstset{firstnumber=\thecuttwod}
+\begin{writecode}{a}{cut2Dshapes.scad}{scad}
+module rectangleoutlinedxf(bx, by, bz, rwidth, rheight, rtn) {
+  dxfpolyline(rtn,bx,by,bx,by+rheight);
+  dxfpolyline(rtn,bx,by+rheight,bx+rwidth,by+rheight);
+  dxfpolyline(rtn,bx+rwidth,by+rheight,bx+rwidth,by);
+  dxfpolyline(rtn,bx+rwidth,by,bx,by);
+}
+
+\end{writecode}
+\addtocounter{cuttwod}{7}
+
+\noindent the initial section performs the cutting operation for the 3D preview while the 
+latter section writes out the outline to the DXF files.
+
+\DescribeRoutine{cutoutrectangledxf}%
+For a cutting version of that file it would make sense to cut to the outside:
+
+\lstset{firstnumber=\thecuttwod}
+\begin{writecode}{a}{cut2Dshapes.scad}{scad}
+module cutoutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {
+  movetosafez();
+  cutwithfeed(bx-tool_radius(rtn),by-tool_radius(rtn),bz-rdepth,feed);
+  cutwithfeed(bx+rwidth+tool_radius(rtn),by-tool_radius(rtn),bz-rdepth,feed);
+  cutwithfeed(bx+rwidth+tool_radius(rtn),by+rheight+tool_radius(rtn),bz-rdepth,feed);
+  cutwithfeed(bx-tool_radius(rtn),by+rheight+tool_radius(rtn),bz-rdepth,feed);
+  cutwithfeed(bx-tool_radius(rtn),by-tool_radius(rtn),bz-rdepth,feed);
+  dxfpolyline(rtn,bx,by,bx,by+rheight);
+  dxfpolyline(rtn,bx,by+rheight,bx+rwidth,by+rheight);
+  dxfpolyline(rtn,bx+rwidth,by+rheight,bx+rwidth,by);
+  dxfpolyline(rtn,bx+rwidth,by,bx,by);
+}
+
+\end{writecode}
+\addtocounter{cuttwod}{13}
+
 \subsection{Bézier curves in 3 dimensions}
  
 One question is how many Bézier curves would it be necessary to have to define a surface
@@ -2604,6 +2737,7 @@ Thomas R. Kramer, Frederick M. Proctor, Elena R. Messina.\\
  
 \PrintIndex
 
+%\MergeAllFiles{readme.md}
 \MergeAllFiles{gcodepreview.py}
 \MergeAllFiles{pygcodepreview.scad}
 \MergeAllFiles{gcodepreview.scad}

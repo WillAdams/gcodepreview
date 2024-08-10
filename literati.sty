@@ -45,10 +45,10 @@
   % some code before
   % including \lstset{..}
   % Write file to given filename
-%  \lst@BeginWriteFile{readme.md}%
+%UNDO TO MAKE README  \lst@BeginWriteFile{readme.md}%
 }%
 {%
-%  \lst@EndWriteFile% closes output file
+%UNDO TO MAKE README  \lst@EndWriteFile% closes output file
 \lstset{basicstyle=\scriptsize\ttfamily,breaklines=true}%
 %\lstinputlisting{readme.md}%
 }
@@ -213,10 +213,13 @@ Last line was \the\lst@lineno\ for #1\ gcpy\ \thegcpy\ pyscad\ \thepyscad\ gcpsc
 \newlength{\listingsindent}
 \setlength{\listingsindent}{48bp}
 
+\newlength{\rightindent}
+\setlength{\rightindent}{126bp}
+
 \newlength{\listingswidth}
 \setlength{\listingswidth}{\textwidth-\listingsindent}
 
 
-\lstset{numbers=left, numberstyle=\footnotesize\ttfamily, stepnumber=1, numbersep=5pt, frame=lines, basicstyle=\small\ttfamily, breaklines=true, aboveskip=\baselineskip, belowskip=\baselineskip, linewidth=\listingswidth, xleftmargin=\listingsindent, xrightmargin=-\listingsindent}
+\lstset{numbers=left, numberstyle=\footnotesize\ttfamily, stepnumber=1, numbersep=5pt, frame=lines, basicstyle=\small\ttfamily, breaklines=true, aboveskip=\baselineskip, belowskip=\baselineskip, linewidth=\listingswidth, xleftmargin=\listingsindent, xrightmargin=-\rightindent}
 %, name=gcodepreview.py
 \usepackage{upquote}

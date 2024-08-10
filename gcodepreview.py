@@ -205,9 +205,6 @@ def writedxfDT(*arguments):
 def pclosegcodefile():
     f.close()
 
-def pclosesvgfile():
-    svg.close()
-
 def pclosedxffile():
     dxf.close()
 
