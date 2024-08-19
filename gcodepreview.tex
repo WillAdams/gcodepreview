@@ -19,8 +19,11 @@
 
 %\DoNotIndex{\bullet}
 
+%\changes{v0.5}{2024/08/10}{DXFs and images}
+\def\fileversion{v0.5} \def\filedate{2024/08/10}
+
 %\changes{v0.4}{2024/07/28}{Literary re-write}
-\def\fileversion{v0.4} \def\filedate{2024/07/28}
+%\def\fileversion{v0.4} \def\filedate{2024/07/28}
 
 %\changes{v0.3}{2024/07/01}{Curves and roundover tooling}
 %\def\fileversion{v0.3} \def\filedate{2024/07/01}
@@ -220,8 +223,10 @@ Deprecated feature:
 \clearpage
 \section{gcodepreview}
 
-As noted above, this library works by using Python code as a back-end so as to persistently
-store and access variables, and to write out files. Doing so requires a total of three files:
+This library works by using Python code as a back-end so as to persistently
+store and access variables, and to write out files while both modeling the motion of a 3-axis. 
+CNC machine and if desired, writing out DXR and/or G-code files. Doing so requires a total of 
+three files:
 
 \begin{itemize}
 \item A Python file: gcodepreview.py (\texttt{gcpy}) --- this will have variables in the 
@@ -285,7 +290,7 @@ In modeling the machine motion and G-code it will be necessary to have the machi
 several variables for machine position, current tool, depth in toolpath, \&c. 
 This will be done using paired functions (which will set and return the  
 matching variable) and a matching (global) variable, as well as additional functions for 
-setting the matching variable.
+setting the matching variable(s).
 
 \begin{samepage}
 The first such variables are for XYZ position:
@@ -298,7 +303,7 @@ The first such variables are for XYZ position:
 \end{samepage}
 
 \begin{samepage}
-Similarly, for some toolpaths it will be necessary to track the depth along the Z-axis
+\noindent Similarly, for some toolpaths it will be necessary to track the depth along the Z-axis
 as the toolpath is cut out:
  
 \begin{itemize}
@@ -307,7 +312,7 @@ as the toolpath is cut out:
 \end{samepage}
 
 \begin{samepage}
-It will further be necessary to have a variable for the current tool:
+\noindent It will further be necessary to have a variable for the current tool:
 
 \begin{itemize}
  \item \texttt{currenttool} \DescribeVariable{currenttool}
@@ -329,7 +334,8 @@ function call, and lastly a <foo> OpenSCAD module which will be \texttt{<include
 so as to be able to make use of OpenSCAD variables.
 
 \DescribeRoutine{psetupstock}The first such routine will be appropriately enough, 
-to set up the stock, and perform other initializations. 
+to set up the stock, and perform other initializations --- in Python all that needs 
+to be done is to set the value of the persistent (Python) variables:
 
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
@@ -349,6 +355,8 @@ def psetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin
 \addtocounter{gcpy}{12}
 
 \DescribeRoutine{osetupstock}The intermediary OpenSCAD code simply calls the Python version. 
+Note that while the parameters are passed all the way down (for consistency) they are not
+used.
 
 \lstset{firstnumber=\thepyscad}
 \begin{writecode}{a}{pygcodepreview.scad}{scad}
@@ -363,6 +371,9 @@ def psetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin
 parameters and will create comments in the G-code which set the stock dimensions and its 
 position relative to the zero as set relative to the stock.
  
+The \texttt{stockorigin} setting is used in an <if then else> structure to position
+the 3D model of the stock. 
+
 \lstset{firstnumber=\thepyscad}
 \begin{writecode}{a}{pygcodepreview.scad}{scad}
 module setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin) {
@@ -552,7 +563,9 @@ module settzpos(newtzpos) {
 \end{writecode}
 \addtocounter{pyscad}{21}
  
-\DescribeRoutine{oset}
+\noindent\DescribeRoutine{oset} while for setting the variables, it is necessary to have
+an OpenSCAD module:
+
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
 module oset(ex, ey, ez) {
@@ -564,7 +577,9 @@ module oset(ex, ey, ez) {
 \end{writecode}
 \addtocounter{gcpscad}{6}
  
-\DescribeRoutine{osettz}
+\noindent and some toolpaths will require the storing and usage\DescribeRoutine{osettz}
+of an intermediate value for the Z-axis position during calculation:
+
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
 module osettz(tz) {
@@ -576,8 +591,7 @@ module osettz(tz) {
 
 \subsection{Tools and Changes}
  
-\DescribeRoutine{pcurrenttool}%
-Similarly Python functions and variables will be used to track and
+Similarly Python functions and variables will be used to track and \DescribeRoutine{pcurrenttool}%
 set and return the current tool: \DescribeRoutine{psettool}
  
 \lstset{firstnumber=\thegcpy}
@@ -611,7 +625,7 @@ function current_tool() = pcurrent_tool();
 \subsubsection{toolchange}
 \noindent and apply the appropriate commands for a \texttt{toolchange}.
 \label{subsubsec:toolchange}\DescribeRoutine{toolchange}%
-Note that it is expected that this subsubsection will be updated as needed when new tooling
+Note that it is expected that this code will be updated as needed when new tooling
 is introduced as additional modules which require specific tooling are added below.
 
 Note that the comments written out in G-code correspond to that used by the G-code previewing tool 
@@ -621,8 +635,8 @@ It is possible that rather than hard-coding the tool definitions, a future updat
 read them in from an external file --- the \texttt{.csv} format used for tool libraries in 
 Carbide Create seems a likely candidate and worth exploring.
 
-Note that there are many varieties of tooling and not all will be implemented in the initial 
-version of this project
+Note that there are many varieties of tooling and not all will be implemented, especially in the 
+initial version of this project
  
 \begin{samepage}
 \paragraph{Normal Tooling}
@@ -639,13 +653,13 @@ and are defined by their profile:
                                  their simple and easily understood geometry makes them a 
                                  standard choice (a radiused form with a flat bottom, often
                                  described as a ``bowl bit'' is not implemented as-of-yet)
-\item Ballnose (\#202 and 101) --- rounded, they are the standard choice for rounded and 
+\item Ballnose (\#202 and 101) --- rounded, they are the standard choice for concave and 
                                    organic shapes
 \item V tooling (\#301, 302 and 390) --- pointed at the tip, they are available in a variety
                                          angles and diameters and may be used for decorative
                                          V carving, or for chamfering or cutting specific angles
-                                         (note that the commonly available radiused form
-                                         is not implemented at this time, \emph{e.g.},~\#501 and 502)
+                                         (note that the commonly available radiused form is not
+                                         implemented at this time, \emph{e.g.},~\#501 and 502)
 \end{itemize}
 \end{samepage}
 
@@ -743,11 +757,10 @@ as coded above which require using a \texttt{hull} operation between 3D represen
 of the tools at the beginning and end points. Tooling which cannot be so represented will be implemented separately below, see paragraph~\ref{para:concavetoolshapes}.
 
 \paragraph{Selecting Tools}
-
+\DescribeVariable{tool number}\DescribeRoutine{selecttool}
 There must also be a module for selecting tools: \texttt{select\_tool} which will
-\DescribeRoutine{selecttool} select the matching module for 3D modeling and pass the 
+select the matching module for 3D modeling and pass the 
 appropriate parameters to that module:
-\DescribeVariable{tool number}
  
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -2008,142 +2021,18 @@ module endtoolpath() {
 \end{writecode}
 \addtocounter{gcpscad}{119}
  
-\section{gcodepreviewtemplate.scad}
-
-The commands may then be put together using a template which will ensure that
-the various files are used/included as necessary, that files are opened before
-being written to, and that they are closed at the end.
- 
-\lstset{firstnumber=1}%\thegcptmpl}
-\begin{writecode}{w}{gcodepreviewtemplate.scad}{scad}
-//!OpenSCAD
-
-use <gcodepreview.py>;
-use <pygcodepreview.scad>;
-include <gcodepreview.scad>;
-
-$fa = 2;
-$fs = 0.125;
-
-/* [Export] */
-Base_filename = "export"; 
-
-/* [Export] */
-generatedxf = true; 
-
-/* [Export] */
-generategcode = true; 
-
-///* [Export] */
-//generatesvg = false; 
-
-/* [CAM] */
-toolradius = 1.5875;
-
-/* [CAM] */
-large_ball_tool_no = 0; // [0:0,111:111,101:101,202:202]
-
-/* [CAM] */
-large_square_tool_no = 0; // [0:0,112:112,102:102,201:201]
-
-/* [CAM] */
-large_V_tool_no = 0; // [0:0,301:301,690:690]
-
-/* [CAM] */
-small_ball_tool_no = 0; // [0:0,121:121,111:111,101:101]
-
-/* [CAM] */
-small_square_tool_no = 102; // [0:0,122:122,112:112,102:102]
-
-/* [CAM] */
-small_V_tool_no = 0; // [0:0,390:390,301:301]
-
-/* [CAM] */
-KH_tool_no = 0; // [0:0,375:375]
-
-/* [CAM] */
-DT_tool_no = 0; // [0:0,814:814]
-
-/* [Feeds and Speeds] */
-plunge = 100;
-
-/* [Feeds and Speeds] */
-feed = 400;
-
-/* [Feeds and Speeds] */
-speed = 16000;
-
-/* [Feeds and Speeds] */
-square_ratio = 1.0; // [0.25:2]
-
-/* [Feeds and Speeds] */
-small_V_ratio = 0.75; // [0.25:2]
-
-/* [Feeds and Speeds] */
-large_V_ratio = 0.875; // [0.25:2]
-
-/* [Stock] */
-stocklength = 219;
-
-/* [Stock] */
-stockwidth = 150;
-
-/* [Stock] */
-stockthickness = 8.35;
-
-/* [Stock] */
-zeroheight = "Top"; // [Top, Bottom]
-
-/* [Stock] */
-stockorigin = "Center"; // [Lower-Left, Center-Left, Top-Left, Center]
-
-/* [Stock] */
-retractheight = 9;
-
-filename_gcode = str(Base_filename, ".nc");
-filename_dxf = str(Base_filename);
-//filename_svg = str(Base_filename, ".svg");
-
-opengcodefile(filename_gcode);
-opendxffile(filename_dxf);
-
-difference() {
-setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
-
-movetosafez();
-
-toolchange(small_square_tool_no,speed * square_ratio);
-
-begintoolpath(0,0,0.25);
-beginpolyline(0,0,0.25);
-
-cutoneaxis_setfeed("Z",0,plunge*square_ratio);
-
-cutwithfeed(stocklength/2,stockwidth/2,-stockthickness,feed);
-addpolyline(stocklength/2,stockwidth/2,-stockthickness);
-
-endtoolpath();
-closepolyline();
-}
-
-closegcodefile();
-closedxffile();
-\end{writecode}
-\addtocounter{gcptmpl}{112}
- 
-\begin{samepage}
 \section{cut2Dshapes and expansion}
  
-New features will be tried out in a file such as \texttt{cut2Dshapes.scad} insofar as the 
+New features may be tried out in a file such as \texttt{cut2Dshapes.scad} insofar as the 
 file structures will allow (tool definitions for example will need to consolidated in 
-\ref{subsubsec:toolchange} which will need
-to be included in the projects which will make use of said features until such time
-as they are added into the main \texttt{gcodepreview.scad} file.
+\ref{subsubsec:toolchange}) which will need to be included in the projects which will 
+make use of said features until such time as they are added into the main 
+\texttt{gcodepreview.scad} file.
 
 A basic requirement will be to define two-dimensional regions so as to cut them out.
 Two different geometric treatments will be necessary: modeling the geometry which 
 defines the region to be cut out (output as a DXF); and modeling the movement of the
-tool, the toolpath which will be use in creating the 3D model and outputting the 
+tool, the toolpath which will be used in creating the 3D model and outputting the 
 G-code.
 
 In the TUG presentation/paper: \url{http://tug.org/TUGboat/tb40-2/tb125adams-3d.pdf}
@@ -2151,6 +2040,78 @@ a list of 2D shapes was put forward --- which of these will need to be created,
 or if some more general solution will be put forward is uncertain. For the time
 being, shapes will be implemented on an as-needed basis, as modified by the
 interaction with the requirements of toolpaths.
+
+\begin{figure}
+\begin{outline}
+\1 0
+   \2 circle
+   \2 ellipse (oval) (requires some sort of non-arc curve)
+      \3 egg-shaped
+   \2 annulus (one circle within another, forming  a ring)
+   \2 superellipse (see astroid below)
+\1 1
+   \2 cone with rounded end (arc)—see also ``sector'' under 3 below
+\1 2
+   \2 semicircle/circular/half-circle segment (arc and a straight line); see also sector below
+   \2 arch---curve possibly smoothly joining a  pair of straight lines with a flat bottom
+   \2 lens/vesica piscis (two convex curves)
+   \2 lune/crescent (one convex, one concave  curve)
+   \2 heart (two curves)
+   \2 tomoe (comma shape)---non-arc curves
+\1 3
+   \2 triangle
+      \3 equilateral
+      \3 isosceles
+      \3 right triangle
+      \3 scalene
+   \2 (circular) sector (two straight edges, one convex arc)
+      \3 quadrant (90\textdegree)
+      \3 sextants (60\textdegree)
+      \3 octants (45\textdegree)
+   \2 deltoid curve (three concave arcs)
+   \2  Reuleaux triangle (three convex arcs)
+   \2 arbelos (one convex, two concave arcs)
+   \2 two straight edges, one concave arc---an example is the hyperbolic sector\footnote{\url{en.wikipedia.org/wiki/Hyperbolic_sector} and
+ \url{www.reddit.com/r/Geometry/comments/bkbzgh/is_there_a_name_for_a_3_pointed_figure_with_two}}
+   \2 two convex, one concave arc
+\1 4
+   \2 rectangle (including square)
+   \2 parallelogram
+   \2 rhombus
+   \2 trapezoid/trapezium
+   \2 kite
+   \2 ring/annulus segment (straight line, concave arc, straight line, convex arc)
+   \2 astroid (four concave arcs)
+   \2 salinon (four semicircles)
+   \2 three straight lines and one concave arc
+\end{outline}
+
+
+  Is the list of shapes for which there are not widely
+ known names interesting for its lack of notoriety?
+
+\begin{itemize}
+ \item two straight edges, one concave arc—oddly, an
+ asymmetric form (hyperbolic sector) has a name,
+ but not the symmetrical---while the colloquial/prosaic “arrowhead” was considered, it was
+ rejected as being better applied to the shape be
+low. (It’s also the shape used for the spaceship
+ in the game Asteroids (or Hyperspace), but that
+ is potentially confusing with astroid.) At the
+ conference, Prof. Knuth suggested “dart” as a
+ suitable term.
+ \item two convex, one concave arc—with the above
+ named, the term “arrowhead” is freed up to use
+ as the name for this shape.
+ \item three straight lines and one concave arc.
+ \end{itemize}
+
+ The first in particular is sorely needed for this project
+ (it’s the result of inscribing a circle in a square or
+ other regular geometric shape). Do these shapes
+ have names in any other languages which might be
+ used instead?
+\end{figure}
 
 The program Carbide Create has toolpath types and options which are as follows:
 
@@ -2166,7 +2127,7 @@ The program Carbide Create has toolpath types and options which are as follows:
                    include/model the areas which should be cleared for the sake of reducing wear
                    on the tool and ensuring chip clearance
 \end{itemize}
-\end{samepage}
+
  
 Some further considerations:
 
@@ -2609,6 +2570,9 @@ module cutrectangleoutlinedxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {//passe
 \end{writecode}
 \addtocounter{cuttwod}{16}
 
+\noindent the initial section performs the cutting operation for the 3D preview while the 
+latter section writes out the outline to the DXF files.
+
 \DescribeRoutine{rectangleoutlinedxf}%
 Which suggests a further command for simply adding a rectangle which could be used in
 Job Setup to add the stock outline to DXFs to assist in registration of jobs with
@@ -2625,9 +2589,6 @@ module rectangleoutlinedxf(bx, by, bz, rwidth, rheight, rtn) {
 
 \end{writecode}
 \addtocounter{cuttwod}{7}
-
-\noindent the initial section performs the cutting operation for the 3D preview while the 
-latter section writes out the outline to the DXF files.
 
 \DescribeRoutine{cutoutrectangledxf}%
 For a cutting version of that file it would make sense to cut to the outside:
@@ -2650,7 +2611,191 @@ module cutoutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {
 \end{writecode}
 \addtocounter{cuttwod}{13}
 
-\subsection{Bézier curves in 3 dimensions}
+\section{gcodepreviewtemplate.scad}
+
+The commands may then be put together using a template which will ensure that
+the various files are used/included as necessary, that files are opened before
+being written to, and that they are closed at the end.
+ 
+\lstset{firstnumber=1}%\thegcptmpl}
+\begin{writecode}{w}{gcodepreviewtemplate.scad}{scad}
+//!OpenSCAD
+
+use <gcodepreview.py>;
+use <pygcodepreview.scad>;
+include <gcodepreview.scad>;
+
+$fa = 2;
+$fs = 0.125;
+
+/* [Export] */
+Base_filename = "export"; 
+
+/* [Export] */
+generatedxf = true; 
+
+/* [Export] */
+generategcode = true; 
+
+///* [Export] */
+//generatesvg = false; 
+
+/* [CAM] */
+toolradius = 1.5875;
+
+/* [CAM] */
+large_ball_tool_no = 0; // [0:0,111:111,101:101,202:202]
+
+/* [CAM] */
+large_square_tool_no = 0; // [0:0,112:112,102:102,201:201]
+
+/* [CAM] */
+large_V_tool_no = 0; // [0:0,301:301,690:690]
+
+/* [CAM] */
+small_ball_tool_no = 0; // [0:0,121:121,111:111,101:101]
+
+/* [CAM] */
+small_square_tool_no = 102; // [0:0,122:122,112:112,102:102]
+
+/* [CAM] */
+small_V_tool_no = 0; // [0:0,390:390,301:301]
+
+/* [CAM] */
+KH_tool_no = 0; // [0:0,375:375]
+
+/* [CAM] */
+DT_tool_no = 0; // [0:0,814:814]
+
+/* [Feeds and Speeds] */
+plunge = 100;
+
+/* [Feeds and Speeds] */
+feed = 400;
+
+/* [Feeds and Speeds] */
+speed = 16000;
+
+/* [Feeds and Speeds] */
+square_ratio = 1.0; // [0.25:2]
+
+/* [Feeds and Speeds] */
+small_V_ratio = 0.75; // [0.25:2]
+
+/* [Feeds and Speeds] */
+large_V_ratio = 0.875; // [0.25:2]
+
+/* [Stock] */
+stocklength = 219;
+
+/* [Stock] */
+stockwidth = 150;
+
+/* [Stock] */
+stockthickness = 8.35;
+
+/* [Stock] */
+zeroheight = "Top"; // [Top, Bottom]
+
+/* [Stock] */
+stockorigin = "Center"; // [Lower-Left, Center-Left, Top-Left, Center]
+
+/* [Stock] */
+retractheight = 9;
+
+filename_gcode = str(Base_filename, ".nc");
+filename_dxf = str(Base_filename);
+//filename_svg = str(Base_filename, ".svg");
+
+opengcodefile(filename_gcode);
+opendxffile(filename_dxf);
+
+difference() {
+setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
+
+movetosafez();
+
+toolchange(small_square_tool_no,speed * square_ratio);
+
+begintoolpath(0,0,0.25);
+beginpolyline(0,0,0.25);
+
+cutoneaxis_setfeed("Z",0,plunge*square_ratio);
+
+cutwithfeed(stocklength/2,stockwidth/2,-stockthickness,feed);
+addpolyline(stocklength/2,stockwidth/2,-stockthickness);
+
+endtoolpath();
+closepolyline();
+}
+
+closegcodefile();
+closedxffile();
+\end{writecode}
+\addtocounter{gcptmpl}{112}
+ 
+\subsection{Future}
+
+\subsubsection{Images}
+
+Would it be helpful to re-create code algorithms/sections using OpenSCAD Graph Editor 
+so as to represent/illustrate the program?
+
+\subsubsection{Generalized DXF creation}
+
+Generalize the creation of DXFs based on the projection() of a toolpath? (Note that openpythonscad has a specific feature to export a given 3D object as a DXF.)
+
+\subsubsection{Import G-code}
+
+Use a tool to read in a G-code file, then create a 3D model which would serve as a preview of the cut?
+
+\begin{itemize}
+\item \url{https://stackoverflow.com/questions/34638372/simple-python-program-to-read-gcode-file}
+\item \url{https://pypi.org/project/gcodeparser/}
+\item \url{https://github.com/fragmuffin/pygcode/wiki}
+\end{itemize} 
+ 
+\subsubsection{Bézier curves in 2 dimensions}
+
+Take a Bézier curve definition and approximate it as arcs and write them into a DXF?
+
+\url{https://pomax.github.io/bezierinfo/}
+
+c.f., \url{https://linuxcnc.org/docs/html/gcode/g-code.html#gcode:g5}
+
+%There is Bernstein polynomial equation which is similar to calculating like $(a+b)^2 ....$ or up to $(a+b)^n$ where $n$ is the degree of polynomial.
+%
+%So how do you calculate $(a+b)^2$ or for that matter to any polynomial degree $n$
+%
+%an integer $i => 0 to n$ calculates each term of the above equation
+%
+%$n!/(i! * (n-i)!)*a^i*b^(n-i)$  where $n!$ means factorial of $n$ --equation 1
+%substituting $a=t$ and $b=(1-t)$
+%where $t$ is a parameter which goes from $0 ->1$ and you can have any numbers within that range
+%
+%in bezier the degree of the curve is 1 less than the control points e.g. if you have 10 control points the polynomial degree will be 9.
+%
+%so finally equation for bezier is:
+%
+%$sum(p[i]*n!/(i! * (n-i)!)*t^i*(1-t)^(n-i))$ where $p[i]$ is the $i$th control point
+%
+%my simple 6 lines function for bezier curve is following:
+%
+%\begin{verbatim}
+%def bezier(p,s=10):
+%  r  '''
+%    bezier curve defined by points 'p' and number of segments 's'
+%    '''
+%    p=a_(p)
+%    n=len(p)
+%    k=n-1
+%    f=[[p[i]*comb(k,i)*u**i*(1-u)**(k-i) for i in range(n)]
+%       for u in linspace(0,1,s)]    
+%    p1=l_(a_([p.sum(0) for p in a_(f)]))
+%    return p1
+%\end{verbatim}    
+
+\subsubsection{Bézier curves in 3 dimensions}
  
 One question is how many Bézier curves would it be necessary to have to define a surface
 in 3 dimensions. Attributes for this which are desirable/necessary:
@@ -2692,6 +2837,12 @@ be definable by:
 \noindent and regions which could not be so represented could be sub-divided until the 
 representation is workable.
 
+Or, it may be that fewer (only two?) curves are needed:
+
+\noindent\includegraphics[width=\linewidth]{images/Screenshot 2024-08-11 at 6.55.26 PM.png}
+
+\url{https://pages.mtu.edu/~shene/COURSES/cs3621/NOTES/notes.html}
+
 \section{Other Resources}
  
 Holidays are from \url{https://nationaltoday.com/}
@@ -2700,7 +2851,7 @@ Holidays are from \url{https://nationaltoday.com/}
  
 \bibliographystyle{alpha}
 
-\begin{thebibliography}{RS274}
+\begin{thebibliography}{PractShopMath}
 
 \bibitem[ConstGeom]{WALMSLEY81}
 Walmsley, Brian. \emph{Construction Geometry}. 2d ed., Centennial College Press, 1981.
