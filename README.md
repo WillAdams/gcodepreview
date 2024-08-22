@@ -146,6 +146,11 @@ Version 0.4
  - Rewrite using literati documentclass, suppression of SVG code
  - dxfrectangle (without G-code support)
 
+Version 0.5
+
+ - more shapes
+ - consolidate rectangles, arcs, and circles in gcodepreview.scad
+
 Possible future improvements:
 
  - support for additional tooling shapes such as tapered ball-nose tools or lollipop cutters or thread-cutting tools
@@ -163,3 +168,4 @@ specialized CAM tool.
 Deprecated feature:
 
  - exporting SVGs --- while this was begun, it turns out that these would be written out upside down due to coordinate system differences between OpenSCAD/DXFs and SVGs requiring managing the inversion of the coordinate system (it is possible that METAPOST, which shares the same orientation and which can write out SVGs will be used instead for future versions)
+

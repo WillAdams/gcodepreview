@@ -200,6 +200,11 @@ Version 0.4
  - Rewrite using literati documentclass, suppression of SVG code
  - dxfrectangle (without G-code support)
 
+Version 0.5
+
+ - more shapes
+ - consolidate rectangles, arcs, and circles in gcodepreview.scad
+
 Possible future improvements:
 
  - support for additional tooling shapes such as tapered ball-nose tools or lollipop cutters or thread-cutting tools
@@ -241,14 +246,17 @@ Each file will begin with a suitable comment indicating the file type and suitab
 
 \begin{writecode}{w}{gcodepreview.py}{python}
 #!/usr/bin/env python
+#"C:\Program Files\OpenSCAD\bin\openscad.exe" --trust-python
+#Currently tested with 2023.11.30 and Python 3.11
+#gcodepreview 0.5, see gcodepreview.scad
 
 \end{writecode}
-\addtocounter{gcpy}{3}
+\addtocounter{gcpy}{6}
 
 \begin{writecode}{w}{pygcodepreview.scad}{scad}
 //!OpenSCAD
  
-//gcodepreview 0.4
+//gcodepreview 0.5, see gcodepreview.scad
 
 \end{writecode}
 \addtocounter{pyscad}{5}
@@ -256,7 +264,7 @@ Each file will begin with a suitable comment indicating the file type and suitab
 \begin{writecode}{w}{gcodepreview.scad}{scad}
 //!OpenSCAD
  
-//gcodepreview 0.4
+//gcodepreview 0.5
 //
 //used via use <gcodepreview.py>;
 //         use <pygcodepreview.scad>;
@@ -2020,16 +2028,20 @@ module endtoolpath() {
 
 \end{writecode}
 \addtocounter{gcpscad}{119}
+
+\section{Cutting shapes, cut2Dshapes, and expansion}
+
+Certain basic shapes (arcs, circles, rectangles), will be incorporated in the main code. 
+Other shapes will be added to the additional/optional file, \texttt{cut2Dshapes.scad}
+as they are developed.
  
-\section{cut2Dshapes and expansion}
- 
-New features may be tried out in a file such as \texttt{cut2Dshapes.scad} insofar as the 
+It is most expedient to test out new features in a new/separate file insofar as the 
 file structures will allow (tool definitions for example will need to consolidated in 
 \ref{subsubsec:toolchange}) which will need to be included in the projects which will 
 make use of said features until such time as they are added into the main 
 \texttt{gcodepreview.scad} file.
 
-A basic requirement will be to define two-dimensional regions so as to cut them out.
+A basic requirement for two-dimensional regions will be to define them so as to cut them out.
 Two different geometric treatments will be necessary: modeling the geometry which 
 defines the region to be cut out (output as a DXF); and modeling the movement of the
 tool, the toolpath which will be used in creating the 3D model and outputting the 
@@ -2218,8 +2230,8 @@ Adding a simple loop to handle the processing of the \texttt{cut()} toolpaths af
 a single point of control for adding additional features such as allowing the depth to 
 vary as one cuts along an arc (two when the need to have a version which steps down):
 
-\lstset{firstnumber=1}
-\begin{writecode}{w}{cut2Dshapes.scad}{scad}
+\lstset{firstnumber=\thegcpscad}
+\begin{writecode}{a}{gcodepreview.scad}{scad}
 //!OpenSCAD
 
 module arcloop(barc,earc, xcenter, ycenter, radius) {
@@ -2245,12 +2257,12 @@ module narcloop(barc,earc, xcenter, ycenter, radius) {
 }
 
 \end{writecode}
-\addtocounter{cuttwod}{25}
+\addtocounter{gcpscad}{25}
  
 The various textual versions are quite obvious:
 
-\lstset{firstnumber=\thecuttwod}
-\begin{writecode}{a}{cut2Dshapes.scad}{scad}
+\lstset{firstnumber=\thegcpscad}
+\begin{writecode}{a}{gcodepreview.scad}{scad}
 module cutarcNECCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
   dxfarc(tn,xcenter,ycenter,radius,0,90);
   settzpos((getzpos()-ez)/90);
@@ -2300,7 +2312,7 @@ module cutarcNWCWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
 }
 
 \end{writecode}
-\addtocounter{cuttwod}{40}
+\addtocounter{gcpscad}{40}
  
 \subsection{Keyhole toolpath and undercut tooling}
  
@@ -2329,8 +2341,8 @@ Supporting all of these would require trigonometric comparisons in the If else b
 so only the 4 quadrants, N, W, S, and E will be supported in the initial version. 
 This will be done by wrapping the command with a version which only accepts those options: 
 
-\lstset{firstnumber=\thecuttwod}
-\begin{writecode}{a}{cut2Dshapes.scad}{scad}
+\lstset{firstnumber=\thegcpscad}
+\begin{writecode}{a}{gcodepreview.scad}{scad}
 module keyhole_toolpath(kh_tool_no, kh_start_depth, kh_max_depth, kht_angle, kh_length) {   
 if (kht_angle == "N") {
   keyhole_toolpath_degrees(kh_tool_no, kh_start_depth, kh_max_depth, 90, kh_length);
@@ -2344,7 +2356,7 @@ if (kht_angle == "N") {
 }
 
 \end{writecode}
-\addtocounter{cuttwod}{12}
+\addtocounter{gcpscad}{12}
  
 The original version of the command is renamed and called by that. Note that code is still
 present for the partial calculation of one quadrant (for the case of all nodes within the
@@ -2352,8 +2364,8 @@ quadrant).
 
 The first task is to place a circle at the origin which is invariant of angle:
  
-\lstset{firstnumber=\thecuttwod}
-\begin{writecode}{a}{cut2Dshapes.scad}{scad}
+\lstset{firstnumber=\thegcpscad}
+\begin{writecode}{a}{gcodepreview.scad}{scad}
 module keyhole_toolpath_degrees(kh_tool_no, kh_start_depth, kh_max_depth, kh_angle, kh_length) {
 dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90);
 dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,90,180);
@@ -2361,12 +2373,12 @@ dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.
 dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360);
 
 \end{writecode}
-\addtocounter{cuttwod}{6}
+\addtocounter{gcpscad}{6}
 
 Then it will be necessary to test for each possible case in a series of If Else blocks:
  
-\lstset{firstnumber=\thecuttwod}
-\begin{writecode}{a}{cut2Dshapes.scad}{scad}
+\lstset{firstnumber=\thegcpscad}
+\begin{writecode}{a}{gcodepreview.scad}{scad}
   if (kh_angle == 0) {
 dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180,270);
 dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90,180);
@@ -2451,7 +2463,7 @@ dxfarc(KH_tool_no,getxpos(),getypos()-kh_length,tool_diameter(KH_tool_no, (kh_ma
 }
 
 \end{writecode}
-\addtocounter{cuttwod}{91}
+\addtocounter{gcpscad}{91}
  
 \subsection{Shapes and tool movement}
  
@@ -2481,24 +2493,24 @@ at the specified feed rate. Despite \texttt{dxf} being included in the filename 
 is made to the dxf file at this time, this simply indicates that this file is preparatory to
 \texttt{continuecutdxf}.
 
-\lstset{firstnumber=\thecuttwod}
-\begin{writecode}{a}{cut2Dshapes.scad}{scad}
+\lstset{firstnumber=\thegcpscad}
+\begin{writecode}{a}{gcodepreview.scad}{scad}
 module begincutdxf(rh, ex, ey, ez, fr) {
   rapid(getxpos(),getypos(),rh);
   cutwithfeed(ex,ey,ez,fr);
 }
 
 \end{writecode}
-\addtocounter{cuttwod}{5}
+\addtocounter{gcpscad}{5}
  
-\lstset{firstnumber=\thecuttwod}
-\begin{writecode}{a}{cut2Dshapes.scad}{scad}
+\lstset{firstnumber=\thegcpscad}
+\begin{writecode}{a}{gcodepreview.scad}{scad}
 module continuecutdxf(ex, ey, ez, fr) {
   cutwithfeed(ex,ey,ez,fr);
 }
 
 \end{writecode}
-\addtocounter{cuttwod}{4}
+\addtocounter{gcpscad}{4}
 
 \paragraph{Rectangles}
 
@@ -2516,8 +2528,8 @@ toolpath strategies such as trochoidal milling could also be implemented.
 The initial version would work as a beginning point for vertical cutting if the \texttt{hull()}
 operation was removed and the loop was uncommented:
  
-\lstset{firstnumber=\thecuttwod}
-\begin{writecode}{a}{cut2Dshapes.scad}{scad}
+\lstset{firstnumber=\thegcpscad}
+\begin{writecode}{a}{gcodepreview.scad}{scad}
 module cutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {//passes
   movetosafez();
   hull(){
@@ -2544,13 +2556,13 @@ module cutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {//passes
 }
 
 \end{writecode}
-\addtocounter{cuttwod}{25}
+\addtocounter{gcpscad}{25}
 
 \DescribeRoutine{cutrectangleoutlinedxf}%
 Cutting the outline of a rounded rectangle is a simplification of the above:
 
-\lstset{firstnumber=\thecuttwod}
-\begin{writecode}{a}{cut2Dshapes.scad}{scad}
+\lstset{firstnumber=\thegcpscad}
+\begin{writecode}{a}{gcodepreview.scad}{scad}
 module cutrectangleoutlinedxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {//passes
   movetosafez();
   cutwithfeed(bx+tool_radius(rtn),by+tool_radius(rtn),bz-rdepth,feed);
@@ -2568,18 +2580,15 @@ module cutrectangleoutlinedxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {//passe
 }
 
 \end{writecode}
-\addtocounter{cuttwod}{16}
-
-\noindent the initial section performs the cutting operation for the 3D preview while the 
-latter section writes out the outline to the DXF files.
+\addtocounter{gcpscad}{16}
 
 \DescribeRoutine{rectangleoutlinedxf}%
 Which suggests a further command for simply adding a rectangle which could be used in
 Job Setup to add the stock outline to DXFs to assist in registration of jobs with
 multiple tools:
 
-\lstset{firstnumber=\thecuttwod}
-\begin{writecode}{a}{cut2Dshapes.scad}{scad}
+\lstset{firstnumber=\thegcpscad}
+\begin{writecode}{a}{gcodepreview.scad}{scad}
 module rectangleoutlinedxf(bx, by, bz, rwidth, rheight, rtn) {
   dxfpolyline(rtn,bx,by,bx,by+rheight);
   dxfpolyline(rtn,bx,by+rheight,bx+rwidth,by+rheight);
@@ -2588,13 +2597,16 @@ module rectangleoutlinedxf(bx, by, bz, rwidth, rheight, rtn) {
 }
 
 \end{writecode}
-\addtocounter{cuttwod}{7}
+\addtocounter{gcpscad}{7}
+
+\noindent the initial section performs the cutting operation for the 3D preview while the 
+latter section writes out the outline to the DXF files.
 
 \DescribeRoutine{cutoutrectangledxf}%
 For a cutting version of that file it would make sense to cut to the outside:
 
-\lstset{firstnumber=\thecuttwod}
-\begin{writecode}{a}{cut2Dshapes.scad}{scad}
+\lstset{firstnumber=\thegcpscad}
+\begin{writecode}{a}{gcodepreview.scad}{scad}
 module cutoutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {
   movetosafez();
   cutwithfeed(bx-tool_radius(rtn),by-tool_radius(rtn),bz-rdepth,feed);
@@ -2609,14 +2621,25 @@ module cutoutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {
 }
 
 \end{writecode}
-\addtocounter{cuttwod}{13}
+\addtocounter{gcpscad}{13}
+
+\subsection{Expansion}
+
+The balance of shapes will go into \texttt{cut2Dshapes.scad}.
+
+\lstset{firstnumber=1}
+\begin{writecode}{w}{cut2Dshapes.scad}{scad}
+//!OpenSCAD
+
+\end{writecode}
+\addtocounter{cuttwod}{2}
 
 \section{gcodepreviewtemplate.scad}
 
 The commands may then be put together using a template which will ensure that
 the various files are used/included as necessary, that files are opened before
 being written to, and that they are closed at the end.
- 
+
 \lstset{firstnumber=1}%\thegcptmpl}
 \begin{writecode}{w}{gcodepreviewtemplate.scad}{scad}
 //!OpenSCAD
@@ -2743,7 +2766,7 @@ so as to represent/illustrate the program?
 
 \subsubsection{Generalized DXF creation}
 
-Generalize the creation of DXFs based on the projection() of a toolpath? (Note that openpythonscad has a specific feature to export a given 3D object as a DXF.)
+Generalize the creation of DXFs based on the projection() of a toolpath?
 
 \subsubsection{Import G-code}
 

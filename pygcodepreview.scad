@@ -1,6 +1,6 @@
 //!OpenSCAD
 
-//gcodepreview 0.4
+//gcodepreview 0.5, see gcodepreview.scad
 
  module osetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin) {
      psetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);

@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+#"C:\Program Files\OpenSCAD\bin\openscad.exe" --trust-python
+#Currently tested with 2023.11.30 and Python 3.11
+#gcodepreview 0.5, see gcodepreview.scad
 
 def writeln(*arguments):
     line_to_write = ""
