@@ -42,7 +42,7 @@ Author: William F. Adams\\
 \date{\filedate}
 \maketitle
 \begin{abstract}
-\noindent The gcodepreview library allows using PythonOpenSCAD to move a tool in lines 
+\noindent The gcodepreview library allows using OpenPythonSCAD to move a tool in lines 
 and arcs and output dxf and G-code files so as to work as a CAD/\allowbreak CAM program 
 for CNC.
 \end{abstract}
@@ -229,10 +229,10 @@ Deprecated feature:
 \clearpage
 \section{gcodepreview}
 
-This library works by using Python code as a back-end so as to persistently
-store and access variables, and to write out files while both modeling the motion of a 3-axis. 
-CNC machine and if desired, writing out DXF and/or G-code files. Doing so requires a total of 
-three files:
+This library for OpenPythonSCAD works by using Python code as a back-end so as to persistently store 
+and access variables, and to write out files while both modeling the motion of a 3-axis CNC machine
+and if desired, writing out DXF and/or G-code files (as opposed to the normal technique of 
+rendering to a 3D model and writing out an STL). Doing so requires a total of three files:
 
 \begin{itemize}
 \item A Python file: gcodepreview.py (\texttt{gcpy}) --- this will have variables in the 
