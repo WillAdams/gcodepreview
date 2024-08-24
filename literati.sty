@@ -10,13 +10,6 @@
 
 %\documentclass{article}
 
-\usepackage{url}
-\usepackage[draft=false,
-            plainpages=false,
-            pdfpagelabels,
-            bookmarksnumbered,
-            hyperindex=false
-           ]{hyperref}
 \makeatletter
   \@mparswitchfalse
 \makeatother
@@ -25,7 +18,7 @@
 \setcounter{secnumdepth}{5}
 \setcounter{tocdepth}{5}
 %\EnableCrossrefs
-\usepackage{makeidx} 
+%\usepackage{makeidx} 
 \usepackage{graphicx}
 \usepackage{calc}
 
@@ -225,3 +218,60 @@ Last line was \the\lst@lineno\ for #1\ gcpy\ \thegcpy\ pyscad\ \thepyscad\ gcpsc
 \lstset{numbers=left, numberstyle=\footnotesize\ttfamily, stepnumber=1, numbersep=5pt, frame=lines, basicstyle=\small\ttfamily, breaklines=true, aboveskip=\baselineskip, belowskip=\baselineskip, linewidth=\listingswidth, xleftmargin=\listingsindent, xrightmargin=-\rightindent}
 %, name=gcodepreview.py
 \usepackage{upquote}
+
+\usepackage[utf8]{inputenc}
+\usepackage{docmfp}
+\usepackage{imakeidx}%[nonewpage]
+
+\usepackage[draft=false,
+            plainpages=false,
+            pdfpagelabels,
+            bookmarksnumbered,
+            hyperindex=true
+           ]{hyperref}
+
+\usepackage{url}
+
+
+\newcommand{\DescribeRoutineorVariable}[2]{%
+\texttt{#2}%
+\marginpar{\strut\hfill \texttt{#2}}%
+\index[#1]{#2}%
+\index{#2}%
+}
+
+\newcommand{\DescribeSubroutine}[2]{%
+\texttt{#2}%
+\marginpar{\strut\hfill \texttt{#2}}%
+\index[routines]{#2}%
+\index{#1!#2}%
+\index{#2}%
+}
+
+\renewcommand{\DescribeRoutine}[1]{\DescribeRoutineorVariable{routines}{#1}}%
+\renewcommand{\DescribeVariable}[1]{\DescribeRoutineorVariable{variables}{#1}}%
+
+\makeindex[title=Index,columns=2]
+
+\makeindex[name=routines,title=Routines,columns=2]
+
+\makeindex[name=variables,title=Variables,columns=2]
+
+%\Finale
+
+%\DoNotIndex{\\\\,\\~,\n,\Users,\RapCAD}
+ 
+%\PrintIndex
+
+\newcommand{\createindexes}{
+\printindex
+
+\addcontentsline{toc}{section}{Index}
+
+
+\printindex[routines]
+\addcontentsline{toc}{subsection}{Routines}
+
+\printindex[variables]
+\addcontentsline{toc}{subsection}{Variables}
+}

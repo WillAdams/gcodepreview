@@ -14,7 +14,7 @@
 %https://tex.stackexchange.com/questions/722886/how-to-write-out-multiple-text-files-from-multiple-instances-of-latex-environmen
 \usepackage{literati}
 \usepackage[paper=legalpaper,left=1.75in,right=0.75in,top=1in,bottom=1in]{geometry}
-\usepackage{docmfp}
+
 \begin{document}
 
 %\DoNotIndex{\bullet}
@@ -43,7 +43,8 @@ Author: William F. Adams\\
 \maketitle
 \begin{abstract}
 \noindent The gcodepreview library allows using PythonOpenSCAD to move a tool in lines 
-and output dxf and G-code files so as to work as a CAD/\allowbreak CAM program for CNC.
+and arcs and output dxf and G-code files so as to work as a CAD/\allowbreak CAM program 
+for CNC.
 \end{abstract}
 %\enlargethispage{\baselineskip}
 \tableofcontents
@@ -230,7 +231,7 @@ Deprecated feature:
 
 This library works by using Python code as a back-end so as to persistently
 store and access variables, and to write out files while both modeling the motion of a 3-axis. 
-CNC machine and if desired, writing out DXR and/or G-code files. Doing so requires a total of 
+CNC machine and if desired, writing out DXF and/or G-code files. Doing so requires a total of 
 three files:
 
 \begin{itemize}
@@ -246,7 +247,7 @@ Each file will begin with a suitable comment indicating the file type and suitab
 
 \begin{writecode}{w}{gcodepreview.py}{python}
 #!/usr/bin/env python
-#"C:\Program Files\OpenSCAD\bin\openscad.exe" --trust-python
+#icon "C:\Program Files\OpenSCAD\bin\openscad.exe" --trust-python
 #Currently tested with 2023.11.30 and Python 3.11
 #gcodepreview 0.5, see gcodepreview.scad
 
@@ -274,8 +275,8 @@ Each file will begin with a suitable comment indicating the file type and suitab
 \end{writecode}
 \addtocounter{gcpscad}{10}
 
-The original implementation in RapSCAD used a command \texttt{writeln}\DescribeRoutine{writeln} 
---- fortunately, this command is easily re-created in Python:
+The original implementation in RapSCAD used a command \DescribeRoutine{writeln} --- fortunately, 
+this command is easily re-created in Python:
 
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
@@ -304,9 +305,9 @@ setting the matching variable(s).
 The first such variables are for XYZ position:
 
 \begin{itemize}
- \item \texttt{mpx} \DescribeVariable{mpx}
- \item \texttt{mpy} \DescribeVariable{mpy}
- \item \texttt{mpz} \DescribeVariable{mpz}
+ \item \DescribeVariable{mpx}
+ \item \DescribeVariable{mpy}
+ \item \DescribeVariable{mpz}
 \end{itemize}
 \end{samepage}
 
@@ -315,7 +316,7 @@ The first such variables are for XYZ position:
 as the toolpath is cut out:
  
 \begin{itemize}
- \item \texttt{tpz} \DescribeVariable{tpz}
+ \item \DescribeVariable{tpz}
 \end{itemize}
 \end{samepage}
 
@@ -323,7 +324,7 @@ as the toolpath is cut out:
 \noindent It will further be necessary to have a variable for the current tool:
 
 \begin{itemize}
- \item \texttt{currenttool} \DescribeVariable{currenttool}
+ \item \DescribeVariable{currenttool}
 \end{itemize}
 \end{samepage}
 
@@ -341,7 +342,8 @@ any file routines, an \texttt{o}<foo> OpenSCAD module which will wrap up the Pyt
 function call, and lastly a <foo> OpenSCAD module which will be \texttt{<include>}d 
 so as to be able to make use of OpenSCAD variables.
 
-\DescribeRoutine{psetupstock}The first such routine will be appropriately enough, 
+The first such routine, (actually a subroutine, see \DescribeRoutine{setupstock}) 
+\DescribeSubroutine{setupstock}{psetupstock} will be appropriately enough, 
 to set up the stock, and perform other initializations --- in Python all that needs 
 to be done is to set the value of the persistent (Python) variables:
 
@@ -362,9 +364,9 @@ def psetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin
 \end{writecode}
 \addtocounter{gcpy}{12}
 
-\DescribeRoutine{osetupstock}The intermediary OpenSCAD code simply calls the Python version. 
-Note that while the parameters are passed all the way down (for consistency) they are not
-used.
+The intermediary OpenSCAD code, \DescribeSubroutine{setupstock}{osetupstock} simply 
+calls the Python version. Note that while the parameters are passed all the way down 
+(for consistency) they are not used.
 
 \lstset{firstnumber=\thepyscad}
 \begin{writecode}{a}{pygcodepreview.scad}{scad}
@@ -375,11 +377,11 @@ used.
 \end{writecode}
 \addtocounter{pyscad}{4}
 
-\DescribeRoutine{setupstock}The OpenSCAD code which is called requires that the user set 
-parameters and will create comments in the G-code which set the stock dimensions and its 
-position relative to the zero as set relative to the stock.
+The OpenSCAD code, \DescribeRoutine{setupstock} requires that the user set parameters
+for stock dimensions and so forth, and will create comments in the G-code which incorporate 
+the stock dimensions and its position relative to the zero as set relative to the stock.
  
-The \texttt{stockorigin} setting is used in an <if then else> structure to position
+The \DescribeVariable{stockorigin} setting is used in an <if then else> structure to position
 the 3D model of the stock. 
 
 \lstset{firstnumber=\thepyscad}
@@ -480,9 +482,9 @@ if (generategcode == true) {
 \end{writecode}
 \addtocounter{pyscad}{93}
 
-\DescribeRoutine{xpos}\DescribeRoutine{ypos}\DescribeRoutine{zpos}
-It will be necessary to have Python functions which return the current values of the 
-machine position in Cartesian coordinates: 
+It will be necessary to have Python functions (\DescribeRoutine{xpos}, \DescribeRoutine{ypos}, 
+and \DescribeRoutine{zpos}) which return the current values of the machine position in 
+Cartesian coordinates: 
 
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
@@ -505,10 +507,11 @@ def tzpos():
 \end{writecode}
 \addtocounter{gcpy}{16}
 
-\noindent and in turn, functions which set the positions: \DescribeRoutine{psetxpos}
- \DescribeRoutine{psetypos}
- \DescribeRoutine{psetzpos}
- \DescribeRoutine{psettzpos}
+\noindent and in turn, functions which set the positions: 
+\DescribeSubroutine{setxpos}{psetxpos},
+\DescribeSubroutine{setypos}{psetypos},
+\DescribeSubroutine{setzpos}{psetzpos}, and
+\DescribeSubroutine{settzpos}{psettzpos}
 
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
@@ -531,19 +534,12 @@ def psettzpos(newtzpos):
 \end{writecode}
 \addtocounter{gcpy}{16}
  
-\noindent and as noted above, there will need to be matching OpenSCAD versions. 
-
-\noindent\DescribeRoutine{getxpos}%
-\DescribeRoutine{getypos}%
-\DescribeRoutine{getzpos}%
-\DescribeRoutine{gettzpos}%
-\DescribeRoutine{setxpos}%
-\DescribeRoutine{setypos}%
-\DescribeRoutine{setzpos}%
-\DescribeRoutine{settzpos}%
+\noindent and as noted above, there will need to be matching OpenSCAD versions which will 
+set: \DescribeRoutine{setxpos}, \DescribeRoutine{setypos}, \DescribeRoutine{setzpos}, and
+\DescribeRoutine{settzpos}; as well as return the value: \DescribeRoutine{getxpos}, \DescribeRoutine{getypos}, \DescribeRoutine{getzpos}, and \DescribeRoutine{gettzpos} 
 Note that for routines where the variable is directly passed from OpenSCAD to Python
 it is possible to have OpenSCAD directly call the matching Python module with no need
-to use an intermediary OpenSCAD command.
+to use an intermediary OpenSCAD module.
  
 \lstset{firstnumber=\thepyscad}
 \begin{writecode}{a}{pygcodepreview.scad}{scad}
@@ -599,8 +595,8 @@ module osettz(tz) {
 
 \subsection{Tools and Changes}
  
-Similarly Python functions and variables will be used to track and \DescribeRoutine{pcurrenttool}%
-set and return the current tool: \DescribeRoutine{psettool}
+Similarly Python functions and variables will be used in: \DescribeRoutine{pcurrenttool} and
+\DescribeRoutine{psettool} to track and set and return the current tool
  
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
@@ -615,10 +611,11 @@ def pcurrent_tool():
 \end{writecode}
 \addtocounter{gcpy}{8}
  
-\noindent and matching OpenSCAD modules set and return the current tool: 
-\DescribeRoutine{osettool}
+\noindent and matching OpenSCAD modules:
+\DescribeRoutine{osettool} and
 \DescribeRoutine{currenttool}
- 
+set and return the current tool: 
+  
 \lstset{firstnumber=\thepyscad}
 \begin{writecode}{a}{pygcodepreview.scad}{scad}
 module osettool(tn){
@@ -631,10 +628,9 @@ function current_tool() = pcurrent_tool();
 \addtocounter{pyscad}{6}
  
 \subsubsection{toolchange}
-\noindent and apply the appropriate commands for a \texttt{toolchange}.
-\label{subsubsec:toolchange}\DescribeRoutine{toolchange}%
-Note that it is expected that this code will be updated as needed when new tooling
-is introduced as additional modules which require specific tooling are added below.
+\noindent and apply the appropriate commands for a \label{subsubsec:toolchange}
+\DescribeRoutine{toolchange}. Note that it is expected that this code will be updated as needed 
+when new tooling is introduced as additional modules which require specific tooling are added below.
 
 Note that the comments written out in G-code correspond to that used by the G-code previewing tool 
 CutViewer (which is unfortunately, no longer readily available).
@@ -644,7 +640,7 @@ read them in from an external file --- the \texttt{.csv} format used for tool li
 Carbide Create seems a likely candidate and worth exploring.
 
 Note that there are many varieties of tooling and not all will be implemented, especially in the 
-initial version of this project
+early versions of this project
  
 \begin{samepage}
 \paragraph{Normal Tooling}
@@ -663,7 +659,7 @@ and are defined by their profile:
                                  described as a ``bowl bit'' is not implemented as-of-yet)
 \item Ballnose (\#202 and 101) --- rounded, they are the standard choice for concave and 
                                    organic shapes
-\item V tooling (\#301, 302 and 390) --- pointed at the tip, they are available in a variety
+\item V tooling (\#301, 302 and 390) --- pointed at the tip, they are available in a variety of
                                          angles and diameters and may be used for decorative
                                          V carving, or for chamfering or cutting specific angles
                                          (note that the commonly available radiused form is not
@@ -765,10 +761,10 @@ as coded above which require using a \texttt{hull} operation between 3D represen
 of the tools at the beginning and end points. Tooling which cannot be so represented will be implemented separately below, see paragraph~\ref{para:concavetoolshapes}.
 
 \paragraph{Selecting Tools}
-\DescribeVariable{tool number}\DescribeRoutine{selecttool}
-There must also be a module for selecting tools: \texttt{select\_tool} which will
-select the matching module for 3D modeling and pass the 
-appropriate parameters to that module:
+
+There must also be a module for selecting tools: \DescribeRoutine{selecttool} which will
+select the matching module for 3D modeling based on the \DescribeVariable{tool number}, 
+and pass the appropriate parameters to that module:
  
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -809,7 +805,7 @@ For a keyhole tool:
 \end{writecode}
 \addtocounter{gcpscad}{2}
 
-Once all tools have been defined the if statement and module may be closed:
+Once all tools have been defined the \texttt{if} statement and module may be closed:
  
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -827,7 +823,7 @@ Each tool must be modeled in 3D using an OpenSCAD module.
 Most tools are easily implemented with concise 3D descriptions which may be connected with
 a simple \texttt{hull} operation:
 
-\DescribeRoutine{gcp endmill square}
+The \DescribeRoutine{gcp endmill square} is a simple cylinder:
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
 module gcp_endmill_square(es_diameter, es_flute_length) {
@@ -837,7 +833,8 @@ module gcp_endmill_square(es_diameter, es_flute_length) {
 \end{writecode}
 \addtocounter{gcpscad}{4}
 
-\DescribeRoutine{gcp keyhole}
+\begin{samepage}
+The \DescribeRoutine{gcp keyhole} is modeled only by the the cutting base:
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
 module gcp_keyhole(es_diameter, es_flute_length) {
@@ -846,8 +843,11 @@ module gcp_keyhole(es_diameter, es_flute_length) {
 
 \end{writecode}
 \addtocounter{gcpscad}{4}
+\end{samepage}
 
-\DescribeRoutine{gcp dovetail}
+The \DescribeRoutine{gcp dovetail} is modeled as a cylinder with the differing bottom and 
+top diameters determining the angle (though \DescribeVariable{dt angle} is still required 
+as a parameter)
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
 module gcp_dovetail(dt_bottomdiameter, dt_topdiameter, dt_height, dt_angle) {
@@ -857,7 +857,7 @@ module gcp_dovetail(dt_bottomdiameter, dt_topdiameter, dt_height, dt_angle) {
 \end{writecode}
 \addtocounter{gcpscad}{4}
 
-\DescribeRoutine{gcp endmill ball}
+The \DescribeRoutine{gcp endmill ball} is modeled as a hemisphere joined with a cylinder:
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
 module gcp_endmill_ball(es_diameter, es_flute_length) {
@@ -872,7 +872,8 @@ module gcp_endmill_ball(es_diameter, es_flute_length) {
 \end{writecode}
 \addtocounter{gcpscad}{9}
 
-\DescribeRoutine{gcp endmill v}
+The \DescribeRoutine{gcp endmill v} is modeled as a cylinder with a zero width base and
+a second cylinder for the shaft:
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
 module gcp_endmill_v(es_v_angle, es_diameter) {
@@ -978,8 +979,8 @@ material at a given point. To accommodate this, it will be necessary to either t
 the thickness of uncut material at any given point, or, to specify the depth of cut 
 as a parameter which is what the initial version will implement.
 
-\DescribeRoutine{tool diameter}
-The public-facing OpenSCAD code simply calls the matching OpenSCAD module which wraps the Python code:
+The public-facing OpenSCAD code, \DescribeRoutine{tool diameter}
+simply calls the matching OpenSCAD module which wraps the Python code:
  
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -988,8 +989,8 @@ function tool_diameter(td_tool, td_depth) = otool_diameter(td_tool, td_depth);
 \end{writecode}
 \addtocounter{gcpscad}{2}
 
-\noindent the matching OpenSCAD function calls the Python function:
-\DescribeRoutine{otool diameter}
+\noindent the matching OpenSCAD function, \DescribeSubroutine{tool diameter}{otool diameter} 
+calls the Python function:
 
 \lstset{firstnumber=\thepyscad}
 \begin{writecode}{a}{pygcodepreview.scad}{scad}
@@ -998,9 +999,8 @@ function otool_diameter(td_tool, td_depth) = ptool_diameter(td_tool, td_depth);
 \end{writecode}
 \addtocounter{pyscad}{2}
  
-\noindent the Python code returns appropriate values 
-\DescribeRoutine{ptool diameter}
-based on the specified tool number and depth:
+\noindent the Python code, \DescribeSubroutine{tool diameter}{ptool diameter} returns 
+appropriate values based on the specified tool number and depth:
  
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
@@ -1039,9 +1039,8 @@ def ptool_diameter(ptd_tool, ptd_depth):
 \end{writecode}
 \addtocounter{gcpy}{32}
 
-\DescribeRoutine{tool radius}
-Since it is often necessary to utilise the radius of the tool, an additional command to return
-this value is worthwhile:
+Since it is often necessary to utilise the radius of the tool, an additional command,
+\DescribeRoutine{tool radius} to return this value is worthwhile:
  
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -1054,14 +1053,19 @@ function tool_radius(td_tool, td_depth) = otool_diameter(td_tool, td_depth)/2;
  
 \subsection{File Handling}
  
-For writing to files it will be necessary to have commands for each step of working with the files. 
- 
-\DescribeRoutine{popengcodefile}\DescribeRoutine{popendxffile}\DescribeRoutine{popendxlgblffile}
-\DescribeRoutine{popendxflgsqfile}\DescribeRoutine{popendxflgVfile}\DescribeRoutine{popendxfsmblfile}
+For writing to files it will be necessary to have commands: 
+\DescribeSubroutine{opengcodefile}{popengcodefile}, 
+\DescribeSubroutine{opendxffile}{popendxffile}, 
+\DescribeRoutine{popendxflgsqfile}, 
+\DescribeRoutine{popendxfsmsqfile}, 
+\DescribeRoutine{popendxlgblffile}, 
+\DescribeRoutine{popendxfsmblfile},  
+\DescribeRoutine{popendxflgVfile}, and 
+\DescribeRoutine{popendxfsmVfile}.
+%\DescribeRoutine{popensvgfile}
 There is a separate function for each type of file, and for DXFs, there are multiple file
 instances, one for each combination of different type and size of tool which it is expected 
 a project will work with. Each such file will be suffixed with the tool number.
-\DescribeRoutine{popendxfsmsqfile}\DescribeRoutine{popendxfsmVfile}%\DescribeRoutine{popensvgfile}
 
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
@@ -1112,8 +1116,10 @@ def popendxDTfile(fn):
 %    svg = open(fn, "w")
 
 %\DescribeRoutine{oopensvgfile}
-\DescribeRoutine{oopengcodefile}\DescribeRoutine{oopendxffile}
-There will need to be matching OpenSCAD modules for the Python functions.
+There will need to be matching OpenSCAD modules 
+\DescribeSubroutine{opengcodefile}{oopengcodefile}, and
+\DescribeSubroutine{opendxffile}{oopendxffile}, 
+for the Python functions.
 
 \lstset{firstnumber=\thepyscad}
 \begin{writecode}{a}{pygcodepreview.scad}{scad}
@@ -1165,8 +1171,7 @@ module oopendxfDTfile(fn) {
 %    popensvgfile(fn);
 %}
 
-\DescribeRoutine{opengcodefile}%\DescribeRoutine{opensvgfile}
-Which has matching OpenSCAD commands:
+With matching OpenSCAD commands: \DescribeRoutine{opengcodefile}%\DescribeRoutine{opensvgfile}
  
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -1192,8 +1197,8 @@ if (generategcode == true) {
 %}
 %}
 
-For each DXF file, in addition to opening the file in the file system there will need to be 
-a Preamble\DescribeRoutine{opendxffile}
+For each DXF file, there will need to be a Preamble created by \DescribeRoutine{opendxffile}
+in addition to opening the file in the file system:
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -1238,8 +1243,7 @@ module opendxffile(fn) {
 
 \subsubsection{Writing to files}
  
-\DescribeRoutine{writedxf}
-Once files have been opened they may be written to. There is a base command:
+Once files have been opened they may be written to. The base command: \DescribeRoutine{writedxf}
  
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
@@ -1253,17 +1257,17 @@ def writedxf(*arguments):
 \end{writecode}
 \addtocounter{gcpy}{7}
 
-\noindent and for each tool/size combination, an appropriate command:
+\noindent has a matching command each tool/size combination:
 
 \begin{itemize}
-\item Ball nose, large (lgbl)\DescribeRoutine{writedxflgbl}
-\item Ball nose, small (smbl)\DescribeRoutine{writedxfsmbl}
-\item Square, large (lgsq)\DescribeRoutine{writedxflgsq}
-\item Square, small (smsq)\DescribeRoutine{writedxfsmsq}
-\item V, large (lgV)\DescribeRoutine{writedxflgV}
-\item V, small (smV)\DescribeRoutine{writedxfsmV}
-\item Keyhole (KH)\DescribeRoutine{writedxfKH}
-\item Dovetail (DT)\DescribeRoutine{writedxfDT}
+\item Ball nose, large (lgbl) \DescribeRoutine{writedxflgbl}
+\item Ball nose, small (smbl) \DescribeRoutine{writedxfsmbl}
+\item Square, large (lgsq) \DescribeRoutine{writedxflgsq}
+\item Square, small (smsq) \DescribeRoutine{writedxfsmsq}
+\item V, large (lgV) \DescribeRoutine{writedxflgV}
+\item V, small (smV) \DescribeRoutine{writedxfsmV}
+\item Keyhole (KH) \DescribeRoutine{writedxfKH}
+\item Dovetail (DT) \DescribeRoutine{writedxfDT}
 \end{itemize}
  
 \lstset{firstnumber=\thegcpy}
@@ -1344,10 +1348,16 @@ def writedxfDT(*arguments):
 %def pwritesvgline():
 %    svg.write("\n")
  
-\DescribeRoutine{owritecomment}\DescribeRoutine{dxfwriteone}\DescribeRoutine{dxfwritelgbl}%
-\DescribeRoutine{dxfwritelgsq}\DescribeRoutine{dxfwritelgV}\DescribeRoutine{dxfwritesmbl}%
-\DescribeRoutine{dxfwritesmsq}\DescribeRoutine{dxfwritesmV}%
-Separate OpenSCAD modules will be used for either writing out comments in G-code (.nc) files
+Separate OpenSCAD modules, 
+\DescribeRoutine{owritecomment}, 
+\DescribeRoutine{dxfwriteone}, 
+\DescribeRoutine{dxfwritelgbl}, 
+\DescribeRoutine{dxfwritelgsq}, 
+\DescribeRoutine{dxfwritelgV}, 
+\DescribeRoutine{dxfwritesmbl}, 
+\DescribeRoutine{dxfwritesmsq}, and
+\DescribeRoutine{dxfwritesmV} 
+will be used for either writing out comments in G-code (.nc) files
 or adding to a DXF file --- for each different tool in a file there will be a matching
 module to write to it.
  
@@ -1405,9 +1415,9 @@ module dxfwriteDT(first) {
 %    pwritesvgline();
 %}
 
-Since it is not convenient to stitch together and then write out multiple elements,
+Since it is not convenient to stitch together and then write out multiple elements, 
 the most expedient thing to do is to have discrete commands for each possible number
-of arguments, one through thirteen.
+of arguments, one through thirteen, \DescribeRoutine{owrite...}
  
 \lstset{firstnumber=\thepyscad}
 \begin{writecode}{a}{pygcodepreview.scad}{scad}
@@ -1466,9 +1476,9 @@ module owritethirteen(first, second, third, fourth, fifth, sixth, seventh, eight
 \end{writecode}
 \addtocounter{pyscad}{52}
  
-\paragraph{Beginning Writing to DXFs}\DescribeRoutine{dxfwrite}\DescribeRoutine{dxfpreamble}%\DescribeRoutine{writesvgline}
-The dxfwrite module requires that the tool number be passed in, and that value will be used
-to write out to the appropriate file with a series of \texttt{if} statements.
+\paragraph{Beginning Writing to DXFs}%\DescribeRoutine{writesvgline}
+The \DescribeRoutine{dxfwrite} module requires that the tool number be passed in, 
+and after writing out \DescribeRoutine{dxfpreamble}, that value will be used to write out to the appropriate file with a series of \texttt{if} statements.
  
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -1508,7 +1518,7 @@ module dxfpreamble(tn) {
 %}
 
  
-\paragraph{DXF Lines and Arcs}\DescribeRoutine{beginpolyline}\DescribeRoutine{dxfbpl}%
+\paragraph{DXF Lines and Arcs}%
 Similarly, each each element which may be written to a DXF file will have a user module
 as well as an internal module which will be called by it so as to write to the file
 for the current tool.
@@ -1516,8 +1526,10 @@ for the current tool.
 There are two notable elements which may be written to a DXF:
 
 \begin{itemize}
- \item a line: LWPOLYLINE is one possible implementation
- \item ARC --- a notable option would be for the arc to close on itself, creating a circle
+ \item a line: LWPOLYLINE is one possible implementation: \DescribeRoutine{dxfbpl} 
+       %\DescribeRoutine{beginpolyline},
+ \item ARC --- a notable option would be for the arc to close on itself, creating a circle:
+       \DescribeRoutine{dxfarc}
 \end{itemize}
  
 DXF orders arcs counter-clockwise:
@@ -1595,10 +1607,9 @@ if (generatedxf == true) {
 \end{writecode}
 \addtocounter{gcpscad}{41}
 
-\DescribeRoutine{dxfa}\DescribeRoutine{dxfarc}%
-As for other files, we have two versions, one which accepts a \texttt{tn} (tool number),
-writing only to it, while a publicly facing version writes to the main DXF file \emph{and}
-writes to the specific DXF file for the specified tool.
+As for other files, we have two versions, \DescribeRoutine{dxfa} and \DescribeRoutine{dxfarc}, 
+one which accepts a \texttt{tn} (tool number), writing only to it, while a publicly facing version 
+writes to the main DXF file \emph{and} writes to the specific DXF file for the specified tool.
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -1737,8 +1748,9 @@ module writecomment(comment) {
 \end{writecode}
 \addtocounter{gcpscad}{92}
  
-\DescribeRoutine{pclosegcodefile}\DescribeRoutine{pclosedxffile}%\DescribeRoutine{pclosesvgfile}
-At the end of the project it will be necessary to close each file. 
+At the end of the project it will be necessary to close each file using the commands: 
+\DescribeSubroutine{closegcodefile}{pclosegcodefile}, and
+\DescribeRoutine{closedxffile}. %\DescribeRoutine{pclosesvgfile}
 In some instances it will be necessary to write additional information,
 depending on the file format.
  
@@ -1780,7 +1792,11 @@ def pclosedxfKHfile():
 %    svg.close()
 %
 
-\DescribeRoutine{oclosegcodefile}\DescribeRoutine{oclosedxffile}\DescribeRoutine{oclosedxflgblfile}
+In addition to the Python forms, there will need to be matching OpenSCAD commands to call them:
+\DescribeSubroutine{closegcodefile}{oclosegcodefile}, and 
+\DescribeSubroutine{closedxffile}{oclosedxffile}.
+%\DescribeSubroutine{oclosedxflgblfile}
+
 \lstset{firstnumber=\thepyscad}
 \begin{writecode}{a}{pygcodepreview.scad}{scad}
 module oclosegcodefile() {
@@ -1830,7 +1846,13 @@ module oclosedxfKHfile() {
 %}
 %
 
-\DescribeRoutine{closegcodefile}\DescribeRoutine{dxfpostamble}\DescribeRoutine{closedxffile}
+The commands: 
+\DescribeRoutine{closegcodefile}, and
+\DescribeRoutine{closedxffile}
+are used to close the files at the end of a program. For efficiency, each references the command:
+\DescribeRoutine{dxfpostamble}
+which when called provides the boilerplate needed at the end of their respective files.
+
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
 module closegcodefile() {
@@ -1901,9 +1923,13 @@ module closedxffile() {
  
 \subsection{Movement and Cutting}
 
-\DescribeRoutine{otm}\DescribeRoutine{ocut}\DescribeRoutine{orapid}%
-With all the scaffolding in place, it is possible to model tool movement
-and cutting and to write out files which represent the desired machine motions.
+With all the scaffolding in place, it is possible to model the tool: 
+\DescribeRoutine{otm}, (colors the tool model so as to differentiate cut areas)
+and cutting: 
+\DescribeRoutine{ocut}, 
+as well as Rapid movements to position the tool to begin a cut:
+\DescribeRoutine{orapid}%
+which will also need to write out files which represent the desired machine motions.
  
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -2033,7 +2059,7 @@ module endtoolpath() {
 
 Certain basic shapes (arcs, circles, rectangles), will be incorporated in the main code. 
 Other shapes will be added to the additional/optional file, \texttt{cut2Dshapes.scad}
-as they are developed.
+as they are developed, and of course the user is free to develop their own systems.
  
 It is most expedient to test out new features in a new/separate file insofar as the 
 file structures will allow (tool definitions for example will need to consolidated in 
@@ -2103,18 +2129,13 @@ interaction with the requirements of toolpaths.
  known names interesting for its lack of notoriety?
 
 \begin{itemize}
- \item two straight edges, one concave arc—oddly, an
- asymmetric form (hyperbolic sector) has a name,
- but not the symmetrical---while the colloquial/prosaic “arrowhead” was considered, it was
- rejected as being better applied to the shape be
-low. (It’s also the shape used for the spaceship
- in the game Asteroids (or Hyperspace), but that
- is potentially confusing with astroid.) At the
- conference, Prof. Knuth suggested “dart” as a
- suitable term.
- \item two convex, one concave arc—with the above
- named, the term “arrowhead” is freed up to use
- as the name for this shape.
+ \item two straight edges, one concave arc—oddly, an asymmetric form (hyperbolic sector) has a name,
+       but not the symmetrical---while the colloquial/prosaic “arrowhead” was considered, it was
+       rejected as being better applied to the shape below. (It’s also the shape used for the
+       spaceship in the game Asteroids (or Hyperspace), but that  is potentially confusing with
+       astroid.) At the  conference, Dr. Knuth suggested “dart” as a suitable term.
+ \item two convex, one concave arc—with the above named, the term “arrowhead” is freed up to use
+       as the name for this shape.
  \item three straight lines and one concave arc.
  \end{itemize}
 
@@ -2226,9 +2247,11 @@ Since these modules will ultimately support G-code, the interface will assume th
       is both convenient and acts as a check on the other parameters
 \end{itemize}
 
-Adding a simple loop to handle the processing of the \texttt{cut()} toolpaths affords 
-a single point of control for adding additional features such as allowing the depth to 
-vary as one cuts along an arc (two when the need to have a version which steps down):
+Since OpenSCAD does not have an arc movement command it is necessary to iterate through a loop: \DescribeRoutine{arcloop} (clockwise), \DescribeRoutine{narcloop}
+(counterclockwise) to handle the drawing and processing of the \texttt{cut()} toolpaths as 
+short line segments which additionally affords a single point of control for adding additional
+features such as allowing the depth to  vary as one cuts along an arc (two when the need to have 
+a version which steps down):
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -2317,7 +2340,8 @@ module cutarcNWCWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
 \subsection{Keyhole toolpath and undercut tooling}
  
 \label{subsec:keyholetoolpaths}
-The most topologically interesting toolpath is ``Keyhole'' --- where other toolpaths have a 
+The first topologically unusual toolpath is \DescribeRoutine{keyhole toolpath} --- where 
+other toolpaths have a 
 direct correspondence between the associated geometry and the area cut, that Keyhole toolpaths
 may be used with tooling which undercuts will result in the creation of two different physical
 physical regions: the visible surface matching the union of the tool perimeter at the entry point
@@ -2338,7 +2362,7 @@ than one would think — for each quadrant there are the following possibilities
 \end{itemize}
  
 Supporting all of these would require trigonometric comparisons in the If else blocks, 
-so only the 4 quadrants, N, W, S, and E will be supported in the initial version. 
+so only the 4 quadrants, N, S, E, and W will be supported in the initial version. 
 This will be done by wrapping the command with a version which only accepts those options: 
 
 \lstset{firstnumber=\thegcpscad}
@@ -2358,9 +2382,10 @@ if (kht_angle == "N") {
 \end{writecode}
 \addtocounter{gcpscad}{12}
  
-The original version of the command is renamed and called by that. Note that code is still
-present for the partial calculation of one quadrant (for the case of all nodes within the
-quadrant).
+The original version of the command, \DescribeRoutine{keyhole toolpath degrees} retains 
+an interface which allows calling it for arbitrary beginning and ending points of an arc. 
+Note that code is still present for the partial calculation of one quadrant (for the case of 
+all nodes within the quadrant).
 
 The first task is to place a circle at the origin which is invariant of angle:
  
@@ -2481,17 +2506,17 @@ and write out matching DXF files. At a later time this will be extended with G-c
  
 \paragraph{begincutdxf}
  
-The first command will need to allow the machine to rapid to the beginning point of the cut
-and then rapid down to the surface of the stock, and then plunge down to the depth of the cut.
-The implementation will need to allow for a hook where the Depth per Pass is applied to the 
-plunge operation so that multiple passes are made.
+The first command, \DescribeRoutine{begincutdxf} will need to allow the machine to rapid to 
+the beginning point of the cut and then rapid down to the surface of the stock, and then 
+plunge down to the depth of the cut. The implementation will need to allow for a hook where 
+the Depth per Pass is applied to the plunge operation so that multiple passes are made.
 
-\DescribeRoutine{begincutdxf} The first module will ensure that the tool is safely up above
+The first module will ensure that the tool is safely up above
 the stock and will rapid to the position specified at the retract height (moving to that 
 position as an initial step, then will \texttt{cutwithfeed} to the specified position
 at the specified feed rate. Despite \texttt{dxf} being included in the filename no change
 is made to the dxf file at this time, this simply indicates that this file is preparatory to
-\texttt{continuecutdxf}.
+the use of \DescribeRoutine{continuecutdxf}.
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -2517,16 +2542,20 @@ module continuecutdxf(ex, ey, ez, fr) {
 Cutting rectangles while writing out their perimeter in the DXF files (so that they may
 be assigned a matching toolpath in a traditional CAM program upon import) will require
 the origin coordinates, height and width and depth of the pocket, and the tool \# so
-that the corners may have a radius equal to the tool which is used.
+that the corners may have a radius equal to the tool which is used. Whether a given module
+is an interior pocket or an outline (interior or exterior) will be determined by the
+specifics of the module and its usage/positioning, with \texttt{outline} being added to 
+those modules which cut perimeter.
 
 A further consideration is that cut orientation as an option should be accounted for
 if writing out G-code, as well as stepover, and the nature of initial
-entry (whether ramping in would be implemented, and if so at what angle). Advanced 
+entry (whether ramping in would be implemented, and if so, at what angle). Advanced 
 toolpath strategies such as trochoidal milling could also be implemented.
 
-\DescribeRoutine{cutrectangledxf}%
-The initial version would work as a beginning point for vertical cutting if the \texttt{hull()}
-operation was removed and the loop was uncommented:
+Th routine \DescribeRoutine{cutrectangledxf}%
+cuts the outline of a rectangle creating sharp corners. Note that the initial 
+version would work as a beginning point for vertical cutting if the \texttt{hull()} operation 
+was removed and the loop was uncommented:
  
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -2558,8 +2587,8 @@ module cutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {//passes
 \end{writecode}
 \addtocounter{gcpscad}{25}
 
-\DescribeRoutine{cutrectangleoutlinedxf}%
-Cutting the outline of a rounded rectangle is a simplification of the above:
+A matching command: \DescribeRoutine{cutrectangleoutlinedxf}%
+cuts the outline of a rounded rectangle and is a simplification of the above:
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -2582,10 +2611,10 @@ module cutrectangleoutlinedxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {//passe
 \end{writecode}
 \addtocounter{gcpscad}{16}
 
-\DescribeRoutine{rectangleoutlinedxf}%
-Which suggests a further command for simply adding a rectangle which could be used in
-Job Setup to add the stock outline to DXFs to assist in registration of jobs with
-multiple tools:
+Which suggests a further command, \DescribeRoutine{rectangleoutlinedxf}
+for simply adding a rectangle (a potential use of
+which would be in Job Setup to add the stock outline to DXFs to assist in registration 
+of jobs with multiple tools):
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -2602,8 +2631,8 @@ module rectangleoutlinedxf(bx, by, bz, rwidth, rheight, rtn) {
 \noindent the initial section performs the cutting operation for the 3D preview while the 
 latter section writes out the outline to the DXF files.
 
-\DescribeRoutine{cutoutrectangledxf}%
-For a cutting version of that file it would make sense to cut to the outside:
+A variant of the  cutting version of that file, \DescribeRoutine{cutoutrectangledxf} 
+will cut to the outside:
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -2625,7 +2654,8 @@ module cutoutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {
 
 \subsection{Expansion}
 
-The balance of shapes will go into \texttt{cut2Dshapes.scad}.
+The balance of shapes will go into \texttt{cut2Dshapes.scad} and of course it will be 
+possible to create additional files for specific purposes.
 
 \lstset{firstnumber=1}
 \begin{writecode}{w}{cut2Dshapes.scad}{scad}
@@ -2757,18 +2787,18 @@ closedxffile();
 \end{writecode}
 \addtocounter{gcptmpl}{112}
  
-\subsection{Future}
+\section{Future}
 
-\subsubsection{Images}
+\subsection{Images}
 
 Would it be helpful to re-create code algorithms/sections using OpenSCAD Graph Editor 
 so as to represent/illustrate the program?
 
-\subsubsection{Generalized DXF creation}
+\subsection{Generalized DXF creation}
 
 Generalize the creation of DXFs based on the projection() of a toolpath?
 
-\subsubsection{Import G-code}
+\subsection{Import G-code}
 
 Use a tool to read in a G-code file, then create a 3D model which would serve as a preview of the cut?
 
@@ -2778,7 +2808,7 @@ Use a tool to read in a G-code file, then create a 3D model which would serve as
 \item \url{https://github.com/fragmuffin/pygcode/wiki}
 \end{itemize} 
  
-\subsubsection{Bézier curves in 2 dimensions}
+\subsection{Bézier curves in 2 dimensions}
 
 Take a Bézier curve definition and approximate it as arcs and write them into a DXF?
 
@@ -2818,7 +2848,7 @@ c.f., \url{https://linuxcnc.org/docs/html/gcode/g-code.html#gcode:g5}
 %    return p1
 %\end{verbatim}    
 
-\subsubsection{Bézier curves in 3 dimensions}
+\subsection{Bézier curves in 3 dimensions}
  
 One question is how many Bézier curves would it be necessary to have to define a surface
 in 3 dimensions. Attributes for this which are desirable/necessary:
@@ -2904,13 +2934,9 @@ Thomas R. Kramer, Frederick M. Proctor, Elena R. Messina.\\
 
 \end{thebibliography}
 
+\createindexes
 
-%\Finale
-
-\DoNotIndex{\\\\,\\~,\n,\Users,\RapCAD}
  
-\PrintIndex
-
 %\MergeAllFiles{readme.md}
 \MergeAllFiles{gcodepreview.py}
 \MergeAllFiles{pygcodepreview.scad}
