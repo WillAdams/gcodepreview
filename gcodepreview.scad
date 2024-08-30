@@ -7,6 +7,99 @@
 //         include <gcodepreview.scad>;
 //
 
+module setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin) {
+  osetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
+//initialize default tool and XYZ origin
+  osettool(102);
+  oset(0,0,0);
+  if (zeroheight == "Top") {
+    if (stockorigin == "Lower-Left") {
+    translate([0, 0, (-stockthickness)]){
+    cube([stocklength, stockwidth, stockthickness], center=false);
+      if (generategcode == true) {
+      owritethree("(stockMin:0.00mm, 0.00mm, -",str(stockthickness),"mm)");
+      owritefive("(stockMax:",str(stocklength),"mm, ",str(stockwidth),"mm, 0.00mm)");
+      owritenine("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", 0.00, 0.00, ",str(stockthickness),")");
+    }
+  }
+}
+     else if (stockorigin == "Center-Left") {
+    translate([0, (-stockwidth / 2), -stockthickness]){
+      cube([stocklength, stockwidth, stockthickness], center=false);
+    if (generategcode == true) {
+owritefive("(stockMin:0.00mm, -",str(stockwidth/2),"mm, -",str(stockthickness),"mm)");
+owritefive("(stockMax:",str(stocklength),"mm, ",str(stockwidth/2),"mm, 0.00mm)");
+    owriteeleven("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", 0.00, ",str(stockwidth/2),", ",str(stockthickness),")");
+    }
+  }
+    } else if (stockorigin == "Top-Left") {
+    translate([0, (-stockwidth), -stockthickness]){
+      cube([stocklength, stockwidth, stockthickness], center=false);
+if (generategcode == true) {
+owritefive("(stockMin:0.00mm, -",str(stockwidth),"mm, -",str(stockthickness),"mm)");
+owritethree("(stockMax:",str(stocklength),"mm, 0.00mm, 0.00mm)");
+owriteeleven("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", 0.00, ",str(stockwidth),", ",str(stockthickness),")");
+    }
+  }
+    }
+    else if (stockorigin == "Center") {
+//owritecomment("Center");
+    translate([(-stocklength / 2), (-stockwidth / 2), -stockthickness]){
+      cube([stocklength, stockwidth, stockthickness], center=false);
+if (generategcode == true) {
+owriteseven("(stockMin: -",str(stocklength/2),", -",str(stockwidth/2),"mm, -",str(stockthickness),"mm)");
+owritefive("(stockMax:",str(stocklength/2),"mm, ",str(stockwidth/2),"mm, 0.00mm)");
+owritethirteen("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", ",str(stocklength/2),", ", str(stockwidth/2),", ",str(stockthickness),")");
+      }
+    }
+  }
+} else if (zeroheight == "Bottom") {
+//owritecomment("Bottom");
+    if (stockorigin == "Lower-Left") {
+    cube([stocklength, stockwidth, stockthickness], center=false);
+if (generategcode == true) {
+owriteone("(stockMin:0.00mm, 0.00mm, 0.00mm)");
+owriteseven("(stockMax:",str(stocklength),"mm, ",str(stockwidth),"mm, ",str(stockthickness),"mm)");
+owriteseven("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),",0.00, 0.00, 0.00)");
+    }
+}    else if (stockorigin == "Center-Left") {
+    translate([0, (-stockwidth / 2), 0]){
+      cube([stocklength, stockwidth, stockthickness], center=false);
+if (generategcode == true) {
+owritethree("(stockMin:0.00mm, -",str(stockwidth/2),"mm, 0.00mm)");
+owriteseven("(stockMax:",str(stocklength),"mm, ",str(stockwidth/2),"mm, ",str(stockthickness),"mm)");
+owritenine("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),",0.00, ",str(stockwidth/2),", 0.00)");
+    }
+  }
+    } else if (stockorigin == "Top-Left") {
+    translate([0, (-stockwidth), 0]){
+      cube([stocklength, stockwidth, stockthickness], center=false);
+    }
+if (generategcode == true) {
+owritethree("(stockMin:0.00mm, -",str(stockwidth),"mm, 0.00mm)");
+owritefive("(stockMax:",str(stocklength),"mm, 0.00mm, ",str(stockthickness),"mm)");
+owritenine("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", 0.00, ", str(stockwidth),", 0.00)");
+  }
+}    else if (stockorigin == "Center") {
+    translate([(-stocklength / 2), (-stockwidth / 2), 0]){
+      cube([stocklength, stockwidth, stockthickness], center=false);
+    }
+if (generategcode == true) {
+owritefive("(stockMin:-",str(stocklength/2),", -",str(stockwidth/2),"mm, 0.00mm)");
+owriteseven("(stockMax:",str(stocklength/2),"mm, ",str(stockwidth/2),"mm, ",str(stockthickness),"mm)");
+owriteeleven("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", ",str(stocklength/2),", ", str(stockwidth/2),", 0.00)");
+    }
+  }
+}
+if (generategcode == true) {
+    owriteone("G90");
+    owriteone("G21");
+//    owriteone("(Move to safe Z to avoid workholding)");
+//    owriteone("G53G0Z-5.000");
+  }
+//owritecomment("ENDSETUP");
+}
+
 module oset(ex, ey, ez) {
     setxpos(ex);
     setypos(ey);
@@ -103,19 +196,19 @@ module gcp_endmill_v(es_v_angle, es_diameter) {
   }
 }
 
-module radiuscut(bx, by, bz, ex, ey, ez, radiustn) {
+module cutroundover(bx, by, bz, ex, ey, ez, radiustn) {
     if (radiustn == 56125) {
-        radiuscuttool(bx, by, bz, ex, ey, ez, 0.508/2, 1.531);
+        cutroundovertool(bx, by, bz, ex, ey, ez, 0.508/2, 1.531);
     } else if (radiustn == 56142) {
-        radiuscuttool(bx, by, bz, ex, ey, ez, 0.508/2, 2.921);
+        cutroundovertool(bx, by, bz, ex, ey, ez, 0.508/2, 2.921);
     } else if (radiustn == 312) {
-        radiuscuttool(bx, by, bz, ex, ey, ez, 1.524/2, 3.175);
+        cutroundovertool(bx, by, bz, ex, ey, ez, 1.524/2, 3.175);
     } else if (radiustn == 1570) {
-        radiuscuttool(bx, by, bz, ex, ey, ez, 0.507/2, 4.509);
+        cutroundovertool(bx, by, bz, ex, ey, ez, 0.507/2, 4.509);
     }
 }
 
-module radiuscuttool(bx, by, bz, ex, ey, ez, tool_radius_tip, tool_radius_width) {
+module cutroundovertool(bx, by, bz, ex, ey, ez, tool_radius_tip, tool_radius_width) {
 n = 90 + $fn*3;
 step = 360/n;
 
@@ -244,7 +337,7 @@ module dxfpl(tn,xbegin,ybegin,xend,yend) {
     dxfwrite(tn,str(yend));
 }
 
-module dxfpolyline(tn,xbegin,ybegin,xend,yend) {
+module dxfpolyline(xbegin,ybegin,xend,yend, tn) {
 if (generatedxf == true) {
     dxfwriteone("0");
     dxfwriteone("LWPOLYLINE");
@@ -281,7 +374,7 @@ module dxfa(tn,xcenter,ycenter,radius,anglebegin,endangle) {
     dxfwrite(tn,str(endangle));
 }
 
-module dxfarc(tn,xcenter,ycenter,radius,anglebegin,endangle) {
+module dxfarc(xcenter, ycenter, radius, anglebegin, endangle, tn) {
 if (generatedxf == true) {
     dxfwriteone("0");
     dxfwriteone("ARC");
@@ -358,7 +451,7 @@ module dxfapl(tn,bx,by) {
 
 module addpolyline(bx,by,bz) {
 if (generatedxf == true) {
-    dxfwrite(tn,"0");
+//    dxfwrite(tn,"0");
     dxfwriteone("VERTEX");
     dxfwriteone("8");
     dxfwriteone("default");
@@ -584,99 +677,97 @@ module narcloop(barc,earc, xcenter, ycenter, radius) {
   }
 }
 
-module cutarcNECCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-  dxfarc(tn,xcenter,ycenter,radius,0,90);
+module cutarcNECCdxf(ex, ey, ez, xcenter, ycenter, radius, tn) {
+  dxfarc(xcenter,ycenter,radius,0,90, tn);
   settzpos((getzpos()-ez)/90);
     arcloop(1,90, xcenter, ycenter, radius);
 }
 
-module cutarcNWCCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-  dxfarc(tn,xcenter,ycenter,radius,90,180);
+module cutarcNWCCdxf(ex, ey, ez, xcenter, ycenter, radius, tn) {
+  dxfarc(xcenter,ycenter,radius,90,180, tn);
   settzpos((getzpos()-ez)/90);
     arcloop(91,180, xcenter, ycenter, radius);
 }
 
-module cutarcSWCCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-  dxfarc(tn,xcenter,ycenter,radius,180,270);
+module cutarcSWCCdxf(ex, ey, ez, xcenter, ycenter, radius, tn) {
+  dxfarc(xcenter,ycenter,radius,180,270, tn);
   settzpos((getzpos()-ez)/90);
     arcloop(181,270, xcenter, ycenter, radius);
 }
 
-module cutarcSECCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-  dxfarc(tn,xcenter,ycenter,radius,270,360);
+module cutarcSECCdxf(ex, ey, ez, xcenter, ycenter, radius, tn) {
+  dxfarc(xcenter,ycenter,radius,270,360, tn);
   settzpos((getzpos()-ez)/90);
     arcloop(271,360, xcenter, ycenter, radius);
 }
 
-module cutarcNECWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-  dxfarc(tn,xcenter,ycenter,radius,0,90);
+module cutarcNECWdxf(ex, ey, ez, xcenter, ycenter, radius, tn) {
+  dxfarc(xcenter,ycenter,radius,0,90, tn);
   settzpos((getzpos()-ez)/90);
     narcloop(89,0, xcenter, ycenter, radius);
 }
 
-module cutarcSECWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-  dxfarc(tn,xcenter,ycenter,radius,270,360);
+module cutarcSECWdxf(ex, ey, ez, xcenter, ycenter, radius, tn) {
+  dxfarc(xcenter,ycenter,radius,270,360, tn);
   settzpos((getzpos()-ez)/90);
     narcloop(359,270, xcenter, ycenter, radius);
 }
 
-module cutarcSWCWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-  dxfarc(tn,xcenter,ycenter,radius,180,270);
+module cutarcSWCWdxf(ex, ey, ez, xcenter, ycenter, radius, tn) {
+  dxfarc(xcenter,ycenter,radius,180,270, tn);
   settzpos((getzpos()-ez)/90);
     narcloop(269,180, xcenter, ycenter, radius);
 }
 
-module cutarcNWCWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-  dxfarc(tn,xcenter,ycenter,radius,90,180);
+module cutarcNWCWdxf(ex, ey, ez, xcenter, ycenter, radius, tn) {
+  dxfarc(xcenter,ycenter,radius,90,180, tn);
   settzpos((getzpos()-ez)/90);
     narcloop(179,90, xcenter, ycenter, radius);
 }
 
-module keyhole_toolpath(kh_tool_no, kh_start_depth, kh_max_depth, kht_angle, kh_length) {
+module cutkeyhole_toolpath(kh_start_depth, kh_max_depth, kht_angle, kh_length, kh_tool_no) {
 if (kht_angle == "N") {
-  keyhole_toolpath_degrees(kh_tool_no, kh_start_depth, kh_max_depth, 90, kh_length);
+  cutkeyhole_toolpath_degrees(kh_start_depth, kh_max_depth, 90, kh_length, kh_tool_no);
     } else if (kht_angle == "S") {
-  keyhole_toolpath_degrees(kh_tool_no, kh_start_depth, kh_max_depth, 270, kh_length);
+  cutkeyhole_toolpath_degrees(kh_start_depth, kh_max_depth, 270, kh_length, kh_tool_no);
     } else if (kht_angle == "E") {
-  keyhole_toolpath_degrees(kh_tool_no, kh_start_depth, kh_max_depth, 0, kh_length);
+  cutkeyhole_toolpath_degrees(kh_start_depth, kh_max_depth, 0, kh_length, kh_tool_no);
     } else if (kht_angle == "W") {
-  keyhole_toolpath_degrees(kh_tool_no, kh_start_depth, kh_max_depth, 180, kh_length);
+  cutkeyhole_toolpath_degrees(kh_start_depth, kh_max_depth, 180, kh_length, kh_tool_no);
     }
 }
 
-module keyhole_toolpath_degrees(kh_tool_no, kh_start_depth, kh_max_depth, kh_angle, kh_length) {
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,90,180);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,180,270);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360);
+module cutkeyhole_toolpath_degrees(kh_start_depth, kh_max_depth, kh_angle, kh_length, kh_tool_no) {
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,90,180, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,180,270, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360, KH_tool_no);
 
   if (kh_angle == 0) {
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180,270);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90,180);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),90);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270,360-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)));
-dxfarc(KH_tool_no,getxpos()+kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90);
-dxfarc(KH_tool_no,getxpos()+kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360);
-dxfpolyline(KH_tool_no, getxpos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2), getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, getxpos()+kh_length, getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2);
-dxfpolyline(KH_tool_no, getxpos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2), getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, getxpos()+kh_length, getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2);
-dxfpolyline(KH_tool_no,getxpos(),getypos(),getxpos()+kh_length,getypos());
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180,270, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90,180, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),90, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270,360-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)), KH_tool_no);
+dxfarc(getxpos()+kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90, KH_tool_no);
+dxfarc(getxpos()+kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360, KH_tool_no);
+dxfpolyline(getxpos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2), getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, getxpos()+kh_length, getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, KH_tool_no);
+dxfpolyline(getxpos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2), getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, getxpos()+kh_length, getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, KH_tool_no);
+dxfpolyline(getxpos(),getypos(),getxpos()+kh_length,getypos(), KH_tool_no);
 cutwithfeed(getxpos()+kh_length,getypos(),-kh_max_depth,feed);
 setxpos(getxpos()-kh_length);
   } else if (kh_angle > 0 && kh_angle < 90) {
 echo(kh_angle);
-  dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90+kh_angle,180+kh_angle);
-  dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180+kh_angle,270+kh_angle);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,kh_angle+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),90+kh_angle);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270+kh_angle,360+kh_angle-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)));
-dxfarc(KH_tool_no,
-  getxpos()+(kh_length*cos(kh_angle)),
-  getypos()+(kh_length*sin(kh_angle)),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0+kh_angle,90+kh_angle);
-dxfarc(KH_tool_no,getxpos()+(kh_length*cos(kh_angle)),getypos()+(kh_length*sin(kh_angle)),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270+kh_angle,360+kh_angle);
-dxfpolyline(KH_tool_no,
- getxpos()+tool_diameter(KH_tool_no, (kh_max_depth))/2*cos(kh_angle+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2))),
+  dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90+kh_angle,180+kh_angle, KH_tool_no);
+  dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180+kh_angle,270+kh_angle, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,kh_angle+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),90+kh_angle, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270+kh_angle,360+kh_angle-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)), KH_tool_no);
+dxfarc(getxpos()+(kh_length*cos(kh_angle)),
+  getypos()+(kh_length*sin(kh_angle)),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0+kh_angle,90+kh_angle, KH_tool_no);
+dxfarc(getxpos()+(kh_length*cos(kh_angle)),getypos()+(kh_length*sin(kh_angle)),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270+kh_angle,360+kh_angle, KH_tool_no);
+dxfpolyline( getxpos()+tool_diameter(KH_tool_no, (kh_max_depth))/2*cos(kh_angle+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2))),
  getypos()+tool_diameter(KH_tool_no, (kh_max_depth))/2*sin(kh_angle+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2))),
  getxpos()+(kh_length*cos(kh_angle))-((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)*sin(kh_angle)),
- getypos()+(kh_length*sin(kh_angle))+((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)*cos(kh_angle)));
+ getypos()+(kh_length*sin(kh_angle))+((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)*cos(kh_angle)), KH_tool_no);
 echo("a",tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2);
 echo("c",tool_diameter(KH_tool_no, (kh_max_depth))/2);
 echo("Aangle",asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)));
@@ -685,49 +776,47 @@ echo(kh_angle);
  setxpos(getxpos()-(kh_length*cos(kh_angle)));
  setypos(getypos()-(kh_length*sin(kh_angle)));
   } else if (kh_angle == 90) {
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180,270);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270,360);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,0,90-asin(
-    (tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)));
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90+asin(
-    (tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),180);
- dxfpolyline(KH_tool_no,getxpos(),getypos(),getxpos(),getypos()+kh_length);
-dxfarc(KH_tool_no,getxpos(),getypos()+kh_length,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90);
-dxfarc(KH_tool_no,getxpos(),getypos()+kh_length,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,90,180);
- dxfpolyline(KH_tool_no,getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+kh_length);
- dxfpolyline(KH_tool_no,getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+kh_length);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180,270, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270,360, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,0,90-asin(
+    (tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)), KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90+asin(
+    (tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),180, KH_tool_no);
+ dxfpolyline(getxpos(),getypos(),getxpos(),getypos()+kh_length);
+dxfarc(KH_tool_no,getxpos(),getypos()+kh_length,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90, KH_tool_no);
+dxfarc(getxpos(),getypos()+kh_length,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,90,180, KH_tool_no);
+ dxfpolyline(getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+kh_length, KH_tool_no);
+ dxfpolyline(getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+kh_length, KH_tool_no);
  cutwithfeed(getxpos(),getypos()+kh_length,-kh_max_depth,feed);
  setypos(getypos()-kh_length);
   } else if (kh_angle == 180) {
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,0,90);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270,360);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90,180-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)));
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),270);
-dxfarc(KH_tool_no,getxpos()-kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,90,180);
-dxfarc(KH_tool_no,getxpos()-kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,180,270);
-dxfpolyline(KH_tool_no,
- getxpos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,0,90, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270,360, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90,180-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)), KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),270, KH_tool_no);
+dxfarc(getxpos()-kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,90,180, KH_tool_no);
+dxfarc(getxpos()-kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,180,270, KH_tool_no);
+dxfpolyline(getxpos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),
  getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,
  getxpos()-kh_length,
- getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2);
-dxfpolyline(KH_tool_no,
- getxpos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),
+ getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, KH_tool_no);
+dxfpolyline( getxpos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),
  getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,
  getxpos()-kh_length,
- getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2);
- dxfpolyline(KH_tool_no,getxpos(),getypos(),getxpos()-kh_length,getypos());
+ getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, KH_tool_no);
+ dxfpolyline(getxpos(),getypos(),getxpos()-kh_length,getypos(), KH_tool_no);
  cutwithfeed(getxpos()-kh_length,getypos(),-kh_max_depth,feed);
  setxpos(getxpos()+kh_length);
   } else if (kh_angle == 270) {
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,0,90);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90,180);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),360);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180, 270-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)));
-dxfarc(KH_tool_no,getxpos(),getypos()-kh_length,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,180,270);
-dxfarc(KH_tool_no,getxpos(),getypos()-kh_length,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360);
- dxfpolyline(KH_tool_no,getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-kh_length);
- dxfpolyline(KH_tool_no,getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-kh_length);
- dxfpolyline(KH_tool_no,getxpos(),getypos(),getxpos(),getypos()-kh_length);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,0,90, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90,180, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),360, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180, 270-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)), KH_tool_no);
+dxfarc(getxpos(),getypos()-kh_length,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,180,270, KH_tool_no);
+dxfarc(getxpos(),getypos()-kh_length,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360, KH_tool_no);
+ dxfpolyline(getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-kh_length, KH_tool_no);
+ dxfpolyline(getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-kh_length, KH_tool_no);
+ dxfpolyline(getxpos(),getypos(),getxpos(),getypos()-kh_length, KH_tool_no);
  cutwithfeed(getxpos(),getypos()-kh_length,-kh_max_depth,feed);
  setypos(getypos()+kh_length);
   }
@@ -755,16 +844,16 @@ module cutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {//passes
     cutwithfeed(bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),bz-rdepth,feed);
     cutwithfeed(bx+tool_radius(rtn),by+rheight-tool_radius(rtn),bz-rdepth,feed);
   }
-  //dxfarc(tn,xcenter,ycenter,radius,anglebegin,endangle)
-  dxfarc(rtn,bx+tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),180,270);
-  //dxfpolyline(tn,xbegin,ybegin,xend,yend)
-  dxfpolyline(rtn,bx,by+tool_radius(rtn),bx,by+rheight-tool_radius(rtn));
-  dxfarc(rtn,bx+tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),90,180);
-  dxfpolyline(rtn,bx+tool_radius(rtn),by+rheight,bx+rwidth-tool_radius(rtn),by+rheight);
-  dxfarc(rtn,bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),0,90);
-  dxfpolyline(rtn,bx+rwidth,by+rheight-tool_radius(rtn),bx+rwidth,by+tool_radius(rtn));
-  dxfarc(rtn,bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),270,360);
-  dxfpolyline(rtn,bx+rwidth-tool_radius(rtn),by,bx+tool_radius(rtn),by);
+  //dxfarc(xcenter,ycenter,radius,anglebegin,endangle, tn)
+  dxfarc(bx+tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),180,270, rtn);
+  //dxfpolyline(xbegin,ybegin,xend,yend, tn)
+  dxfpolyline(bx,by+tool_radius(rtn),bx,by+rheight-tool_radius(rtn), rtn);
+  dxfarc(bx+tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),90,180, rtn);
+  dxfpolyline(bx+tool_radius(rtn),by+rheight,bx+rwidth-tool_radius(rtn),by+rheight, rtn);
+  dxfarc(bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),0,90, rtn);
+  dxfpolyline(bx+rwidth,by+rheight-tool_radius(rtn),bx+rwidth,by+tool_radius(rtn), rtn);
+  dxfarc(bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),270,360, rtn);
+  dxfpolyline(bx+rwidth-tool_radius(rtn),by,bx+tool_radius(rtn),by, rtn);
 }
 
 module cutrectangleoutlinedxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {//passes
@@ -773,21 +862,21 @@ module cutrectangleoutlinedxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {//passe
   cutwithfeed(bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),bz-rdepth,feed);
   cutwithfeed(bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),bz-rdepth,feed);
   cutwithfeed(bx+tool_radius(rtn),by+rheight-tool_radius(rtn),bz-rdepth,feed);
-  dxfarc(rtn,bx+tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),180,270);
-  dxfpolyline(rtn,bx,by+tool_radius(rtn),bx,by+rheight-tool_radius(rtn));
-  dxfarc(rtn,bx+tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),90,180);
-  dxfpolyline(rtn,bx+tool_radius(rtn),by+rheight,bx+rwidth-tool_radius(rtn),by+rheight);
-  dxfarc(rtn,bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),0,90);
-  dxfpolyline(rtn,bx+rwidth,by+rheight-tool_radius(rtn),bx+rwidth,by+tool_radius(rtn));
-  dxfarc(rtn,bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),270,360);
-  dxfpolyline(rtn,bx+rwidth-tool_radius(rtn),by,bx+tool_radius(rtn),by);
+  dxfarc(bx+tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),180,270, rtn);
+  dxfpolyline(bx,by+tool_radius(rtn),bx,by+rheight-tool_radius(rtn), rtn);
+  dxfarc(bx+tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),90,180, rtn);
+  dxfpolyline(bx+tool_radius(rtn),by+rheight,bx+rwidth-tool_radius(rtn),by+rheight, rtn);
+  dxfarc(bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),0,90, rtn);
+  dxfpolyline(bx+rwidth,by+rheight-tool_radius(rtn),bx+rwidth,by+tool_radius(rtn), rtn);
+  dxfarc(bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),270,360, rtn);
+  dxfpolyline(bx+rwidth-tool_radius(rtn),by,bx+tool_radius(rtn),by, rtn);
 }
 
 module rectangleoutlinedxf(bx, by, bz, rwidth, rheight, rtn) {
-  dxfpolyline(rtn,bx,by,bx,by+rheight);
-  dxfpolyline(rtn,bx,by+rheight,bx+rwidth,by+rheight);
-  dxfpolyline(rtn,bx+rwidth,by+rheight,bx+rwidth,by);
-  dxfpolyline(rtn,bx+rwidth,by,bx,by);
+  dxfpolyline(bx,by,bx,by+rheight, rtn);
+  dxfpolyline(bx,by+rheight,bx+rwidth,by+rheight, rtn);
+  dxfpolyline(bx+rwidth,by+rheight,bx+rwidth,by, rtn);
+  dxfpolyline(bx+rwidth,by,bx,by, rtn);
 }
 
 module cutoutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {
@@ -797,9 +886,9 @@ module cutoutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {
   cutwithfeed(bx+rwidth+tool_radius(rtn),by+rheight+tool_radius(rtn),bz-rdepth,feed);
   cutwithfeed(bx-tool_radius(rtn),by+rheight+tool_radius(rtn),bz-rdepth,feed);
   cutwithfeed(bx-tool_radius(rtn),by-tool_radius(rtn),bz-rdepth,feed);
-  dxfpolyline(rtn,bx,by,bx,by+rheight);
-  dxfpolyline(rtn,bx,by+rheight,bx+rwidth,by+rheight);
-  dxfpolyline(rtn,bx+rwidth,by+rheight,bx+rwidth,by);
-  dxfpolyline(rtn,bx+rwidth,by,bx,by);
+  dxfpolyline(bx,by,bx,by+rheight, rtn);
+  dxfpolyline(bx,by+rheight,bx+rwidth,by+rheight, rtn);
+  dxfpolyline(bx+rwidth,by+rheight,bx+rwidth,by, rtn);
+  dxfpolyline(bx+rwidth,by,bx,by, rtn);
 }
 

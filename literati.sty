@@ -55,7 +55,9 @@
 %\lstalias{scad}{c}
 
 \lstdefinelanguage{scad} {morekeywords={assert, children, circle, concat, cube, cylinder, difference, echo, else, for, function, hull, if, import, include, let, minkowski, mirror, module, offset, projection, render, resize, return, rotate, scale, sphere, square, translate, union, use}}
- 
+
+%\lstdefinelanguage{txt}{morekeywords={function, module, openscad, python}}
+
 \newcounter{gcpy}
 \newcounter{pyscad}
 \newcounter{gcpscad}
@@ -245,11 +247,11 @@ Last line was \the\lst@lineno\ for #1\ gcpy\ \thegcpy\ pyscad\ \thepyscad\ gcpsc
 \marginpar{\strut\hfill \texttt{#2}}%
 \index[routines]{#2}%
 \index{#1!#2}%
-\index{#2}%
-}
+\index{subroutine!#2}%
+\label{routine:#2}}
 
-\renewcommand{\DescribeRoutine}[1]{\DescribeRoutineorVariable{routines}{#1}}%
-\renewcommand{\DescribeVariable}[1]{\DescribeRoutineorVariable{variables}{#1}}%
+\renewcommand{\DescribeRoutine}[1]{\DescribeRoutineorVariable{routines}{#1}\label{routine:#1}}%
+\renewcommand{\DescribeVariable}[1]{\DescribeRoutineorVariable{variables}{#1}\label{variable:#1}}%
 
 \makeindex[title=Index,columns=2]
 

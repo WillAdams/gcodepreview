@@ -19,8 +19,11 @@
 
 %\DoNotIndex{\bullet}
 
+%\changes{v0.6}{2024/08/30}{modules and setupstock}
+\def\fileversion{v0.6} \def\filedate{2024/08/10}
+
 %\changes{v0.5}{2024/08/10}{DXFs and images}
-\def\fileversion{v0.5} \def\filedate{2024/08/10}
+%\def\fileversion{v0.5} \def\filedate{2024/08/10}
 
 %\changes{v0.4}{2024/07/28}{Literary re-write}
 %\def\fileversion{v0.4} \def\filedate{2024/07/28}
@@ -205,6 +208,11 @@ Version 0.5
 
  - more shapes
  - consolidate rectangles, arcs, and circles in gcodepreview.scad
+ 
+Version 0.6
+
+ - notes on modules
+ - change file for setupstock
 
 Possible future improvements:
 
@@ -335,12 +343,159 @@ Python, while there will be two OpenSCAD files as noted above, one which calls t
 and use OpenSCAD variables, as well as implement Customizer options
 (this will be \texttt{include}d).
 
+\subsection{Modules}
+
 Note that as a convention, where it is necessary for a module to coordinate between 
-Python~and OpenSCAD, it will be necessary for there to be three separate versions:
-a \texttt{p}<foo>~Python definition for the manipulation of Python variables and
+Python~and OpenSCAD, in certain cases it will be necessary for there to be three separate 
+versions: a \texttt{p}<foo>~Python definition for the manipulation of Python variables and
 any file routines, an \texttt{o}<foo> OpenSCAD module which will wrap up the Python
 function call, and lastly a <foo> OpenSCAD module which will be \texttt{<include>}d 
 so as to be able to make use of OpenSCAD variables.
+
+In natural languages such as English, there is an order to various parts of speech such as 
+adjectives 
+%(determiner, opinion/observation, size, age, shape, color, origin/nationality, 
+%material, purpose/qualifier) 
+--- since various prefixes and suffixes will be used for module names, having a consistent 
+ordering/usage will help in consistency and make expression clearer.
+The ordering should be: sequence, action, function, parameter, filetype
+
+\begin{outline}
+\1 Both prefix and suffix
+\2 \texttt{dxf} (action (write out dxf file), filetype)
+\1 Prefixes
+\2 \texttt{begin} (sequence)
+\2 \texttt{continue} (sequence)
+\2 \texttt{end} (sequence)
+\2 \texttt{cut} (action)
+\2 \texttt{move} (action)
+\2 \texttt{rapid} (action)
+\2 \texttt{open} (action)
+\2 \texttt{close} (action)
+\2 \texttt{set} (action/function)
+\1 Suffixes
+\2 \texttt{feed} (parameter)
+\2 \texttt{gcode} (filetype)
+\2 \texttt{polyline) (file (element))}
+\end{outline}
+
+%\subsubsection{Interfaces}
+
+For the sake of convenience, all user-facing modules will be listed here with their interface
+requirements/variables. Where appropriate, modules which interact will be listed together.
+
+%\lstset{firstnumber=1}
+%\begin{writecode}{w}{interfaces.txt}{txt}
+\begin{verbatim}
+begincutdxf(rh, ex, ey, ez, fr) and continuecutdxf(ex, ey, ez, fr)
+
+beginpolyline(bx,by,bz) and addpolyline(bx,by,bz) and closepolyline()
+
+begintoolpath(bx,by,bz) and endtoolpath()
+
+current_tool() (function)
+
+cut(ex, ey, ez)
+cutoneaxis_setfeed(axis,depth,feed)
+cutwithfeed(ex, ey, ez, feed)
+
+cutarcNECCdxf(ex, ey, ez, xcenter, ycenter, radius, tn)
+cutarcNWCCdxf(ex, ey, ez, xcenter, ycenter, radius, tn)
+cutarcSWCCdxf(ex, ey, ez, xcenter, ycenter, radius, tn)
+cutarcSECCdxf(ex, ey, ez, xcenter, ycenter, radius, tn)
+cutarcNECWdxf(ex, ey, ez, xcenter, ycenter, radius, tn)
+cutarcSECWdxf(ex, ey, ez, xcenter, ycenter, radius, tn)
+cutarcSWCWdxf(ex, ey, ez, xcenter, ycenter, radius, tn)
+
+cutkeyhole_toolpath(kh_start_depth, kh_max_depth, kht_angle, kh_length, kh_tool_no)
+
+cutoutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn) 
+cutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn)
+cutrectangleoutlinedxf(bx, by, bz, rwidth, rheight, rdepth, rtn)
+
+cutroundover(bx, by, bz, ex, ey, ez, radiustn)
+
+dxfarc(xcenter, ycenter, radius, anglebegin, endangle, tn) 
+dxfpolyline(xbegin,ybegin,xend,yend, tn)
+
+movetosafeheight()
+movetosafez() 
+
+opendxffile(fn) and closedxffile()
+opengcodefile(fn) and closegcodefile()
+
+rapidbx(bx, by, bz, ex, ey, ez)
+rapid(ex, ey, ez)
+
+rectangleoutlinedxf(bx, by, bz, rwidth, rheight, rtn)
+
+select_tool(tool_number)
+
+setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin) 
+
+setxpos(newxpos)
+setypos(newypos)
+setzpos(newzpos)
+
+settzpos(newtzpos)
+
+toolchange(tool_number,speed)
+tool_diameter(td_tool, td_depth) (function)
+tool_radius(td_tool, td_depth) (function)
+
+writecomment(comment)
+\end{verbatim}
+%\end{writecode}
+
+Principles for naming modules (and variables):
+
+\begin{itemize}
+\item minimize use of underscores (for convenience sake, underscores are not used for index entries)
+\item identify which aspect of the project structure is being worked with (\texttt{cut}(ting), 
+      \texttt{dxf}, \texttt{gcode}, \texttt{tool} management, etc.) and esp. note the use of
+      \texttt{o}(penscad) and \texttt{p}(ython) as prefixes
+\end{itemize}
+
+Structurally, this will typically look like:
+
+\begin{verbatim}
+The user-facing module is \DescribeRoutine{FOOBAR}
+
+\lstset{firstnumber=\thegcpscad}
+\begin{writecode}{a}{gcodepreview.scad}{scad}
+module FOOBAR(...) {
+    oFOOBAR(...);
+}
+
+\end{writecode}
+\addtocounter{gcpscad}{4}
+ 
+
+which calls the internal OpenSCAD Module \DescribeSubroutine{FOOBAR}{oFOOBAR}
+
+\begin{writecode}{a}{pygcodepreview.scad}{scad}
+module oFOOBAR(...) {
+    pFOOBAR(...);
+ }
+ 
+\end{writecode}
+\addtocounter{pyscad}{4}
+
+which in turn calls the internal Python definitioon \DescribeSubroutine{FOOBAR}{pFOOBAR}
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+def pFOOBAR (...)
+    ...
+    
+\end{writecode}
+\addtocounter{gcpy}{3}
+\end{verbatim}
+
+Further note that this definition will not be necessary for some later modules since they are
+in turn calling internal modules which already use this structure.
+
+\subsubsection{Initial Modules}
 
 The first such routine, (actually a subroutine, see \DescribeRoutine{setupstock}) 
 \DescribeSubroutine{setupstock}{psetupstock} will be appropriately enough, 
@@ -381,11 +536,11 @@ The OpenSCAD code, \DescribeRoutine{setupstock} requires that the user set param
 for stock dimensions and so forth, and will create comments in the G-code which incorporate 
 the stock dimensions and its position relative to the zero as set relative to the stock.
  
-The \DescribeVariable{stockorigin} setting is used in an <if then else> structure to position
+The internal variable \verb|stockorigin| is used in an \verb|<if then else>| structure to position
 the 3D model of the stock. 
 
 \lstset{firstnumber=\thepyscad}
-\begin{writecode}{a}{pygcodepreview.scad}{scad}
+\begin{writecode}{a}{gcodepreview.scad}{scad}
 module setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin) {
   osetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
 //initialize default tool and XYZ origin
@@ -567,8 +722,8 @@ module settzpos(newtzpos) {
 \end{writecode}
 \addtocounter{pyscad}{21}
  
-\noindent\DescribeRoutine{oset} while for setting the variables, it is necessary to have
-an OpenSCAD module:
+\noindent\DescribeSubroutine{set...}{oset} while for setting all three of the variables, there is
+an internal OpenSCAD module:
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -581,8 +736,8 @@ module oset(ex, ey, ez) {
 \end{writecode}
 \addtocounter{gcpscad}{6}
  
-\noindent and some toolpaths will require the storing and usage\DescribeRoutine{osettz}
-of an intermediate value for the Z-axis position during calculation:
+\noindent and some toolpaths will require the storing and usage of an intermediate value via
+\DescribeSubroutine{set...}{osettz} for the Z-axis position during calculation:
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -763,8 +918,9 @@ of the tools at the beginning and end points. Tooling which cannot be so represe
 \paragraph{Selecting Tools}
 
 There must also be a module for selecting tools: \DescribeRoutine{selecttool} which will
-select the matching module for 3D modeling based on the \DescribeVariable{tool number}, 
-and pass the appropriate parameters to that module:
+select the matching module for 3D modeling based on the \DescribeVariable{currenttool} 
+(which is fed in to the module as \verb|tool_number|, and pass the appropriate parameters 
+to that module:
  
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -846,7 +1002,7 @@ module gcp_keyhole(es_diameter, es_flute_length) {
 \end{samepage}
 
 The \DescribeRoutine{gcp dovetail} is modeled as a cylinder with the differing bottom and 
-top diameters determining the angle (though \DescribeVariable{dt angle} is still required 
+top diameters determining the angle (though \verb|dt_angle| is still required 
 as a parameter)
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -905,32 +1061,32 @@ easily justified.
 Because it is necessary to divide the tooling into vertical slices and call the hull operation 
 for each slice the tool definitions are tightly coupled with the module. Note that there are 
 two different modules, the public-facing version which includes the tool number:
-\DescribeRoutine{radiuscut}
+\DescribeRoutine{cutroundover}
  
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
-module radiuscut(bx, by, bz, ex, ey, ez, radiustn) {
+module cutroundover(bx, by, bz, ex, ey, ez, radiustn) {
     if (radiustn == 56125) {
-        radiuscuttool(bx, by, bz, ex, ey, ez, 0.508/2, 1.531);
+        cutroundovertool(bx, by, bz, ex, ey, ez, 0.508/2, 1.531);
     } else if (radiustn == 56142) {
-        radiuscuttool(bx, by, bz, ex, ey, ez, 0.508/2, 2.921);
+        cutroundovertool(bx, by, bz, ex, ey, ez, 0.508/2, 2.921);
     } else if (radiustn == 312) {
-        radiuscuttool(bx, by, bz, ex, ey, ez, 1.524/2, 3.175);
+        cutroundovertool(bx, by, bz, ex, ey, ez, 1.524/2, 3.175);
     } else if (radiustn == 1570) {
-        radiuscuttool(bx, by, bz, ex, ey, ez, 0.507/2, 4.509);
+        cutroundovertool(bx, by, bz, ex, ey, ez, 0.507/2, 4.509);
     }
 }
 
 \end{writecode}
 \addtocounter{gcpscad}{12}
 
-\noindent which then calls the actual \texttt{radiuscuttool} module  
+\noindent which then calls the actual \texttt{cutroundovertool} module  
 passing in the tip radius and the radius of the rounding. Note that this
 module sets its quality relative to the value of \verb|$fn|.
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
-module radiuscuttool(bx, by, bz, ex, ey, ez, tool_radius_tip, tool_radius_width) {
+module cutroundovertool(bx, by, bz, ex, ey, ez, tool_radius_tip, tool_radius_width) {
 n = 90 + $fn*3;
 step = 360/n;
 
@@ -1541,10 +1697,10 @@ precision, they should be limited to a swing of 90 degrees or less. Further note
 may be stitched together to make a circle:
  
 \begin{verbatim}
-           dxfarc(small_square_tool_no,10,10,5,0,90);
-           dxfarc(small_square_tool_no,10,10,5,90,180);
-           dxfarc(small_square_tool_no,10,10,5,180,270);
-           dxfarc(small_square_tool_no,10,10,5,270,360);
+           dxfarc(10, 10, 5,   0,  90, small_square_tool_no);
+           dxfarc(10, 10, 5,  90, 180, small_square_tool_no);
+           dxfarc(10, 10, 5, 180, 270, small_square_tool_no);
+           dxfarc(10, 10, 5, 270, 360, small_square_tool_no);
 \end{verbatim}
  
 A further refinement would be to connect multiple line segments/arcs into a larger polyline, 
@@ -1582,7 +1738,7 @@ module dxfpl(tn,xbegin,ybegin,xend,yend) {
     dxfwrite(tn,str(yend));
 }
 
-module dxfpolyline(tn,xbegin,ybegin,xend,yend) {
+module dxfpolyline(xbegin,ybegin,xend,yend, tn) {
 if (generatedxf == true) {
     dxfwriteone("0");
     dxfwriteone("LWPOLYLINE");
@@ -1628,7 +1784,7 @@ module dxfa(tn,xcenter,ycenter,radius,anglebegin,endangle) {
     dxfwrite(tn,str(endangle));
 }
 
-module dxfarc(tn,xcenter,ycenter,radius,anglebegin,endangle) {
+module dxfarc(xcenter, ycenter, radius, anglebegin, endangle, tn) {
 if (generatedxf == true) {
     dxfwriteone("0");
     dxfwriteone("ARC");
@@ -1712,7 +1868,7 @@ module dxfapl(tn,bx,by) {
 
 module addpolyline(bx,by,bz) {
 if (generatedxf == true) {
-    dxfwrite(tn,"0");
+//    dxfwrite(tn,"0");
     dxfwriteone("VERTEX");
     dxfwriteone("8");
     dxfwriteone("default");
@@ -1926,9 +2082,9 @@ module closedxffile() {
 With all the scaffolding in place, it is possible to model the tool: 
 \DescribeRoutine{otm}, (colors the tool model so as to differentiate cut areas)
 and cutting: 
-\DescribeRoutine{ocut}, 
+\DescribeSubroutine{cut}{ocut}, 
 as well as Rapid movements to position the tool to begin a cut:
-\DescribeRoutine{orapid}%
+\DescribeSubroutine{rapid}{orapid}, \DescribeRoutine{rapid}, and \DescribeRoutine{rapidbx}
 which will also need to write out files which represent the desired machine motions.
  
 \lstset{firstnumber=\thegcpscad}
@@ -2113,7 +2269,9 @@ interaction with the requirements of toolpaths.
  \url{www.reddit.com/r/Geometry/comments/bkbzgh/is_there_a_name_for_a_3_pointed_figure_with_two}}
    \2 two convex, one concave arc
 \1 4
-   \2 rectangle (including square)
+   \2 rectangle (including square) --- \hyperref[routine:cutrectangledxf]{cutrectangledxf},
+                                       \hyperref[routine:cutoutrectangledxf]{cutoutrectangledxf},
+                                       \hyperref[routine:rectangleoutlinedxf]{rectangleoutlinedxf} 
    \2 parallelogram
    \2 rhombus
    \2 trapezoid/trapezium
@@ -2217,7 +2375,7 @@ Note that there are the following representations/interfaces for representing an
 \item G-code --- G2 (clockwise) and G3 (counter-clockwise) arcs may be specified, and since 
       the endpoint is the positional requirement, it is most likely best to use the offset 
       to the center (I and J), rather than the radius parameter (K) \texttt{G2/3 ...} 
-\item DXF --- \texttt{dxfarc(tn,xcenter,ycenter,radius,anglebegin,endangle)}
+\item DXF --- \texttt{dxfarc(xcenter, ycenter, radius, anglebegin, endangle, tn)}
 \item approximation of arc using lines (OpenSCAD) --- note that this may also be used 
       in DXF so as to sidestep the question of how many line segments there would be
       for a given arc representation 
@@ -2286,50 +2444,50 @@ The various textual versions are quite obvious:
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
-module cutarcNECCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-  dxfarc(tn,xcenter,ycenter,radius,0,90);
+module cutarcNECCdxf(ex, ey, ez, xcenter, ycenter, radius, tn) {
+  dxfarc(xcenter,ycenter,radius,0,90, tn);
   settzpos((getzpos()-ez)/90);
     arcloop(1,90, xcenter, ycenter, radius);
 }
 
-module cutarcNWCCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-  dxfarc(tn,xcenter,ycenter,radius,90,180);
+module cutarcNWCCdxf(ex, ey, ez, xcenter, ycenter, radius, tn) {
+  dxfarc(xcenter,ycenter,radius,90,180, tn);
   settzpos((getzpos()-ez)/90);
     arcloop(91,180, xcenter, ycenter, radius);
 }
 
-module cutarcSWCCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-  dxfarc(tn,xcenter,ycenter,radius,180,270);
+module cutarcSWCCdxf(ex, ey, ez, xcenter, ycenter, radius, tn) {
+  dxfarc(xcenter,ycenter,radius,180,270, tn);
   settzpos((getzpos()-ez)/90);
     arcloop(181,270, xcenter, ycenter, radius);
 }
 
-module cutarcSECCdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-  dxfarc(tn,xcenter,ycenter,radius,270,360);
+module cutarcSECCdxf(ex, ey, ez, xcenter, ycenter, radius, tn) {
+  dxfarc(xcenter,ycenter,radius,270,360, tn);
   settzpos((getzpos()-ez)/90);
     arcloop(271,360, xcenter, ycenter, radius);
 }
 
-module cutarcNECWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-  dxfarc(tn,xcenter,ycenter,radius,0,90);
+module cutarcNECWdxf(ex, ey, ez, xcenter, ycenter, radius, tn) {
+  dxfarc(xcenter,ycenter,radius,0,90, tn);
   settzpos((getzpos()-ez)/90);
     narcloop(89,0, xcenter, ycenter, radius);
 }
 
-module cutarcSECWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-  dxfarc(tn,xcenter,ycenter,radius,270,360);
+module cutarcSECWdxf(ex, ey, ez, xcenter, ycenter, radius, tn) {
+  dxfarc(xcenter,ycenter,radius,270,360, tn);
   settzpos((getzpos()-ez)/90);
     narcloop(359,270, xcenter, ycenter, radius);
 }
 
-module cutarcSWCWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-  dxfarc(tn,xcenter,ycenter,radius,180,270);
+module cutarcSWCWdxf(ex, ey, ez, xcenter, ycenter, radius, tn) {
+  dxfarc(xcenter,ycenter,radius,180,270, tn);
   settzpos((getzpos()-ez)/90);
     narcloop(269,180, xcenter, ycenter, radius);
 }
 
-module cutarcNWCWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
-  dxfarc(tn,xcenter,ycenter,radius,90,180);
+module cutarcNWCWdxf(ex, ey, ez, xcenter, ycenter, radius, tn) {
+  dxfarc(xcenter,ycenter,radius,90,180, tn);
   settzpos((getzpos()-ez)/90);
     narcloop(179,90, xcenter, ycenter, radius);
 }
@@ -2340,7 +2498,7 @@ module cutarcNWCWdxf(tn, ex, ey, ez, xcenter, ycenter, radius) {
 \subsection{Keyhole toolpath and undercut tooling}
  
 \label{subsec:keyholetoolpaths}
-The first topologically unusual toolpath is \DescribeRoutine{keyhole toolpath} --- where 
+The first topologically unusual toolpath is \DescribeRoutine{cutkeyhole toolpath} --- where 
 other toolpaths have a 
 direct correspondence between the associated geometry and the area cut, that Keyhole toolpaths
 may be used with tooling which undercuts will result in the creation of two different physical
@@ -2367,22 +2525,22 @@ This will be done by wrapping the command with a version which only accepts thos
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
-module keyhole_toolpath(kh_tool_no, kh_start_depth, kh_max_depth, kht_angle, kh_length) {   
+module cutkeyhole_toolpath(kh_start_depth, kh_max_depth, kht_angle, kh_length, kh_tool_no) {   
 if (kht_angle == "N") {
-  keyhole_toolpath_degrees(kh_tool_no, kh_start_depth, kh_max_depth, 90, kh_length);
+  cutkeyhole_toolpath_degrees(kh_start_depth, kh_max_depth, 90, kh_length, kh_tool_no);
     } else if (kht_angle == "S") {
-  keyhole_toolpath_degrees(kh_tool_no, kh_start_depth, kh_max_depth, 270, kh_length);
+  cutkeyhole_toolpath_degrees(kh_start_depth, kh_max_depth, 270, kh_length, kh_tool_no);
     } else if (kht_angle == "E") {
-  keyhole_toolpath_degrees(kh_tool_no, kh_start_depth, kh_max_depth, 0, kh_length);
+  cutkeyhole_toolpath_degrees(kh_start_depth, kh_max_depth, 0, kh_length, kh_tool_no);
     } else if (kht_angle == "W") {
-  keyhole_toolpath_degrees(kh_tool_no, kh_start_depth, kh_max_depth, 180, kh_length);
+  cutkeyhole_toolpath_degrees(kh_start_depth, kh_max_depth, 180, kh_length, kh_tool_no);
     }
 }
 
 \end{writecode}
 \addtocounter{gcpscad}{12}
  
-The original version of the command, \DescribeRoutine{keyhole toolpath degrees} retains 
+The original version of the command, \DescribeRoutine{cutkeyhole toolpath degrees} retains 
 an interface which allows calling it for arbitrary beginning and ending points of an arc. 
 Note that code is still present for the partial calculation of one quadrant (for the case of 
 all nodes within the quadrant).
@@ -2391,11 +2549,11 @@ The first task is to place a circle at the origin which is invariant of angle:
  
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
-module keyhole_toolpath_degrees(kh_tool_no, kh_start_depth, kh_max_depth, kh_angle, kh_length) {
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,90,180);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,180,270);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360);
+module cutkeyhole_toolpath_degrees(kh_start_depth, kh_max_depth, kh_angle, kh_length, kh_tool_no) {
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,90,180, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,180,270, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360, KH_tool_no);
 
 \end{writecode}
 \addtocounter{gcpscad}{6}
@@ -2405,32 +2563,30 @@ Then it will be necessary to test for each possible case in a series of If Else 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
   if (kh_angle == 0) {
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180,270);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90,180);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),90);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270,360-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)));
-dxfarc(KH_tool_no,getxpos()+kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90);
-dxfarc(KH_tool_no,getxpos()+kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360);
-dxfpolyline(KH_tool_no, getxpos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2), getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, getxpos()+kh_length, getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2);
-dxfpolyline(KH_tool_no, getxpos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2), getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, getxpos()+kh_length, getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2);
-dxfpolyline(KH_tool_no,getxpos(),getypos(),getxpos()+kh_length,getypos());
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180,270, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90,180, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),90, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270,360-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)), KH_tool_no);
+dxfarc(getxpos()+kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90, KH_tool_no);
+dxfarc(getxpos()+kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360, KH_tool_no);
+dxfpolyline(getxpos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2), getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, getxpos()+kh_length, getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, KH_tool_no);
+dxfpolyline(getxpos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2), getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, getxpos()+kh_length, getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, KH_tool_no);
+dxfpolyline(getxpos(),getypos(),getxpos()+kh_length,getypos(), KH_tool_no);
 cutwithfeed(getxpos()+kh_length,getypos(),-kh_max_depth,feed);
 setxpos(getxpos()-kh_length);
   } else if (kh_angle > 0 && kh_angle < 90) {
 echo(kh_angle);
-  dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90+kh_angle,180+kh_angle);
-  dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180+kh_angle,270+kh_angle);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,kh_angle+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),90+kh_angle);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270+kh_angle,360+kh_angle-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)));
-dxfarc(KH_tool_no,
-  getxpos()+(kh_length*cos(kh_angle)),
-  getypos()+(kh_length*sin(kh_angle)),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0+kh_angle,90+kh_angle);
-dxfarc(KH_tool_no,getxpos()+(kh_length*cos(kh_angle)),getypos()+(kh_length*sin(kh_angle)),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270+kh_angle,360+kh_angle);
-dxfpolyline(KH_tool_no,
- getxpos()+tool_diameter(KH_tool_no, (kh_max_depth))/2*cos(kh_angle+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2))),
+  dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90+kh_angle,180+kh_angle, KH_tool_no);
+  dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180+kh_angle,270+kh_angle, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,kh_angle+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),90+kh_angle, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270+kh_angle,360+kh_angle-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)), KH_tool_no);
+dxfarc(getxpos()+(kh_length*cos(kh_angle)),
+  getypos()+(kh_length*sin(kh_angle)),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0+kh_angle,90+kh_angle, KH_tool_no);
+dxfarc(getxpos()+(kh_length*cos(kh_angle)),getypos()+(kh_length*sin(kh_angle)),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270+kh_angle,360+kh_angle, KH_tool_no);
+dxfpolyline( getxpos()+tool_diameter(KH_tool_no, (kh_max_depth))/2*cos(kh_angle+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2))),
  getypos()+tool_diameter(KH_tool_no, (kh_max_depth))/2*sin(kh_angle+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2))),
  getxpos()+(kh_length*cos(kh_angle))-((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)*sin(kh_angle)),
- getypos()+(kh_length*sin(kh_angle))+((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)*cos(kh_angle)));
+ getypos()+(kh_length*sin(kh_angle))+((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)*cos(kh_angle)), KH_tool_no);
 echo("a",tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2);
 echo("c",tool_diameter(KH_tool_no, (kh_max_depth))/2);
 echo("Aangle",asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)));
@@ -2439,49 +2595,47 @@ echo(kh_angle);
  setxpos(getxpos()-(kh_length*cos(kh_angle)));
  setypos(getypos()-(kh_length*sin(kh_angle)));
   } else if (kh_angle == 90) {
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180,270);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270,360);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,0,90-asin(
-    (tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)));
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90+asin(
-    (tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),180);
- dxfpolyline(KH_tool_no,getxpos(),getypos(),getxpos(),getypos()+kh_length);
-dxfarc(KH_tool_no,getxpos(),getypos()+kh_length,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90);
-dxfarc(KH_tool_no,getxpos(),getypos()+kh_length,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,90,180);
- dxfpolyline(KH_tool_no,getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+kh_length);
- dxfpolyline(KH_tool_no,getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+kh_length);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180,270, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270,360, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,0,90-asin(
+    (tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)), KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90+asin(
+    (tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),180, KH_tool_no);
+ dxfpolyline(getxpos(),getypos(),getxpos(),getypos()+kh_length);
+dxfarc(KH_tool_no,getxpos(),getypos()+kh_length,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90, KH_tool_no);
+dxfarc(getxpos(),getypos()+kh_length,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,90,180, KH_tool_no);
+ dxfpolyline(getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+kh_length, KH_tool_no);
+ dxfpolyline(getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+kh_length, KH_tool_no);
  cutwithfeed(getxpos(),getypos()+kh_length,-kh_max_depth,feed);
  setypos(getypos()-kh_length);
   } else if (kh_angle == 180) {
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,0,90);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270,360);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90,180-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)));
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),270);
-dxfarc(KH_tool_no,getxpos()-kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,90,180);
-dxfarc(KH_tool_no,getxpos()-kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,180,270);
-dxfpolyline(KH_tool_no,
- getxpos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,0,90, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270,360, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90,180-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)), KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),270, KH_tool_no);
+dxfarc(getxpos()-kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,90,180, KH_tool_no);
+dxfarc(getxpos()-kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,180,270, KH_tool_no);
+dxfpolyline(getxpos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),
  getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,
  getxpos()-kh_length,
- getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2);
-dxfpolyline(KH_tool_no,
- getxpos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),
+ getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, KH_tool_no);
+dxfpolyline( getxpos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),
  getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,
  getxpos()-kh_length,
- getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2);
- dxfpolyline(KH_tool_no,getxpos(),getypos(),getxpos()-kh_length,getypos());
+ getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, KH_tool_no);
+ dxfpolyline(getxpos(),getypos(),getxpos()-kh_length,getypos(), KH_tool_no);
  cutwithfeed(getxpos()-kh_length,getypos(),-kh_max_depth,feed);
  setxpos(getxpos()+kh_length);
   } else if (kh_angle == 270) {
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,0,90);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90,180);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),360);
-dxfarc(KH_tool_no,getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180, 270-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)));
-dxfarc(KH_tool_no,getxpos(),getypos()-kh_length,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,180,270);
-dxfarc(KH_tool_no,getxpos(),getypos()-kh_length,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360);
- dxfpolyline(KH_tool_no,getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-kh_length);
- dxfpolyline(KH_tool_no,getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-kh_length);
- dxfpolyline(KH_tool_no,getxpos(),getypos(),getxpos(),getypos()-kh_length);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,0,90, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90,180, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),360, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180, 270-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)), KH_tool_no);
+dxfarc(getxpos(),getypos()-kh_length,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,180,270, KH_tool_no);
+dxfarc(getxpos(),getypos()-kh_length,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360, KH_tool_no);
+ dxfpolyline(getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-kh_length, KH_tool_no);
+ dxfpolyline(getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-kh_length, KH_tool_no);
+ dxfpolyline(getxpos(),getypos(),getxpos(),getypos()-kh_length, KH_tool_no);
  cutwithfeed(getxpos(),getypos()-kh_length,-kh_max_depth,feed);
  setypos(getypos()+kh_length);
   }
@@ -2572,22 +2726,22 @@ module cutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {//passes
     cutwithfeed(bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),bz-rdepth,feed);
     cutwithfeed(bx+tool_radius(rtn),by+rheight-tool_radius(rtn),bz-rdepth,feed);
   }
-  //dxfarc(tn,xcenter,ycenter,radius,anglebegin,endangle)
-  dxfarc(rtn,bx+tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),180,270);
-  //dxfpolyline(tn,xbegin,ybegin,xend,yend)
-  dxfpolyline(rtn,bx,by+tool_radius(rtn),bx,by+rheight-tool_radius(rtn));
-  dxfarc(rtn,bx+tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),90,180);
-  dxfpolyline(rtn,bx+tool_radius(rtn),by+rheight,bx+rwidth-tool_radius(rtn),by+rheight);
-  dxfarc(rtn,bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),0,90);
-  dxfpolyline(rtn,bx+rwidth,by+rheight-tool_radius(rtn),bx+rwidth,by+tool_radius(rtn));
-  dxfarc(rtn,bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),270,360);
-  dxfpolyline(rtn,bx+rwidth-tool_radius(rtn),by,bx+tool_radius(rtn),by);
+  //dxfarc(xcenter,ycenter,radius,anglebegin,endangle, tn)
+  dxfarc(bx+tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),180,270, rtn);
+  //dxfpolyline(xbegin,ybegin,xend,yend, tn)
+  dxfpolyline(bx,by+tool_radius(rtn),bx,by+rheight-tool_radius(rtn), rtn);
+  dxfarc(bx+tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),90,180, rtn);
+  dxfpolyline(bx+tool_radius(rtn),by+rheight,bx+rwidth-tool_radius(rtn),by+rheight, rtn);
+  dxfarc(bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),0,90, rtn);
+  dxfpolyline(bx+rwidth,by+rheight-tool_radius(rtn),bx+rwidth,by+tool_radius(rtn), rtn);
+  dxfarc(bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),270,360, rtn);
+  dxfpolyline(bx+rwidth-tool_radius(rtn),by,bx+tool_radius(rtn),by, rtn);
 }
 
 \end{writecode}
 \addtocounter{gcpscad}{25}
 
-A matching command: \DescribeRoutine{cutrectangleoutlinedxf}%
+A matching command: \DescribeRoutine{cutrectangleoutlinedxf} 
 cuts the outline of a rounded rectangle and is a simplification of the above:
 
 \lstset{firstnumber=\thegcpscad}
@@ -2598,14 +2752,14 @@ module cutrectangleoutlinedxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {//passe
   cutwithfeed(bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),bz-rdepth,feed);
   cutwithfeed(bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),bz-rdepth,feed);
   cutwithfeed(bx+tool_radius(rtn),by+rheight-tool_radius(rtn),bz-rdepth,feed);
-  dxfarc(rtn,bx+tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),180,270);
-  dxfpolyline(rtn,bx,by+tool_radius(rtn),bx,by+rheight-tool_radius(rtn));
-  dxfarc(rtn,bx+tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),90,180);
-  dxfpolyline(rtn,bx+tool_radius(rtn),by+rheight,bx+rwidth-tool_radius(rtn),by+rheight);
-  dxfarc(rtn,bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),0,90);
-  dxfpolyline(rtn,bx+rwidth,by+rheight-tool_radius(rtn),bx+rwidth,by+tool_radius(rtn));
-  dxfarc(rtn,bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),270,360);
-  dxfpolyline(rtn,bx+rwidth-tool_radius(rtn),by,bx+tool_radius(rtn),by);
+  dxfarc(bx+tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),180,270, rtn);
+  dxfpolyline(bx,by+tool_radius(rtn),bx,by+rheight-tool_radius(rtn), rtn);
+  dxfarc(bx+tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),90,180, rtn);
+  dxfpolyline(bx+tool_radius(rtn),by+rheight,bx+rwidth-tool_radius(rtn),by+rheight, rtn);
+  dxfarc(bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),0,90, rtn);
+  dxfpolyline(bx+rwidth,by+rheight-tool_radius(rtn),bx+rwidth,by+tool_radius(rtn), rtn);
+  dxfarc(bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),270,360, rtn);
+  dxfpolyline(bx+rwidth-tool_radius(rtn),by,bx+tool_radius(rtn),by, rtn);
 }
 
 \end{writecode}
@@ -2619,10 +2773,10 @@ of jobs with multiple tools):
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
 module rectangleoutlinedxf(bx, by, bz, rwidth, rheight, rtn) {
-  dxfpolyline(rtn,bx,by,bx,by+rheight);
-  dxfpolyline(rtn,bx,by+rheight,bx+rwidth,by+rheight);
-  dxfpolyline(rtn,bx+rwidth,by+rheight,bx+rwidth,by);
-  dxfpolyline(rtn,bx+rwidth,by,bx,by);
+  dxfpolyline(bx,by,bx,by+rheight, rtn);
+  dxfpolyline(bx,by+rheight,bx+rwidth,by+rheight, rtn);
+  dxfpolyline(bx+rwidth,by+rheight,bx+rwidth,by, rtn);
+  dxfpolyline(bx+rwidth,by,bx,by, rtn);
 }
 
 \end{writecode}
@@ -2643,10 +2797,10 @@ module cutoutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {
   cutwithfeed(bx+rwidth+tool_radius(rtn),by+rheight+tool_radius(rtn),bz-rdepth,feed);
   cutwithfeed(bx-tool_radius(rtn),by+rheight+tool_radius(rtn),bz-rdepth,feed);
   cutwithfeed(bx-tool_radius(rtn),by-tool_radius(rtn),bz-rdepth,feed);
-  dxfpolyline(rtn,bx,by,bx,by+rheight);
-  dxfpolyline(rtn,bx,by+rheight,bx+rwidth,by+rheight);
-  dxfpolyline(rtn,bx+rwidth,by+rheight,bx+rwidth,by);
-  dxfpolyline(rtn,bx+rwidth,by,bx,by);
+  dxfpolyline(bx,by,bx,by+rheight, rtn);
+  dxfpolyline(bx,by+rheight,bx+rwidth,by+rheight, rtn);
+  dxfpolyline(bx+rwidth,by+rheight,bx+rwidth,by, rtn);
+  dxfpolyline(bx+rwidth,by,bx,by, rtn);
 }
 
 \end{writecode}
@@ -2669,6 +2823,24 @@ possible to create additional files for specific purposes.
 The commands may then be put together using a template which will ensure that
 the various files are used/included as necessary, that files are opened before
 being written to, and that they are closed at the end.
+
+%Creating a template from memory, the file should be something like:
+%
+%List of all tools
+%chipload for each tool
+%Depth per Pass for each tool
+%scaling factor for chipload to arrive at feeds and speeds
+%Booleans for generateDXF/Gcode, 3D Preview, assembly or parts or drop-down list of parts, &c.
+%
+%setupstock --- should this open gcode/dxf files as well?
+%
+%toolchange to first tool
+%
+%Rapid to location of first cut
+%cutline/cutarc --- iterate as needed
+%Rapid to safe height
+%
+%Program END --- should close gcode/DXF files and include rapid to safe height and rapid to back
 
 \lstset{firstnumber=1}%\thegcptmpl}
 \begin{writecode}{w}{gcodepreviewtemplate.scad}{scad}
@@ -2902,9 +3074,11 @@ Holidays are from \url{https://nationaltoday.com/}
 
 %This document was re-worked per: \url{https://tex.stackexchange.com/questions/47237/different-approach-to-literate-programming-for-latex}
  
+%https://www.semanticscholar.org/paper/A-Philosophy-of-Software-Design-Ousterhout/93cf2d44a3e9d94b059a0e4c68b477cfefc5fef9
+
 \bibliographystyle{alpha}
 
-\begin{thebibliography}{PractShopMath}
+\begin{thebibliography}{Ousterhout2018APO}
 
 \bibitem[ConstGeom]{WALMSLEY81}
 Walmsley, Brian. \emph{Construction Geometry}. 2d ed., Centennial College Press, 1981.
@@ -2932,12 +3106,23 @@ Thomas R. Kramer, Frederick M. Proctor, Elena R. Messina.\\
 \mbox{\url{https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=823374}}\\
 \url{https://www.nist.gov/publications/nist-rs274ngc-interpreter-version-3}
 
+\bibitem[SoftwareDesign]{Ousterhout2018APO}
+Ousterhout, John K.
+\emph{A Philosophy of Software Design}. First Edition., Yaknyam Press, Palo Alto, Ca., 2018
+
+%  title={A Philosophy of Software Design},
+%  author={ Ousterhout},
+%  year={2018},
+%  url={https://api.semanticscholar.org/CorpusID:69749255}
+
+
 \end{thebibliography}
 
 \createindexes
 
  
 %\MergeAllFiles{readme.md}
+%\MergeAllFiles{interfaces.txt}
 \MergeAllFiles{gcodepreview.py}
 \MergeAllFiles{pygcodepreview.scad}
 \MergeAllFiles{gcodepreview.scad}
