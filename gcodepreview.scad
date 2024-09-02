@@ -653,8 +653,6 @@ module endtoolpath() {
   orapid(getxpos(),getypos(),retractheight);
 }
 
-//!OpenSCAD
-
 module arcloop(barc,earc, xcenter, ycenter, radius) {
   for (i = [barc : abs(1) : earc]) {
         cut(xcenter + radius * cos(i),
@@ -725,19 +723,19 @@ module cutarcNWCWdxf(ex, ey, ez, xcenter, ycenter, radius, tn) {
     narcloop(179,90, xcenter, ycenter, radius);
 }
 
-module cutkeyhole_toolpath(kh_start_depth, kh_max_depth, kht_angle, kh_length, kh_tool_no) {
-if (kht_angle == "N") {
-  cutkeyhole_toolpath_degrees(kh_start_depth, kh_max_depth, 90, kh_length, kh_tool_no);
-    } else if (kht_angle == "S") {
-  cutkeyhole_toolpath_degrees(kh_start_depth, kh_max_depth, 270, kh_length, kh_tool_no);
-    } else if (kht_angle == "E") {
-  cutkeyhole_toolpath_degrees(kh_start_depth, kh_max_depth, 0, kh_length, kh_tool_no);
-    } else if (kht_angle == "W") {
-  cutkeyhole_toolpath_degrees(kh_start_depth, kh_max_depth, 180, kh_length, kh_tool_no);
+module cutkeyhole_toolpath(kh_start_depth, kh_max_depth, kht_direction, kh_distance, kh_tool_no) {
+if (kht_direction == "N") {
+  cutKH_toolpath_degrees(kh_start_depth, kh_max_depth, 90, kh_distance, kh_tool_no);
+    } else if (kht_direction == "S") {
+  cutKH_toolpath_degrees(kh_start_depth, kh_max_depth, 270, kh_distance, kh_tool_no);
+    } else if (kht_direction == "E") {
+  cutKH_toolpath_degrees(kh_start_depth, kh_max_depth, 0, kh_distance, kh_tool_no);
+    } else if (kht_direction == "W") {
+  cutKH_toolpath_degrees(kh_start_depth, kh_max_depth, 180, kh_distance, kh_tool_no);
     }
 }
 
-module cutkeyhole_toolpath_degrees(kh_start_depth, kh_max_depth, kh_angle, kh_length, kh_tool_no) {
+module cutKH_toolpath_degrees(kh_start_depth, kh_max_depth, kh_angle, kh_distance, kh_tool_no) {
 dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90, KH_tool_no);
 dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,90,180, KH_tool_no);
 dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,180,270, KH_tool_no);
@@ -748,33 +746,33 @@ dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180,270, 
 dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90,180, KH_tool_no);
 dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),90, KH_tool_no);
 dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270,360-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)), KH_tool_no);
-dxfarc(getxpos()+kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90, KH_tool_no);
-dxfarc(getxpos()+kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360, KH_tool_no);
-dxfpolyline(getxpos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2), getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, getxpos()+kh_length, getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, KH_tool_no);
-dxfpolyline(getxpos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2), getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, getxpos()+kh_length, getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, KH_tool_no);
-dxfpolyline(getxpos(),getypos(),getxpos()+kh_length,getypos(), KH_tool_no);
-cutwithfeed(getxpos()+kh_length,getypos(),-kh_max_depth,feed);
-setxpos(getxpos()-kh_length);
+dxfarc(getxpos()+kh_distance,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90, KH_tool_no);
+dxfarc(getxpos()+kh_distance,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360, KH_tool_no);
+dxfpolyline(getxpos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2), getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, getxpos()+kh_distance, getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, KH_tool_no);
+dxfpolyline(getxpos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2), getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, getxpos()+kh_distance, getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, KH_tool_no);
+dxfpolyline(getxpos(),getypos(),getxpos()+kh_distance,getypos(), KH_tool_no);
+cutwithfeed(getxpos()+kh_distance,getypos(),-kh_max_depth,feed);
+setxpos(getxpos()-kh_distance);
   } else if (kh_angle > 0 && kh_angle < 90) {
 echo(kh_angle);
   dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90+kh_angle,180+kh_angle, KH_tool_no);
   dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180+kh_angle,270+kh_angle, KH_tool_no);
 dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,kh_angle+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),90+kh_angle, KH_tool_no);
 dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270+kh_angle,360+kh_angle-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)), KH_tool_no);
-dxfarc(getxpos()+(kh_length*cos(kh_angle)),
-  getypos()+(kh_length*sin(kh_angle)),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0+kh_angle,90+kh_angle, KH_tool_no);
-dxfarc(getxpos()+(kh_length*cos(kh_angle)),getypos()+(kh_length*sin(kh_angle)),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270+kh_angle,360+kh_angle, KH_tool_no);
+dxfarc(getxpos()+(kh_distance*cos(kh_angle)),
+  getypos()+(kh_distance*sin(kh_angle)),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0+kh_angle,90+kh_angle, KH_tool_no);
+dxfarc(getxpos()+(kh_distance*cos(kh_angle)),getypos()+(kh_distance*sin(kh_angle)),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270+kh_angle,360+kh_angle, KH_tool_no);
 dxfpolyline( getxpos()+tool_diameter(KH_tool_no, (kh_max_depth))/2*cos(kh_angle+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2))),
  getypos()+tool_diameter(KH_tool_no, (kh_max_depth))/2*sin(kh_angle+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2))),
- getxpos()+(kh_length*cos(kh_angle))-((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)*sin(kh_angle)),
- getypos()+(kh_length*sin(kh_angle))+((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)*cos(kh_angle)), KH_tool_no);
+ getxpos()+(kh_distance*cos(kh_angle))-((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)*sin(kh_angle)),
+ getypos()+(kh_distance*sin(kh_angle))+((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)*cos(kh_angle)), KH_tool_no);
 echo("a",tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2);
 echo("c",tool_diameter(KH_tool_no, (kh_max_depth))/2);
 echo("Aangle",asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)));
 echo(kh_angle);
- cutwithfeed(getxpos()+(kh_length*cos(kh_angle)),getypos()+(kh_length*sin(kh_angle)),-kh_max_depth,feed);
- setxpos(getxpos()-(kh_length*cos(kh_angle)));
- setypos(getypos()-(kh_length*sin(kh_angle)));
+ cutwithfeed(getxpos()+(kh_distance*cos(kh_angle)),getypos()+(kh_distance*sin(kh_angle)),-kh_max_depth,feed);
+ setxpos(getxpos()-(kh_distance*cos(kh_angle)));
+ setypos(getypos()-(kh_distance*sin(kh_angle)));
   } else if (kh_angle == 90) {
 dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180,270, KH_tool_no);
 dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270,360, KH_tool_no);
@@ -782,43 +780,43 @@ dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,0,90-asin
     (tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)), KH_tool_no);
 dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90+asin(
     (tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),180, KH_tool_no);
- dxfpolyline(getxpos(),getypos(),getxpos(),getypos()+kh_length);
-dxfarc(KH_tool_no,getxpos(),getypos()+kh_length,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90, KH_tool_no);
-dxfarc(getxpos(),getypos()+kh_length,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,90,180, KH_tool_no);
- dxfpolyline(getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+kh_length, KH_tool_no);
- dxfpolyline(getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+kh_length, KH_tool_no);
- cutwithfeed(getxpos(),getypos()+kh_length,-kh_max_depth,feed);
- setypos(getypos()-kh_length);
+ dxfpolyline(getxpos(),getypos(),getxpos(),getypos()+kh_distance);
+dxfarc(getxpos(),getypos()+kh_distance,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90, KH_tool_no);
+dxfarc(getxpos(),getypos()+kh_distance,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,90,180, KH_tool_no);
+ dxfpolyline(getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+kh_distance, KH_tool_no);
+ dxfpolyline(getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+kh_distance, KH_tool_no);
+ cutwithfeed(getxpos(),getypos()+kh_distance,-kh_max_depth,feed);
+ setypos(getypos()-kh_distance);
   } else if (kh_angle == 180) {
 dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,0,90, KH_tool_no);
 dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270,360, KH_tool_no);
 dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90,180-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)), KH_tool_no);
 dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),270, KH_tool_no);
-dxfarc(getxpos()-kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,90,180, KH_tool_no);
-dxfarc(getxpos()-kh_length,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,180,270, KH_tool_no);
+dxfarc(getxpos()-kh_distance,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,90,180, KH_tool_no);
+dxfarc(getxpos()-kh_distance,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,180,270, KH_tool_no);
 dxfpolyline(getxpos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),
  getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,
- getxpos()-kh_length,
+ getxpos()-kh_distance,
  getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, KH_tool_no);
 dxfpolyline( getxpos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),
  getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,
- getxpos()-kh_length,
+ getxpos()-kh_distance,
  getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, KH_tool_no);
- dxfpolyline(getxpos(),getypos(),getxpos()-kh_length,getypos(), KH_tool_no);
- cutwithfeed(getxpos()-kh_length,getypos(),-kh_max_depth,feed);
- setxpos(getxpos()+kh_length);
+ dxfpolyline(getxpos(),getypos(),getxpos()-kh_distance,getypos(), KH_tool_no);
+ cutwithfeed(getxpos()-kh_distance,getypos(),-kh_max_depth,feed);
+ setxpos(getxpos()+kh_distance);
   } else if (kh_angle == 270) {
 dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,0,90, KH_tool_no);
 dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90,180, KH_tool_no);
 dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),360, KH_tool_no);
 dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180, 270-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)), KH_tool_no);
-dxfarc(getxpos(),getypos()-kh_length,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,180,270, KH_tool_no);
-dxfarc(getxpos(),getypos()-kh_length,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360, KH_tool_no);
- dxfpolyline(getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-kh_length, KH_tool_no);
- dxfpolyline(getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-kh_length, KH_tool_no);
- dxfpolyline(getxpos(),getypos(),getxpos(),getypos()-kh_length, KH_tool_no);
- cutwithfeed(getxpos(),getypos()-kh_length,-kh_max_depth,feed);
- setypos(getypos()+kh_length);
+dxfarc(getxpos(),getypos()-kh_distance,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,180,270, KH_tool_no);
+dxfarc(getxpos(),getypos()-kh_distance,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360, KH_tool_no);
+ dxfpolyline(getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-kh_distance, KH_tool_no);
+ dxfpolyline(getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-kh_distance, KH_tool_no);
+ dxfpolyline(getxpos(),getypos(),getxpos(),getypos()-kh_distance, KH_tool_no);
+ cutwithfeed(getxpos(),getypos()-kh_distance,-kh_max_depth,feed);
+ setypos(getypos()+kh_distance);
   }
 }
 
