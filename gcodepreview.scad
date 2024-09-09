@@ -1,6 +1,6 @@
 //!OpenSCAD
 
-//gcodepreview 0.5
+//gcodepreview 0.7
 //
 //used via use <gcodepreview.py>;
 //         use <pygcodepreview.scad>;
@@ -144,7 +144,7 @@ if (generategcode == true) {
 }
 
 module select_tool(tool_number) {
-//echo(tool_number);
+echo(tool_number);
   if (tool_number == 201) {
     gcp_endmill_square(6.35, 19.05);
   } else if (tool_number == 202) {

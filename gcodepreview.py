@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-#icon "C:\Program Files\OpenSCAD\bin\openscad.exe" --trust-python
-#Currently tested with 2023.11.30 and Python 3.11
-#gcodepreview 0.5, see gcodepreview.scad
+#icon "C:\Program Files\PythonSCAD\bin\openscad.exe"  --trust-python
+#Currently tested with 2024.09.01 and Python 3.11
+#gcodepreview 0.7, see gcodepreview.scad
 
 def writeln(*arguments):
     line_to_write = ""
@@ -63,31 +63,51 @@ def pcurrent_tool():
     return currenttool
 
 def ptool_diameter(ptd_tool, ptd_depth):
-    if ptd_tool == 201:
-        return 6.35
-    if ptd_tool == 202:
-        if ptd_depth > 3.175:
-            return 6.35
-        else:
-            return 0
+# Square 122,112,102,201
+    if ptd_tool == 122:
+        return 0.79375
+    if ptd_tool == 112:
+        return 1.5875
     if ptd_tool == 102:
         return 3.175
+    if ptd_tool == 201:
+        return 6.35
+# Ball 121,111,101,202
+    if ptd_tool == 122:
+        return
+        if ptd_depth > 0.396875:
+            return 0.79375
+        else:
+            return 0
+    if ptd_tool == 112:
+        if ptd_depth > 0.79375:
+            return 1.5875
+        else:
+            return 0
     if ptd_tool == 101:
         if ptd_depth > 1.5875:
             return 3.175
         else:
             return 0
+    if ptd_tool == 202:
+        if ptd_depth > 3.175:
+            return 6.35
+        else:
+            return 0
+# V 301, 302, 390
     if ptd_tool == 301:
         return 0
     if ptd_tool == 302:
         return 0
     if ptd_tool == 390:
         return 0
+# Keyhole
     if ptd_tool == 375:
         if ptd_depth < 6.35:
             return 9.525
         else:
             return 6.35
+# Dovetail
     if ptd_tool == 814:
         if ptd_depth > 12.7:
             return 6.35
@@ -102,12 +122,12 @@ def popendxffile(fn):
     global dxf
     dxf = open(fn, "w")
 
-def popendxlgblffile(fn):
+def popendxflgblfile(fn):
     global dxflgbl
     dxflgbl = open(fn, "w")
 
 def popendxflgsqfile(fn):
-    global dxfldsq
+    global dxflgsq
     dxflgsq = open(fn, "w")
 
 def popendxflgVfile(fn):
@@ -130,14 +150,14 @@ def popendxfKHfile(fn):
     global dxfKH
     dxfKH = open(fn, "w")
 
-def popendxDTfile(fn):
+def popendxfDTfile(fn):
     global dxfDT
     dxfDT = open(fn, "w")
 
 def writedxf(*arguments):
     line_to_write = ""
     for element in arguments:
-       line_to_write += element
+        line_to_write += element
     dxf.write(line_to_write)
     dxf.write("\n")
 

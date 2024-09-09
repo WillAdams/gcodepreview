@@ -19,8 +19,11 @@
 
 %\DoNotIndex{\bullet}
 
+%\changes{v0.61}{2024/09/08}{modules and tests}
+\def\fileversion{v0.61} \def\filedate{2024/09/08}
+
 %\changes{v0.6}{2024/08/30}{modules and setupstock}
-\def\fileversion{v0.6} \def\filedate{2024/08/10}
+%\def\fileversion{v0.6} \def\filedate{2024/08/30}
 
 %\changes{v0.5}{2024/08/10}{DXFs and images}
 %\def\fileversion{v0.5} \def\filedate{2024/08/10}
@@ -214,6 +217,11 @@ Version 0.6
  - notes on modules
  - change file for setupstock
 
+Version 0.7
+
+ - reduce usage of tool numbers
+ - validate all code so that it runs without errors from sample file
+
 Possible future improvements:
 
  - support for additional tooling shapes such as tapered ball-nose tools or lollipop cutters or thread-cutting tools
@@ -255,9 +263,9 @@ Each file will begin with a suitable comment indicating the file type and suitab
 
 \begin{writecode}{w}{gcodepreview.py}{python}
 #!/usr/bin/env python
-#icon "C:\Program Files\OpenSCAD\bin\openscad.exe" --trust-python
-#Currently tested with 2023.11.30 and Python 3.11
-#gcodepreview 0.5, see gcodepreview.scad
+#icon "C:\Program Files\PythonSCAD\bin\openscad.exe"  --trust-python
+#Currently tested with 2024.09.01 and Python 3.11
+#gcodepreview 0.7, see gcodepreview.scad
 
 \end{writecode}
 \addtocounter{gcpy}{6}
@@ -265,7 +273,7 @@ Each file will begin with a suitable comment indicating the file type and suitab
 \begin{writecode}{w}{pygcodepreview.scad}{scad}
 //!OpenSCAD
  
-//gcodepreview 0.5, see gcodepreview.scad
+//gcodepreview 0.7, see gcodepreview.scad
 
 \end{writecode}
 \addtocounter{pyscad}{5}
@@ -273,7 +281,7 @@ Each file will begin with a suitable comment indicating the file type and suitab
 \begin{writecode}{w}{gcodepreview.scad}{scad}
 //!OpenSCAD
  
-//gcodepreview 0.5
+//gcodepreview 0.7
 //
 //used via use <gcodepreview.py>;
 //         use <pygcodepreview.scad>;
@@ -337,9 +345,9 @@ as the toolpath is cut out:
 \end{samepage}
 
 Note that the \verb|currenttool| variable should always be used for any specification 
-of a tool, being read in whenever a tool needs to be specified. (Which implies that 
-the tool parameters in modules other then \verb|toolchange(tool_number, speed);| 
-should be removed.)
+of a tool, being read in whenever a tool needs to be specified. %(Which implies that 
+%the tool parameters in modules other then \verb|toolchange(tool_number, speed);| 
+%should be removed.)
 
 For each intended command it will be necessary to implement an appropriate aspect in each file. 
 The Python file will manage the Python variables and handle things which can only be done in 
@@ -404,24 +412,24 @@ cut(ex, ey, ez);
 cutoneaxis_setfeed(axis,depth,feed);
 cutwithfeed(ex, ey, ez, feed);
 
-cutarcNECCdxf(ex, ey, ez, xcenter, ycenter, radius, tn);
-cutarcNWCCdxf(ex, ey, ez, xcenter, ycenter, radius, tn);
-cutarcSWCCdxf(ex, ey, ez, xcenter, ycenter, radius, tn);
-cutarcSECCdxf(ex, ey, ez, xcenter, ycenter, radius, tn);
-cutarcNECWdxf(ex, ey, ez, xcenter, ycenter, radius, tn);
-cutarcSECWdxf(ex, ey, ez, xcenter, ycenter, radius, tn);
-cutarcSWCWdxf(ex, ey, ez, xcenter, ycenter, radius, tn);
+cutarcNECCdxf(ex, ey, ez, xcenter, ycenter, radius);
+cutarcNWCCdxf(ex, ey, ez, xcenter, ycenter, radius);
+cutarcSWCCdxf(ex, ey, ez, xcenter, ycenter, radius);
+cutarcSECCdxf(ex, ey, ez, xcenter, ycenter, radius);
+cutarcNECWdxf(ex, ey, ez, xcenter, ycenter, radius);
+cutarcSECWdxf(ex, ey, ez, xcenter, ycenter, radius);
+cutarcSWCWdxf(ex, ey, ez, xcenter, ycenter, radius);
 
-cutkeyhole_toolpath(kh_start_depth, kh_max_depth, kht_direction, kh_distance, kh_tool_no);
+cutkeyhole_toolpath(kh_start_depth, kh_max_depth, kht_direction, kh_distance);
 
-cutoutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn);
-cutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn);
-cutrectangleoutlinedxf(bx, by, bz, rwidth, rheight, rdepth, rtn);
+cutoutrectangledxf(bx, by, bz, rwidth, rheight, rdepth);
+cutrectangledxf(bx, by, bz, rwidth, rheight, rdepth);
+cutrectangleoutlinedxf(bx, by, bz, rwidth, rheight, rdepth);
 
-cutroundover(bx, by, bz, ex, ey, ez, radiustn);
+cutroundover(bx, by, bz, ex, ey, ez);
 
-dxfarc(xcenter, ycenter, radius, anglebegin, endangle, tn);
-dxfpolyline(xbegin,ybegin,xend,yend, tn);
+dxfarc(xcenter, ycenter, radius, anglebegin, endangle);
+dxfpolyline(xbegin,ybegin,xend,yend);
 
 movetosafeheight();
 movetosafez();
@@ -432,7 +440,7 @@ opengcodefile(fn); and closegcodefile();
 rapidbx(bx, by, bz, ex, ey, ez);
 rapid(ex, ey, ez);
 
-rectangleoutlinedxf(bx, by, bz, rwidth, rheight, rtn);
+rectangleoutlinedxf(bx, by, bz, rwidth, rheight);
 
 setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
 
@@ -521,6 +529,11 @@ def psetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin
 
 \end{writecode}
 \addtocounter{gcpy}{12}
+
+Note that while the \#102 is declared as a default tool, while it was originally necessary 
+to call a tool change after invoking \verb|setupstock| in the 2024.09.03 version of
+PythonSCAD this requirement went away when a but which interfered with persistently setting 
+a variable directly was fixed.
 
 The intermediary OpenSCAD code, \DescribeSubroutine{setupstock}{osetupstock} simply 
 calls the Python version. Note that while the parameters are passed all the way down 
@@ -639,6 +652,15 @@ if (generategcode == true) {
 
 \end{writecode}
 \addtocounter{gcpscad}{93}
+
+An example usage would be:
+
+\begin{verbatim}
+difference() {
+setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
+... // Cutting commands go here
+}
+\end{verbatim}
 
 It will be necessary to have Python functions (\DescribeRoutine{xpos}, \DescribeRoutine{ypos}, 
 and \DescribeRoutine{zpos}) which return the current values of the machine position in 
@@ -784,14 +806,18 @@ function current_tool() = pcurrent_tool();
 
 \end{writecode}
 \addtocounter{pyscad}{6}
- 
+
 \subsubsection{toolchange}
 \noindent and apply the appropriate commands for a \label{subsubsec:toolchange}
 \DescribeRoutine{toolchange}. Note that it is expected that this code will be updated as needed 
-when new tooling is introduced as additional modules which require specific tooling are added below.
+when new tooling is introduced as additional modules which require specific tooling are added below. 
 
 Note that the comments written out in G-code correspond to that used by the G-code previewing tool 
 CutViewer (which is unfortunately, no longer readily available).
+
+A further concern is that early versions often passed the tool into a module using a parameter.
+That ceased to be necessary in the 2024.09.03 version of PythonSCAD, and all modules should 
+read the tool \# from \verb|currenttool()|. 
 
 It is possible that rather than hard-coding the tool definitions, a future update will instead
 read them in from an external file --- the \texttt{.csv} format used for tool libraries in 
@@ -852,6 +878,8 @@ if (generategcode == true) {
 \end{writecode}
 \addtocounter{gcpscad}{22}
 
+
+
 \paragraph{Tooling for Keyhole Toolpaths}
 
 \label{para:undercuttooling} Keyhole toolpaths (see: subsection~\ref{subsec:keyholetoolpaths} 
@@ -911,6 +939,12 @@ the G-code.
 
 \end{writecode}
 \addtocounter{gcpscad}{7}
+
+For example:
+
+\begin{verbatim}
+toolchange(small_square_tool_no,speed * square_ratio);
+\end{verbatim}
 
 \paragraph{Roundover tooling}
 
@@ -1087,6 +1121,14 @@ module cutroundover(bx, by, bz, ex, ey, ez, radiustn) {
 passing in the tip radius and the radius of the rounding. Note that this
 module sets its quality relative to the value of \verb|$fn|.
 
+%This should work as something like to:
+%
+%\begin{verbatim}
+%toolchange(1570,speed * square_ratio);
+%\end{verbatim}
+%
+%and this disconnect will need to be investigated.
+
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
 module cutroundovertool(bx, by, bz, ex, ey, ez, tool_radius_tip, tool_radius_width) {
@@ -1164,31 +1206,51 @@ appropriate values based on the specified tool number and depth:
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
 def ptool_diameter(ptd_tool, ptd_depth):
-    if ptd_tool == 201:
-        return 6.35
-    if ptd_tool == 202:
-        if ptd_depth > 3.175:
-            return 6.35
-        else:
-            return 0
+# Square 122,112,102,201
+    if ptd_tool == 122:
+        return 0.79375
+    if ptd_tool == 112:
+        return 1.5875
     if ptd_tool == 102:
         return 3.175
+    if ptd_tool == 201:
+        return 6.35
+# Ball 121,111,101,202
+    if ptd_tool == 122:
+        return 
+        if ptd_depth > 0.396875:
+            return 0.79375
+        else:
+            return 0
+    if ptd_tool == 112:
+        if ptd_depth > 0.79375:
+            return 1.5875
+        else:
+            return 0
     if ptd_tool == 101:
         if ptd_depth > 1.5875:
             return 3.175
         else:
             return 0
+    if ptd_tool == 202:
+        if ptd_depth > 3.175:
+            return 6.35
+        else:
+            return 0
+# V 301, 302, 390
     if ptd_tool == 301:
         return 0
     if ptd_tool == 302:
         return 0
     if ptd_tool == 390:
         return 0
+# Keyhole
     if ptd_tool == 375:
         if ptd_depth < 6.35:
             return 9.525
         else:
             return 6.35
+# Dovetail
     if ptd_tool == 814:
         if ptd_depth > 12.7:
             return 6.35
@@ -1218,7 +1280,7 @@ For writing to files it will be necessary to have commands:
 \DescribeSubroutine{opendxffile}{popendxffile}, 
 \DescribeRoutine{popendxflgsqfile}, 
 \DescribeRoutine{popendxfsmsqfile}, 
-\DescribeRoutine{popendxlgblffile}, 
+\DescribeRoutine{popendxflgblfile}, 
 \DescribeRoutine{popendxfsmblfile},  
 \DescribeRoutine{popendxflgVfile}, and 
 \DescribeRoutine{popendxfsmVfile}.
@@ -1237,12 +1299,12 @@ def popendxffile(fn):
     global dxf
     dxf = open(fn, "w")
 
-def popendxlgblffile(fn):
+def popendxflgblfile(fn):
     global dxflgbl
     dxflgbl = open(fn, "w")
 
 def popendxflgsqfile(fn):
-    global dxfldsq
+    global dxflgsq
     dxflgsq = open(fn, "w")
 
 def popendxflgVfile(fn):
@@ -1265,7 +1327,7 @@ def popendxfKHfile(fn):
     global dxfKH
     dxfKH = open(fn, "w")
 
-def popendxDTfile(fn):
+def popendxfDTfile(fn):
     global dxfDT
     dxfDT = open(fn, "w")
 
@@ -1309,7 +1371,7 @@ module oopendxfsmblfile(fn) {
 }
 
 module oopendxfsmsqfile(fn) {
-    echo(fn);
+//    echo(fn);
     popendxfsmsqfile(fn);
 }
 
@@ -1410,7 +1472,7 @@ Once files have been opened they may be written to. The base command: \DescribeR
 def writedxf(*arguments):
     line_to_write = ""
     for element in arguments:
-       line_to_write += element
+        line_to_write += element
     dxf.write(line_to_write)
     dxf.write("\n")
 
@@ -2857,76 +2919,55 @@ $fs = 0.125;
 
 /* [Export] */
 Base_filename = "export"; 
-
 /* [Export] */
 generatedxf = true; 
-
 /* [Export] */
 generategcode = true; 
-
 ///* [Export] */
 //generatesvg = false; 
 
 /* [CAM] */
 toolradius = 1.5875;
-
 /* [CAM] */
 large_ball_tool_no = 0; // [0:0,111:111,101:101,202:202]
-
 /* [CAM] */
 large_square_tool_no = 0; // [0:0,112:112,102:102,201:201]
-
 /* [CAM] */
 large_V_tool_no = 0; // [0:0,301:301,690:690]
-
 /* [CAM] */
 small_ball_tool_no = 0; // [0:0,121:121,111:111,101:101]
-
 /* [CAM] */
 small_square_tool_no = 102; // [0:0,122:122,112:112,102:102]
-
 /* [CAM] */
 small_V_tool_no = 0; // [0:0,390:390,301:301]
-
 /* [CAM] */
 KH_tool_no = 0; // [0:0,375:375]
-
 /* [CAM] */
 DT_tool_no = 0; // [0:0,814:814]
 
 /* [Feeds and Speeds] */
 plunge = 100;
-
 /* [Feeds and Speeds] */
 feed = 400;
-
 /* [Feeds and Speeds] */
 speed = 16000;
-
 /* [Feeds and Speeds] */
 square_ratio = 1.0; // [0.25:2]
-
 /* [Feeds and Speeds] */
 small_V_ratio = 0.75; // [0.25:2]
-
 /* [Feeds and Speeds] */
 large_V_ratio = 0.875; // [0.25:2]
 
 /* [Stock] */
 stocklength = 219;
-
 /* [Stock] */
 stockwidth = 150;
-
 /* [Stock] */
 stockthickness = 8.35;
-
 /* [Stock] */
 zeroheight = "Top"; // [Top, Bottom]
-
 /* [Stock] */
 stockorigin = "Center"; // [Lower-Left, Center-Left, Top-Left, Center]
-
 /* [Stock] */
 retractheight = 9;
 
@@ -2960,7 +3001,129 @@ closegcodefile();
 closedxffile();
 \end{writecode}
 \addtocounter{gcptmpl}{112}
+
+Note that the line:
+
+\begin{verbatim}
+toolchange(small_square_tool_no,speed * square_ratio);
+\end{verbatim}
+
+\noindent may be commented out --- whether or no it is actually necessary will need to be 
+decided upon.
  
+\subsection{G-code and modules and commands}
+ 
+Each module/command will write out certain G-code commands:
+
+\bigskip
+
+\noindent \begin{tabular}{@{}ll@{}} \toprule
+ Command/Module                    & G-code                                        \\ \midrule
+ \texttt{opengcodefile(...);}
+ \texttt{setupstock(...)}          & \texttt{(export.nc)}                          \\
+                                   & \texttt{(stockMin: -109.5, -75mm, -8.35mm)}\\
+                                   & \texttt{(stockMax:109.5mm, 75mm, 0.00mm)}\\
+                                   & \texttt{(STOCK/BLOCK, 219, 150, 8.35, 109.5, 75, 8.35)}\\
+                                   & \texttt{G90}\\
+                                   & \texttt{G21} \\ \midrule
+ \texttt{movetosafez()}            & \texttt{(Move to safe Z to avoid workholding)}\\
+                                   & \texttt{G53G0Z-5.000}\\ \midrule
+ \texttt{toolchange(...);}         & \texttt{(TOOL/MILL,3.17, 0.00, 0.00, 0.00)} \\
+                                   & \texttt{M6T102} \\
+                                   & \texttt{M03S16000} \\ \midrule
+ \verb|cutoneaxis_setfeed(...);|   & \texttt{(PREPOSITION FOR RAPID PLUNGE)}\\
+  & \texttt{G0X0Y0} \\
+  & \texttt{Z0.25} \\
+  & \texttt{G1Z0F100} \\
+  & \texttt{G1 X109.5 Y75 Z-8.35F400} \\
+  & \texttt{Z9}\\
+ \texttt{cutwithfeed(...);}\\ \midrule
+
+ \texttt{closegcodefile();}        & \texttt{M05}\\
+                                   & \texttt{M02}\\ 
+\bottomrule
+\end{tabular}
+\bigskip
+
+%(Toolpath)
+%M05
+
+
+\noindent Conversely, the G-code commands which are supported are generated by the following modules:
+
+\bigskip
+
+\noindent \begin{tabular}{@{}ll@{}} \toprule
+ G-code                                                           & Command/Module \\ \midrule
+ \verb|(Design File: )| &  \texttt{opengcodefile(...);}
+                           \texttt{setupstock(...)}\\
+ \verb|(stockMin:0.00mm, -152.40mm, -34.92mm)| \\
+ \verb|(stockMax:109.50mm, -77.40mm, 0.00mm)| \\
+ \verb|(STOCK/BLOCK,109.50, 75.00, 34.92,0.00, 152.40, 34.92)| \\
+ \verb|G90| \\
+ \verb|G21| \\ \midrule
+ \verb|(Move to safe Z to avoid workholding)| &  \texttt{movetosafez()} \\
+ \verb|G53G0Z-5.000| \\ \midrule
+ \verb|(Toolpath: Contour Toolpath 1)| &  \texttt{toolchange(...);}\\
+ \verb|M05| \\
+ \verb|(TOOL/MILL,3.17, 0.00, 0.00, 0.00)| \\
+ \verb|M6T102| \\
+ \verb|M03S10000|  \\ \midrule
+ \verb|(PREPOSITION FOR RAPID PLUNGE)| & \texttt{writecomment(...)}\\ \midrule
+ \verb|G0X0.000Y-152.400| & \texttt{rapid(...)}\\
+ \verb|Z0.250| & \texttt{rapid(...)}\\ \midrule
+ \verb|G1Z-1.000F203.2| & \texttt{cutwithfeed(...);}\\ 
+ \verb|X109.500Y-77.400F508.0| & \texttt{cutwithfeed(...);} \\ \midrule
+ \verb|Z12.700| & \texttt{rapid(...)} \\ \midrule
+ \verb|M05| &  \texttt{closegcodefile();}\\
+ \verb|M02|\\
+ \bottomrule
+ \end{tabular}
+\bigskip
+
+\subsection{DXF}
+
+\begin{verbatim}
+0
+SECTION
+2
+ENTITIES
+0
+POLYLINE
+8
+default
+66
+1
+70
+0
+0
+VERTEX
+8
+default
+70
+32
+10
+0
+20
+0
+0
+VERTEX
+8
+default
+70
+32
+10
+109.5
+20
+75
+0
+SEQEND
+0
+ENDSEC
+0
+EOF
+\end{verbatim}
+
 \section{Future}
 
 \subsection{Images}
