@@ -1,6 +1,6 @@
 //!OpenSCAD
 
-//gcodepreview 0.7, see gcodepreview.scad
+//gcodepreview 0.61, see gcodepreview.scad
 
  module osetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin) {
      psetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
@@ -40,7 +40,7 @@ module oopengcodefile(fn) {
 }
 
 module oopendxffile(fn) {
-    echo(fn);
+//    echo(fn);
     popendxffile(fn);
 }
 

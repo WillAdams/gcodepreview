@@ -1,6 +1,6 @@
 //!OpenSCAD
 
-//gcodepreview 0.7
+//gcodepreview 0.61
 //
 //used via use <gcodepreview.py>;
 //         use <pygcodepreview.scad>;
@@ -132,8 +132,14 @@ if (generategcode == true) {
       writecommment("TOOL/MILL,0.03, 0.00, 10.998, 30.00");
     } else if (tool_number == 390) {
       writecomment("TOOL/MILL,0.03, 0.00, 1.5875, 45.00");
+   } else if (tool_number == 374) {
+     writecomment("TOOL/MILL,9.53, 0.00, 3.17, 0.00");
    } else if (tool_number == 375) {
      writecomment("TOOL/MILL,9.53, 0.00, 3.17, 0.00");
+   } else if (tool_number == 376) {
+     writecomment("TOOL/MILL,12.7, 0.00, 4.77, 0.00");
+   } else if (tool_number == 378) {
+     writecomment("TOOL/MILL,12.7, 0.00, 4.77, 0.00");
    } else if (tool_number == 814) {
      writecomment("TOOL/MILL,12.7, 6.367, 12.7, 0.00");
    }
@@ -144,7 +150,7 @@ if (generategcode == true) {
 }
 
 module select_tool(tool_number) {
-echo(tool_number);
+//echo(tool_number);
   if (tool_number == 201) {
     gcp_endmill_square(6.35, 19.05);
   } else if (tool_number == 202) {
@@ -159,8 +165,14 @@ echo(tool_number);
     gcp_endmill_v(60, 12.7);
   } else if (tool_number == 390) {
     gcp_endmill_v(90, 3.175);
+  } else if (tool_number == 374) {
+    gcp_keyhole(9.525, 3.175);
   } else if (tool_number == 375) {
     gcp_keyhole(9.525, 3.175);
+  } else if (tool_number == 376) {
+    gcp_keyhole(12.7, 4.7625);
+  } else if (tool_number == 378) {
+    gcp_keyhole(12.7, 4.7625);
   } else if (tool_number == 814) {
     gcp_dovetail(12.7, 6.367, 12.7, 14);
   }
@@ -171,6 +183,10 @@ module gcp_endmill_square(es_diameter, es_flute_length) {
 }
 
 module gcp_keyhole(es_diameter, es_flute_length) {
+  cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=es_flute_length, center=false);
+}
+
+module gcp_keyhole_shaft(es_diameter, es_flute_length) {
   cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=es_flute_length, center=false);
 }
 
@@ -250,7 +266,7 @@ function tool_radius(td_tool, td_depth) = otool_diameter(td_tool, td_depth)/2;
 module opengcodefile(fn) {
 if (generategcode == true) {
     oopengcodefile(fn);
-    echo(fn);
+//    echo(fn);
     owritecomment(fn);
     }
 }
@@ -437,7 +453,7 @@ if (generatedxf == true) {
 }
 
 module dxfapl(tn,bx,by) {
-    dxfwriteone("0");
+    dxfwrite(tn,"0");
     dxfwrite(tn,"VERTEX");
     dxfwrite(tn,"8");
     dxfwrite(tn,"default");
@@ -451,7 +467,7 @@ module dxfapl(tn,bx,by) {
 
 module addpolyline(bx,by,bz) {
 if (generatedxf == true) {
-//    dxfwrite(tn,"0");
+    dxfwriteone("0");
     dxfwriteone("VERTEX");
     dxfwriteone("8");
     dxfwriteone("default");
@@ -506,7 +522,7 @@ module closedxffile() {
     dxfwriteone("0");
     dxfwriteone("EOF");
     oclosedxffile();
-    echo("CLOSING");
+//    echo("CLOSING");
     if (large_ball_tool_no >  0) {    dxfpostamble(large_ball_tool_no);
       oclosedxflgblfile();
     }
@@ -736,25 +752,65 @@ if (kht_direction == "N") {
 }
 
 module cutKH_toolpath_degrees(kh_start_depth, kh_max_depth, kh_angle, kh_distance, kh_tool_no) {
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90, KH_tool_no);
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,90,180, KH_tool_no);
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,180,270, KH_tool_no);
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360, KH_tool_no);
+//Circle at entry hole
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (7))/2,0,90, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (7))/2,90,180, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (7))/2,180,270, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (7))/2,270,360, KH_tool_no);
 
+//Outlines of entry hole and slot
   if (kh_angle == 0) {
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180,270, KH_tool_no);
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90,180, KH_tool_no);
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),90, KH_tool_no);
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270,360-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)), KH_tool_no);
-dxfarc(getxpos()+kh_distance,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90, KH_tool_no);
-dxfarc(getxpos()+kh_distance,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360, KH_tool_no);
-dxfpolyline(getxpos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2), getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, getxpos()+kh_distance, getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, KH_tool_no);
-dxfpolyline(getxpos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2), getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, getxpos()+kh_distance, getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, KH_tool_no);
-dxfpolyline(getxpos(),getypos(),getxpos()+kh_distance,getypos(), KH_tool_no);
-cutwithfeed(getxpos()+kh_distance,getypos(),-kh_max_depth,feed);
-setxpos(getxpos()-kh_distance);
+    //Lower left of entry hole
+    dxfarc(getxpos(),getypos(),9.525/2,180,270, KH_tool_no);
+    //Upper left of entry hole
+    dxfarc(getxpos(),getypos(),9.525/2,90,180, KH_tool_no);
+    //Upper right of entry hole
+    dxfarc(getxpos(),getypos(),9.525/2,90-acos(tool_diameter(KH_tool_no, 5)/tool_diameter(KH_tool_no, 1)), 90, KH_tool_no);
+    //Lower right of entry hole
+    dxfarc(getxpos(),getypos(),9.525/2,270, 270+acos(tool_diameter(KH_tool_no, 5)/tool_diameter(KH_tool_no, 1)), KH_tool_no);
+    //Actual line of cut
+    dxfpolyline(getxpos(),getypos(),getxpos()+kh_distance,getypos());
+    //upper right of slot
+    dxfarc(getxpos()+kh_distance,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90, KH_tool_no);
+    //lower right of slot
+    dxfarc(getxpos()+kh_distance,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360, KH_tool_no);
+    //upper right slot
+    dxfpolyline(
+        getxpos()+(sqrt((tool_diameter(KH_tool_no,1)^2)-(tool_diameter(KH_tool_no,5)^2))/2),
+        getypos()+tool_diameter(KH_tool_no, (kh_max_depth))/2,//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth-6.34))/2)^2,
+        getxpos()+kh_distance,
+    //end position at top of slot
+        getypos()+tool_diameter(KH_tool_no, (kh_max_depth))/2,
+        KH_tool_no);
+    //lower right slot
+    dxfpolyline(
+        getxpos()+(sqrt((tool_diameter(KH_tool_no,1)^2)-(tool_diameter(KH_tool_no,5)^2))/2),
+        getypos()-tool_diameter(KH_tool_no, (kh_max_depth))/2,//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth-6.34))/2)^2,
+        getxpos()+kh_distance,
+    //end position at top of slot
+        getypos()-tool_diameter(KH_tool_no, (kh_max_depth))/2,
+        KH_tool_no);
+    hull(){
+      translate([xpos(), ypos(), zpos()]){
+        gcp_keyhole_shaft(6.35, 9.525);
+      }
+      translate([xpos(), ypos(), zpos()-kh_max_depth]){
+        gcp_keyhole_shaft(6.35, 9.525);
+      }
+    }
+    hull(){
+      translate([xpos(), ypos(), zpos()-kh_max_depth]){
+        gcp_keyhole_shaft(6.35, 9.525);
+      }
+      translate([xpos()+kh_distance, ypos(), zpos()-kh_max_depth]){
+        gcp_keyhole_shaft(6.35, 9.525);
+      }
+    }
+    cutwithfeed(getxpos(),getypos(),-kh_max_depth,feed);
+    cutwithfeed(getxpos()+kh_distance,getypos(),-kh_max_depth,feed);
+    setxpos(getxpos()-kh_distance);
   } else if (kh_angle > 0 && kh_angle < 90) {
-echo(kh_angle);
+//echo(kh_angle);
   dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90+kh_angle,180+kh_angle, KH_tool_no);
   dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180+kh_angle,270+kh_angle, KH_tool_no);
 dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,kh_angle+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),90+kh_angle, KH_tool_no);
@@ -766,57 +822,156 @@ dxfpolyline( getxpos()+tool_diameter(KH_tool_no, (kh_max_depth))/2*cos(kh_angle+
  getypos()+tool_diameter(KH_tool_no, (kh_max_depth))/2*sin(kh_angle+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2))),
  getxpos()+(kh_distance*cos(kh_angle))-((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)*sin(kh_angle)),
  getypos()+(kh_distance*sin(kh_angle))+((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)*cos(kh_angle)), KH_tool_no);
-echo("a",tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2);
-echo("c",tool_diameter(KH_tool_no, (kh_max_depth))/2);
+//echo("a",tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2);
+//echo("c",tool_diameter(KH_tool_no, (kh_max_depth))/2);
 echo("Aangle",asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)));
-echo(kh_angle);
+//echo(kh_angle);
  cutwithfeed(getxpos()+(kh_distance*cos(kh_angle)),getypos()+(kh_distance*sin(kh_angle)),-kh_max_depth,feed);
  setxpos(getxpos()-(kh_distance*cos(kh_angle)));
  setypos(getypos()-(kh_distance*sin(kh_angle)));
   } else if (kh_angle == 90) {
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180,270, KH_tool_no);
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270,360, KH_tool_no);
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,0,90-asin(
-    (tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)), KH_tool_no);
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90+asin(
-    (tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),180, KH_tool_no);
- dxfpolyline(getxpos(),getypos(),getxpos(),getypos()+kh_distance);
-dxfarc(getxpos(),getypos()+kh_distance,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90, KH_tool_no);
-dxfarc(getxpos(),getypos()+kh_distance,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,90,180, KH_tool_no);
- dxfpolyline(getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+kh_distance, KH_tool_no);
- dxfpolyline(getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()+kh_distance, KH_tool_no);
- cutwithfeed(getxpos(),getypos()+kh_distance,-kh_max_depth,feed);
- setypos(getypos()-kh_distance);
+    //Lower left of entry hole
+    dxfarc(getxpos(),getypos(),9.525/2,180,270, KH_tool_no);
+    //Lower right of entry hole
+    dxfarc(getxpos(),getypos(),9.525/2,270,360, KH_tool_no);
+    //Upper right of entry hole
+    dxfarc(getxpos(),getypos(),9.525/2,0,acos(tool_diameter(KH_tool_no, 5)/tool_diameter(KH_tool_no, 1)), KH_tool_no);
+    //Upper left of entry hole
+    dxfarc(getxpos(),getypos(),9.525/2,180-acos(tool_diameter(KH_tool_no, 5)/tool_diameter(KH_tool_no, 1)), 180,KH_tool_no);
+    //Actual line of cut
+    dxfpolyline(getxpos(),getypos(),getxpos(),getypos()+kh_distance);
+    //upper right of slot
+    dxfarc(getxpos(),getypos()+kh_distance,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90, KH_tool_no);
+    //upper left of slot
+    dxfarc(getxpos(),getypos()+kh_distance,tool_diameter(KH_tool_no, (kh_max_depth+6.35))/2,90,180, KH_tool_no);
+    //right of slot
+    dxfpolyline(
+        getxpos()+tool_diameter(KH_tool_no, (kh_max_depth))/2,
+        getypos()+(sqrt((tool_diameter(KH_tool_no,1)^2)-(tool_diameter(KH_tool_no,5)^2))/2),//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth-6.34))/2)^2,
+        getxpos()+tool_diameter(KH_tool_no, (kh_max_depth))/2,
+    //end position at top of slot
+        getypos()+kh_distance,
+        KH_tool_no);
+    dxfpolyline(getxpos()-tool_diameter(KH_tool_no, (kh_max_depth))/2, getypos()+(sqrt((tool_diameter(KH_tool_no,1)^2)-(tool_diameter(KH_tool_no,5)^2))/2), getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+6.35))/2,getypos()+kh_distance, KH_tool_no);
+    hull(){
+      translate([xpos(), ypos(), zpos()]){
+        gcp_keyhole_shaft(6.35, 9.525);
+      }
+      translate([xpos(), ypos(), zpos()-kh_max_depth]){
+        gcp_keyhole_shaft(6.35, 9.525);
+      }
+    }
+    hull(){
+      translate([xpos(), ypos(), zpos()-kh_max_depth]){
+        gcp_keyhole_shaft(6.35, 9.525);
+      }
+      translate([xpos(), ypos()+kh_distance, zpos()-kh_max_depth]){
+        gcp_keyhole_shaft(6.35, 9.525);
+      }
+    }
+    cutwithfeed(getxpos(),getypos(),-kh_max_depth,feed);
+    cutwithfeed(getxpos(),getypos()+kh_distance,-kh_max_depth,feed);
+    setypos(getypos()-kh_distance);
   } else if (kh_angle == 180) {
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,0,90, KH_tool_no);
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270,360, KH_tool_no);
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90,180-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)), KH_tool_no);
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),270, KH_tool_no);
-dxfarc(getxpos()-kh_distance,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,90,180, KH_tool_no);
-dxfarc(getxpos()-kh_distance,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,180,270, KH_tool_no);
-dxfpolyline(getxpos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),
- getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,
- getxpos()-kh_distance,
- getypos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, KH_tool_no);
-dxfpolyline( getxpos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),
- getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,
- getxpos()-kh_distance,
- getypos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2, KH_tool_no);
- dxfpolyline(getxpos(),getypos(),getxpos()-kh_distance,getypos(), KH_tool_no);
- cutwithfeed(getxpos()-kh_distance,getypos(),-kh_max_depth,feed);
- setxpos(getxpos()+kh_distance);
+    //Lower right of entry hole
+    dxfarc(getxpos(),getypos(),9.525/2,270,360, KH_tool_no);
+    //Upper right of entry hole
+    dxfarc(getxpos(),getypos(),9.525/2,0,90, KH_tool_no);
+    //Upper left of entry hole
+    dxfarc(getxpos(),getypos(),9.525/2,90, 90+acos(tool_diameter(KH_tool_no, 5)/tool_diameter(KH_tool_no, 1)), KH_tool_no);
+    //Lower left of entry hole
+    dxfarc(getxpos(),getypos(),9.525/2, 270-acos(tool_diameter(KH_tool_no, 5)/tool_diameter(KH_tool_no, 1)), 270, KH_tool_no);
+    //upper left of slot
+    dxfarc(getxpos()-kh_distance,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+6.35))/2,90,180, KH_tool_no);
+    //lower left of slot
+    dxfarc(getxpos()-kh_distance,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+6.35))/2,180,270, KH_tool_no);
+    //Actual line of cut
+    dxfpolyline(getxpos(),getypos(),getxpos()-kh_distance,getypos());
+    //upper left slot
+    dxfpolyline(
+        getxpos()-(sqrt((tool_diameter(KH_tool_no,1)^2)-(tool_diameter(KH_tool_no,5)^2))/2),
+        getypos()+tool_diameter(KH_tool_no, (kh_max_depth))/2,//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth-6.34))/2)^2,
+        getxpos()-kh_distance,
+    //end position at top of slot
+        getypos()+tool_diameter(KH_tool_no, (kh_max_depth))/2,
+        KH_tool_no);
+    //lower right slot
+    dxfpolyline(
+        getxpos()-(sqrt((tool_diameter(KH_tool_no,1)^2)-(tool_diameter(KH_tool_no,5)^2))/2),
+        getypos()-tool_diameter(KH_tool_no, (kh_max_depth))/2,//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth-6.34))/2)^2,
+        getxpos()-kh_distance,
+    //end position at top of slot
+        getypos()-tool_diameter(KH_tool_no, (kh_max_depth))/2,
+        KH_tool_no);
+    hull(){
+      translate([xpos(), ypos(), zpos()]){
+        gcp_keyhole_shaft(6.35, 9.525);
+      }
+      translate([xpos(), ypos(), zpos()-kh_max_depth]){
+        gcp_keyhole_shaft(6.35, 9.525);
+      }
+    }
+    hull(){
+      translate([xpos(), ypos(), zpos()-kh_max_depth]){
+        gcp_keyhole_shaft(6.35, 9.525);
+      }
+      translate([xpos()-kh_distance, ypos(), zpos()-kh_max_depth]){
+        gcp_keyhole_shaft(6.35, 9.525);
+      }
+    }
+    cutwithfeed(getxpos(),getypos(),-kh_max_depth,feed);
+    cutwithfeed(getxpos()-kh_distance,getypos(),-kh_max_depth,feed);
+    setxpos(getxpos()+kh_distance);
   } else if (kh_angle == 270) {
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,0,90, KH_tool_no);
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90,180, KH_tool_no);
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),360, KH_tool_no);
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180, 270-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)), KH_tool_no);
-dxfarc(getxpos(),getypos()-kh_distance,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,180,270, KH_tool_no);
-dxfarc(getxpos(),getypos()-kh_distance,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360, KH_tool_no);
- dxfpolyline(getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()+tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-kh_distance, KH_tool_no);
- dxfpolyline(getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-sqrt((tool_diameter(KH_tool_no, (kh_max_depth))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)^2),getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,getypos()-kh_distance, KH_tool_no);
- dxfpolyline(getxpos(),getypos(),getxpos(),getypos()-kh_distance, KH_tool_no);
- cutwithfeed(getxpos(),getypos()-kh_distance,-kh_max_depth,feed);
- setypos(getypos()+kh_distance);
+    //Upper right of entry hole
+    dxfarc(getxpos(),getypos(),9.525/2,0,90, KH_tool_no);
+    //Upper left of entry hole
+    dxfarc(getxpos(),getypos(),9.525/2,90,180, KH_tool_no);
+    //lower right of slot
+    dxfarc(getxpos(),getypos()-kh_distance,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360, KH_tool_no);
+    //lower left of slot
+    dxfarc(getxpos(),getypos()-kh_distance,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,180,270, KH_tool_no);
+    //Actual line of cut
+    dxfpolyline(getxpos(),getypos(),getxpos(),getypos()-kh_distance);
+    //right of slot
+    dxfpolyline(
+        getxpos()+tool_diameter(KH_tool_no, (kh_max_depth))/2,
+        getypos()-(sqrt((tool_diameter(KH_tool_no,1)^2)-(tool_diameter(KH_tool_no,5)^2))/2),//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth-6.34))/2)^2,
+        getxpos()+tool_diameter(KH_tool_no, (kh_max_depth))/2,
+    //end position at top of slot
+        getypos()-kh_distance,
+        KH_tool_no);
+    //left of slot
+    dxfpolyline(
+        getxpos()-tool_diameter(KH_tool_no, (kh_max_depth))/2,
+        getypos()-(sqrt((tool_diameter(KH_tool_no,1)^2)-(tool_diameter(KH_tool_no,5)^2))/2),//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth-6.34))/2)^2,
+        getxpos()-tool_diameter(KH_tool_no, (kh_max_depth))/2,
+    //end position at top of slot
+        getypos()-kh_distance,
+        KH_tool_no);
+    //Lower right of entry hole
+    dxfarc(getxpos(),getypos(),9.525/2,360-acos(tool_diameter(KH_tool_no, 5)/tool_diameter(KH_tool_no, 1)), 360, KH_tool_no);
+    //Lower left of entry hole
+    dxfarc(getxpos(),getypos(),9.525/2,180, 180+acos(tool_diameter(KH_tool_no, 5)/tool_diameter(KH_tool_no, 1)), KH_tool_no);
+    hull(){
+      translate([xpos(), ypos(), zpos()]){
+        gcp_keyhole_shaft(6.35, 9.525);
+      }
+      translate([xpos(), ypos(), zpos()-kh_max_depth]){
+        gcp_keyhole_shaft(6.35, 9.525);
+      }
+    }
+    hull(){
+      translate([xpos(), ypos(), zpos()-kh_max_depth]){
+        gcp_keyhole_shaft(6.35, 9.525);
+      }
+      translate([xpos(), ypos()-kh_distance, zpos()-kh_max_depth]){
+        gcp_keyhole_shaft(6.35, 9.525);
+      }
+    }
+    cutwithfeed(getxpos(),getypos(),-kh_max_depth,feed);
+    cutwithfeed(getxpos(),getypos()-kh_distance,-kh_max_depth,feed);
+    setypos(getypos()+kh_distance);
   }
 }
 

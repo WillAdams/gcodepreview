@@ -31,7 +31,7 @@ small_square_tool_no = 102; // [0:0,122:122,112:112,102:102]
 /* [CAM] */
 small_V_tool_no = 0; // [0:0,390:390,301:301]
 /* [CAM] */
-KH_tool_no = 0; // [0:0,375:375]
+KH_tool_no = 0; // [0:0,374:374,375:375,376:376,378]
 /* [CAM] */
 DT_tool_no = 0; // [0:0,814:814]
 
@@ -42,11 +42,19 @@ feed = 400;
 /* [Feeds and Speeds] */
 speed = 16000;
 /* [Feeds and Speeds] */
-square_ratio = 1.0; // [0.25:2]
+small_square_ratio = 0.75; // [0.25:2]
 /* [Feeds and Speeds] */
-small_V_ratio = 0.75; // [0.25:2]
+small_ball_ratio = 0.75; // [0.25:2]
+/* [Feeds and Speeds] */
+large_ball_ratio = 1.0; // [0.25:2]
+/* [Feeds and Speeds] */
+small_V_ratio = 0.625; // [0.25:2]
 /* [Feeds and Speeds] */
 large_V_ratio = 0.875; // [0.25:2]
+/* [Feeds and Speeds] */
+KH_ratio = 0.75; // [0.25:2]
+/* [Feeds and Speeds] */
+DT_ratio = 0.75; // [0.25:2]
 
 /* [Stock] */
 stocklength = 219;
@@ -73,12 +81,12 @@ setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
 
 movetosafez();
 
-toolchange(small_square_tool_no,speed * square_ratio);
+toolchange(small_square_tool_no,speed * small_square_ratio);
 
 begintoolpath(0,0,0.25);
 beginpolyline(0,0,0.25);
 
-cutoneaxis_setfeed("Z",0,plunge*square_ratio);
+cutoneaxis_setfeed("Z",0,plunge*small_square_ratio);
 
 cutwithfeed(stocklength/2,stockwidth/2,-stockthickness,feed);
 addpolyline(stocklength/2,stockwidth/2,-stockthickness);

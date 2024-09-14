@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #icon "C:\Program Files\PythonSCAD\bin\openscad.exe"  --trust-python
-#Currently tested with 2024.09.01 and Python 3.11
-#gcodepreview 0.7, see gcodepreview.scad
+#Currently tested with 2024.09.03 and Python 3.11
+#gcodepreview 0.61, see gcodepreview.scad
 
 def writeln(*arguments):
     line_to_write = ""
@@ -102,11 +102,26 @@ def ptool_diameter(ptd_tool, ptd_depth):
     if ptd_tool == 390:
         return 0
 # Keyhole
-    if ptd_tool == 375:
-        if ptd_depth < 6.35:
+    if ptd_tool == 374:
+        if ptd_depth < 3.175:
             return 9.525
         else:
             return 6.35
+    if ptd_tool == 375:
+        if ptd_depth < 3.175:
+            return 9.525
+        else:
+            return 8
+    if ptd_tool == 376:
+        if ptd_depth < 4.7625:
+            return 12.7
+        else:
+            return 6.35
+    if ptd_tool == 378:
+        if ptd_depth < 4.7625:
+            return 12.7
+        else:
+            return 8
 # Dovetail
     if ptd_tool == 814:
         if ptd_depth > 12.7:
