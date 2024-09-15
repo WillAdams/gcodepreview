@@ -70,7 +70,7 @@ toolpaths which would not normally be feasible),
 and to write out DXF files which may be imported 
 into a traditional CAM program to create toolpaths.
 
-![OpenSCAD Cut Joinery Module](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/openscad_cutjoinery.png?raw=true)
+![OpenSCAD Cut Joinery Module](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/gcodepreview_unittests.png?raw=true)
 
 Updated to make use of Python in OpenSCAD:[^rapcad]
 
@@ -258,8 +258,206 @@ rendering to a 3D model and writing out an STL). Doing so requires a total of th
 \item An OpenSCAD file: gcodepreview.scad (\texttt{gcpscad}) --- which uses the other two files 
       and which is \texttt{include}d allowing it to access OpenSCAD variables for branching   
 \end{itemize}
+
+Note that this architecture requires that many modules are essentially ``Dispatchers'' which 
+pass information from one aspect of the environment to another.
+
+\subsection{gcodepreviewtemplate.scad}
+
+The various commands are shown all together in a template so as to provide examples of usage, 
+and to ensure that the various files are used/included as necessary, all variables are set up 
+with the correct names, and that files are opened before being written to, and that each
+is closed at the end. 
+
+Note that while the file seems overly verbose, it specifically incorporates variables
+for each tool shape, possibly in two different sizes, and a feed rate parameter or ratio
+for each, which may be used (by setting a tool \#) or ignored (by leaving the variable
+at zero (0).
+
+It should be that this section is all the documentation which some users will need.
+(and arguably is still too much). The balance of the document after this section
+shows all the code and implementation details.
+
+%Creating a template from memory, the file should be something like:
+%
+%List of all tools
+%chipload for each tool
+%Depth per Pass for each tool
+%scaling factor for chipload to arrive at feeds and speeds
+%Booleans for generateDXF/Gcode, 3D Preview, assembly or parts or drop-down list of parts, &c.
+%
+%setupstock --- should this open gcode/dxf files as well?
+%
+%toolchange to first tool
+%
+%Rapid to location of first cut
+%cutline/cutarc --- iterate as needed
+%Rapid to safe height
+%
+%Program END --- should close gcode/DXF files and include rapid to safe height and rapid to back
+
+\lstset{firstnumber=1}%\thegcptmpl}
+\begin{writecode}{w}{gcodepreviewtemplate.scad}{scad}
+//!OpenSCAD
+
+use <gcodepreview.py>;
+use <pygcodepreview.scad>;
+include <gcodepreview.scad>;
+
+$fa = 2;
+$fs = 0.125;
+
+/* [Export] */
+Base_filename = "export"; 
+/* [Export] */
+generatedxf = true; 
+/* [Export] */
+generategcode = true; 
+///* [Export] */
+//generatesvg = false; 
+
+/* [CAM] */
+toolradius = 1.5875;
+/* [CAM] */
+large_ball_tool_no = 0; // [0:0,111:111,101:101,202:202]
+/* [CAM] */
+large_square_tool_no = 0; // [0:0,112:112,102:102,201:201]
+/* [CAM] */
+large_V_tool_no = 0; // [0:0,301:301,690:690]
+/* [CAM] */
+small_ball_tool_no = 0; // [0:0,121:121,111:111,101:101]
+/* [CAM] */
+small_square_tool_no = 102; // [0:0,122:122,112:112,102:102]
+/* [CAM] */
+small_V_tool_no = 0; // [0:0,390:390,301:301]
+/* [CAM] */
+KH_tool_no = 0; // [0:0,374:374,375:375,376:376,378]
+/* [CAM] */
+DT_tool_no = 0; // [0:0,814:814]
+/* [CAM] */
+Roundover_tool_no = 56125; // [56125:56125, 56142:56142,312:312, 1570:1570]
+/* [CAM] */
+MISC_tool_no = 0; // 
+
+/* [Feeds and Speeds] */
+plunge = 100;
+/* [Feeds and Speeds] */
+feed = 400;
+/* [Feeds and Speeds] */
+speed = 16000;
+/* [Feeds and Speeds] */
+small_square_ratio = 0.75; // [0.25:2]
+/* [Feeds and Speeds] */
+small_ball_ratio = 0.75; // [0.25:2]
+/* [Feeds and Speeds] */
+large_ball_ratio = 1.0; // [0.25:2]
+/* [Feeds and Speeds] */
+small_V_ratio = 0.625; // [0.25:2]
+/* [Feeds and Speeds] */
+large_V_ratio = 0.875; // [0.25:2]
+/* [Feeds and Speeds] */
+KH_ratio = 0.75; // [0.25:2]
+/* [Feeds and Speeds] */
+DT_ratio = 0.75; // [0.25:2]
+/* [Feeds and Speeds] */
+RO_ratio = 0.5; // [0.25:2]
+/* [Feeds and Speeds] */
+MISC_ratio = 0.5; // [0.25:2]
+
+/* [Stock] */
+stocklength = 219;
+/* [Stock] */
+stockwidth = 150;
+/* [Stock] */
+stockthickness = 8.35;
+/* [Stock] */
+zeroheight = "Top"; // [Top, Bottom]
+/* [Stock] */
+stockorigin = "Center"; // [Lower-Left, Center-Left, Top-Left, Center]
+/* [Stock] */
+retractheight = 9;
+
+filename_gcode = str(Base_filename, ".nc");
+filename_dxf = str(Base_filename);
+
+opengcodefile(filename_gcode);
+opendxffile(filename_dxf);
+
+difference() {
+setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
+
+movetosafez();
+
+toolchange(small_square_tool_no,speed * small_square_ratio);
+
+begintoolpath(0,0,0.25);
+
+cutoneaxis_setfeed("Z",0,plunge*small_square_ratio);
+
+cutwithfeed(stocklength/2,stockwidth/2,-stockthickness,feed);
+dxfpolyline(getxpos(),getypos(),stocklength/2,stockwidth/2, small_square_tool_no);
+
+endtoolpath();
+rapid(-(stocklength/4-stockwidth/16),stockwidth/4,0);
+cutoneaxis_setfeed("Z",-stockthickness,plunge*small_square_ratio);
+
+cutarcNECCdxf(-stocklength/4, stockwidth/4+stockwidth/16, -stockthickness, -stocklength/4, stockwidth/4, stockwidth/16, small_square_tool_no);
+cutarcNWCCdxf(-(stocklength/4+stockwidth/16), stockwidth/4, -stockthickness, -stocklength/4, stockwidth/4, stockwidth/16, small_square_tool_no);
+cutarcSWCCdxf(-stocklength/4, stockwidth/4-stockwidth/16, -stockthickness, -stocklength/4, stockwidth/4, stockwidth/16, small_square_tool_no);
+cutarcSECCdxf(-(stocklength/4-stockwidth/16), stockwidth/4, -stockthickness, -stocklength/4, stockwidth/4, stockwidth/16, small_square_tool_no);
+
+rapid(getxpos(),getypos(),stockthickness);
+toolchange(KH_tool_no,speed * KH_ratio);
+rapid(-stocklength/8,-stockwidth/4,0);
+
+cutkeyhole_toolpath((stockthickness), (stockthickness), "N", stockwidth/8, KH_tool_no);
+rapid(getxpos(),getypos(),stockthickness);
+rapid(-stocklength/4,-stockwidth/4,0);
+cutkeyhole_toolpath((stockthickness), (stockthickness), "S", stockwidth/8, KH_tool_no);
+rapid(getxpos(),getypos(),stockthickness);
+rapid(-stocklength/4,-stockwidth/8,0);
+cutkeyhole_toolpath((stockthickness), (stockthickness), "E", stockwidth/8, KH_tool_no);
+rapid(getxpos(),getypos(),stockthickness);
+rapid(-stocklength/8,-stockwidth/8*3,0);
+cutkeyhole_toolpath((stockthickness), (stockthickness), "W", stockwidth/8, KH_tool_no);
+
+rapid(getxpos(),getypos(),stockthickness);
+toolchange(DT_tool_no,speed * DT_ratio);
+rapid(0,-(stockwidth/2+tool_diameter(DT_tool_no,0)),0);
+
+cutoneaxis_setfeed("Z",-stockthickness,plunge*DT_ratio);
+cutwithfeed(0,-(stockwidth/4),-stockthickness,feed*DT_ratio);
+rapid(0,-(stockwidth/2+tool_diameter(DT_tool_no,0)),-stockthickness);
+
+rapid(getxpos(),getypos(),stockthickness);
+toolchange(Roundover_tool_no, speed * RO_ratio);
+rapid(-(stocklength/2),-(stockwidth/2),0);
+cutoneaxis_setfeed("Z",-4.509,plunge*RO_ratio);
+
+cutroundovertool(-(stocklength/2++0.507/2), -(stockwidth/2+0.507/2), -4.509, stocklength/2+0.507/2, -(stockwidth/2+0.507/2), -4.509, 0.507/2, 4.509);
+
+cutroundover(stocklength/2+0.507/2, -(stockwidth/2+0.507/2), -4.509, stocklength/2+0.507/2, stockwidth/2+0.507/2, -4.509, 1570);
+cutroundover(stocklength/2+0.507/2, stockwidth/2+0.507/2, -4.509, -(stocklength/2+0.507/2), stockwidth/2+0.507/2, -4.509, 1570);
+cutroundover(-(stocklength/2+0.507/2), stockwidth/2+0.507/2, -4.509, -(stocklength/2+0.507/2), -(stockwidth/2+0.507/2), -4.509, 1570);
+}
+
+closegcodefile();
+closedxffile();
+\end{writecode}
+\addtocounter{gcptmpl}{145}
+
+%Note that the line:
+%
+%\begin{verbatim}
+%toolchange(small_square_tool_no,speed * square_ratio);
+%\end{verbatim}
+%
+%\noindent may be commented out --- whether or no it is actually necessary will need to be 
+%decided upon.
  
-Each file will begin with a suitable comment indicating the file type and suitable notes:
+\subsection{Implementation}
+ 
+Each file will begin with a suitable comment indicating the file type and suitable notes/comments:
 
 \begin{writecode}{w}{gcodepreview.py}{python}
 #!/usr/bin/env python
@@ -291,7 +489,8 @@ Each file will begin with a suitable comment indicating the file type and suitab
 \end{writecode}
 \addtocounter{gcpscad}{10}
 
-The original implementation in RapSCAD used a command \DescribeRoutine{writeln} --- fortunately, 
+The original implementation in \textsf{RapSCAD} used a command 
+\DescribeRoutine{writeln} --- fortunately, 
 this command is easily re-created in Python:
 
 \lstset{firstnumber=\thegcpy}
@@ -312,7 +511,7 @@ object.
 \subsection{Position and Variables}
  
 In modeling the machine motion and G-code it will be necessary to have the machine track 
-several variables for machine position, current tool, depth in toolpath, \&c. 
+several variables for machine position, current tool, and depth in toolpath. 
 This will be done using paired functions (which will set and return the  
 matching variable) and a matching (global) variable, as well as additional functions for 
 setting the matching variable(s).
@@ -345,7 +544,8 @@ as the toolpath is cut out:
 \end{samepage}
 
 Note that the \verb|currenttool| variable should always be used for any specification 
-of a tool, being read in whenever a tool needs to be specified. %(Which implies that 
+of a tool, being read in whenever a tool is to be made use of, or a parameter or aspect
+of the tool needs to be used in a calculation. %(Which implies that 
 %the tool parameters in modules other then \verb|toolchange(tool_number, speed);| 
 %should be removed.)
 
@@ -355,6 +555,129 @@ Python, while there will be two OpenSCAD files as noted above, one which calls t
 (this will be \texttt{use}d), while the other will be able to access
 and use OpenSCAD variables, as well as implement Customizer options
 (this will be \texttt{include}d).
+
+\subsection{Output files}
+
+\subsubsection{G-code and modules and commands}
+ 
+Each module/command will write out certain G-code commands:
+
+\bigskip
+
+\noindent \begin{tabular}{@{}ll@{}} \toprule
+ Command/Module                    & G-code                                        \\ \midrule
+ \texttt{opengcodefile(...);}
+ \texttt{setupstock(...)}          & \texttt{(export.nc)}                          \\
+                                   & \texttt{(stockMin: -109.5, -75mm, -8.35mm)}\\
+                                   & \texttt{(stockMax:109.5mm, 75mm, 0.00mm)}\\
+                                   & \texttt{(STOCK/BLOCK, 219, 150, 8.35, 109.5, 75, 8.35)}\\
+                                   & \texttt{G90}\\
+                                   & \texttt{G21} \\ \midrule
+ \texttt{movetosafez()}            & \texttt{(Move to safe Z to avoid workholding)}\\
+                                   & \texttt{G53G0Z-5.000}\\ \midrule
+ \texttt{toolchange(...);}         & \texttt{(TOOL/MILL,3.17, 0.00, 0.00, 0.00)} \\
+                                   & \texttt{M6T102} \\
+                                   & \texttt{M03S16000} \\ \midrule
+ \verb|cutoneaxis_setfeed(...);|   & \texttt{(PREPOSITION FOR RAPID PLUNGE)}\\
+  & \texttt{G0X0Y0} \\
+  & \texttt{Z0.25} \\
+  & \texttt{G1Z0F100} \\
+  & \texttt{G1 X109.5 Y75 Z-8.35F400} \\
+  & \texttt{Z9}\\
+ \texttt{cutwithfeed(...);}\\ \midrule
+
+ \texttt{closegcodefile();}        & \texttt{M05}\\
+                                   & \texttt{M02}\\ 
+\bottomrule
+\end{tabular}
+\bigskip
+
+%(Toolpath)
+%M05
+
+
+\noindent Conversely, the G-code commands which are supported are generated by the following modules:
+
+\bigskip
+
+\noindent \begin{tabular}{@{}ll@{}} \toprule
+ G-code                                                           & Command/Module \\ \midrule
+ \verb|(Design File: )| &  \texttt{opengcodefile(...);}
+                           \texttt{setupstock(...)}\\
+ \verb|(stockMin:0.00mm, -152.40mm, -34.92mm)| \\
+ \verb|(stockMax:109.50mm, -77.40mm, 0.00mm)| \\
+ \verb|(STOCK/BLOCK,109.50, 75.00, 34.92,0.00, 152.40, 34.92)| \\
+ \verb|G90| \\
+ \verb|G21| \\ \midrule
+ \verb|(Move to safe Z to avoid workholding)| &  \texttt{movetosafez()} \\
+ \verb|G53G0Z-5.000| \\ \midrule
+ \verb|(Toolpath: Contour Toolpath 1)| &  \texttt{toolchange(...);}\\
+ \verb|M05| \\
+ \verb|(TOOL/MILL,3.17, 0.00, 0.00, 0.00)| \\
+ \verb|M6T102| \\
+ \verb|M03S10000|  \\ \midrule
+ \verb|(PREPOSITION FOR RAPID PLUNGE)| & \texttt{writecomment(...)}\\ \midrule
+ \verb|G0X0.000Y-152.400| & \texttt{rapid(...)}\\
+ \verb|Z0.250| & \texttt{rapid(...)}\\ \midrule
+ \verb|G1Z-1.000F203.2| & \texttt{cutwithfeed(...);}\\  
+ \verb|X109.500Y-77.400F508.0| & \texttt{cutwithfeed(...);} \\ 
+ \verb|X57.918Y16.302Z-0.726|\\ 
+ \verb|Y22.023Z-1.023|\\ 
+ \verb|X61.190Z-0.681|\\ 
+ \verb|Y21.643|\\ 
+ \verb|X57.681|\\
+ \verb|Z12.700|\\ \midrule
+ \verb|M05| &  \texttt{closegcodefile();}\\
+ \verb|M02|\\
+ \bottomrule
+ \end{tabular}
+\bigskip
+
+The implication here is that it should be possible to read in a G-code file, and for each
+line/command instantiate a matching command so as to create a 3D model/preview of the file.
+
+\subsubsection{DXF}
+
+Elements in DXFs are represented as lines or arcs. A minimal file showing both:
+
+\begin{verbatim}
+0
+SECTION
+2
+ENTITIES
+0
+LWPOLYLINE
+90
+2
+70
+0
+43
+0
+10
+-31.375
+20
+-34.9152
+10
+-31.375
+20
+-18.75
+0
+ARC
+10
+-54.75
+20
+-37.5
+40
+4
+50
+0
+51
+90
+0
+ENDSEC
+0
+EOF
+\end{verbatim}
 
 \subsection{Modules}
 
@@ -3099,256 +3422,6 @@ possible to create additional files for specific purposes.
 
 \end{writecode}
 \addtocounter{cuttwod}{2}
-
-\section{gcodepreviewtemplate.scad}
-
-The commands may then be put together using a template which will ensure that
-the various files are used/included as necessary, that files are opened before
-being written to, and that they are closed at the end.
-
-%Creating a template from memory, the file should be something like:
-%
-%List of all tools
-%chipload for each tool
-%Depth per Pass for each tool
-%scaling factor for chipload to arrive at feeds and speeds
-%Booleans for generateDXF/Gcode, 3D Preview, assembly or parts or drop-down list of parts, &c.
-%
-%setupstock --- should this open gcode/dxf files as well?
-%
-%toolchange to first tool
-%
-%Rapid to location of first cut
-%cutline/cutarc --- iterate as needed
-%Rapid to safe height
-%
-%Program END --- should close gcode/DXF files and include rapid to safe height and rapid to back
-
-\lstset{firstnumber=1}%\thegcptmpl}
-\begin{writecode}{w}{gcodepreviewtemplate.scad}{scad}
-//!OpenSCAD
-
-use <gcodepreview.py>;
-use <pygcodepreview.scad>;
-include <gcodepreview.scad>;
-
-$fa = 2;
-$fs = 0.125;
-
-/* [Export] */
-Base_filename = "export"; 
-/* [Export] */
-generatedxf = true; 
-/* [Export] */
-generategcode = true; 
-///* [Export] */
-//generatesvg = false; 
-
-/* [CAM] */
-toolradius = 1.5875;
-/* [CAM] */
-large_ball_tool_no = 0; // [0:0,111:111,101:101,202:202]
-/* [CAM] */
-large_square_tool_no = 0; // [0:0,112:112,102:102,201:201]
-/* [CAM] */
-large_V_tool_no = 0; // [0:0,301:301,690:690]
-/* [CAM] */
-small_ball_tool_no = 0; // [0:0,121:121,111:111,101:101]
-/* [CAM] */
-small_square_tool_no = 102; // [0:0,122:122,112:112,102:102]
-/* [CAM] */
-small_V_tool_no = 0; // [0:0,390:390,301:301]
-/* [CAM] */
-KH_tool_no = 0; // [0:0,374:374,375:375,376:376,378]
-/* [CAM] */
-DT_tool_no = 0; // [0:0,814:814]
-
-/* [Feeds and Speeds] */
-plunge = 100;
-/* [Feeds and Speeds] */
-feed = 400;
-/* [Feeds and Speeds] */
-speed = 16000;
-/* [Feeds and Speeds] */
-small_square_ratio = 0.75; // [0.25:2]
-/* [Feeds and Speeds] */
-small_ball_ratio = 0.75; // [0.25:2]
-/* [Feeds and Speeds] */
-large_ball_ratio = 1.0; // [0.25:2]
-/* [Feeds and Speeds] */
-small_V_ratio = 0.625; // [0.25:2]
-/* [Feeds and Speeds] */
-large_V_ratio = 0.875; // [0.25:2]
-/* [Feeds and Speeds] */
-KH_ratio = 0.75; // [0.25:2]
-/* [Feeds and Speeds] */
-DT_ratio = 0.75; // [0.25:2]
-
-/* [Stock] */
-stocklength = 219;
-/* [Stock] */
-stockwidth = 150;
-/* [Stock] */
-stockthickness = 8.35;
-/* [Stock] */
-zeroheight = "Top"; // [Top, Bottom]
-/* [Stock] */
-stockorigin = "Center"; // [Lower-Left, Center-Left, Top-Left, Center]
-/* [Stock] */
-retractheight = 9;
-
-filename_gcode = str(Base_filename, ".nc");
-filename_dxf = str(Base_filename);
-//filename_svg = str(Base_filename, ".svg");
-
-opengcodefile(filename_gcode);
-opendxffile(filename_dxf);
-
-difference() {
-setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
-
-movetosafez();
-
-toolchange(small_square_tool_no,speed * small_square_ratio);
-
-begintoolpath(0,0,0.25);
-beginpolyline(0,0,0.25);
-
-cutoneaxis_setfeed("Z",0,plunge*small_square_ratio);
-
-cutwithfeed(stocklength/2,stockwidth/2,-stockthickness,feed);
-addpolyline(stocklength/2,stockwidth/2,-stockthickness);
-
-endtoolpath();
-closepolyline();
-}
-
-closegcodefile();
-closedxffile();
-\end{writecode}
-\addtocounter{gcptmpl}{99}
-
-Note that the line:
-
-\begin{verbatim}
-toolchange(small_square_tool_no,speed * square_ratio);
-\end{verbatim}
-
-\noindent may be commented out --- whether or no it is actually necessary will need to be 
-decided upon.
- 
-\subsection{G-code and modules and commands}
- 
-Each module/command will write out certain G-code commands:
-
-\bigskip
-
-\noindent \begin{tabular}{@{}ll@{}} \toprule
- Command/Module                    & G-code                                        \\ \midrule
- \texttt{opengcodefile(...);}
- \texttt{setupstock(...)}          & \texttt{(export.nc)}                          \\
-                                   & \texttt{(stockMin: -109.5, -75mm, -8.35mm)}\\
-                                   & \texttt{(stockMax:109.5mm, 75mm, 0.00mm)}\\
-                                   & \texttt{(STOCK/BLOCK, 219, 150, 8.35, 109.5, 75, 8.35)}\\
-                                   & \texttt{G90}\\
-                                   & \texttt{G21} \\ \midrule
- \texttt{movetosafez()}            & \texttt{(Move to safe Z to avoid workholding)}\\
-                                   & \texttt{G53G0Z-5.000}\\ \midrule
- \texttt{toolchange(...);}         & \texttt{(TOOL/MILL,3.17, 0.00, 0.00, 0.00)} \\
-                                   & \texttt{M6T102} \\
-                                   & \texttt{M03S16000} \\ \midrule
- \verb|cutoneaxis_setfeed(...);|   & \texttt{(PREPOSITION FOR RAPID PLUNGE)}\\
-  & \texttt{G0X0Y0} \\
-  & \texttt{Z0.25} \\
-  & \texttt{G1Z0F100} \\
-  & \texttt{G1 X109.5 Y75 Z-8.35F400} \\
-  & \texttt{Z9}\\
- \texttt{cutwithfeed(...);}\\ \midrule
-
- \texttt{closegcodefile();}        & \texttt{M05}\\
-                                   & \texttt{M02}\\ 
-\bottomrule
-\end{tabular}
-\bigskip
-
-%(Toolpath)
-%M05
-
-
-\noindent Conversely, the G-code commands which are supported are generated by the following modules:
-
-\bigskip
-
-\noindent \begin{tabular}{@{}ll@{}} \toprule
- G-code                                                           & Command/Module \\ \midrule
- \verb|(Design File: )| &  \texttt{opengcodefile(...);}
-                           \texttt{setupstock(...)}\\
- \verb|(stockMin:0.00mm, -152.40mm, -34.92mm)| \\
- \verb|(stockMax:109.50mm, -77.40mm, 0.00mm)| \\
- \verb|(STOCK/BLOCK,109.50, 75.00, 34.92,0.00, 152.40, 34.92)| \\
- \verb|G90| \\
- \verb|G21| \\ \midrule
- \verb|(Move to safe Z to avoid workholding)| &  \texttt{movetosafez()} \\
- \verb|G53G0Z-5.000| \\ \midrule
- \verb|(Toolpath: Contour Toolpath 1)| &  \texttt{toolchange(...);}\\
- \verb|M05| \\
- \verb|(TOOL/MILL,3.17, 0.00, 0.00, 0.00)| \\
- \verb|M6T102| \\
- \verb|M03S10000|  \\ \midrule
- \verb|(PREPOSITION FOR RAPID PLUNGE)| & \texttt{writecomment(...)}\\ \midrule
- \verb|G0X0.000Y-152.400| & \texttt{rapid(...)}\\
- \verb|Z0.250| & \texttt{rapid(...)}\\ \midrule
- \verb|G1Z-1.000F203.2| & \texttt{cutwithfeed(...);}\\ 
- \verb|X109.500Y-77.400F508.0| & \texttt{cutwithfeed(...);} \\ \midrule
- \verb|Z12.700| & \texttt{rapid(...)} \\ \midrule
- \verb|M05| &  \texttt{closegcodefile();}\\
- \verb|M02|\\
- \bottomrule
- \end{tabular}
-\bigskip
-
-\subsection{DXF}
-
-\begin{verbatim}
-0
-SECTION
-2
-ENTITIES
-0
-POLYLINE
-8
-default
-66
-1
-70
-0
-0
-VERTEX
-8
-default
-70
-32
-10
-0
-20
-0
-0
-VERTEX
-8
-default
-70
-32
-10
-109.5
-20
-75
-0
-SEQEND
-0
-ENDSEC
-0
-EOF
-\end{verbatim}
 
 \section{Future}
 
