@@ -9,7 +9,7 @@ toolpaths which would not normally be feasible),
 and to write out DXF files which may be imported 
 into a traditional CAM program to create toolpaths.
 
-![OpenSCAD Cut Joinery Module](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/openscad_cutjoinery.png?raw=true)
+![OpenSCAD Cut Joinery Module](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/gcodepreview_unittests.png?raw=true)
 
 Updated to make use of Python in OpenSCAD:[^rapcad]
 
@@ -150,6 +150,16 @@ Version 0.5
 
  - more shapes
  - consolidate rectangles, arcs, and circles in gcodepreview.scad
+ 
+Version 0.6
+
+ - notes on modules
+ - change file for setupstock
+
+Version 0.7
+
+ - reduce usage of tool numbers
+ - validate all code so that it runs without errors from sample file
 
 Possible future improvements:
 
@@ -168,4 +178,3 @@ specialized CAM tool.
 Deprecated feature:
 
  - exporting SVGs --- while this was begun, it turns out that these would be written out upside down due to coordinate system differences between OpenSCAD/DXFs and SVGs requiring managing the inversion of the coordinate system (it is possible that METAPOST, which shares the same orientation and which can write out SVGs will be used instead for future versions)
-
