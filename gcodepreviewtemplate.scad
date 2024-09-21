@@ -140,10 +140,16 @@ cutroundover(stocklength/2+0.507/2, -(stockwidth/2+0.507/2), -4.509, stocklength
 cutroundover(stocklength/2+0.507/2, stockwidth/2+0.507/2, -4.509, -(stocklength/2+0.507/2), stockwidth/2+0.507/2, -4.509, 1570);
 cutroundover(-(stocklength/2+0.507/2), stockwidth/2+0.507/2, -4.509, -(stocklength/2+0.507/2), -(stockwidth/2+0.507/2), -4.509, 1570);
 
-for (i = [0 : abs(1) : 80]) {
-cutwithfeed(stocklength/4,-stockwidth/4,-stockthickness/4,feed);
-cutwithfeed(stocklength/8+(stocklength/256*i),-stockwidth/2,-stockthickness*3/4,feed);
+//for (i = [0 : abs(1) : 80]) {
+//  cutwithfeed(stocklength/4,-stockwidth/4,-stockthickness/4,feed);
+//  cutwithfeed(stocklength/8+(stocklength/256*i),-stockwidth/2,-stockthickness*3/4,feed);
+//  }
 
+hull(){
+  cutwithfeed(stocklength/4,-stockwidth/4,-stockthickness/4,feed);
+  cutwithfeed(stocklength/8,-stockwidth/2,-stockthickness*3/4,feed);
+  cutwithfeed(stocklength/8+(stocklength*0.3125),-stockwidth/2,-stockthickness*3/4,feed);
+  }
 }
 
 closegcodefile();
