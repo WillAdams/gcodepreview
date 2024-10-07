@@ -1,13 +1,6 @@
 # gcodepreview
 
-OpenPythonSCAD library for moving a tool in lines and arcs
-so as to model how a part would be cut using G-Code,
-so as to allow OpenSCAD to function as a compleat
-CAD/CAM solution for subtractive 3-axis CNC (mills
-and routers) by writing out G-code (in some cases
-toolpaths which would not normally be feasible),
-and to write out DXF files which may be imported
-into a traditional CAM program to create toolpaths.
+OpenPythonSCAD library for moving a tool in lines and arcs so as to model how a part would be cut using G-Code, so as to allow OpenSCAD to function as a compleat CAD/CAM solution for subtractive 3-axis CNC (mills and routers) by writing out G-code (in some cases toolpaths which would not normally be feasible), and to write out DXF files which may be imported into a traditional CAM program to create toolpaths.
 
 ![OpenSCAD Cut Joinery Module](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/gcodepreview_unittests.png?raw=true)
 
