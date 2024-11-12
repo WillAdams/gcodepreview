@@ -19,8 +19,11 @@
 
 %\DoNotIndex{\bullet}
 
+%\changes{v0.7}{2024/11/11}{Python re-write}
+\def\fileversion{v0.7} \def\filedate{2024/11/11}
+
 %\changes{v0.61}{2024/09/08}{modules and tests}
-\def\fileversion{v0.61} \def\filedate{2024/09/08}
+%\def\fileversion{v0.61} \def\filedate{2024/09/08}
 
 %\changes{v0.6}{2024/08/30}{modules and setupstock}
 %\def\fileversion{v0.6} \def\filedate{2024/08/30}
@@ -61,14 +64,7 @@ for CNC.
 \begin{readme}
 # gcodepreview
 
-OpenSCAD library for moving a tool in lines and arcs 
-so as to model how a part would be cut using G-Code, 
-so as to allow OpenSCAD to function as a compleat 
-CAD/CAM solution for subtractive 3-axis CNC (mills  
-and routers) by writing out G-code (in some cases 
-toolpaths which would not normally be feasible), 
-and to write out DXF files which may be imported 
-into a traditional CAM program to create toolpaths.
+OpenPythonSCAD library for moving a tool in lines and arcs so as to model how a part would be cut using G-Code, so as to allow OpenPythonSCAD to function as a compleat CAD/CAM solution for subtractive 3-axis CNC (mills and routers) by writing out G-code in addition to 3D modeling (in some cases toolpaths which would not normally be feasible), and to write out DXF files which may be imported into a traditional CAM program to create toolpaths.
 
 ![OpenSCAD Cut Joinery Module](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/gcodepreview_unittests.png?raw=true)
 
@@ -95,11 +91,7 @@ and
 
 https://willadams.gitbook.io/design-into-3d/programming
 
-Since it is now programmed using Literate Programming 
-(initially a .dtx, now a .tex file) there is a PDF:
-https://github.com/WillAdams/gcodepreview/blob/main/gcodepreview.pdf
-which includes all of the source code with formatted 
-commentary.
+Since it is now programmed using Literate Programming (initially a .dtx, now a .tex file) there is a PDF: https://github.com/WillAdams/gcodepreview/blob/main/gcodepreview.pdf which includes all of the source code with formatted commentary.
 
 The files for this library are:
 
@@ -109,7 +101,7 @@ The files for this library are:
  - gcodepreview_template.scad (gcptmpl) --- example file
  - cut2Dshapes.scad (cut2D) --- code for cutting 2D shapes 
 
-Place the files in C:\Users\\\~\Documents\OpenSCAD\libraries and call as:[^libraries]
+If using from OpenPythonSCAD, place the files in C:\Users\\\~\Documents\OpenSCAD\libraries and call as:[^libraries]
 
 [^libraries]: C:\Users\\\~\Documents\RapCAD\libraries is deprecated since RapCAD is no longer needed since Python is now used for writing out files)
 
@@ -117,32 +109,25 @@ Place the files in C:\Users\\\~\Documents\OpenSCAD\libraries and call as:[^libra
     use <pygcodepreview.scad>;
     include <gcodepreview.scad>;
 
-Note that it is necessary to use the first two files 
-(this allows loading the Python commands and then 
-wrapping them in OpenSCAD commands) and then include 
-the last file (which allows using OpenSCAD variables 
-to selectively implement the Python commands via their 
-being wrapped in OpenSCAD modules) and define 
-variables which match the project and then use 
-commands such as:
+Note that it is necessary to use the first two files (this allows loading the Python commands and then wrapping them in OpenSCAD commands) and then include the last file (which allows using OpenSCAD variables to selectively implement the Python commands via their being wrapped in OpenSCAD modules) and define variables which match the project and then use commands such as:
 
     opengcodefile(Gcode_filename);
     opendxffile(DXF_filename);
     
     difference() {
-        setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
+        setupstock(stockXwidth, stockYheight, stockZthickness, zeroheight, stockzero);
     
     movetosafez();
     
-    toolchange(squaretoolno,speed * square_ratio);
+    toolchange(squaretoolnum,speed * square_ratio);
     
     begintoolpath(0,0,0.25);
     beginpolyline(0,0,0.25);
 
     cutoneaxis_setfeed("Z",-1,plunge*square_ratio);
-    addpolyline(stocklength/2,stockwidth/2,-stockthickness);
+    addpolyline(stockXwidth/2,stockYheight/2,-stockZthickness);
     
-    cutwithfeed(stocklength/2,stockwidth/2,-stockthickness,feed);
+    cutwithfeed(stockXwidth/2,stockYheight/2,-stockZthickness,feed);
     
     endtoolpath();
     endpolyline();
@@ -156,34 +141,23 @@ which makes a G-code file:
 
 ![OpenSCAD template G-code file](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/gcodepreview_template.png?raw=true)
 
-but one which could only be sent to a machine so as to 
-cut only the softest and most yielding of materials 
-since it makes a single full-depth pass, and of which 
-has a matching DXF which may be imported into a 
-CAM tool --- but which it is not directly possible 
-to assign a toolpath in readily available CAM tools 
-(since it varies in depth from beginning-to-end). 
+but one which could only be sent to a machine so as to cut only the softest and most yielding of materials since it makes a single full-depth pass, and of which has a matching DXF which may be imported into a CAM tool --- but which it is not directly possible to assign a toolpath in readily available CAM tools (since it varies in depth from beginning-to-end). 
 
-Importing this DXF and actually cutting it 
-is discussed at:
+Importing this DXF and actually cutting it is discussed at:
 
 https://forum.makerforums.info/t/rewriting-gcodepreview-with-python/88617/14
 
-Tool numbers match those of tooling sold by Carbide 3D 
-(ob. discl., I work for them). 
+Alternately, gcodepreview.py may be placed in a Python library location and used directly from Python --- note that it is possible to use it from a "normal" Python when generating only DXFs.
 
-Comments are included in the G-code to match those 
-expected by CutViewer.
+Tool numbers match those of tooling sold by Carbide 3D (ob. discl., I work for them). 
 
-A complete example file is: gcodepreview_template.scad 
-and another example is openscad_gcodepreview_cutjoinery.tres.scad 
-which is made from an OpenSCAD Graph Editor file:
+Comments are included in the G-code to match those expected by CutViewer.
+
+A complete example file is: gcodepreview_template.scad Note that a Python template has since been developed as well, allowing usage without OpenSCAD code, and another example is openscad_gcodepreview_cutjoinery.tres.scad which is made from an OpenSCAD Graph Editor file:
 
 ![OpenSCAD Graph Editor Cut Joinery File](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/OSGE_cutjoinery.png?raw=true)
 
-Version 0.1 supports setting up stock, origin, rapid 
-positioning, making cuts, and writing out matching 
-G-code, and creating a DXF with polylines.
+Version 0.1 supports setting up stock, origin, rapid positioning, making cuts, and writing out matching G-code, and creating a DXF with polylines.
 
 Added features since initial upload:
 
@@ -217,24 +191,22 @@ Version 0.6
  - notes on modules
  - change file for setupstock
 
-Version 0.7
+Version 0.61
 
- - reduce usage of tool numbers
  - validate all code so that it runs without errors from sample file
+ - NEW: Note that this version is archived as gcodepreview-openscad_0_6.tex and the matching PDF is available as well
+ 
+ Version 0.7
+ 
+  - re-write completely in Python --- note that it is possible to use from within OpenPythonSCAD and an OpenSCAD wrapper is not functional at this time --- note that the OpenSCAD wrapper will need to be rewritten
 
 Possible future improvements:
 
+ - rewrite OpenSCAD wrapper
+ - restore support for additional tooling shapes (dovetail, roundover)
  - support for additional tooling shapes such as tapered ball-nose tools or lollipop cutters or thread-cutting tools
- - G-code: support for G2/G3 arcs and circles
- - G-code: import external tool libraries and feeds and speeds from JSON or CSV files ---
- - general coding improvements --- current coding style is quite prosaic
- - additional generalized modules for cutting out various shapes/geometries
 
-Note for G-code generation that it is up to the user 
-to implement Depth per Pass so as to not take a 
-single full-depth pass. Working from a DXF of course 
-allows one to off-load such considerations to a 
-specialized CAM tool.
+Note for G-code generation that it is up to the user to implement Depth per Pass so as to not take a single full-depth pass. Working from a DXF of course allows one to off-load such considerations to a specialized CAM tool.
 
 Deprecated feature:
 
@@ -245,38 +217,33 @@ Deprecated feature:
 \clearpage
 \section{gcodepreview}
 
-This library for OpenPythonSCAD works by using Python code as a back-end so as to persistently store 
-and access variables, and to write out files while both modeling the motion of a 3-axis CNC machine
-and if desired, writing out DXF and/or G-code files (as opposed to the normal technique of 
-rendering to a 3D model and writing out an STL). Doing so requires a total of three files:
+This library for OpenPythonSCAD works by using Python code as a back-end so as to persistently store and access variables, and to write out files while both modeling the motion of a 3-axis CNC machine and if desired, writing out DXF and/or G-code files (as opposed to the normal technique of rendering to a 3D model and writing out an STL or STEP or other model format). There are multiple modes for this, doing so requires up to three files:
 
 \begin{itemize}
-\item A Python file: gcodepreview.py (\texttt{gcpy}) --- this will have variables in the 
-      traditional sense which may be used for tracking machine position and so forth
+\item A Python file: gcodepreview.py (\texttt{gcpy}) --- this has variables in the 
+      traditional sense which may be used for tracking machine position and so forth. 
+      Note that where it is placed/loaded from will depend on whether it is imported into
+      a Python file:\\
+      \verb|import gcodepreview_standalone as gcp|\\ 
+      or used in an OpenSCAD file:\\
+      \verb|use <gcodepreview.py>;|\\
+      with additional OpenSCAD modules which allow accessing it
 \item An OpenSCAD file: pygcodepreview.scad (\texttt{pyscad}) --- which wraps the Python code 
-      in OpenSCAD
+      in OpenSCAD (note that it too is included by \verb|use <pygcodepreview.scad>|)
 \item An OpenSCAD file: gcodepreview.scad (\texttt{gcpscad}) --- which uses the other two files 
       and which is \texttt{include}d allowing it to access OpenSCAD variables for branching   
 \end{itemize}
 
-Note that this architecture requires that many modules are essentially ``Dispatchers'' which 
-pass information from one aspect of the environment to another.
+\noindent Note that this architecture requires that many OpenSCAD modules are essentially 
+``Dispatchers'' which pass information from one aspect of the environment to another.
 
-\subsection{gcodepreviewtemplate.scad}
+\subsection{gcodepreviewtemplate}
 
-The various commands are shown all together in a template so as to provide examples of usage, 
-and to ensure that the various files are used/included as necessary, all variables are set up 
-with the correct names, and that files are opened before being written to, and that each
-is closed at the end. 
+The various commands are shown all together in templates so as to provide examples of usage, and to ensure that the various files are used/included as necessary, all variables are set up with the correct names, and that files are opened before being written to, and that each is closed at the end. 
 
-Note that while the file seems overly verbose, it specifically incorporates variables
-for each tool shape, possibly in two different sizes, and a feed rate parameter or ratio
-for each, which may be used (by setting a tool \#) or ignored (by leaving the variable
-at zero (0).
+Note that while the template files seem overly verbose, they specifically incorporate variables for each tool shape, possibly in two different sizes, and a feed rate parameter or ratio for each, which may be used (by setting a tool \#) or ignored (by leaving the variable at zero (0).
 
-It should be that this section is all the documentation which some users will need.
-(and arguably is still too much). The balance of the document after this section
-shows all the code and implementation details.
+It should be that this section is all the documentation which some users will need (and arguably is still too much). The balance of the document after this section shows all the code and implementation details.
 
 %Creating a template from memory, the file should be something like:
 %
@@ -296,6 +263,8 @@ shows all the code and implementation details.
 %
 %Program END --- should close gcode/DXF files and include rapid to safe height and rapid to back
 
+\subsubsection{gcodepreviewtemplate.scad}
+
 \lstset{firstnumber=1}%\thegcptmpl}
 \begin{writecode}{w}{gcodepreviewtemplate.scad}{scad}
 //!OpenSCAD
@@ -306,6 +275,19 @@ include <gcodepreview.scad>;
 
 $fa = 2;
 $fs = 0.125;
+
+/* [Stock] */
+stockXwidth = 219;
+/* [Stock] */
+stockYheight = 150;
+/* [Stock] */
+stockZthickness = 8.35;
+/* [Stock] */
+zeroheight = "Top"; // [Top, Bottom]
+/* [Stock] */
+stockzero = "Center"; // [Lower-Left, Center-Left, Top-Left, Center]
+/* [Stock] */
+retractheight = 9;
 
 /* [Export] */
 Base_filename = "export"; 
@@ -319,25 +301,25 @@ generategcode = true;
 /* [CAM] */
 toolradius = 1.5875;
 /* [CAM] */
-large_ball_tool_no = 0; // [0:0,111:111,101:101,202:202]
+large_square_tool_num = 0; // [0:0,112:112,102:102,201:201]
 /* [CAM] */
-large_square_tool_no = 0; // [0:0,112:112,102:102,201:201]
+small_square_tool_num = 102; // [0:0,122:122,112:112,102:102]
 /* [CAM] */
-large_V_tool_no = 0; // [0:0,301:301,690:690]
+large_ball_tool_num = 0; // [0:0,111:111,101:101,202:202]
 /* [CAM] */
-small_ball_tool_no = 0; // [0:0,121:121,111:111,101:101]
+small_ball_tool_num = 0; // [0:0,121:121,111:111,101:101]
 /* [CAM] */
-small_square_tool_no = 102; // [0:0,122:122,112:112,102:102]
+large_V_tool_num = 0; // [0:0,301:301,690:690]
 /* [CAM] */
-small_V_tool_no = 0; // [0:0,390:390,301:301]
+small_V_tool_num = 0; // [0:0,390:390,301:301]
 /* [CAM] */
-KH_tool_no = 0; // [0:0,374:374,375:375,376:376,378]
+DT_tool_num = 0; // [0:0,814:814]
 /* [CAM] */
-DT_tool_no = 0; // [0:0,814:814]
+KH_tool_num = 0; // [0:0,374:374,375:375,376:376,378]
 /* [CAM] */
-Roundover_tool_no = 56125; // [56125:56125, 56142:56142,312:312, 1570:1570]
+Roundover_tool_num = 0; // [56125:56125, 56142:56142,312:312, 1570:1570]
 /* [CAM] */
-MISC_tool_no = 0; // 
+MISC_tool_num = 0; // 
 
 /* [Feeds and Speeds] */
 plunge = 100;
@@ -348,34 +330,21 @@ speed = 16000;
 /* [Feeds and Speeds] */
 small_square_ratio = 0.75; // [0.25:2]
 /* [Feeds and Speeds] */
-small_ball_ratio = 0.75; // [0.25:2]
-/* [Feeds and Speeds] */
 large_ball_ratio = 1.0; // [0.25:2]
 /* [Feeds and Speeds] */
-small_V_ratio = 0.625; // [0.25:2]
+small_ball_ratio = 0.75; // [0.25:2]
 /* [Feeds and Speeds] */
 large_V_ratio = 0.875; // [0.25:2]
 /* [Feeds and Speeds] */
-KH_ratio = 0.75; // [0.25:2]
+small_V_ratio = 0.625; // [0.25:2]
 /* [Feeds and Speeds] */
 DT_ratio = 0.75; // [0.25:2]
+/* [Feeds and Speeds] */
+KH_ratio = 0.75; // [0.25:2]
 /* [Feeds and Speeds] */
 RO_ratio = 0.5; // [0.25:2]
 /* [Feeds and Speeds] */
 MISC_ratio = 0.5; // [0.25:2]
-
-/* [Stock] */
-stocklength = 219;
-/* [Stock] */
-stockwidth = 150;
-/* [Stock] */
-stockthickness = 8.35;
-/* [Stock] */
-zeroheight = "Top"; // [Top, Bottom]
-/* [Stock] */
-stockorigin = "Center"; // [Lower-Left, Center-Left, Top-Left, Center]
-/* [Stock] */
-retractheight = 9;
 
 filename_gcode = str(Base_filename, ".nc");
 filename_dxf = str(Base_filename);
@@ -384,107 +353,354 @@ opengcodefile(filename_gcode);
 opendxffile(filename_dxf);
 
 difference() {
-setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
+setupstock(stockXwidth, stockYheight, stockZthickness, zeroheight, stockzero);
 
 movetosafez();
 
-toolchange(small_square_tool_no,speed * small_square_ratio);
+toolchange(small_square_tool_num,speed * small_square_ratio);
 
 begintoolpath(0,0,0.25);
 
 cutoneaxis_setfeed("Z",0,plunge*small_square_ratio);
 
-cutwithfeed(stocklength/2,stockwidth/2,-stockthickness,feed);
-dxfpolyline(getxpos(),getypos(),stocklength/2,stockwidth/2, small_square_tool_no);
+cutwithfeed(stockXwidth/2,stockYheight/2,-stockZthickness,feed);
+dxfpolyline(getxpos(),getypos(),stockXwidth/2,stockYheight/2, small_square_tool_num);
 
 endtoolpath();
-rapid(-(stocklength/4-stockwidth/16),stockwidth/4,0);
-cutoneaxis_setfeed("Z",-stockthickness,plunge*small_square_ratio);
+rapid(-(stockXwidth/4-stockYheight/16),stockYheight/4,0);
+cutoneaxis_setfeed("Z",-stockZthickness,plunge*small_square_ratio);
 
-cutarcNECCdxf(-stocklength/4, stockwidth/4+stockwidth/16, -stockthickness, -stocklength/4, stockwidth/4, stockwidth/16, small_square_tool_no);
-cutarcNWCCdxf(-(stocklength/4+stockwidth/16), stockwidth/4, -stockthickness, -stocklength/4, stockwidth/4, stockwidth/16, small_square_tool_no);
-cutarcSWCCdxf(-stocklength/4, stockwidth/4-stockwidth/16, -stockthickness, -stocklength/4, stockwidth/4, stockwidth/16, small_square_tool_no);
-cutarcSECCdxf(-(stocklength/4-stockwidth/16), stockwidth/4, -stockthickness, -stocklength/4, stockwidth/4, stockwidth/16, small_square_tool_no);
+cutarcNECCdxf(-stockXwidth/4, stockYheight/4+stockYheight/16, -stockZthickness, -stockXwidth/4, stockYheight/4, stockYheight/16, small_square_tool_num);
+cutarcNWCCdxf(-(stockXwidth/4+stockYheight/16), stockYheight/4, -stockZthickness, -stockXwidth/4, stockYheight/4, stockYheight/16, small_square_tool_num);
+cutarcSWCCdxf(-stockXwidth/4, stockYheight/4-stockYheight/16, -stockZthickness, -stockXwidth/4, stockYheight/4, stockYheight/16, small_square_tool_num);
+cutarcSECCdxf(-(stockXwidth/4-stockYheight/16), stockYheight/4, -stockZthickness, -stockXwidth/4, stockYheight/4, stockYheight/16, small_square_tool_num);
 
-rapid(getxpos(),getypos(),stockthickness);
-toolchange(KH_tool_no,speed * KH_ratio);
-rapid(-stocklength/8,-stockwidth/4,0);
+rapid(getxpos(),getypos(),stockZthickness);
+toolchange(KH_tool_num,speed * KH_ratio);
+rapid(-stockXwidth/8,-stockYheight/4,0);
 
-cutkeyhole_toolpath((stockthickness), (stockthickness), "N", stockwidth/8, KH_tool_no);
-rapid(getxpos(),getypos(),stockthickness);
-rapid(-stocklength/4,-stockwidth/4,0);
-cutkeyhole_toolpath((stockthickness), (stockthickness), "S", stockwidth/8, KH_tool_no);
-rapid(getxpos(),getypos(),stockthickness);
-rapid(-stocklength/4,-stockwidth/8,0);
-cutkeyhole_toolpath((stockthickness), (stockthickness), "E", stockwidth/8, KH_tool_no);
-rapid(getxpos(),getypos(),stockthickness);
-rapid(-stocklength/8,-stockwidth/8*3,0);
-cutkeyhole_toolpath((stockthickness), (stockthickness), "W", stockwidth/8, KH_tool_no);
+cutkeyhole_toolpath((stockZthickness), (stockZthickness), "N", stockYheight/8, KH_tool_num);
+rapid(getxpos(),getypos(),stockZthickness);
+rapid(-stockXwidth/4,-stockYheight/4,0);
+cutkeyhole_toolpath((stockZthickness), (stockZthickness), "S", stockYheight/8, KH_tool_num);
+rapid(getxpos(),getypos(),stockZthickness);
+rapid(-stockXwidth/4,-stockYheight/8,0);
+cutkeyhole_toolpath((stockZthickness), (stockZthickness), "E", stockYheight/8, KH_tool_num);
+rapid(getxpos(),getypos(),stockZthickness);
+rapid(-stockXwidth/8,-stockYheight/8*3,0);
+cutkeyhole_toolpath((stockZthickness), (stockZthickness), "W", stockYheight/8, KH_tool_num);
 
-rapid(getxpos(),getypos(),stockthickness);
-toolchange(DT_tool_no,speed * DT_ratio);
-rapid(0,-(stockwidth/2+tool_diameter(DT_tool_no,0)),0);
+rapid(getxpos(),getypos(),stockZthickness);
+toolchange(DT_tool_num,speed * DT_ratio);
+rapid(0,-(stockYheight/2+tool_diameter(DT_tool_num,0)),0);
 
-cutoneaxis_setfeed("Z",-stockthickness,plunge*DT_ratio);
-cutwithfeed(0,-(stockwidth/4),-stockthickness,feed*DT_ratio);
-rapid(0,-(stockwidth/2+tool_diameter(DT_tool_no,0)),-stockthickness);
+cutoneaxis_setfeed("Z",-stockZthickness,plunge*DT_ratio);
+cutwithfeed(0,-(stockYheight/4),-stockZthickness,feed*DT_ratio);
+rapid(0,-(stockYheight/2+tool_diameter(DT_tool_num,0)),-stockZthickness);
 
-rapid(getxpos(),getypos(),stockthickness);
-toolchange(Roundover_tool_no, speed * RO_ratio);
-rapid(-(stocklength/2),-(stockwidth/2),0);
+rapid(getxpos(),getypos(),stockZthickness);
+toolchange(Roundover_tool_num, speed * RO_ratio);
+rapid(-(stockXwidth/2),-(stockYheight/2),0);
 cutoneaxis_setfeed("Z",-4.509,plunge*RO_ratio);
 
-cutroundovertool(-(stocklength/2++0.507/2), -(stockwidth/2+0.507/2), -4.509, stocklength/2+0.507/2, -(stockwidth/2+0.507/2), -4.509, 0.507/2, 4.509);
+cutroundovertool(-(stockXwidth/2++0.507/2), -(stockYheight/2+0.507/2), -4.509, stockXwidth/2+0.507/2, -(stockYheight/2+0.507/2), -4.509, 0.507/2, 4.509);
 
-cutroundover(stocklength/2+0.507/2, -(stockwidth/2+0.507/2), -4.509, stocklength/2+0.507/2, stockwidth/2+0.507/2, -4.509, 1570);
-cutroundover(stocklength/2+0.507/2, stockwidth/2+0.507/2, -4.509, -(stocklength/2+0.507/2), stockwidth/2+0.507/2, -4.509, 1570);
-cutroundover(-(stocklength/2+0.507/2), stockwidth/2+0.507/2, -4.509, -(stocklength/2+0.507/2), -(stockwidth/2+0.507/2), -4.509, 1570);
+cutroundover(stockXwidth/2+0.507/2, -(stockYheight/2+0.507/2), -4.509, stockXwidth/2+0.507/2, stockYheight/2+0.507/2, -4.509, 1570);
+cutroundover(stockXwidth/2+0.507/2, stockYheight/2+0.507/2, -4.509, -(stockXwidth/2+0.507/2), stockYheight/2+0.507/2, -4.509, 1570);
+cutroundover(-(stockXwidth/2+0.507/2), stockYheight/2+0.507/2, -4.509, -(stockXwidth/2+0.507/2), -(stockYheight/2+0.507/2), -4.509, 1570);
 
-for (i = [0 : abs(1) : 80]) {
-cutwithfeed(stocklength/4,-stockwidth/4,-stockthickness/4,feed);
-cutwithfeed(stocklength/8+(stocklength/256*i),-stockwidth/2,-stockthickness*3/4,feed);
+//for (i = [0 : abs(1) : 80]) {
+//  cutwithfeed(stockXwidth/4,-stockYheight/4,-stockZthickness/4,feed);
+//  cutwithfeed(stockXwidth/8+(stockXwidth/256*i),-stockYheight/2,-stockZthickness*3/4,feed);
+//  }
 
+hull(){
+  cutwithfeed(stockXwidth/4,-stockYheight/4,-stockZthickness/4,feed);
+  cutwithfeed(stockXwidth/8,-stockYheight/2,-stockZthickness*3/4,feed);
+  cutwithfeed(stockXwidth/8+(stockXwidth*0.3125),-stockYheight/2,-stockZthickness*3/4,feed);
+  }
 }
 
 closegcodefile();
 closedxffile();
 \end{writecode}
-\addtocounter{gcptmpl}{145}
+\addtocounter{gcptmpl}{157}
 
 %Note that the line:
 %
 %\begin{verbatim}
-%toolchange(small_square_tool_no,speed * square_ratio);
+%toolchange(small_square_tool_num,speed * square_ratio);
 %\end{verbatim}
 %
 %\noindent may be commented out --- whether or no it is actually necessary will need to be 
 %decided upon.
- 
-\subsection{Implementation}
+
+\begin{samepage}
+Which cuts as:
+
+\includegraphics[width=\linewidth]{C:/Users/willa/OneDrive/Documents/GitHub/gcodepreview/gcodepreview_unittests.png}
+\end{samepage}
+
+Some comments on the template:
+
+\begin{itemize}
+\item minimal --- it is intended as a framework for a minimal working example (MWE) --- it should be
+                  possible to comment out unused portions and so arrive at code which tests
+                  any aspect of this project
+\item compleat --- a quite wide variety of tools are listed (and probably more will be
+                   added in the future), but pre-defining them and having these ``hooks'' seems
+                   the easiest (non-object-oriented) mechanism to handle everything
+\item shortcuts --- as the last example shows, while in real life it is necessary to make many 
+                    passes with a tool, an expedient shortcut is to forgo the \verb|loop| 
+                    operation and just use a \verb|hull()| operation
+\end{itemize}
+
+Further features will be added to the template, and the main image updated to reflect the capabilities of the system.
+
+
+\subsubsection{gcodepreviewtemplate.py}
+           
+Note that with the v0.7 re-write, it is possible to directly use the underlying Python code directly.
+
+\lstset{firstnumber=1}%\thegcptmplpy}
+\begin{writecode}{w}{gcodepreviewtemplate.py}{python}
+#!/usr/bin/env python
+
+# getting openscad functions into namespace
+#https://github.com/gsohler/openscad/issues/39
+from openscad import *
+
+import sys
+try:
+    if 'gcodepreview' in sys.modules:
+        del sys.modules['gcodepreview']
+except AttributeError:
+    pass
+
+#Below command only needed if using withing OpenPythonSCAD
+from gcodepreview import *
+
+#fa = 2
+#fs = 0.125
+
+# [Export] */
+Base_filename = "export" 
+# [Export] */
+generatedxf = True 
+# [Export] */
+generategcode = True 
+
+# [Stock] */
+stockXwidth = 219
+# [Stock] */
+stockYheight = 150
+# [Stock] */
+stockZthickness = 8.35
+# [Stock] */
+zeroheight = "Top" # [Top, Bottom]
+# [Stock] */
+stockzero = "Center" # [Lower-Left, Center-Left, Top-Left, Center]
+# [Stock] */
+retractheight = 9
+
+# [CAM] */
+toolradius = 1.5875
+# [CAM] */
+large_square_tool_num = 0 # [0:0,112:112,102:102,201:201]
+# [CAM] */
+small_square_tool_num = 102 # [0:0,122:122,112:112,102:102]
+# [CAM] */
+large_ball_tool_num = 0 # [0:0,111:111,101:101,202:202]
+# [CAM] */
+small_ball_tool_num = 0 # [0:0,121:121,111:111,101:101]
+# [CAM] */
+large_V_tool_num = 0 # [0:0,301:301,690:690]
+# [CAM] */
+small_V_tool_num = 0 # [0:0,390:390,301:301]
+# [CAM] */
+DT_tool_num = 0 # [0:0,814:814]
+# [CAM] */
+KH_tool_num = 0 # [0:0,374:374,375:375,376:376,378]
+# [CAM] */
+Roundover_tool_num = 0 # [56125:56125, 56142:56142,312:312, 1570:1570]
+# [CAM] */
+MISC_tool_num = 0 # 
+
+# [Feeds and Speeds] */
+plunge = 100
+# [Feeds and Speeds] */
+feed = 400
+# [Feeds and Speeds] */
+speed = 16000
+# [Feeds and Speeds] */
+small_square_ratio = 0.75 # [0.25:2]
+# [Feeds and Speeds] */
+large_ball_ratio = 1.0 # [0.25:2]
+# [Feeds and Speeds] */
+small_ball_ratio = 0.75 # [0.25:2]
+# [Feeds and Speeds] */
+large_V_ratio = 0.875 # [0.25:2]
+# [Feeds and Speeds] */
+small_V_ratio = 0.625 # [0.25:2]
+# [Feeds and Speeds] */
+DT_ratio = 0.75 # [0.25:2]
+# [Feeds and Speeds] */
+KH_ratio = 0.75 # [0.25:2]
+# [Feeds and Speeds] */
+RO_ratio = 0.5 # [0.25:2]
+# [Feeds and Speeds] */
+MISC_ratio = 0.5 # [0.25:2]
+
+gcp = gcodepreview(Base_filename, #"export", basefilename
+                   True, #generategcode
+                   True, #generatedxf
+                   stockXwidth, 
+                   stockYheight, 
+                   stockZthickness, 
+                   zeroheight, 
+                   stockzero, 
+                   retractheight, 
+                   large_square_tool_num,
+                   toolradius,
+                   plunge,
+                   feed,
+                   speed)
+
+gcp.opengcodefile(Base_filename)
+gcp.opendxffiles(Base_filename)
+
+gcp.setupstock(stockXwidth,stockYheight,stockZthickness,"Top","Center",retractheight)
+
+gcp.movetosafeZ()
+
+gcp.toolchange(102,10000)
+
+#gcp.rapidXY(6,12)
+gcp.rapidZ(0)
+
+#print (gcp.xpos())
+#print (gcp.ypos())
+#psetzpos(7)
+#gcp.setzpos(-12)
+#print (gcp.zpos())
+
+#print ("X", str(gcp.xpos()))
+#print ("Y", str(gcp.ypos()))
+#print ("Z", str(gcp.zpos()))
+
+toolpaths = gcp.currenttool()
+
+toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/2, stockYheight/2, -stockZthickness))
+
+gcp.rapidZ(retractheight)
+gcp.toolchange(201,10000)
+gcp.rapidXY(0, stockYheight/16)
+gcp.rapidZ(0)
+toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/16*7, stockYheight/2, -stockZthickness))
+
+gcp.setzpos(retractheight)
+gcp.toolchange(202,10000)
+gcp.rapidXY(0, stockYheight/8)
+gcp.rapidZ(0)
+toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/16*6, stockYheight/2, -stockZthickness))
+
+gcp.setzpos(retractheight)
+gcp.toolchange(101,10000)
+gcp.rapidXY(0, stockYheight/16*3)
+gcp.rapidZ(0)
+toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/16*5, stockYheight/2, -stockZthickness))
+
+gcp.setzpos(retractheight)
+gcp.toolchange(390,10000)
+gcp.rapidXY(0, stockYheight/16*4)
+gcp.rapidZ(0)
+toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/16*4, stockYheight/2, -stockZthickness))
+gcp.setzpos(retractheight)
+
+gcp.toolchange(301,10000)
+gcp.rapidXY(0, stockYheight/16*6)
+gcp.rapidZ(0)
+toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/16*2, stockYheight/2, -stockZthickness))
+
+#gcp.setzpos(retractheight)
+#gcp.toolchange(102,10000)
+#gcp.rapidXY(stockXwidth/4+stockYheight/16, -(stockYheight/4))
+#gcp.rapidZ(0)
+##arcloop(barc, earc, xcenter, ycenter, radius)
+#gcp.settzpos(stockZthickness/90)
+#toolpaths = toolpaths.union(gcp.arcloop(0, 90, stockXwidth/4, -stockYheight/4, stockYheight/16))
+
+gcp.setzpos(retractheight)
+gcp.toolchange(102,10000)
+gcp.rapidXY(stockXwidth/4+stockYheight/8+stockYheight/16, +stockYheight/8)
+gcp.rapidZ(0)
+#gcp.settzpos(stockZthickness/90)
+#toolpaths = toolpaths.union(gcp.arcloop(0, 90, stockXwidth/4+stockYheight/8, stockYheight/8, stockYheight/16))
+toolpaths = toolpaths.union(gcp.cutarcNECCdxf(stockXwidth/4+stockYheight/8, stockYheight/8+stockYheight/16, -stockZthickness, stockXwidth/4+stockYheight/8, stockYheight/8, stockYheight/16))
+toolpaths = toolpaths.union(gcp.cutarcNWCCdxf(stockXwidth/4+stockYheight/8-stockYheight/16, stockYheight/8, -stockZthickness, stockXwidth/4+stockYheight/8, stockYheight/8, stockYheight/16))
+toolpaths = toolpaths.union(gcp.cutarcSWCCdxf(stockXwidth/4+stockYheight/8, stockYheight/8-stockYheight/16, -stockZthickness, stockXwidth/4+stockYheight/8, stockYheight/8, stockYheight/16))
+toolpaths = toolpaths.union(gcp.cutarcSECCdxf(stockXwidth/4+stockYheight/8+stockYheight/16, stockYheight/8, -stockZthickness, stockXwidth/4+stockYheight/8, stockYheight/8, stockYheight/16))
+
+#a = gcp.currenttool()
+#arcbegin = a.translate([64.37357214209116, -37.33638368965047,-stockZthickness])
+#arcend = a.translate([55.16361631034953, -28.12642785790883,-stockZthickness])
+#toolpaths = toolpaths.union(arcbegin)
+#toolpaths = toolpaths.union(arcend)
+
+#cu = cube([10,20,30])
+#c = cu.translate([0,0,gcp.zpos()])
+
+part = gcp.stock.difference(toolpaths)
+
+#output(gcp.stock)
+#output(gcp.currenttool())
+#output(test)
+output(part)
+#output(toolpaths)
+#output (arc)
+
+gcp.setzpos(retractheight)
+
+gcp.closegcodefile()
+gcp.closedxffile()
+#gcp.closedxffiles()
+
+\end{writecode}
+\addtocounter{gcptmplpy}{201}
+
+\subsection{Implementation files and gcodepreview class}
  
 Each file will begin with a suitable comment indicating the file type and suitable notes/comments:
 
 \begin{writecode}{w}{gcodepreview.py}{python}
 #!/usr/bin/env python
 #icon "C:\Program Files\PythonSCAD\bin\openscad.exe"  --trust-python
-#Currently tested with 2024.09.03 and Python 3.11
-#gcodepreview 0.61, see gcodepreview.scad
+#Currently tested with 2024.09.23 and Python 3.11
+#gcodepreview 0.7, for use with OpenPythonSCAD, 
+#if using from OpenPythonSCAD see gcodepreview.scad
+
+# getting openscad functions into namespace
+#https://github.com/gsohler/openscad/issues/39
+from openscad import *
+
+# add math functions (using radians by default, convert to degrees where necessary)
+import math
 
 \end{writecode}
-\addtocounter{gcpy}{6}
+\addtocounter{gcpy}{14}
 
 \begin{writecode}{w}{pygcodepreview.scad}{scad}
 //!OpenSCAD
  
-//gcodepreview 0.61, see gcodepreview.scad
+//gcodepreview 0.7, see gcodepreview.scad
 
 \end{writecode}
-\addtocounter{pyscad}{5}
+\addtocounter{pyscad}{4}
 
 \begin{writecode}{w}{gcodepreview.scad}{scad}
 //!OpenSCAD
  
-//gcodepreview 0.61
+//gcodepreview 0.7
 //
 //used via use <gcodepreview.py>;
 //         use <pygcodepreview.scad>;
@@ -492,78 +708,106 @@ Each file will begin with a suitable comment indicating the file type and suitab
 //
 
 \end{writecode}
-\addtocounter{gcpscad}{10}
+\addtocounter{gcpscad}{9}
 
-The original implementation in \textsf{RapSCAD} used a command 
-\DescribeRoutine{writeln} --- fortunately, 
-this command is easily re-created in Python:
+If all functions are to be handled within Python, then they will need to be gathered into a class which contains them and which may be initialized so as to define shared variables, and then there will need to be objects/commands for each aspect of the program, each of which will initialize needed variables and will contain appropriate commands. Note that they will be divided between mandatory and optional functions/variables/objects:
+
+\begin{outline}
+\1 Mandatory
+   \2 stocksetup:
+      \3 stockXwidth, stockYheight, stockZthickness, zeroheight, stockzero, retract\-height
+   \2 gcpfiles: 
+      \3 basefilename, generatedxf, generategcode
+   \2 largesquaretool: 
+      \3 large\_square\_tool\_num, toolradius, plunge, feed, speed
+\1 Optional
+   \2 smallsquaretool: 
+      \3small\_square\_tool\_num, small\_square\_ratio
+   \2 largeballtool: 
+      \3 large\_ball\_tool\_num, large\_ball\_ratio
+   \2 largeVtool: 
+      \3 large\_V\_tool\_num, large\_V\_ratio
+   \2 smallballtool: 
+      \3 small\_ball\_tool\_num, small\_ball\_ratio
+   \2 smallVtool: 
+      \3 small\_V\_tool\_num, small\_V\_ratio
+   \2 DTtool: 
+      \3 DT\_tool\_num, DT\_ratio
+   \2 KHtool: 
+      \3 KH\_tool\_num, KH\_ratio
+   \2 Roundovertool: 
+      \3 Roundover\_tool\_num, RO\_ratio
+   \2 misctool: 
+      \3 MISC\_tool\_num, MISC\_ratio
+\end{outline}
+
+The first class which is defined is \DescribeRoutine{gcodepreview} which includes an \verb|init| method which allows passing in the variables which will be used by the other methods in this class.
 
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
-def writeln(*arguments):
-    line_to_write = ""
-    for element in arguments:
-        line_to_write += element
-    f.write(line_to_write)
-    f.write("\n")
-    
+class gcodepreview:
+
+    def __init__(self, basefilename = "export", 
+                 generategcode = False,
+                 generatedxf = False,
+                 stockXwidth = 25, 
+                 stockYheight = 25, 
+                 stockZthickness = 1, 
+                 zeroheight = "Top", 
+                 stockzero = "Lower-left" , 
+                 retractheight = 6, 
+                 currenttoolnum = 102,
+                 toolradius = 3.175,
+                 plunge = 100,
+                 feed = 400,
+                 speed = 10000):
+        self.basefilename = basefilename
+        self.generategcode = generategcode
+        self.generatedxf = generatedxf
+        self.stockXwidth = stockXwidth
+        self.stockYheight = stockYheight
+        self.stockZthickness = stockZthickness
+        self.zeroheight = zeroheight
+        self.stockzero = stockzero
+        self.retractheight = retractheight
+        self.currenttoolnum = currenttoolnum
+        self.toolradius = toolradius
+        self.plunge = plunge
+        self.feed = feed
+        self.speed = speed
+#        global toolpaths
+#        self.toolpaths = cylinder(1.5875, 12.7)
+        global generatedxfs
+        self.generatedxfs = False
+        
 \end{writecode}
-\addtocounter{gcpy}{7}
+\addtocounter{gcpy}{35}
 
-\noindent which command will accept a series of arguments and then write them out to a file 
-object.
+%Note that it is best-practice to add the other global variables here to ensure that they are initialized:
+%
+%\lstset{firstnumber=\thegcpy}
+%\begin{writecode}{a}{gcodepreview.py}{python}
+%        global mpx
+%        mpx = float(0)
+%        global mpy
+%        mpy = float(0)
+%        global mpz
+%        mpz = float(0)
+%        global tpz
+%        tpz = float(0)
+%        global currenttoolnum
+%        currenttoolnum = 102
+%        global stock
+%        self.stock = cube([25,25,25])
+%
+%\end{writecode}
+%\addtocounter{gcpy}{1}
 
-\subsection{Position and Variables}
- 
-In modeling the machine motion and G-code it will be necessary to have the machine track 
-several variables for machine position, current tool, and depth in toolpath. 
-This will be done using paired functions (which will set and return the  
-matching variable) and a matching (global) variable, as well as additional functions for 
-setting the matching variable(s).
+\subsubsection{Output files}
 
-\begin{samepage}
-The first such variables are for XYZ position:
+The \verb|gcodepreview| class will write out DXF and G-code files.
 
-\begin{itemize}
- \item \DescribeVariable{mpx}
- \item \DescribeVariable{mpy}
- \item \DescribeVariable{mpz}
-\end{itemize}
-\end{samepage}
-
-\begin{samepage}
-\noindent Similarly, for some toolpaths it will be necessary to track the depth along the Z-axis
-as the toolpath is cut out:
- 
-\begin{itemize}
- \item \DescribeVariable{tpz}
-\end{itemize}
-\end{samepage}
-
-\begin{samepage}
-\noindent It will further be necessary to have a variable for the current tool:
-
-\begin{itemize}
- \item \DescribeVariable{currenttool}
-\end{itemize}
-\end{samepage}
-
-Note that the \verb|currenttool| variable should always be used for any specification 
-of a tool, being read in whenever a tool is to be made use of, or a parameter or aspect
-of the tool needs to be used in a calculation. %(Which implies that 
-%the tool parameters in modules other then \verb|toolchange(tool_number, speed);| 
-%should be removed.)
-
-For each intended command it will be necessary to implement an appropriate aspect in each file. 
-The Python file will manage the Python variables and handle things which can only be done in 
-Python, while there will be two OpenSCAD files as noted above, one which calls the Python code 
-(this will be \texttt{use}d), while the other will be able to access
-and use OpenSCAD variables, as well as implement Customizer options
-(this will be \texttt{include}d).
-
-\subsection{Output files}
-
-\subsubsection{G-code and modules and commands}
+\paragraph{G-code and modules and commands}
  
 Each module/command will write out certain G-code commands:
 
@@ -638,10 +882,9 @@ Each module/command will write out certain G-code commands:
  \end{tabular}
 \bigskip
 
-The implication here is that it should be possible to read in a G-code file, and for each
-line/command instantiate a matching command so as to create a 3D model/preview of the file.
+The implication here is that it should be possible to read in a G-code file, and for each line/\allowbreak command instantiate a matching command so as to create a 3D model/preview  of the file. One possible option would be to make specialized commands for movement which correspond to the various axis combinations (XYZ, XY, XZ, YZ, X, Y, Z).
 
-\subsubsection{DXF}
+\paragraph{DXF}
 
 Elements in DXFs are represented as lines or arcs. A minimal file showing both:
 
@@ -684,115 +927,322 @@ ENDSEC
 EOF
 \end{verbatim}
 
-\subsection{Modules}
+The class \verb|gcodepreview| will need additional commands for opening files:
 
-Note that as a convention, where it is necessary for a module to coordinate between 
-Python~and OpenSCAD, in certain cases it will be necessary for there to be three separate 
-versions: a \texttt{p}<foo>~Python definition for the manipulation of Python variables and
-any file routines, an \texttt{o}<foo> OpenSCAD module which will wrap up the Python
-function call, and lastly a <foo> OpenSCAD module which will be \texttt{<include>}d 
-so as to be able to make use of OpenSCAD variables.
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def opengcodefile(self, basefilename = "export"):
+        if self.generategcode == True:
+            self.gcodefilename = basefilename + ".nc"
+            self.gc = open(self.gcodefilename, "w")
 
-In natural languages such as English, there is an order to various parts of speech such as 
-adjectives 
-%(determiner, opinion/observation, size, age, shape, color, origin/nationality, 
-%material, purpose/qualifier) 
---- since various prefixes and suffixes will be used for module names, having a consistent 
-ordering/usage will help in consistency and make expression clearer.
-The ordering should be: sequence, action, function, parameter, filetype
+    def opendxffile(self, basefilename = "export"): 
+        global generatedxfs
+        if self.generatedxf == True:
+            self.generatedxfs = False
+            self.dxffilename = basefilename + ".dxf"
+            self.dxf = open(self.dxffilename, "w")
+            self.dxfpreamble(-1)
+
+    def opendxffiles(self, basefilename = "export", 
+                     large_square_tool_num = 0, 
+                     small_square_tool_num = 0, 
+                     large_ball_tool_num = 0,
+                     small_ball_tool_num = 0,
+                     large_V_tool_num = 0,
+                     small_V_tool_num = 0,
+                     DT_tool_num = 0,
+                     KH_tool_num = 0,
+                     Roundover_tool_num = 0,
+                     MISC_tool_num = 0):
+        global generatedxfs
+        self.generatedxfs = True
+        self.large_square_tool_num = large_square_tool_num 
+        self.small_square_tool_num = small_square_tool_num
+        self.large_ball_tool_num = large_ball_tool_num
+        self.small_ball_tool_num = small_ball_tool_num
+        self.large_V_tool_num = large_V_tool_num
+        self.small_V_tool_num = small_V_tool_num
+        self.DT_tool_num = DT_tool_num
+        self.KH_tool_num = KH_tool_num
+        self.Roundover_tool_num = Roundover_tool_num
+        self.MISC_tool_num = MISC_tool_num
+        if self.generatedxf == True:
+            if (large_square_tool_num > 0):
+                self.dxflgsqfilename = basefilename + str(large_square_tool_num) + ".dxf"
+                print("Opening ", str(self.dxflgsqfilename))
+                self.dxflgsq = open(self.dxflgsqfilename, "w")
+                self.dxfpreamble(large_square_tool_num)
+            if (small_square_tool_num > 0):
+                print("Opening small square")
+                self.dxfsmsqfilename = basefilename + str(small_square_tool_num) + ".dxf"
+                self.dxfsmsq = open(self.dxfsmsqfilename, "w")
+                self.dxfpreamble(small_square_tool_num)
+            if (large_ball_tool_num > 0):
+                print("Opening large ball")
+                self.dxflgblfilename = basefilename + str(large_ball_tool_num) + ".dxf"
+                self.dxflgbl = open(self.dxflgblfilename, "w")
+                self.dxfpreamble(large_ball_tool_num)
+            if (small_ball_tool_num > 0):
+                print("Opening small ball")
+                self.dxfsmblfilename = basefilename + str(small_ball_tool_num) + ".dxf"
+                self.dxfsmbl = open(self.dxfsmblfilename, "w")
+                self.dxfpreamble(small_ball_tool_num)
+            if (large_V_tool_num > 0):
+                print("Opening large V")
+                self.dxflgVfilename = basefilename + str(large_V_tool_num) + ".dxf"
+                self.dxflgV = open(self.dxflgVfilename, "w")
+                self.dxfpreamble(large_V_tool_num)
+            if (small_V_tool_num > 0):
+                print("Opening small V")
+                self.dxfsmVfilename = basefilename + str(small_V_tool_num) + ".dxf"
+                self.dxfsmV = open(self.dxfsmVfilename, "w")
+                self.dxfpreamble(small_V_tool_num)
+            if (DT_tool_num > 0):
+                print("Opening DT")
+                self.dxfDTfilename = basefilename + str(DT_tool_num) + ".dxf"
+                self.dxfDT = open(self.dxfDTfilename, "w")
+                self.dxfpreamble(DT_tool_num)
+            if (KH_tool_num > 0):
+                print("Opening KH")
+                self.dxfKHfilename = basefilename + str(KH_tool_num) + ".dxf"
+                self.dxfKH = open(self.dxfKHfilename, "w")
+                self.dxfpreamble(KH_tool_num)
+            if (Roundover_tool_num > 0):
+                print("Opening Rt")
+                self.dxfRtfilename = basefilename + str(Roundover_tool_num) + ".dxf"
+                self.dxfRt = open(self.dxfRtfilename, "w")
+                self.dxfpreamble(Roundover_tool_num)
+            if (MISC_tool_num > 0):
+                print("Opening Mt")
+                self.dxfMtfilename = basefilename + str(MISC_tool_num) + ".dxf"
+                self.dxfMt = open(self.dxfMtfilename, "w")
+                self.dxfpreamble(MISC_tool_num)
+
+\end{writecode}
+\addtocounter{gcpy}{88}
+
+Note that the commands which interact with files include checks to see if said files are being generated.
+   
+The original implementation in {RapSCAD} used a command \DescribeSubroutine{gcodepreview}{writeln} --- fortunately, this command is easily re-created in Python. Note that the dxf commands will be wrapped up with \verb|if/elif| blocks which will write to additional file(s) based on tool number as set up above.
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def writegc(self, *arguments):
+        line_to_write = ""
+        for element in arguments:
+            line_to_write += element
+        self.gc.write(line_to_write)
+        self.gc.write("\n")
+
+    def writedxf(self, toolnumber, *arguments):
+        line_to_write = ""
+        for element in arguments:
+            line_to_write += element
+        if self.generatedxf == True:
+            self.dxf.write(line_to_write)
+            self.dxf.write("\n")
+        if self.generatedxfs == True:
+            self.writedxfs(toolnumber, arguments)
+
+    def writedxfs(self, toolnumber, *arguments):
+        print("Processing writing toolnumber", toolnumber)
+        line_to_write = ""
+        for element in arguments:
+            line_to_write += element
+        if (toolnumber == 0):
+            return
+        elif self.generatedxfs == True:
+            if (self.large_square_tool_num > 0):
+                self.dxflgsq.write(line_to_write)
+                self.dxflgsq.write("\n")
+            if (self.small_square_tool_num > 0):
+                self.dxfsmsq.write(line_to_write)
+                self.dxfsmsq.write("\n")
+            if (self.large_ball_tool_num > 0):
+                self.dxflgbl.write(line_to_write)
+                self.dxflgbl.write("\n")
+            if (self.small_ball_tool_num > 0):
+                self.dxfsmbl.write(line_to_write)
+                self.dxfsmbl.write("\n")
+            if (self.large_V_tool_num > 0):
+                self.dxflgV.write(line_to_write)
+                self.dxflgV.write("\n")
+            if (self.small_V_tool_num > 0):
+                self.dxfsmV.write(line_to_write)
+                self.dxfsmV.write("\n")
+            if (self.DT_tool_num > 0):
+                self.dxfDT.write(line_to_write)
+                self.dxfDT.write("\n")
+            if (self.KH_tool_num > 0):
+                self.dxfKH.write(line_to_write)
+                self.dxfKH.write("\n")
+            if (self.Roundover_tool_num > 0):
+                self.dxfRt.write(line_to_write)
+                self.dxfRt.write("\n")
+            if (self.MISC_tool_num > 0):
+                self.dxfMt.write(line_to_write)
+                self.dxfMt.write("\n")
+
+\end{writecode}
+\addtocounter{gcpy}{56}
+
+\noindent which commands will accept a series of arguments and then write them out to a file object for the appropriate file.
+
+\subsection{Module Naming Convention}
+
+Note that as a convention, where it is necessary for a module to coordinate between Python~and OpenSCAD, in certain cases it will be necessary for there to be three separate  versions: a Python definition for the manipulation of Python variables and any file routines, originally these were identified as \texttt{p}<foo>, but with the use of an object-oriented programming style and dot notation, since v0.7 they will be identified as \verb|gcp.foo| (where \verb|gcp| is the identifier used to import the class); while an \texttt{o}<foo> OpenSCAD module which will wrap up the Python function call, and lastly a <foo> OpenSCAD module which will be \texttt{<include>}d so as to be able to make use of OpenSCAD variables.
+
+Number will be abbreviated as \verb|num| rather than \verb|no|.
+
+In natural languages such as English, there is an order to various parts of speech such as adjectives 
+%(determiner, opinion/observation, size, age, shape, color, origin/nationality, material, purpose/qualifier) 
+--- since various prefixes and suffixes will be used for module names, having a consistent ordering/usage will help in consistency and make expression clearer. The ordering should be: sequence, action, function, parameter, filetype, and where possible a hierarchy of large/general to small/specific should be maintained.
 
 \begin{outline}
 \1 Both prefix and suffix
 \2 \texttt{dxf} (action (write out dxf file), filetype)
 \1 Prefixes
-\2 \texttt{begin} (sequence)
-\2 \texttt{continue} (sequence)
-\2 \texttt{end} (sequence)
-\2 \texttt{cut} (action)
+\2 \texttt{generate} (action)
+%\2 \texttt{begin} (sequence)
+%\2 \texttt{continue} (sequence)
+%\2 \texttt{end} (sequence)
+\2 \texttt{cut} (action --- create 3D object)
 \2 \texttt{move} (action)
-\2 \texttt{rapid} (action)
+\2 \texttt{rapid} (action --- create 3D object so as to show a collision)
 \2 \texttt{open} (action)
 \2 \texttt{close} (action)
 \2 \texttt{set} (action/function)
+\1 Nouns
+\2 \texttt{arc}
+\2 \texttt{line}
 \1 Suffixes
 \2 \texttt{feed} (parameter)
-\2 \texttt{gcode} (filetype)
-\2 \texttt{polyline) (file (element))}
+\2 \texttt{gcode/gc} (filetype)
+%\2 \texttt{polyline) (file (element))}
 \end{outline}
+
+\noindent In particular, this means that the basic \verb|cut...| command exists (or potentially exists) in the following forms and has matching versions which :
+
+\addvspace{\baselineskip}
+
+\noindent\begin{tabular}{lcccccc}\toprule
+& \multicolumn{3}{c}{line} & \multicolumn{3}{c}{arc}
+\\\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+      & cut                  & dxf     & gcode        & cut                 & dxf       & gcode       \\\midrule
+cut   & cutline\hphantom{dxf}&         &              & cutarc\hphantom{dxf}&           &             \\
+dxf   & cutlinedxf           & dxfline &              & cutarcdxf           & dxfarc    &             \\
+gcode &                      &         & cutlinedxfgc &                     &           & cutarcdxfgc \\
+OpenSCAD &                      &         & linedxfgc\hphantom{cut} &                     &           & arcdxfgc\hphantom{cut} \\\bottomrule
+\end{tabular}
+
+\addvspace{\baselineskip}
+
+\noindent while OpenPythonSCAD requires that the current toolpath be returned, stored in a variable, which can then be subtracted from the stock, using OpenSCAD will instead have the toolpaths output in a structure which is differenced from the stock.
+
+\addvspace{\baselineskip}
+
+%\subsubsection{Running list of commands}
+%
+%\begin{verbatim}
+%gcp.opengcodefile(Base_filename)
+%gcp.opendxffile(Base_filename)
+%#gcp.opendxffiles(Base_filename,...)
+%
+%gcp.setupstock(stockXwidth,stockYheight,stockZthickness,"Top","Center",retractheight)
+%
+%gcp.movetosafeZ()
+%
+%gcp.toolchange(102,10000)
+%
+%gcp.rapidZ(0)
+%#gcp.rapidXY(6,12)
+%
+%toolpaths = gcp.currenttool()
+%
+%toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/2, stockYheight/2, -stockZthickness))
+%
+%toolpaths = toolpaths.union(gcp.cutarcNECCdxf(stockXwidth/4+stockYheight/8, stockYheight/8+stockYheight/16, -stockZthickness, stockXwidth/4+stockYheight/8, stockYheight/8, stockYheight/16))
+%toolpaths = toolpaths.union(gcp.cutarcNWCCdxf(stockXwidth/4+stockYheight/8-stockYheight/16, stockYheight/8, -stockZthickness, stockXwidth/4+stockYheight/8, stockYheight/8, stockYheight/16))
+%toolpaths = toolpaths.union(gcp.cutarcSWCCdxf(stockXwidth/4-stockYheight/8, stockYheight/8+stockYheight/16, -stockZthickness, stockXwidth/4+stockYheight/8, stockYheight/8, stockYheight/16))
+%
+%\end{verbatim}
 
 %\subsubsection{Interfaces}
 
-For the sake of convenience, all user-facing modules will be listed here with their interface
-requirements/variables. Where appropriate, modules which interact will be listed together.
-
-%\lstset{firstnumber=1}
-%\begin{writecode}{w}{interfaces.txt}{txt}
-\begin{verbatim}
-begincutdxf(rh, ex, ey, ez, fr); and continuecutdxf(ex, ey, ez, fr);
-
-beginpolyline(bx,by,bz); and addpolyline(bx,by,bz); and closepolyline();
-
-begintoolpath(bx,by,bz); and endtoolpath();
-
-current_tool(); [function]
-
-cut(ex, ey, ez);
-cutoneaxis_setfeed(axis,depth,feed);
-cutwithfeed(ex, ey, ez, feed);
-
-cutarcNECCdxf(ex, ey, ez, xcenter, ycenter, radius);
-cutarcNWCCdxf(ex, ey, ez, xcenter, ycenter, radius);
-cutarcSWCCdxf(ex, ey, ez, xcenter, ycenter, radius);
-cutarcSECCdxf(ex, ey, ez, xcenter, ycenter, radius);
-cutarcNECWdxf(ex, ey, ez, xcenter, ycenter, radius);
-cutarcSECWdxf(ex, ey, ez, xcenter, ycenter, radius);
-cutarcSWCWdxf(ex, ey, ez, xcenter, ycenter, radius);
-
-cutkeyhole_toolpath(kh_start_depth, kh_max_depth, kht_direction, kh_distance);
-
-cutoutrectangledxf(bx, by, bz, rwidth, rheight, rdepth);
-cutrectangledxf(bx, by, bz, rwidth, rheight, rdepth);
-cutrectangleoutlinedxf(bx, by, bz, rwidth, rheight, rdepth);
-
-cutroundover(bx, by, bz, ex, ey, ez);
-
-dxfarc(xcenter, ycenter, radius, anglebegin, endangle);
-dxfpolyline(xbegin,ybegin,xend,yend);
-
-movetosafeheight();
-movetosafez();
-
-opendxffile(fn); and closedxffile();
-opengcodefile(fn); and closegcodefile();
-
-rapidbx(bx, by, bz, ex, ey, ez);
-rapid(ex, ey, ez);
-
-rectangleoutlinedxf(bx, by, bz, rwidth, rheight);
-
-setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
-
-setxpos(newxpos);
-setypos(newypos);
-setzpos(newzpos);
-
-settzpos(newtzpos);
-
-toolchange(tool_number,speed);
-tool_diameter(td_tool, td_depth); [function]
-tool_radius(td_tool, td_depth); [function]
-
-writecomment(comment);
-\end{verbatim}
-%\end{writecode}
+%For the sake of convenience, all user-facing modules will be listed here with their interface requirements/variables. Where appropriate, modules which interact will be listed together.
+%
+%%\lstset{firstnumber=1}
+%%\begin{writecode}{w}{interfaces.txt}{txt}
+%\begin{verbatim}
+%begincutdxf(rh, ex, ey, ez, fr); and continuecutdxf(ex, ey, ez, fr);
+%
+%beginpolyline(bx,by,bz); and addpolyline(bx,by,bz); and closepolyline();
+%
+%begintoolpath(bx,by,bz); and endtoolpath();
+%
+%current_tool(); [function]
+%
+%cut(ex, ey, ez);
+%cutoneaxis_setfeed(axis,depth,feed);
+%cutwithfeed(ex, ey, ez, feed);
+%
+%cutarcNECCdxf(ex, ey, ez, xcenter, ycenter, radius);
+%cutarcNWCCdxf(ex, ey, ez, xcenter, ycenter, radius);
+%cutarcSWCCdxf(ex, ey, ez, xcenter, ycenter, radius);
+%cutarcSECCdxf(ex, ey, ez, xcenter, ycenter, radius);
+%cutarcNECWdxf(ex, ey, ez, xcenter, ycenter, radius);
+%cutarcSECWdxf(ex, ey, ez, xcenter, ycenter, radius);
+%cutarcSWCWdxf(ex, ey, ez, xcenter, ycenter, radius);
+%
+%cutkeyhole_toolpath(kh_start_depth, kh_max_depth, kht_direction, kh_distance);
+%
+%cutoutrectangledxf(bx, by, bz, rwidth, rheight, rdepth);
+%cutrectangledxf(bx, by, bz, rwidth, rheight, rdepth);
+%cutrectangleoutlinedxf(bx, by, bz, rwidth, rheight, rdepth);
+%
+%cutroundover(bx, by, bz, ex, ey, ez);
+%
+%dxfarc(xcenter, ycenter, radius, anglebegin, endangle);
+%dxfpolyline(xbegin,ybegin,xend,yend);
+%
+%movetosafeheight();
+%movetosafez();
+%
+%opendxffile(fn); and closedxffile();
+%opengcodefile(fn); and closegcodefile();
+%
+%rapidbx(bx, by, bz, ex, ey, ez);
+%rapid(ex, ey, ez);
+%
+%rectangleoutlinedxf(bx, by, bz, rwidth, rheight);
+%
+%setupstock(stockXwidth, stockYheight, stockZthickness, zeroheight, stockzero);
+%
+%setxpos(newxpos);
+%setypos(newypos);
+%setzpos(newzpos);
+%
+%settzpos(newtzpos);
+%
+%toolchange(tool_number,speed);
+%tool_diameter(td_tool, td_depth); [function]
+%tool_radius(td_tool, td_depth); [function]
+%
+%writecomment(comment);
+%\end{verbatim}
+%%\end{writecode}
 
 Principles for naming modules (and variables):
 
 \begin{itemize}
 \item minimize use of underscores (for convenience sake, underscores are not used for index entries)
 \item identify which aspect of the project structure is being worked with (\texttt{cut}(ting), 
-      \texttt{dxf}, \texttt{gcode}, \texttt{tool} management, etc.) and esp. note the use of
-      \texttt{o}(penscad) and \texttt{p}(ython) as prefixes
+      \texttt{dxf}, \texttt{gcode}, \texttt{tool}, etc.) and esp. note the use of
+      \texttt{o}(penscad) and \texttt{p}(ython) as prefixes, though the latter is 
+      not necessary for definitions within the \verb|gcodepreview| class which will 
+      normally be imported as \verb|gcp| so that module \verb|<foo>| will be called as
+      \verb|gcp.<foo>|
 \end{itemize}
 
 Structurally, this will typically look like:
@@ -809,7 +1259,6 @@ module FOOBAR(...) {
 \end{writecode}
 \addtocounter{gcpscad}{4}
  
-
 which calls the internal OpenSCAD Module \DescribeSubroutine{FOOBAR}{oFOOBAR}
 
 \begin{writecode}{a}{pygcodepreview.scad}{scad}
@@ -831,186 +1280,211 @@ def pFOOBAR (...)
 \addtocounter{gcpy}{3}
 \end{verbatim}
 
-Further note that this definition will not be necessary for some later modules since they are
-in turn calling internal modules which already use this structure.
+Further note that this definition will not be necessary for some later modules since they are in turn calling internal modules which already use this structure.
+
+Another consideration is that all commands which write files will check to see if a given filetype is enabled or no.
+
+
 
 \subsubsection{Initial Modules}
 
-The first such routine, (actually a subroutine, see \DescribeRoutine{setupstock}) 
-\DescribeSubroutine{setupstock}{psetupstock} will be appropriately enough, 
-to set up the stock, and perform other initializations --- in Python all that needs 
-to be done is to set the value of the persistent (Python) variables:
+The first such routine, (actually a subroutine, see \DescribeRoutine{setupstock}) \DescribeSubroutine{setupstock}{gcodepreview} will be appropriately enough, to set up the stock, and perform other initializations --- initially, the only thing done in Python was to set the value of the persistent (Python) variables, but the rewritten standalone Python version does everything.
+
+The Python code, \DescribeRoutine{gcp.setupstock} requires that the user set parameters for stock dimensions and so forth, and will create comments in the G-code which incorporate the stock dimensions and its position relative to the zero as set relative to the stock.
+ 
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def setupstock(self, stockXwidth,
+                 stockYheight,
+                 stockZthickness,
+                 zeroheight,
+                 stockzero,
+                 retractheight):
+        global mpx
+        mpx = float(0)
+        global mpy
+        mpy = float(0)
+        global mpz
+        mpz = float(0)
+        global tpz
+        tpz = float(0)
+        global currenttoolnum
+        currenttoolnum = 102
+        global currenttoolshape
+        currenttoolshape = cylinder(1.5875,12.7)
+        global stock
+        self.stock = cube([stockXwidth, stockYheight, stockZthickness])
+        if self.generategcode == True:
+            self.writegc("(Design File: " + self.basefilename + ")")
+\end{writecode}
+\addtocounter{gcpy}{22}
+
+Note that since Python in OpenPythonSCAD defers output of the 3D model, it is possible to define it once, then set up all the specifics for each possible positioning of the stock in terms of origin:
+
+The internal variable \verb|stockzero| is used in an \verb|<if then else>| structure to position the 3D model of the stock. 
 
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
-def psetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin):
-    global mpx
-    mpx = float(0)
-    global mpy
-    mpy = float(0)
-    global mpz
-    mpz = float(0)
-    global tpz
-    tpz = float(0)
-    global currenttool
-    currenttool = 102
+        if self.zeroheight == "Top":
+            if self.stockzero == "Lower-Left":
+                self.stock = stock.translate([0,0,-self.stockZthickness])
+                if self.generategcode == True:
+                    self.writegc("(stockMin:0.00mm, 0.00mm, -",str(self.stockZthickness),"mm)")
+                    self.writegc("(stockMax:",str(self.stockXwidth),"mm, ",str(stockYheight),"mm, 0.00mm)")
+                    self.writegc("(STOCK/BLOCK, ",str(self.stockXwidth),", ",str(self.stockYheight),", ",str(self.stockZthickness),", 0.00, 0.00, ",str(self.stockZthickness),")")
+            if self.stockzero == "Center-Left":
+                self.stock = self.stock.translate([0,-stockYheight / 2,-stockZthickness])
+                if self.generategcode == True:
+                    self.writegc("(stockMin:0.00mm, -",str(self.stockYheight/2),"mm, -",str(self.stockZthickness),"mm)")
+                    self.writegc("(stockMax:",str(self.stockXwidth),"mm, ",str(self.stockYheight/2),"mm, 0.00mm)")
+                    self.writegc("(STOCK/BLOCK, ",str(self.stockXwidth),", ",str(self.stockYheight),", ",str(self.stockZthickness),", 0.00, ",str(self.stockYheight/2),", ",str(self.stockZthickness),")");
+            if self.stockzero == "Top-Left":
+                self.stock = self.stock.translate([0,-self.stockYheight,-self.stockZthickness])
+                if self.generategcode == True:
+                    self.writegc("(stockMin:0.00mm, -",str(self.stockYheight),"mm, -",str(self.stockZthickness),"mm)")
+                    self.writegc("(stockMax:",str(self.stockXwidth),"mm, 0.00mm, 0.00mm)")
+                    self.writegc("(STOCK/BLOCK, ",str(self.stockXwidth),", ",str(self.stockYheight),", ",str(self.stockZthickness),", 0.00, ",str(self.stockYheight),", ",str(self.stockZthickness),")")
+            if self.stockzero == "Center":
+                self.stock = self.stock.translate([-self.stockXwidth / 2,-self.stockYheight / 2,-self.stockZthickness])
+                if self.generategcode == True:
+                    self.writegc("(stockMin: -",str(self.stockXwidth/2),", -",str(self.stockYheight/2),"mm, -",str(self.stockZthickness),"mm)")
+                    self.writegc("(stockMax:",str(self.stockXwidth/2),"mm, ",str(self.stockYheight/2),"mm, 0.00mm)")
+                    self.writegc("(STOCK/BLOCK, ",str(self.stockXwidth),", ",str(self.stockYheight),", ",str(self.stockZthickness),", ",str(self.stockXwidth/2),", ", str(self.stockYheight/2),", ",str(self.stockZthickness),")")
+        if self.zeroheight == "Bottom":
+            if self.stockzero == "Lower-Left":
+                 self.stock = self.stock.translate([0,0,0])
+                 if self.generategcode == True:
+                     self.writegc("(stockMin:0.00mm, 0.00mm, 0.00mm)")
+                     self.writegc("(stockMax:",str(self.stockXwidth),"mm, ",str(self.stockYheight),"mm,  ",str(self.stockZthickness),"mm)")
+                     self.writegc("(STOCK/BLOCK, ",str(self.stockXwidth),", ",str(self.stockYheight),", ",str(self.stockZthickness),", 0.00, 0.00, 0.00)")
+            if self.stockzero == "Center-Left":
+                self.stock = self.stock.translate([0,-self.stockYheight / 2,0])
+                if self.generategcode == True:
+                    self.writegc("(stockMin:0.00mm, -",str(self.stockYheight/2),"mm, 0.00mm)")
+                    self.writegc("(stockMax:",str(self.stockXwidth),"mm, ",str(self.stockYheight/2),"mm, -",str(self.stockZthickness),"mm)")
+                    self.writegc("(STOCK/BLOCK, ",str(self.stockXwidth),", ",str(self.stockYheight),", ",str(self.stockZthickness),", 0.00, ",str(self.stockYheight/2),", 0.00mm)");
+            if self.stockzero == "Top-Left":
+                self.stock = self.stock.translate([0,-self.stockYheight,0])
+                if self.generategcode == True:
+                    self.writegc("(stockMin:0.00mm, -",str(self.stockYheight),"mm, 0.00mm)")
+                    self.writegc("(stockMax:",str(self.stockXwidth),"mm, 0.00mm, ",str(self.stockZthickness),"mm)")
+                    self.writegc("(STOCK/BLOCK, ",str(self.stockXwidth),", ",str(self.stockYheight),", ",str(self.stockZthickness),", 0.00, ",str(self.stockYheight),", 0.00)")
+            if self.stockzero == "Center":
+                self.stock = self.stock.translate([-self.stockXwidth / 2,-self.stockYheight / 2,0])
+                if self.generategcode == True:
+                    self.writegc("(stockMin: -",str(self.stockXwidth/2),", -",str(self.stockYheight/2),"mm, 0.00mm)")
+                    self.writegc("(stockMax:",str(self.stockXwidth/2),"mm, ",str(self.stockYheight/2),"mm, ",str(self.stockZthickness),"mm)")
+                    self.writegc("(STOCK/BLOCK, ",str(self.stockXwidth),", ",str(self.stockYheight),", ",str(self.stockZthickness),", ",str(self.stockXwidth/2),", ", str(self.stockYheight/2),", 0.00)")
+        if self.generategcode == True:
+            self.writegc("G90");
+            self.writegc("G21");
 
 \end{writecode}
-\addtocounter{gcpy}{12}
+\addtocounter{gcpy}{54}
 
 Note that while the \#102 is declared as a default tool, while it was originally necessary 
 to call a tool change after invoking \verb|setupstock| in the 2024.09.03 version of
-PythonSCAD this requirement went away when a but which interfered with persistently setting 
+PythonSCAD this requirement went away when an update which interfered with persistently setting 
 a variable directly was fixed.
 
 The intermediary OpenSCAD code, \DescribeSubroutine{setupstock}{osetupstock} simply 
-calls the Python version. Note that while the parameters are passed all the way down 
-(for consistency) they are not used.
+calls the Python version. Note that the parameters are passed all the way down, which was
+initially for consistency (they were not used) in 0.8 and later, everything happens
+in the Python file, and the OpenSCAD code is simply a series of descriptors which 
+simply call the Python file.
 
 \lstset{firstnumber=\thepyscad}
 \begin{writecode}{a}{pygcodepreview.scad}{scad}
- module osetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin) {
-     psetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
+ module osetupstock(stockXwidth, stockYheight, stockZthickness, zeroheight, stockzero) {
+     psetupstock(stockXwidth, stockYheight, stockZthickness, zeroheight, stockzero);
  }
  
 \end{writecode}
 \addtocounter{pyscad}{4}
 
-The OpenSCAD code, \DescribeRoutine{setupstock} requires that the user set parameters
-for stock dimensions and so forth, and will create comments in the G-code which incorporate 
-the stock dimensions and its position relative to the zero as set relative to the stock.
- 
-The internal variable \verb|stockorigin| is used in an \verb|<if then else>| structure to position
-the 3D model of the stock. 
-
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
-module setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin) {
-  osetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
-//initialize default tool and XYZ origin
-  osettool(102);
-  oset(0,0,0);
-  if (zeroheight == "Top") {
-    if (stockorigin == "Lower-Left") {
-    translate([0, 0, (-stockthickness)]){
-    cube([stocklength, stockwidth, stockthickness], center=false);
-      if (generategcode == true) {
-      owritethree("(stockMin:0.00mm, 0.00mm, -",str(stockthickness),"mm)");
-      owritefive("(stockMax:",str(stocklength),"mm, ",str(stockwidth),"mm, 0.00mm)");
-      owritenine("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", 0.00, 0.00, ",str(stockthickness),")");
-    }
-  }
-}
-     else if (stockorigin == "Center-Left") {
-    translate([0, (-stockwidth / 2), -stockthickness]){
-      cube([stocklength, stockwidth, stockthickness], center=false);
-    if (generategcode == true) {
-owritefive("(stockMin:0.00mm, -",str(stockwidth/2),"mm, -",str(stockthickness),"mm)");
-owritefive("(stockMax:",str(stocklength),"mm, ",str(stockwidth/2),"mm, 0.00mm)");
-    owriteeleven("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", 0.00, ",str(stockwidth/2),", ",str(stockthickness),")");
-    }
-  }
-    } else if (stockorigin == "Top-Left") {
-    translate([0, (-stockwidth), -stockthickness]){
-      cube([stocklength, stockwidth, stockthickness], center=false);
-if (generategcode == true) {
-owritefive("(stockMin:0.00mm, -",str(stockwidth),"mm, -",str(stockthickness),"mm)");
-owritethree("(stockMax:",str(stocklength),"mm, 0.00mm, 0.00mm)");
-owriteeleven("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", 0.00, ",str(stockwidth),", ",str(stockthickness),")");
-    }
-  }
-    }
-    else if (stockorigin == "Center") {
-//owritecomment("Center");
-    translate([(-stocklength / 2), (-stockwidth / 2), -stockthickness]){
-      cube([stocklength, stockwidth, stockthickness], center=false);
-if (generategcode == true) {
-owriteseven("(stockMin: -",str(stocklength/2),", -",str(stockwidth/2),"mm, -",str(stockthickness),"mm)");
-owritefive("(stockMax:",str(stocklength/2),"mm, ",str(stockwidth/2),"mm, 0.00mm)");
-owritethirteen("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", ",str(stocklength/2),", ", str(stockwidth/2),", ",str(stockthickness),")");
-      }
-    }
-  }
-} else if (zeroheight == "Bottom") {
-//owritecomment("Bottom");
-    if (stockorigin == "Lower-Left") {
-    cube([stocklength, stockwidth, stockthickness], center=false);
-if (generategcode == true) {
-owriteone("(stockMin:0.00mm, 0.00mm, 0.00mm)");
-owriteseven("(stockMax:",str(stocklength),"mm, ",str(stockwidth),"mm, ",str(stockthickness),"mm)");
-owriteseven("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),",0.00, 0.00, 0.00)");
-    }
-}    else if (stockorigin == "Center-Left") {
-    translate([0, (-stockwidth / 2), 0]){
-      cube([stocklength, stockwidth, stockthickness], center=false);
-if (generategcode == true) {
-owritethree("(stockMin:0.00mm, -",str(stockwidth/2),"mm, 0.00mm)");
-owriteseven("(stockMax:",str(stocklength),"mm, ",str(stockwidth/2),"mm, ",str(stockthickness),"mm)");
-owritenine("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),",0.00, ",str(stockwidth/2),", 0.00)");
-    }
-  } 
-    } else if (stockorigin == "Top-Left") {
-    translate([0, (-stockwidth), 0]){
-      cube([stocklength, stockwidth, stockthickness], center=false);
-    }
-if (generategcode == true) {
-owritethree("(stockMin:0.00mm, -",str(stockwidth),"mm, 0.00mm)");
-owritefive("(stockMax:",str(stocklength),"mm, 0.00mm, ",str(stockthickness),"mm)");
-owritenine("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", 0.00, ", str(stockwidth),", 0.00)");
-  }
-}    else if (stockorigin == "Center") {
-    translate([(-stocklength / 2), (-stockwidth / 2), 0]){
-      cube([stocklength, stockwidth, stockthickness], center=false);
-    }
-if (generategcode == true) {
-owritefive("(stockMin:-",str(stocklength/2),", -",str(stockwidth/2),"mm, 0.00mm)");
-owriteseven("(stockMax:",str(stocklength/2),"mm, ",str(stockwidth/2),"mm, ",str(stockthickness),"mm)");
-owriteeleven("(STOCK/BLOCK, ",str(stocklength),", ",str(stockwidth),", ",str(stockthickness),", ",str(stocklength/2),", ", str(stockwidth/2),", 0.00)");
-    }
-  }
-}
-if (generategcode == true) {
-    owriteone("G90");
-    owriteone("G21");
-//    owriteone("(Move to safe Z to avoid workholding)");
-//    owriteone("G53G0Z-5.000");
-  }
-//owritecomment("ENDSETUP");
+module setupstock(stockXwidth, stockYheight, stockZthickness, zeroheight, stockzero) {
+  osetupstock(stockXwidth, stockYheight, stockZthickness, zeroheight, stockzero);
 }
 
 \end{writecode}
 \addtocounter{gcpscad}{93}
 
-An example usage would be:
+An example usage in OpenSCAD would be:
 
 \begin{verbatim}
 difference() {
-setupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
+setupstock(stockXwidth, stockYheight, stockZthickness, zeroheight, stockzero);
 ... // Cutting commands go here
 }
 \end{verbatim}
 
-It will be necessary to have Python functions (\DescribeRoutine{xpos}, \DescribeRoutine{ypos}, 
-and \DescribeRoutine{zpos}) which return the current values of the machine position in 
-Cartesian coordinates: 
+For Python, the initial 3D model is stored in the variable \verb|stock|:
+
+\begin{verbatim}
+setupstock(stockXwidth, stockYheight, stockZthickness, zeroheight, stockzero)
+
+cy = cube([1,2,stockZthickness*2])
+
+diff = stock.difference(cy)
+#output(diff)
+diff.show()
+\end{verbatim}
+
+\subsubsection{Position and Variables}
+ 
+In modeling the machine motion and G-code it will be necessary to have the machine track several variables for machine position, current tool, and depth in toolpath. This will be done using paired functions (which will set and return the  matching variable) and a matching (global) variable, as well as additional functions for setting the matching variable(s).
+
+\begin{samepage}
+The first such variables are for XYZ position:
+
+\begin{itemize}
+ \item \DescribeVariable{mpx}
+ \item \DescribeVariable{mpy}
+ \item \DescribeVariable{mpz}
+\end{itemize}
+\end{samepage}
+
+\begin{samepage}
+\noindent Similarly, for some toolpaths it will be necessary to track the depth along the Z-axis as the toolpath is cut out:
+ 
+\begin{itemize}
+ \item \DescribeVariable{tpz}
+\end{itemize}
+\end{samepage}
+
+\begin{samepage}
+\noindent It will further be necessary to have a variable for the current tool:
+
+\begin{itemize}
+ \item \DescribeVariable{currenttoolnum}
+\end{itemize}
+\end{samepage}
+
+Note that the \verb|currenttoolnum| variable should always be used for any specification of a tool, being read in whenever a tool is to be made use of, or a parameter or aspect of the tool needs to be used in a calculation. %(Which implies that the tool parameters in modules other than \verb|toolchange(tool_number, speed);| should be removed.)
+
+For each intended command it will be necessary to implement an appropriate aspect in each file. The Python file will manage the Python variables and handle things which can only be done in Python, while there will be two OpenSCAD files as noted above, one which calls the Python code (this will be \texttt{use}d), while the other will be able to access and use OpenSCAD variables, as well as implement Customizer options (this will be \texttt{include}d).
+
+It will be necessary to have Python functions (\DescribeRoutine{xpos}, \DescribeRoutine{ypos}, and \DescribeRoutine{zpos}) which return the current values of the machine position in Cartesian coordinates: 
 
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
-def xpos():
-    global mpx
-    return mpx
+    def xpos(self):
+        global mpx
+        return mpx
 
-def ypos():
-    global mpy
-    return mpy
+    def ypos(self):
+        global mpy
+        return mpy
 
-def zpos():
-    global mpz
-    return mpz
+    def zpos(self):
+        global mpz
+        return mpz
 
-def tzpos():
-    global tpz
-    return tpz
+    def tzpos(self):
+        global tpz
+        return tpz
 
 \end{writecode}
 \addtocounter{gcpy}{16}
@@ -1023,97 +1497,90 @@ def tzpos():
 
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
-def psetxpos(newxpos):
-    global mpx
-    mpx = newxpos
+    def setxpos(self, newxpos):
+        global mpx
+        mpx = newxpos
 
-def psetypos(newypos):
-    global mpy
-    mpy = newypos
+    def setypos(self, newypos):
+        global mpy
+        mpy = newypos
 
-def psetzpos(newzpos):
-    global mpz
-    mpz = newzpos
- 
-def psettzpos(newtzpos):
-    global tpz
-    tpz = newtzpos
+    def setzpos(self, newzpos):
+        global mpz
+        mpz = newzpos
+     
+    def settzpos(self, newtzpos):
+        global tpz
+        tpz = newtzpos
 
 \end{writecode}
 \addtocounter{gcpy}{16}
  
-\noindent and as noted above, there will need to be matching OpenSCAD versions which will 
-set: \DescribeRoutine{setxpos}, \DescribeRoutine{setypos}, \DescribeRoutine{setzpos}, and
-\DescribeRoutine{settzpos}; as well as return the value: \DescribeRoutine{getxpos}, \DescribeRoutine{getypos}, \DescribeRoutine{getzpos}, and \DescribeRoutine{gettzpos} 
-Note that for routines where the variable is directly passed from OpenSCAD to Python
-it is possible to have OpenSCAD directly call the matching Python module with no need
-to use an intermediary OpenSCAD module.
+\noindent and as noted above, there will need to be matching OpenSCAD versions which will set: \DescribeRoutine{setxpos}, \DescribeRoutine{setypos}, \DescribeRoutine{setzpos}, and \DescribeRoutine{settzpos}; as well as return the value: \DescribeRoutine{getxpos}, \DescribeRoutine{getypos}, \DescribeRoutine{getzpos}, and \DescribeRoutine{gettzpos} Note that for routines where the variable is directly passed from OpenSCAD to Python it is possible to have OpenSCAD directly call the matching Python module with no needto use an intermediary OpenSCAD module.
  
 \lstset{firstnumber=\thepyscad}
 \begin{writecode}{a}{pygcodepreview.scad}{scad}
-function getxpos() = xpos();
-function getypos() = ypos();
-function getzpos() = zpos();
-function gettzpos() = tzpos();
-
-module setxpos(newxpos) {
-    psetxpos(newxpos);
-}
-
-module setypos(newypos) {
-    psetypos(newypos);
-}
-
-module setzpos(newzpos) {
-    psetzpos(newzpos);
-}
-
-module settzpos(newtzpos) {
-    psettzpos(newtzpos);
-}
-
+//function getxpos() = xpos();
+//function getypos() = ypos();
+//function getzpos() = zpos();
+//function gettzpos() = tzpos();
+//
+//module setxpos(newxpos) {
+//    psetxpos(newxpos);
+//}
+//
+//module setypos(newypos) {
+//    psetypos(newypos);
+//}
+//
+//module setzpos(newzpos) {
+//    psetzpos(newzpos);
+//}
+//
+//module settzpos(newtzpos) {
+//    psettzpos(newtzpos);
+//}
+//
 \end{writecode}
 \addtocounter{pyscad}{21}
  
-\noindent\DescribeSubroutine{set...}{oset} while for setting all three of the variables, there is
-an internal OpenSCAD module:
+\noindent\DescribeSubroutine{set...}{oset} while for setting all three of the variables, there is an internal OpenSCAD module:
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
-module oset(ex, ey, ez) {
-    setxpos(ex);
-    setypos(ey);
-    setzpos(ez);
-}
-
+//module oset(ex, ey, ez) {
+//    setxpos(ex);
+//    setypos(ey);
+//    setzpos(ez);
+//}
+//
 \end{writecode}
 \addtocounter{gcpscad}{6}
  
-\noindent and some toolpaths will require the storing and usage of an intermediate value via
-\DescribeSubroutine{set...}{osettz} for the Z-axis position during calculation:
+\noindent and some toolpaths will require the storing and usage of an intermediate value via \DescribeSubroutine{set...}{osettz} for the Z-axis position during calculation:
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
-module osettz(tz) {
-    settzpos(tz);
-}
-
+//module osettz(tz) {
+//    settzpos(tz);
+//}
+//
 \end{writecode}
 \addtocounter{gcpscad}{4}
 
 \subsection{Tools and Changes}
  
-Similarly Python functions and variables will be used in: \DescribeSubroutine{current tool}{pcurrenttool} and \DescribeRoutine{psettool} to track and set and return the current tool
+Similarly Python functions and variables will be used in: \DescribeRoutine{currenttoolnumber} (note that it is important to use a different name than the variable \verb|currenttoolnum| and \DescribeRoutine{settool} (it may be that the latter will be removed) to track and set and return the current tool:
  
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
-def psettool(tn):
-    global currenttool
-    currenttool = tn
+    def settool(self,tn):
+        global currenttoolnum
+        currenttoolnum = tn
 
-def pcurrent_tool():
-    global currenttool
-    return currenttool
+    def currenttoolnumber(self):
+        global currenttoolnum
+        return currenttoolnum
 
 \end{writecode}
 \addtocounter{gcpy}{8}
@@ -1134,27 +1601,13 @@ function current_tool() = pcurrent_tool();
 \end{writecode}
 \addtocounter{pyscad}{6}
 
-\subsubsection{toolchange}
-\noindent and apply the appropriate commands for a \label{subsubsec:toolchange}
-\DescribeRoutine{toolchange}. Note that it is expected that this code will be updated as needed 
-when new tooling is introduced as additional modules which require specific tooling are added below. 
+\subsubsection{3D Shapes for Tools}
 
-Note that the comments written out in G-code correspond to that used by the G-code previewing tool 
-CutViewer (which is unfortunately, no longer readily available).
+Each tool must be modeled in 3D using an OpenSCAD module. 
 
-A further concern is that early versions often passed the tool into a module using a parameter.
-That ceased to be necessary in the 2024.09.03 version of PythonSCAD, and all modules should 
-read the tool \# from \verb|currenttool()|. 
-
-It is possible that rather than hard-coding the tool definitions, a future update will instead
-read them in from an external file --- the \texttt{.csv} format used for tool libraries in 
-Carbide Create seems a likely candidate and worth exploring.
-
-Note that there are many varieties of tooling and not all will be implemented, especially in the 
-early versions of this project
- 
 \begin{samepage}
-\paragraph{Normal Tooling}
+\paragraph{Normal Tooling/toolshapes}
+%\paragraph{Normal toolshapes}
 
 \label{para:normaltooling} Most tooling has quite standard shapes 
 and are defined by their profile:
@@ -1178,40 +1631,47 @@ and are defined by their profile:
 \end{itemize}
 \end{samepage}
 
-\lstset{firstnumber=\thegcpscad}
-\begin{writecode}{a}{gcodepreview.scad}{scad}
-module toolchange(tool_number,speed) {
-   osettool(tool_number); 
-if (generategcode == true) {
-    writecomment("Toolpath");
-    owriteone("M05");
-//    writecomment("Move to safe Z to avoid workholding");
-//    owriteone("G53G0Z-5.000");
-//    writecomment("Begin toolpath");
-    if (tool_number == 201) {
-      writecomment("TOOL/MILL,6.35, 0.00, 0.00, 0.00");
-    } else if (tool_number == 202) {
-      writecomment("TOOL/MILL,6.35, 3.17, 0.00, 0.00");
-    } else if (tool_number == 102) {
-      writecomment("TOOL/MILL,3.17, 0.00, 0.00, 0.00");
-    } else if (tool_number == 101) {
-      writecomment("TOOL/MILL,3.17, 1.58, 0.00, 0.00");
-    } else if (tool_number == 301) {
-      writecomment("TOOL/MILL,0.03, 0.00, 6.35, 45.00");
-    } else if (tool_number == 302) {
-      writecommment("TOOL/MILL,0.03, 0.00, 10.998, 30.00");
-    } else if (tool_number == 390) {
-      writecomment("TOOL/MILL,0.03, 0.00, 1.5875, 45.00");
-\end{writecode}
-\addtocounter{gcpscad}{22}
+Most tools are easily implemented with concise 3D descriptions which may be connected with a simple \texttt{hull} operation:
 
+The \DescribeRoutine{endmill square} is a simple cylinder:
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def endmill_square(self, es_diameter, es_flute_length):
+        return cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=es_flute_length, center = False)
+
+\end{writecode}
+\addtocounter{gcpy}{3}
+
+The \DescribeRoutine{gcp endmill ball} is modeled as a hemisphere joined with a cylinder:
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def gcp_endmill_ball(self, es_diameter, es_flute_length):
+        b = sphere(r=(es_diameter / 2))
+        s = cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=es_flute_length, center=False)
+        p = union(b,s)
+        return p.translate([0, 0, (es_diameter / 2)])
+
+\end{writecode}
+\addtocounter{gcpy}{6}
+
+The \DescribeRoutine{gcp endmill v} is modeled as a cylinder with a zero width base and a second cylinder for the shaft (note that Python's \verb|math| defaults to radians, hence the need to convert from degrees):
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def gcp_endmill_v(self, es_v_angle, es_diameter):
+        es_v_angle = math.radians(es_v_angle)
+        v = cylinder(r1=0, r2=(es_diameter / 2), h=((es_diameter / 2) / math.tan((es_v_angle / 2))), center=False)
+        s = cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=((es_diameter * 8) ), center=False)
+        sh = s.translate([0, 0, ((es_diameter / 2) / math.tan((es_v_angle / 2)))])
+        return union(v,sh)
+
+\end{writecode}
+\addtocounter{gcpy}{7}
 
 \paragraph{Tooling for Keyhole Toolpaths}
 
-\label{para:undercuttooling} Keyhole toolpaths (see: subsection~\ref{subsec:keyholetoolpaths} 
-are intended for use with tooling which projects beyond the the narrower shaft and so
-will cut usefully underneath the visible surface. Also described as ``undercut'' tooling,
-but see below.
+\label{para:undercuttooling} Keyhole toolpaths (see: subsection~\ref{subsec:keyholetoolpaths} are intended for use with tooling which projects beyond the the narrower shaft and so will cut usefully underneath the visible surface. Also described as ``undercut'' tooling, but see below.
 
 \begin{samepage}
 There are several notable candidates for such tooling:
@@ -1234,228 +1694,58 @@ There are several notable candidates for such tooling:
 \end{itemize}
 \end{samepage}
 
-\lstset{firstnumber=\thegcpscad}
-\begin{writecode}{a}{gcodepreview.scad}{scad}
-   } else if (tool_number == 374) {
-     writecomment("TOOL/MILL,9.53, 0.00, 3.17, 0.00");
-   } else if (tool_number == 375) {
-     writecomment("TOOL/MILL,9.53, 0.00, 3.17, 0.00");
-   } else if (tool_number == 376) {
-     writecomment("TOOL/MILL,12.7, 0.00, 4.77, 0.00");
-   } else if (tool_number == 378) {
-     writecomment("TOOL/MILL,12.7, 0.00, 4.77, 0.00");
-\end{writecode}
-\addtocounter{gcpscad}{8}
- 
-\lstset{firstnumber=\thegcpscad}
-\begin{writecode}{a}{gcodepreview.scad}{scad}
-   } else if (tool_number == 814) {
-     writecomment("TOOL/MILL,12.7, 6.367, 12.7, 0.00");
-\end{writecode}
-\addtocounter{gcpscad}{2}
- 
 \paragraph{Thread mills}
 
 \label{para:threadmills} The implementation of arcs cutting along the Z-axis raises the 
 possibility of cutting threads using ``thread mills''. 
 See: \url{https://community.carbide3d.com/t/thread-milling-in-metal-on-the-shapeoko-3/5332}
 
-Note that it will be necessary to to define modules (see below) for each tool shape.
-
-With the tools delineated, the module is closed out and the tooling information written into
-the G-code.
- 
-\lstset{firstnumber=\thegcpscad}
-\begin{writecode}{a}{gcodepreview.scad}{scad}
-   }
-     select_tool(tool_number);
-     owritetwo("M6T",str(tool_number));
-     owritetwo("M03S",str(speed));
- }
-}
-
-\end{writecode}
-\addtocounter{gcpscad}{7}
-
-For example:
-
-\begin{verbatim}
-toolchange(small_square_tool_no,speed * square_ratio);
-\end{verbatim}
-
-\paragraph{Roundover tooling}
-
-\label{para:roundover} It is not possible to represent all tools using tool changes 
-as coded above which require using a \texttt{hull} operation between 3D representations
-of the tools at the beginning and end points. Tooling which cannot be so represented will be implemented separately below, see paragraph~\ref{para:concavetoolshapes}.
-
-\paragraph{Selecting Tools}
-
-There must also be a module for selecting tools: \DescribeRoutine{selecttool} which will
-select the matching module for 3D modeling based on the \DescribeVariable{currenttool} 
-(which is fed in to the module as \verb|tool_number|, and pass the appropriate parameters 
-to that module:
- 
-\lstset{firstnumber=\thegcpscad}
-\begin{writecode}{a}{gcodepreview.scad}{scad}
-module select_tool(tool_number) {
-//echo(tool_number);
-  if (tool_number == 201) {
-    gcp_endmill_square(6.35, 19.05);
-  } else if (tool_number == 202) {
-    gcp_endmill_ball(6.35, 19.05);
-  } else if (tool_number == 102) {
-    gcp_endmill_square(3.175, 19.05);
-  } else if (tool_number == 101) {
-    gcp_endmill_ball(3.175, 19.05);
-  } else if (tool_number == 301) {
-    gcp_endmill_v(90, 12.7);
-  } else if (tool_number == 302) {
-    gcp_endmill_v(60, 12.7);
-  } else if (tool_number == 390) {
-    gcp_endmill_v(90, 3.175);
-\end{writecode}
-\addtocounter{gcpscad}{16}
- 
-For a keyhole tool:
- 
-\lstset{firstnumber=\thegcpscad}
-\begin{writecode}{a}{gcodepreview.scad}{scad}
-  } else if (tool_number == 374) {
-    gcp_keyhole(9.525, 3.175);
-  } else if (tool_number == 375) {
-    gcp_keyhole(9.525, 3.175);
-  } else if (tool_number == 376) {
-    gcp_keyhole(12.7, 4.7625);
-  } else if (tool_number == 378) {
-    gcp_keyhole(12.7, 4.7625);
-\end{writecode}
-\addtocounter{gcpscad}{8}
- 
-\noindent and dovetail tool:
- 
-\lstset{firstnumber=\thegcpscad}
-\begin{writecode}{a}{gcodepreview.scad}{scad}
-  } else if (tool_number == 814) {
-    gcp_dovetail(12.7, 6.367, 12.7, 14);
-\end{writecode}
-\addtocounter{gcpscad}{2}
-
-Once all tools have been defined the \texttt{if} statement and module may be closed:
- 
-\lstset{firstnumber=\thegcpscad}
-\begin{writecode}{a}{gcodepreview.scad}{scad}
-  }
-}
-
-\end{writecode}
-\addtocounter{gcpscad}{3}
-
-\subsubsection{3D Shapes for Tools}
-
-Each tool must be modeled in 3D using an OpenSCAD module. 
-
-\paragraph{Normal toolshapes}
-Most tools are easily implemented with concise 3D descriptions which may be connected with
-a simple \texttt{hull} operation:
-
-The \DescribeRoutine{gcp endmill square} is a simple cylinder:
-\lstset{firstnumber=\thegcpscad}
-\begin{writecode}{a}{gcodepreview.scad}{scad}
-module gcp_endmill_square(es_diameter, es_flute_length) {
-  cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=es_flute_length, center=false);
-}
-
-\end{writecode}
-\addtocounter{gcpscad}{4}
-
 \begin{samepage}
+\paragraph{Keyhole}
+
 The \DescribeRoutine{gcp keyhole} is modeled by the cutting base:
 
-\lstset{firstnumber=\thegcpscad}
-\begin{writecode}{a}{gcodepreview.scad}{scad}
-module gcp_keyhole(es_diameter, es_flute_length) {
-  cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=es_flute_length, center=false);
-}
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def gcp_keyhole(self, es_diameter, es_flute_length):
+        return cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=es_flute_length, center=false)
 
 \end{writecode}
-\addtocounter{gcpscad}{4}
+\addtocounter{gcpy}{3}
 
 \noindent and a second call for an additional cylinder for the shaft will be necessary:
 
-\lstset{firstnumber=\thegcpscad}
-\begin{writecode}{a}{gcodepreview.scad}{scad}
-module gcp_keyhole_shaft(es_diameter, es_flute_length) {
-  cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=es_flute_length, center=false);
-}
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def gcp_keyhole_shaft(self, es_diameter, es_flute_length):
+        return cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=es_flute_length, center=false)
 
 \end{writecode}
-\addtocounter{gcpscad}{4}
+\addtocounter{gcpy}{3}
 \end{samepage}
 
-The \DescribeRoutine{gcp dovetail} is modeled as a cylinder with the differing bottom and 
-top diameters determining the angle (though \verb|dt_angle| is still required 
-as a parameter)
+The \DescribeRoutine{gcp dovetail} is modeled as a cylinder with the differing bottom and top diameters determining the angle (though \verb|dt_angle| is still required as a parameter)
 
-\lstset{firstnumber=\thegcpscad}
-\begin{writecode}{a}{gcodepreview.scad}{scad}
-module gcp_dovetail(dt_bottomdiameter, dt_topdiameter, dt_height, dt_angle) {
-  cylinder(r1=(dt_bottomdiameter / 2), r2=(dt_topdiameter / 2), h= dt_height, center=false);
-}
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def gcp_dovetail(self, dt_bottomdiameter, dt_topdiameter, dt_height, dt_angle):
+        return cylinder(r1=(dt_bottomdiameter / 2), r2=(dt_topdiameter / 2), h= dt_height, center=false)
 
 \end{writecode}
-\addtocounter{gcpscad}{4}
+\addtocounter{gcpy}{3}
 
-The \DescribeRoutine{gcp endmill ball} is modeled as a hemisphere joined with a cylinder:
-\lstset{firstnumber=\thegcpscad}
-\begin{writecode}{a}{gcodepreview.scad}{scad}
-module gcp_endmill_ball(es_diameter, es_flute_length) {
-  translate([0, 0, (es_diameter / 2)]){
-    union(){
-      sphere(r=(es_diameter / 2));
-      cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=es_flute_length, center=false);
-    }
-  }
-}
-
-\end{writecode}
-\addtocounter{gcpscad}{9}
-
-The \DescribeRoutine{gcp endmill v} is modeled as a cylinder with a zero width base and
-a second cylinder for the shaft:
-\lstset{firstnumber=\thegcpscad}
-\begin{writecode}{a}{gcodepreview.scad}{scad}
-module gcp_endmill_v(es_v_angle, es_diameter) {
-  union(){
-    cylinder(r1=0, r2=(es_diameter / 2), h=((es_diameter / 2) / tan((es_v_angle / 2))), center=false);
-    translate([0, 0, ((es_diameter / 2) / tan((es_v_angle / 2)))]){
-      cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=((es_diameter * 8) ), center=false);/// tan((es_v_angle / 2))
-    }
-  }
-}
-
-\end{writecode}
-\addtocounter{gcpscad}{9}
- 
 \paragraph{Concave toolshapes}
 \label{para:concavetoolshapes} 
-While normal tooling may be represented with a single \texttt{hull} operation betwixt two
-3D toolshapes, concave tooling such as roundover/radius tooling require multiple slices
-of the tool shape which are then \texttt{hull}ed together. Something of this can be seen
-in the manual work-around for previewing them: 
-\url{https://community.carbide3d.com/t/using-unsupported-tooling-in-carbide-create-roundover-cove-radius-bits/43723}.
+While normal tooling may be represented with a single \texttt{hull} operation betwixt two 3D toolshapes, concave tooling such as roundover/radius tooling require multiple slices of the tool shape which are then \texttt{hull}ed together. Something of this can be seen in the manual work-around for previewing them: \url{https://community.carbide3d.com/t/using-unsupported-tooling-in-carbide-create-roundover-cove-radius-bits/43723}.
 
-Ideally, it would be possible to simply identify such tooling using the tool \# in the
-code used for normal toolshapes as above, but the most expedient option is to simply
-use a specific command for this. Since such tooling is quite limited in its use and 
-normally only used at the surface of the part along an edge, this separation is 
-easily justified.
+Ideally, it would be possible to simply identify such tooling using the tool \# in the code used for normal toolshapes as above, but the most expedient option is to simply use a specific command for this. Since such tooling is quite limited in its use and normally only used at the surface of the part along an edge, this separation is easily justified.
 
-Because it is necessary to divide the tooling into vertical slices and call the hull operation 
-for each slice the tool definitions are tightly coupled with the module. Note that there are 
-two different modules, the public-facing version which includes the tool number:
-\DescribeRoutine{cutroundover}
- 
+Because it is necessary to divide the tooling into vertical slices and call the hull operation for each slice the tool definitions are tightly coupled with the module. Note that there are two different modules, the public-facing version which includes the tool number:\DescribeRoutine{cutroundover}
+
+\paragraph{Roundover tooling}
+
+\label{para:roundover} It is not possible to represent all tools using tool changes as coded above which require using a \texttt{hull} operation between 3D representations of the tools at the beginning and end points. Tooling which cannot be so represented will be implemented separately below, see paragraph~\ref{para:concavetoolshapes}.
+
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
 module cutroundover(bx, by, bz, ex, ey, ez, radiustn) {
@@ -1473,9 +1763,7 @@ module cutroundover(bx, by, bz, ex, ey, ez, radiustn) {
 \end{writecode}
 \addtocounter{gcpscad}{12}
 
-\noindent which then calls the actual \texttt{cutroundovertool} module  
-passing in the tip radius and the radius of the rounding. Note that this
-module sets its quality relative to the value of \verb|$fn|.
+\noindent which then calls the actual \texttt{cutroundovertool} module passing in the tip radius and the radius of the rounding. Note that this module sets its quality relative to the value of \verb|$fn|.
 
 %This should work as something like to:
 %
@@ -1525,19 +1813,99 @@ for (i=[0:step:90]) {
 \end{writecode}
 \addtocounter{gcpscad}{35}
 
+\subsubsection{toolchange}
+
+\noindent and apply the appropriate commands for a \label{subsubsec:toolchange} \DescribeRoutine{toolchange}. Note that it is expected that this code will be updated as needed when new tooling is introduced as additional modules which require specific tooling are added below. 
+
+Note that the comments written out in G-code correspond to that used by the G-code previewing tool CutViewer (which is unfortunately, no longer readily available).
+
+A further concern is that early versions often passed the tool into a module using a parameter. That ceased to be necessary in the 2024.09.03 version of PythonSCAD, and all modules should read the tool \# from \verb|currenttoolnumber()|. Note that this variable has changed names from the original \verb|currenttool| which is now used to store the current tool \emph{shape} (or 3D model).
+
+It is possible that rather than hard-coding the tool definitions, a future update will instead read them in from an external file --- the \texttt{.csv} format used for tool libraries in Carbide Create seems a likely candidate and worth exploring.
+
+Note that there are many varieties of tooling and not all will be implemented, especially in the early versions of this project
+ 
+\paragraph{Selecting Tools}
+ 
+The original implementation created the model for the tool at the current position, wrapping the twain for each end of a given movement in a \verb|hull()| command. This approach will not work within Python, so it will be necessary to instead assign and select the tool as part of the cutting command indirectly by first storing it in the variable \DescribeVariable{currenttoolshape}.
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def currenttool(self):
+        global currenttoolshape
+        return self.currenttoolshape
+
+\end{writecode}
+\addtocounter{gcpy}{4}
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def toolchange(self,tool_number,speed):
+        global currenttoolshape
+        
+        self.settool(tool_number)
+        if (self.generategcode == True):
+            self.writegc("(Toolpath)")
+            self.writegc("M05")
+        if (tool_number == 201):
+            self.writegc("(TOOL/MILL,6.35, 0.00, 0.00, 0.00)")
+            self.currenttoolshape = self.endmill_square(6.35, 19.05)
+        elif (tool_number == 202):
+            self.writegc("(TOOL/MILL,6.35, 3.17, 0.00, 0.00)")
+            self.currenttoolshape = self.gcp_endmill_ball(6.35, 19.05)
+        elif (tool_number == 102):
+            self.writegc("(TOOL/MILL,3.17, 0.00, 0.00, 0.00)")
+            self.currenttoolshape = self.endmill_square(3.175, 12.7)
+        elif (tool_number == 101):
+            self.writegc("(TOOL/MILL,3.17, 1.58, 0.00, 0.00)")
+            self.currenttoolshape = self.gcp_endmill_ball(3.175, 12.7)
+        elif (tool_number == 301):
+            self.writegc("(TOOL/MILL,0.03, 0.00, 6.35, 45.00)")
+            self.currenttoolshape = self.gcp_endmill_v(90, 12.7)
+        elif (tool_number == 302):
+            self.writegc("(TOOL/MILL,0.03, 0.00, 10.998, 30.00)")
+            self.currenttoolshape = self.gcp_endmill_v(60, 12.7)
+        elif (tool_number == 390):
+            self.writegc("(TOOL/MILL,0.03, 0.00, 1.5875, 45.00)")
+            self.currenttoolshape = self.gcp_endmill_v(90, 3.175)
+        elif (tool_number == 374):
+            self.writegc("(TOOL/MILL,9.53, 0.00, 3.17, 0.00)")
+        elif (tool_number == 375):
+            self.writegc("(TOOL/MILL,9.53, 0.00, 3.17, 0.00)")
+        elif (tool_number == 376):
+            self.writegc("(TOOL/MILL,12.7, 0.00, 4.77, 0.00)")
+        elif (tool_number == 378):
+            self.writegc("(TOOL/MILL,12.7, 0.00, 4.77, 0.00)")
+        elif (tool_number == 814):
+            writegc("(TOOL/MILL,12.7, 6.367, 12.7, 0.00)")
+\end{writecode}
+\addtocounter{gcpy}{38}
+ 
+With the tools delineated, the module is closed out and the toolchange information written into the G-code as well as the command to start the spindle at the specified speed.
+ 
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+        self.writegc("M6T",str(tool_number))
+        self.writegc("M03S",str(speed))
+
+\end{writecode}
+\addtocounter{gcpy}{3}
+
+For example:
+
+\begin{verbatim}
+toolchange(small_square_tool_num,speed);
+\end{verbatim}
+
+\noindent (the assumption is that all speed rates in a file will be the same, so as to account for the most frequent use case of a trim router with speed controlled by a dial setting)
+
 \subsubsection{tooldiameter}
 
-It will also be necessary to be able to provide the diameter of the current tool.
-Arguably, this would be much easier using an object-oriented programming style/dot notation.
+It will also be necessary to be able to provide the diameter of the current tool. Arguably, this would be much easier using an object-oriented programming style/dot notation.
 
-One aspect of tool parameters which will need to be supported is shapes which create
-different profiles based on how deeply the tool is cutting into the surface of the 
-material at a given point. To accommodate this, it will be necessary to either track
-the thickness of uncut material at any given point, or, to specify the depth of cut 
-as a parameter which is what the initial version will implement.
+One aspect of tool parameters which will need to be supported is shapes which create different profiles based on how deeply the tool is cutting into the surface of the material at a given point. To accommodate this, it will be necessary to either track the thickness of uncut material at any given point, or, to specify the depth of cut as a parameter which is what the initial version will implement.
 
-The public-facing OpenSCAD code, \DescribeRoutine{tool diameter}
-simply calls the matching OpenSCAD module which wraps the Python code:
+The public-facing OpenSCAD code, \DescribeRoutine{tool diameter} simply calls the matching OpenSCAD module which wraps the Python code:
  
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -1546,8 +1914,7 @@ function tool_diameter(td_tool, td_depth) = otool_diameter(td_tool, td_depth);
 \end{writecode}
 \addtocounter{gcpscad}{2}
 
-\noindent the matching OpenSCAD function, \DescribeSubroutine{tool diameter}{otool diameter} 
-calls the Python function:
+\noindent the matching OpenSCAD function, \DescribeSubroutine{tool diameter}{otool diameter} calls the Python function:
 
 \lstset{firstnumber=\thepyscad}
 \begin{writecode}{a}{pygcodepreview.scad}{scad}
@@ -1561,78 +1928,77 @@ appropriate values based on the specified tool number and depth:
  
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
-def ptool_diameter(ptd_tool, ptd_depth):
+#def ptool_diameter(ptd_tool, ptd_depth):
 # Square 122,112,102,201
-    if ptd_tool == 122:
-        return 0.79375
-    if ptd_tool == 112:
-        return 1.5875
-    if ptd_tool == 102:
-        return 3.175
-    if ptd_tool == 201:
-        return 6.35
-# Ball 121,111,101,202
-    if ptd_tool == 122:
-        return 
-        if ptd_depth > 0.396875:
-            return 0.79375
-        else:
-            return 0
-    if ptd_tool == 112:
-        if ptd_depth > 0.79375:
-            return 1.5875
-        else:
-            return 0
-    if ptd_tool == 101:
-        if ptd_depth > 1.5875:
-            return 3.175
-        else:
-            return 0
-    if ptd_tool == 202:
-        if ptd_depth > 3.175:
-            return 6.35
-        else:
-            return 0
-# V 301, 302, 390
-    if ptd_tool == 301:
-        return 0
-    if ptd_tool == 302:
-        return 0
-    if ptd_tool == 390:
-        return 0
-# Keyhole
-    if ptd_tool == 374:
-        if ptd_depth < 3.175:
-            return 9.525
-        else:
-            return 6.35
-    if ptd_tool == 375:
-        if ptd_depth < 3.175:
-            return 9.525
-        else:
-            return 8
-    if ptd_tool == 376:
-        if ptd_depth < 4.7625:
-            return 12.7
-        else:
-            return 6.35
-    if ptd_tool == 378:
-        if ptd_depth < 4.7625:
-            return 12.7
-        else:
-            return 8
-# Dovetail
-    if ptd_tool == 814:
-        if ptd_depth > 12.7:
-            return 6.35
-        else:
-            return 12.7
-
+#    if ptd_tool == 122:
+#        return 0.79375
+#    if ptd_tool == 112:
+#        return 1.5875
+#    if ptd_tool == 102:
+#        return 3.175
+#    if ptd_tool == 201:
+#        return 6.35
+## Ball 121,111,101,202
+#    if ptd_tool == 122:
+#        return 
+#        if ptd_depth > 0.396875:
+#            return 0.79375
+#        else:
+#            return 0
+#    if ptd_tool == 112:
+#        if ptd_depth > 0.79375:
+#            return 1.5875
+#        else:
+#            return 0
+#    if ptd_tool == 101:
+#        if ptd_depth > 1.5875:
+#            return 3.175
+#        else:
+#            return 0
+#    if ptd_tool == 202:
+#        if ptd_depth > 3.175:
+#            return 6.35
+#        else:
+#            return 0
+## V 301, 302, 390
+#    if ptd_tool == 301:
+#        return 0
+#    if ptd_tool == 302:
+#        return 0
+#    if ptd_tool == 390:
+#        return 0
+## Keyhole
+#    if ptd_tool == 374:
+#        if ptd_depth < 3.175:
+#            return 9.525
+#        else:
+#            return 6.35
+#    if ptd_tool == 375:
+#        if ptd_depth < 3.175:
+#            return 9.525
+#        else:
+#            return 8
+#    if ptd_tool == 376:
+#        if ptd_depth < 4.7625:
+#            return 12.7
+#        else:
+#            return 6.35
+#    if ptd_tool == 378:
+#        if ptd_depth < 4.7625:
+#            return 12.7
+#        else:
+#            return 8
+## Dovetail
+#    if ptd_tool == 814:
+#        if ptd_depth > 12.7:
+#            return 6.35
+#        else:
+#            return 12.7
+#
 \end{writecode}
-\addtocounter{gcpy}{32}
+\addtocounter{gcpy}{67}
 
-Since it is often necessary to utilise the radius of the tool, an additional command,
-\DescribeRoutine{tool radius} to return this value is worthwhile:
+Since it is often necessary to utilise the radius of the tool, an additional command, \DescribeRoutine{tool radius} to return this value is worthwhile:
  
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -1641,19 +2007,13 @@ function tool_radius(td_tool, td_depth) = otool_diameter(td_tool, td_depth)/2;
 \end{writecode}
 \addtocounter{gcpscad}{2}
  
-(Note that zero (0) and other not fully calculated values will need to be replaced 
-with code which calculates the appropriate values.)
+(Note that zero (0) and other not fully calculated values will need to be replaced with code which calculates the appropriate values.)
 
 \subsubsection{Feeds and Speeds}
 
-There are several possibilities for handling feeds and speeds. Currently, base values for \DescribeVariable{feed}, \DescribeVariable{plunge}, and \DescribeVariable{speed} are used, 
-which may then be adjusted using various \verb|<tooldescriptor>_ratio| values, as an 
-acknowledgement of the likelihood of a trim router being used as a spindle, the
-assumption is that the \texttt{speed} will remain unchanged.
+There are several possibilities for handling feeds and speeds. Currently, base values for \DescribeVariable{feed}, \DescribeVariable{plunge}, and \DescribeVariable{speed} are used, which may then be adjusted using various \verb|<tooldescriptor>_ratio| values, as an acknowledgement of the likelihood of a trim router being used as a spindle, the assumption is that the \texttt{speed} will remain unchanged.
 
-One notable possibility for the future would be to load it from the .csv files used for User tool 
-libraries in Carbide Create. Ideally, any use of such values in modules would be such that some
-other scheme could replace that usage with minimal editing and updating.
+One notable possibility for the future would be to load it from the .csv files used for User tool libraries in Carbide Create. Ideally, any use of such values in modules would be such that some other scheme could replace that usage with minimal editing and updating.
 
 The tools which need to be calculated thus are those in addition to the \verb|large_square| tool:
 
@@ -1668,7 +2028,7 @@ The tools which need to be calculated thus are those in addition to the \verb|la
 \end{itemize}
 
 \begin{samepage}
-\subsection{File Handling}
+\subsection{OpenSCAD File Handling}
  
 For writing to files it will be necessary to have commands: 
 \DescribeSubroutine{opengcodefile}{popengcodefile}, 
@@ -1680,55 +2040,52 @@ For writing to files it will be necessary to have commands:
 \DescribeRoutine{popendxflgVfile}, and 
 \DescribeRoutine{popendxfsmVfile}.
 %\DescribeRoutine{popensvgfile}
-There is a separate function for each type of file, and for DXFs, there are multiple file
-instances, one for each combination of different type and size of tool which it is expected 
-a project will work with. Each such file will be suffixed with the tool number.
+There is a separate function for each type of file, and for DXFs, there are multiple file instances, one for each combination of different type and size of tool which it is expected a project will work with. Each such file will be suffixed with the tool number.
 
-Integrating G-code and DXF generation with everything else would be ideal, but will require 
-ensuring that each command which moves the tool creates a matching command for both files.
+Integrating G-code and DXF generation with everything else would be ideal, but will require ensuring that each command which moves the tool creates a matching command for both files.
 
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
-def popengcodefile(fn):
-    global f
-    f = open(fn, "w")
-
-def popendxffile(fn):
-    global dxf
-    dxf = open(fn, "w")
-
-def popendxflgblfile(fn):
-    global dxflgbl
-    dxflgbl = open(fn, "w")
-
-def popendxflgsqfile(fn):
-    global dxflgsq
-    dxflgsq = open(fn, "w")
-
-def popendxflgVfile(fn):
-    global dxflgV
-    dxflgV = open(fn, "w")
-
-def popendxfsmblfile(fn):
-    global dxfsmbl
-    dxfsmbl = open(fn, "w")
-
-def popendxfsmsqfile(fn):
-    global dxfsmsq
-    dxfsmsq = open(fn, "w")
-
-def popendxfsmVfile(fn):
-    global dxfsmV
-    dxfsmV = open(fn, "w")
-
-def popendxfKHfile(fn):
-    global dxfKH
-    dxfKH = open(fn, "w")
-
-def popendxfDTfile(fn):
-    global dxfDT
-    dxfDT = open(fn, "w")
-
+#def popengcodefile(fn):
+#    global f
+#    f = open(fn, "w")
+#
+#def popendxffile(fn):
+#    global dxf
+#    dxf = open(fn, "w")
+#
+#def popendxflgblfile(fn):
+#    global dxflgbl
+#    dxflgbl = open(fn, "w")
+#
+#def popendxflgsqfile(fn):
+#    global dxflgsq
+#    dxflgsq = open(fn, "w")
+#
+#def popendxflgVfile(fn):
+#    global dxflgV
+#    dxflgV = open(fn, "w")
+#
+#def popendxfsmblfile(fn):
+#    global dxfsmbl
+#    dxfsmbl = open(fn, "w")
+#
+#def popendxfsmsqfile(fn):
+#    global dxfsmsq
+#    dxfsmsq = open(fn, "w")
+#
+#def popendxfsmVfile(fn):
+#    global dxfsmV
+#    dxfsmV = open(fn, "w")
+#
+#def popendxfKHfile(fn):
+#    global dxfKH
+#    dxfKH = open(fn, "w")
+#
+#def popendxfDTfile(fn):
+#    global dxfDT
+#    dxfDT = open(fn, "w")
+#
 \end{writecode}
 \addtocounter{gcpy}{40}
 %def popensvgfile(fn):
@@ -1812,14 +2169,13 @@ if (generategcode == true) {
 %    echo(fn);
 %    svgwriteone(str("<?xml version=",chr(34),"1.0",chr(34)," encoding=",chr(34),"UTF-8",chr(34)," standalone=",chr(34),"no",chr(34),"?> "));
 %//    writesvglineend();
-%svgwriteone(str("<svg  version=",chr(34),"1.1",chr(34)," xmlns=",chr(34),"http://www.w3.org/2000/svg",chr(34)," width=",chr(34),stocklength*3.77953,"px",chr(34)," height=",chr(34),stockwidth*3.77953,"px",chr(34),"> "));
+%svgwriteone(str("<svg  version=",chr(34),"1.1",chr(34)," xmlns=",chr(34),"http://www.w3.org/2000/svg",chr(34)," width=",chr(34),stockXwidth*3.77953,"px",chr(34)," height=",chr(34),stockYheight*3.77953,"px",chr(34),"> "));
 %//<path d="M755.906 0 L755.906 377.953 L0 377.953 L0 0 L755.906 0 Z " stroke="black" stroke-width="1" fill="none" /> 
-%svgwriteone(str("<path d=",chr(34),"M",stocklength*3.77953," 0 L",stocklength*3.77953," ",stockwidth*3.77953," L0 ",stockwidth*3.77953," L0 0 L",stocklength*3.77953," 0 Z ",chr(34)," stroke=",chr(34),"black",chr(34)," stroke-width=",chr(34),"1",chr(34)," fill=",chr(34),"none",chr(34)," /> "));
+%svgwriteone(str("<path d=",chr(34),"M",stockXwidth*3.77953," 0 L",stockXwidth*3.77953," ",stockYheight*3.77953," L0 ",stockYheight*3.77953," L0 0 L",stockXwidth*3.77953," 0 Z ",chr(34)," stroke=",chr(34),"black",chr(34)," stroke-width=",chr(34),"1",chr(34)," fill=",chr(34),"none",chr(34)," /> "));
 %}
 %}
 
-For each DXF file, there will need to be a Preamble created by \DescribeRoutine{opendxffile}
-in addition to opening the file in the file system:
+For each DXF file, there will need to be a Preamble created by \DescribeRoutine{opendxffile} in addition to opening the file in the file system:
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -1831,30 +2187,30 @@ module opendxffile(fn) {
       dxfwriteone("SECTION");
       dxfwriteone("2");
       dxfwriteone("ENTITIES");
-    if (large_ball_tool_no >  0) {    oopendxflgblfile(str(fn,".",large_ball_tool_no,".dxf"));
-      dxfpreamble(large_ball_tool_no);
+    if (large_ball_tool_num >  0) {    oopendxflgblfile(str(fn,".",large_ball_tool_num,".dxf"));
+      dxfpreamble(large_ball_tool_num);
     } 
-    if (large_square_tool_no >  0) {    oopendxflgsqfile(str(fn,".",large_square_tool_no,".dxf"));
-      dxfpreamble(large_square_tool_no);
+    if (large_square_tool_num >  0) {    oopendxflgsqfile(str(fn,".",large_square_tool_num,".dxf"));
+      dxfpreamble(large_square_tool_num);
     } 
-    if (large_V_tool_no >  0) {    oopendxflgVfile(str(fn,".",large_V_tool_no,".dxf"));
-      dxfpreamble(large_V_tool_no);
+    if (large_V_tool_num >  0) {    oopendxflgVfile(str(fn,".",large_V_tool_num,".dxf"));
+      dxfpreamble(large_V_tool_num);
     } 
-    if (small_ball_tool_no >  0) { oopendxfsmblfile(str(fn,".",small_ball_tool_no,".dxf"));
-      dxfpreamble(small_ball_tool_no);
+    if (small_ball_tool_num >  0) { oopendxfsmblfile(str(fn,".",small_ball_tool_num,".dxf"));
+      dxfpreamble(small_ball_tool_num);
     } 
-    if (small_square_tool_no >  0) {    oopendxfsmsqfile(str(fn,".",small_square_tool_no,".dxf"));
-//    echo(str("tool no",small_square_tool_no));
-      dxfpreamble(small_square_tool_no);
+    if (small_square_tool_num >  0) {    oopendxfsmsqfile(str(fn,".",small_square_tool_num,".dxf"));
+//    echo(str("tool number ",small_square_tool_num));
+      dxfpreamble(small_square_tool_num);
     } 
-    if (small_V_tool_no >  0) {    oopendxfsmVfile(str(fn,".",small_V_tool_no,".dxf"));
-      dxfpreamble(small_V_tool_no);
+    if (small_V_tool_num >  0) {    oopendxfsmVfile(str(fn,".",small_V_tool_num,".dxf"));
+      dxfpreamble(small_V_tool_num);
     } 
-    if (KH_tool_no >  0) {    oopendxfKHfile(str(fn,".",KH_tool_no,".dxf"));
-      dxfpreamble(KH_tool_no);
+    if (KH_tool_num >  0) {    oopendxfKHfile(str(fn,".",KH_tool_num,".dxf"));
+      dxfpreamble(KH_tool_num);
     } 
-    if (DT_tool_no >  0) {    oopendxfDTfile(str(fn,".",DT_tool_no,".dxf"));
-      dxfpreamble(DT_tool_no);
+    if (DT_tool_num >  0) {    oopendxfDTfile(str(fn,".",DT_tool_num,".dxf"));
+      dxfpreamble(DT_tool_num);
     } 
   }
 }
@@ -1864,19 +2220,7 @@ module opendxffile(fn) {
 
 \subsubsection{Writing to files}
  
-Once files have been opened they may be written to. The base command: \DescribeRoutine{writedxf}
- 
-\lstset{firstnumber=\thegcpy}
-\begin{writecode}{a}{gcodepreview.py}{python}
-def writedxf(*arguments):
-    line_to_write = ""
-    for element in arguments:
-        line_to_write += element
-    dxf.write(line_to_write)
-    dxf.write("\n")
-
-\end{writecode}
-\addtocounter{gcpy}{7}
+When the command to open dxf files is called it is passed all of the variables for the various tool types/sizes, and based on a value being greater than zero, the matching file is opened, and in addition, the main DXF which is always written to is opened as well. On the gripping hand, each element which may be written to a DXF file will have a user module as well as an internal module which will be called by it so as to write to the file for the current tool. It will be necessary for the \DescribeRoutine{dxfwrite} command to evaluate the tool number which is passed in, and to use an appropriate command or set of commands to then write out to the appropriate file for a given tool (if positive) or not do anything (if zero), and to write to the master file if a negative value is passed in (this allows the various DXF template commands to be written only once and then called at need).
 
 \noindent has a matching command each tool/size combination:
 
@@ -1893,70 +2237,70 @@ def writedxf(*arguments):
  
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
-def writedxflgbl(*arguments):
-    line_to_write = ""
-    for element in arguments:
-        line_to_write += element
-    dxflgbl.write(line_to_write)
-    print(line_to_write)
-    dxflgbl.write("\n")
-
-def writedxflgsq(*arguments):
-    line_to_write = ""
-    for element in arguments:
-        line_to_write += element
-    dxflgsq.write(line_to_write)
-    print(line_to_write)
-    dxflgsq.write("\n")
-
-def writedxflgV(*arguments):
-    line_to_write = ""
-    for element in arguments:
-        line_to_write += element
-    dxflgV.write(line_to_write)
-    print(line_to_write)
-    dxflgV.write("\n")
-
-def writedxfsmbl(*arguments):
-    line_to_write = ""
-    for element in arguments:
-        line_to_write += element
-    dxfsmbl.write(line_to_write)
-    print(line_to_write)
-    dxfsmbl.write("\n")
-
-def writedxfsmsq(*arguments):
-    line_to_write = ""
-    for element in arguments:
-        line_to_write += element
-    dxfsmsq.write(line_to_write)
-    print(line_to_write)
-    dxfsmsq.write("\n")
-
-def writedxfsmV(*arguments):
-    line_to_write = ""
-    for element in arguments:
-        line_to_write += element
-    dxfsmV.write(line_to_write)
-    print(line_to_write)
-    dxfsmV.write("\n")
-
-def writedxfKH(*arguments):
-    line_to_write = ""
-    for element in arguments:
-        line_to_write += element
-    dxfKH.write(line_to_write)
-    print(line_to_write)
-    dxfKH.write("\n")
-
-def writedxfDT(*arguments):
-    line_to_write = ""
-    for element in arguments:
-        line_to_write += element
-    dxfDT.write(line_to_write)
-    print(line_to_write)
-    dxfDT.write("\n")
-
+#def writedxflgbl(*arguments):
+#    line_to_write = ""
+#    for element in arguments:
+#        line_to_write += element
+#    dxflgbl.write(line_to_write)
+#    print(line_to_write)
+#    dxflgbl.write("\n")
+#
+#def writedxflgsq(*arguments):
+#    line_to_write = ""
+#    for element in arguments:
+#        line_to_write += element
+#    dxflgsq.write(line_to_write)
+#    print(line_to_write)
+#    dxflgsq.write("\n")
+#
+#def writedxflgV(*arguments):
+#    line_to_write = ""
+#    for element in arguments:
+#        line_to_write += element
+#    dxflgV.write(line_to_write)
+#    print(line_to_write)
+#    dxflgV.write("\n")
+#
+#def writedxfsmbl(*arguments):
+#    line_to_write = ""
+#    for element in arguments:
+#        line_to_write += element
+#    dxfsmbl.write(line_to_write)
+#    print(line_to_write)
+#    dxfsmbl.write("\n")
+#
+#def writedxfsmsq(*arguments):
+#    line_to_write = ""
+#    for element in arguments:
+#        line_to_write += element
+#    dxfsmsq.write(line_to_write)
+#    print(line_to_write)
+#    dxfsmsq.write("\n")
+#
+#def writedxfsmV(*arguments):
+#    line_to_write = ""
+#    for element in arguments:
+#        line_to_write += element
+#    dxfsmV.write(line_to_write)
+#    print(line_to_write)
+#    dxfsmV.write("\n")
+#
+#def writedxfKH(*arguments):
+#    line_to_write = ""
+#    for element in arguments:
+#        line_to_write += element
+#    dxfKH.write(line_to_write)
+#    print(line_to_write)
+#    dxfKH.write("\n")
+#
+#def writedxfDT(*arguments):
+#    line_to_write = ""
+#    for element in arguments:
+#        line_to_write += element
+#    dxfDT.write(line_to_write)
+#    print(line_to_write)
+#    dxfDT.write("\n")
+#
 \end{writecode}
 \addtocounter{gcpy}{64}
 %def writesvg(*arguments):
@@ -1978,9 +2322,7 @@ Separate OpenSCAD modules,
 \DescribeRoutine{dxfwritesmbl}, 
 \DescribeRoutine{dxfwritesmsq}, and
 \DescribeRoutine{dxfwritesmV} 
-will be used for either writing out comments in G-code (.nc) files
-or adding to a DXF file --- for each different tool in a file there will be a matching
-module to write to it.
+will be used for either writing out comments in G-code (.nc) files or adding to a DXF file --- for each different tool in a file there will be a matching module to write to it.
  
 \lstset{firstnumber=\thepyscad}
 \begin{writecode}{a}{pygcodepreview.scad}{scad}
@@ -2036,9 +2378,7 @@ module dxfwriteDT(first) {
 %    pwritesvgline();
 %}
 
-Since it is not convenient to stitch together and then write out multiple elements, 
-the most expedient thing to do is to have discrete commands for each possible number
-of arguments, one through thirteen, \DescribeRoutine{owrite...}
+Since it is not convenient to stitch together and then write out multiple elements, the most expedient thing to do is to have discrete commands for each possible number of arguments, one through thirteen, \DescribeRoutine{owrite...}
  
 \lstset{firstnumber=\thepyscad}
 \begin{writecode}{a}{pygcodepreview.scad}{scad}
@@ -2097,52 +2437,23 @@ module owritethirteen(first, second, third, fourth, fifth, sixth, seventh, eight
 \end{writecode}
 \addtocounter{pyscad}{52}
  
-\paragraph{Beginning Writing to DXFs}%\DescribeRoutine{writesvgline}
-The \DescribeRoutine{dxfwrite} module requires that the tool number be passed in, 
-and after writing out \DescribeRoutine{dxfpreamble}, that value will be used to write out to the appropriate file with a series of \texttt{if} statements.
- 
-\lstset{firstnumber=\thegcpscad}
-\begin{writecode}{a}{gcodepreview.scad}{scad}
-module dxfwrite(tn,arg) {
-if (tn == large_ball_tool_no) {
-    dxfwritelgbl(arg);}
-if (tn == large_square_tool_no) {
-    dxfwritelgsq(arg);}
-if (tn == large_V_tool_no) {
-    dxfwritelgV(arg);}
-if (tn == small_ball_tool_no) {
-    dxfwritesmbl(arg);}
-if (tn == small_square_tool_no) {
-    dxfwritesmsq(arg);}
-if (tn == small_V_tool_no) {
-    dxfwritesmV(arg);}
-if (tn == DT_tool_no) {
-    dxfwriteDT(arg);}
-if (tn == KH_tool_no) {
-    dxfwriteKH(arg);}
-}
+\paragraph{Writing to DXFs}%\DescribeRoutine{writesvgline}
 
-module dxfpreamble(tn) {
-//    echo(str("dxfpreamble",small_square_tool_no));
-    dxfwrite(tn,"0");
-    dxfwrite(tn,"SECTION");
-    dxfwrite(tn,"2");
-    dxfwrite(tn,"ENTITIES");
-}
+This module requires that the tool number be passed in, and after writing out \DescribeRoutine{dxfpreamble}, that value will be used to write out to the appropriate file with a series of \texttt{if} statements.
+ 
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def dxfpreamble(self, tn):
+#        self.writedxf(tn,str(tn))
+        self.writedxf(tn,"0")
+        self.writedxf(tn,"SECTION")
+        self.writedxf(tn,"2")
+        self.writedxf(tn,"ENTITIES")
 
 \end{writecode}
-\addtocounter{gcpscad}{27}
-%module writesvgline(bx,by,ex,ey) {
-%if (generatesvg == true) {
-%    svgwriteone(str("<path d=",chr(34),"M",bx*3.77953," ",by*3.77953," L",ex*3.77953," %",ey*3.77953," ",chr(34)," stroke=",chr(34),"black",chr(34)," stroke-width=",chr(34),"1",chr(34)," %fill=",chr(34),"none",chr(34)," /> "));
-%    }
-%}
-
+\addtocounter{gcpy}{7}
  
 \paragraph{DXF Lines and Arcs}%
-Similarly, each each element which may be written to a DXF file will have a user module
-as well as an internal module which will be called by it so as to write to the file
-for the current tool.
  
 There are two notable elements which may be written to a DXF:
 
@@ -2157,19 +2468,16 @@ DXF orders arcs counter-clockwise:
 
 \noindent\includegraphics[width=\linewidth]{images/arcs_circle_degrees.pdf}%
 
-Note that arcs of greater than 90 degrees are not rendered accurately, so, for the sake of
-precision, they should be limited to a swing of 90 degrees or less. Further note that 4 arcs
-may be stitched together to make a circle:
+Note that arcs of greater than 90 degrees are not rendered accurately, so, for the sake of precision, they should be limited to a swing of 90 degrees or less. Further note that 4 arcs may be stitched together to make a circle:
  
 \begin{verbatim}
-           dxfarc(10, 10, 5,   0,  90, small_square_tool_no);
-           dxfarc(10, 10, 5,  90, 180, small_square_tool_no);
-           dxfarc(10, 10, 5, 180, 270, small_square_tool_no);
-           dxfarc(10, 10, 5, 270, 360, small_square_tool_no);
+           dxfarc(10, 10, 5,   0,  90, small_square_tool_num);
+           dxfarc(10, 10, 5,  90, 180, small_square_tool_num);
+           dxfarc(10, 10, 5, 180, 270, small_square_tool_num);
+           dxfarc(10, 10, 5, 270, 360, small_square_tool_num);
 \end{verbatim}
  
-A further refinement would be to connect multiple line segments/arcs into a larger polyline, 
-but since most CAM tools implicitly join elements on import, that is not necessary.
+A further refinement would be to connect multiple line segments/arcs into a larger polyline, but since most CAM tools implicitly join elements on import, that is not necessary.
  
 There are three possible interactions for DXF elements and toolpaths:
 
@@ -2179,97 +2487,33 @@ There are three possible interactions for DXF elements and toolpaths:
  \item define a centerpoint for a specialty toolpath such as Drill or Keyhhole
 \end{itemize}
  
-\noindent and it is possible that multiple such elements could be instantiated for
-a given toolpath.
+\noindent and it is possible that multiple such elements could be instantiated for a given toolpath.
  
-\lstset{firstnumber=\thegcpscad}
-\begin{writecode}{a}{gcodepreview.scad}{scad}
-module dxfpl(tn,xbegin,ybegin,xend,yend) {
-    dxfwrite(tn,"0");
-    dxfwrite(tn,"LWPOLYLINE");
-    dxfwrite(tn,"90");
-    dxfwrite(tn,"2");
-    dxfwrite(tn,"70");
-    dxfwrite(tn,"0");
-    dxfwrite(tn,"43");
-    dxfwrite(tn,"0");
-    dxfwrite(tn,"10");
-    dxfwrite(tn,str(xbegin));
-    dxfwrite(tn,"20");
-    dxfwrite(tn,str(ybegin));
-    dxfwrite(tn,"10");
-    dxfwrite(tn,str(xend));
-    dxfwrite(tn,"20");
-    dxfwrite(tn,str(yend));
-}
+When writing out to a DXF file there is a pair of commands, a public facing command which takes in a tool number in addition to the coordinates which then writes out to the main DXF file and then calls an internal command to which repeats the call with the tool number so as to write it out to the matching file.
 
-module dxfpolyline(xbegin,ybegin,xend,yend, tn) {
-if (generatedxf == true) {
-    dxfwriteone("0");
-    dxfwriteone("LWPOLYLINE");
-    dxfwriteone("90");
-    dxfwriteone("2");
-    dxfwriteone("70");
-    dxfwriteone("0");
-    dxfwriteone("43");
-    dxfwriteone("0");
-    dxfwriteone("10");
-    dxfwriteone(str(xbegin));
-    dxfwriteone("20");
-    dxfwriteone(str(ybegin));
-    dxfwriteone("10");
-    dxfwriteone(str(xend));
-    dxfwriteone("20");
-    dxfwriteone(str(yend));
-    dxfpl(tn,xbegin,ybegin,xend,yend);
-    }
-}
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def dxfpolyline(self, tn, xbegin,ybegin,xend,yend):
+        self.writedxf(tn,"0")
+        self.writedxf(tn,"LWPOLYLINE")
+        self.writedxf(tn,"90")
+        self.writedxf(tn,"2")
+        self.writedxf(tn,"70")
+        self.writedxf(tn,"0")
+        self.writedxf(tn,"43")
+        self.writedxf(tn,"0")
+        self.writedxf(tn,"10")
+        self.writedxf(tn,str(xbegin))
+        self.writedxf(tn,"20")
+        self.writedxf(tn,str(ybegin))
+        self.writedxf(tn,"10")
+        self.writedxf(tn,str(xend))
+        self.writedxf(tn,"20")
+        self.writedxf(tn,str(yend))
 
 \end{writecode}
-\addtocounter{gcpscad}{41}
+\addtocounter{gcpy}{18}
 
-As for other files, we have two versions, \DescribeRoutine{dxfa} and \DescribeRoutine{dxfarc}, 
-one which accepts a \texttt{tn} (tool number), writing only to it, while a publicly facing version 
-writes to the main DXF file \emph{and} writes to the specific DXF file for the specified tool.
-
-\lstset{firstnumber=\thegcpscad}
-\begin{writecode}{a}{gcodepreview.scad}{scad}
-module dxfa(tn,xcenter,ycenter,radius,anglebegin,endangle) {
-    dxfwrite(tn,"0");
-    dxfwrite(tn,"ARC");
-    dxfwrite(tn,"10");
-    dxfwrite(tn,str(xcenter));
-    dxfwrite(tn,"20");
-    dxfwrite(tn,str(ycenter));
-    dxfwrite(tn,"40");
-    dxfwrite(tn,str(radius));
-    dxfwrite(tn,"50");
-    dxfwrite(tn,str(anglebegin));
-    dxfwrite(tn,"51");
-    dxfwrite(tn,str(endangle));
-}
-
-module dxfarc(xcenter, ycenter, radius, anglebegin, endangle, tn) {
-if (generatedxf == true) {
-    dxfwriteone("0");
-    dxfwriteone("ARC");
-    dxfwriteone("10");
-    dxfwriteone(str(xcenter));
-    dxfwriteone("20");
-    dxfwriteone(str(ycenter));
-    dxfwriteone("40");
-    dxfwriteone(str(radius));
-    dxfwriteone("50");
-    dxfwriteone(str(anglebegin));
-    dxfwriteone("51");
-    dxfwriteone(str(endangle));
-    dxfa(tn,xcenter,ycenter,radius,anglebegin,endangle);
-    }
-}
-
-\end{writecode}
-\addtocounter{gcpscad}{33}
- 
 The original implementation of polylines worked, but may be removed.
  
 \lstset{firstnumber=\thegcpscad}
@@ -2372,43 +2616,90 @@ module writecomment(comment) {
 At the end of the project it will be necessary to close each file using the commands: 
 \DescribeSubroutine{closegcodefile}{pclosegcodefile}, and
 \DescribeRoutine{closedxffile}. %\DescribeRoutine{pclosesvgfile}
-In some instances it will be necessary to write additional information,
-depending on the file format.
+In some instances it may be necessary to write additional information, depending on the file format. Note that these commands will need to be within the \verb|gcodepreview class|.
  
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
-def pclosegcodefile():
-    f.close()
+    def dxfpostamble(self,tn):
+#        self.writedxf(tn,str(tn))
+        self.writedxf(tn,"0")
+        self.writedxf(tn,"ENDSEC")
+        self.writedxf(tn,"0")
+        self.writedxf(tn,"EOF")
+        
+\end{writecode}
+\addtocounter{gcpy}{7}
 
-def pclosedxffile():
-    dxf.close()
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def gcodepostamble(self):
+        self.writegc("Z12.700")
+        self.writegc("M05")
+        self.writegc("M02")
+        
+\end{writecode}
+\addtocounter{gcpy}{5}
 
-def pclosedxflgblfile():
-    dxflgbl.close()
 
-def pclosedxflgsqfile():
-    dxflgsq.close()
+It will be necessary to call the dxfpostamble (with appropriate checks and trappings so as to ensure that each dxf file is ended and closed so as to be valid.
+ 
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def closegcodefile(self):
+        self.gcodepostamble()
+        self.gc.close()
 
-def pclosedxflgVfile():
-    dxflgV.close()
-
-def pclosedxfsmblfile():
-    dxfsmbl.close()
-
-def pclosedxfsmsqfile():
-    dxfsmsq.close()
-
-def pclosedxfsmVfile():
-    dxfsmV.close()
-
-def pclosedxfDTfile():
-    dxfDT.close()
-
-def pclosedxfKHfile():
-    dxfKH.close()
+    def closedxffile(self):
+        if self.generatedxf == True:
+            self.dxfpostamble(-1)
+            self.dxf.close()
+    
+    def closedxffiles(self):
+        if self.generatedxfs == True:
+            if (self.large_square_tool_num > 0):
+                self.dxfpostamble(self.large_square_tool_num)
+            if (self.small_square_tool_num > 0):
+                self.dxfpostamble(self.small_square_tool_num)
+            if (self.large_ball_tool_num > 0):
+                self.dxfpostamble(self.large_ball_tool_num)
+            if (self.small_ball_tool_num > 0):
+                self.dxfpostamble(self.small_ball_tool_num)
+            if (self.large_V_tool_num > 0):
+                self.dxfpostamble(self.large_V_tool_num)
+            if (self.small_V_tool_num > 0):
+                self.dxfpostamble(self.small_V_tool_num)
+            if (self.DT_tool_num > 0):
+                self.dxfpostamble(self.DT_tool_num)
+            if (self.KH_tool_num > 0):
+                self.dxfpostamble(self.KH_tool_num)
+            if (self.Roundover_tool_num > 0):
+                self.dxfpostamble(self.Roundover_tool_num)
+            if (self.MISC_tool_num > 0):
+                self.dxfpostamble(self.MISC_tool_num)
+                
+            if (self.large_square_tool_num > 0):
+                self.dxflgsq.close()
+            if (self.small_square_tool_num > 0):
+                self.dxfsmsq.close()
+            if (self.large_ball_tool_num > 0):
+                self.dxflgbl.close()
+            if (self.small_ball_tool_num > 0):
+                self.dxfsmbl.close()
+            if (self.large_V_tool_num > 0):
+                self.dxflgV.close()
+            if (self.small_V_tool_num > 0):
+                self.dxfsmV.close()
+            if (self.DT_tool_num > 0):
+                self.dxfDT.close()
+            if (self.KH_tool_num > 0):
+                self.dxfKH.close()
+            if (self.Roundover_tool_num > 0):
+                self.dxfRt.close()
+            if (self.MISC_tool_num > 0):
+                self.dxfMt.close()
 
 \end{writecode}
-\addtocounter{gcpy}{30}
+\addtocounter{gcpy}{53}
 %def pclosesvgfile():
 %    svg.close()
 %
@@ -2467,12 +2758,7 @@ module oclosedxfKHfile() {
 %}
 %
 
-The commands: 
-\DescribeRoutine{closegcodefile}, and
-\DescribeRoutine{closedxffile}
-are used to close the files at the end of a program. For efficiency, each references the command:
-\DescribeRoutine{dxfpostamble}
-which when called provides the boilerplate needed at the end of their respective files.
+The commands: \DescribeRoutine{closegcodefile}, and \DescribeRoutine{closedxffile} are used to close the files at the end of a program. For efficiency, each references the command: \DescribeRoutine{dxfpostamble} which when called provides the boilerplate needed at the end of their respective files.
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -2499,28 +2785,28 @@ module closedxffile() {
     dxfwriteone("EOF");
     oclosedxffile();
 //    echo("CLOSING");
-    if (large_ball_tool_no >  0) {    dxfpostamble(large_ball_tool_no);
+    if (large_ball_tool_num >  0) {    dxfpostamble(large_ball_tool_num);
       oclosedxflgblfile();
     } 
-    if (large_square_tool_no >  0) {    dxfpostamble(large_square_tool_no);
+    if (large_square_tool_num >  0) {    dxfpostamble(large_square_tool_num);
       oclosedxflgsqfile();
     } 
-    if (large_V_tool_no >  0) {    dxfpostamble(large_V_tool_no);
+    if (large_V_tool_num >  0) {    dxfpostamble(large_V_tool_num);
       oclosedxflgVfile();
     } 
-    if (small_ball_tool_no >  0) {    dxfpostamble(small_ball_tool_no);
+    if (small_ball_tool_num >  0) {    dxfpostamble(small_ball_tool_num);
       oclosedxfsmblfile();
     } 
-    if (small_square_tool_no >  0) {    dxfpostamble(small_square_tool_no);
+    if (small_square_tool_num >  0) {    dxfpostamble(small_square_tool_num);
       oclosedxfsmsqfile();
     } 
-    if (small_V_tool_no >  0) {    dxfpostamble(small_V_tool_no);
+    if (small_V_tool_num >  0) {    dxfpostamble(small_V_tool_num);
       oclosedxfsmVfile();
     } 
-    if (DT_tool_no >  0) {    dxfpostamble(DT_tool_no);
+    if (DT_tool_num >  0) {    dxfpostamble(DT_tool_num);
       oclosedxfDTfile();
     } 
-    if (KH_tool_no >  0) {    dxfpostamble(KH_tool_no);
+    if (KH_tool_num >  0) {    dxfpostamble(KH_tool_num);
       oclosedxfKHfile();
     } 
   }
@@ -2544,14 +2830,131 @@ module closedxffile() {
  
 \subsection{Movement and Cutting}
 
-With all the scaffolding in place, it is possible to model the tool: 
-\DescribeRoutine{otm}, (colors the tool model so as to differentiate cut areas)
-and cutting: 
-\DescribeSubroutine{cut}{ocut}, 
-as well as Rapid movements to position the tool to begin a cut:
-\DescribeSubroutine{rapid}{orapid}, \DescribeRoutine{rapid}, and \DescribeRoutine{rapidbx}
-which will also need to write out files which represent the desired machine motions.
- 
+With all the scaffolding in place, it is possible to model the tool: \DescribeRoutine{otm}, (colors the tool model so as to differentiate cut areas) and cutting: \DescribeSubroutine{cut}{ocut}, as well as Rapid movements to position the tool to begin a cut: \DescribeSubroutine{rapid}{orapid}, \DescribeRoutine{rapid}, and \DescribeRoutine{rapidbx} which will also need to write out files which represent the desired machine motions.
+
+The first command needs to be a move to/from the safe Z height. In G-code this would be:
+
+\begin{verbatim}
+(Move to safe Z to avoid workholding)
+G53G0Z-5.000
+\end{verbatim}
+
+but in the 3D model, since we do not know how tall the Z-axis is, we simply move to safe height and use that as a starting point:
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def movetosafeZ(self):
+#        global toolpaths
+        self.writegc("(Move to safe Z to avoid workholding)")
+        self.writegc("G53G0Z-5.000")
+        self.setzpos(self.retractheight)
+        toolpath = cylinder(1.5875,12.7)
+        toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
+#        self.toolpaths = union([self.toolpaths, toolpath])
+        return toolpath
+        
+\end{writecode}
+\addtocounter{gcpy}{10}
+
+Note that a hard-coded cylinder is used since the command will be used prior to a toolchange. This also allows initializing the \DescribeVariable{toolpath} so that later commands may add to it.
+
+There are three different movements in G-code which will need to be handled. Rapid commands will be used for G0 movements and will not appear in DXFs but will appear in G-code files, while cut (G1) and arc (G2/G3) commands will appear in both G-code and DXF files. 
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def rapid(self, ex, ey, ez):
+#        global toolpath
+#        global toolpaths
+        self.writegc("G00 X", str(ex), " Y", str(ey), " Z", str(ez))
+        start = self.currenttool()
+        start = start.translate([self.xpos(), self.ypos(), self.zpos()])
+        toolpath = hull(start, start.translate([ex,ey,ez]))
+        self.setxpos(ex)
+        self.setypos(ey)
+        self.setzpos(ez)
+#        self.toolpaths = union([self.toolpaths, toolpath])
+        return toolpath
+        
+\end{writecode}
+\addtocounter{gcpy}{13}
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def rapidXY(self, ex, ey):
+#        global toolpath
+#        global toolpaths
+        self.writegc("G00 X", str(ex), " Y", str(ey))
+        start = self.currenttool()
+        start = start.translate([self.xpos(), self.ypos(), self.zpos()])
+        toolpath = hull(start, start.translate([ex,ey,self.zpos()]))
+        self.setxpos(ex)
+        self.setypos(ey)
+#        self.toolpaths = union([self.toolpaths, toolpath])
+        return toolpath
+        
+\end{writecode}
+\addtocounter{gcpy}{12}
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def rapidZ(self, ez):
+#        global toolpath
+#        global toolpaths
+        self.writegc("G00 Z", str(ez))
+        start = self.currenttool()
+        start = start.translate([self.xpos(), self.ypos(), self.zpos()])
+        toolpath = hull(start, start.translate([self.xpos(),self.ypos(),ez]))
+        self.setzpos(ez)
+#        self.toolpaths = union([self.toolpaths, toolpath])
+        return toolpath
+        
+\end{writecode}
+\addtocounter{gcpy}{11}
+
+The Python commands \DescribeRoutine{cut...} add the \verb|currenttool| to the \verb|toolpath| \verb|hull|ed together at the current position and the end position of the move.
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def cutlinedxfgc(self,ex, ey, ez):
+#        global toolpath
+#        global toolpaths
+        self.dxfpolyline(self.currenttool(), self.xpos(), self.ypos(), ex, ey)
+        self.writegc("G01 X", str(ex), " Y", str(ey), " Z", str(ez))
+        start = self.currenttool()
+        start = start.translate([self.xpos(), self.ypos(), self.zpos()])
+        end = self.currenttool()
+        toolpath = hull(start, end.translate([ex,ey,ez]))
+        self.setxpos(ex)
+        self.setypos(ey)
+        self.setzpos(ez)
+#        self.toolpaths = union([self.toolpaths, toolpath])
+        return toolpath
+        
+    def cutline(self,ex, ey, ez):
+#        global toolpath
+#        global toolpaths
+        start = self.currenttool()
+        start = start.translate([self.xpos(), self.ypos(), self.zpos()])
+        end = self.currenttool()
+        toolpath = hull(start, end.translate([ex,ey,ez]))
+        self.setxpos(ex)
+        self.setypos(ey)
+        self.setzpos(ez)
+#        self.toolpaths = union([self.toolpaths, toolpath])
+        return toolpath
+
+\end{writecode}
+\addtocounter{gcpy}{28}
+
+%\lstset{firstnumber=\thegcpy}
+%\begin{writecode}{a}{gcodepreview.py}{python}
+%    def toolpaths(self):
+%        global toolpath
+%        return self.toolpath
+%
+%\end{writecode}
+%\addtocounter{gcpy}{4}
+
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
 module otm(ex, ey, ez, r,g,b) {
@@ -2678,27 +3081,13 @@ module endtoolpath() {
 
 \section{Cutting shapes, cut2Dshapes, and expansion}
 
-Certain basic shapes (arcs, circles, rectangles), will be incorporated in the main code. 
-Other shapes will be added to the additional/optional file, \texttt{cut2Dshapes.scad}
-as they are developed, and of course the user is free to develop their own systems.
+Certain basic shapes (arcs, circles, rectangles), will be incorporated in the main code. Other shapes will be added to the additional/optional file, \texttt{cut2Dshapes.scad} as they are developed, and of course the user is free to develop their own systems.
  
-It is most expedient to test out new features in a new/separate file insofar as the 
-file structures will allow (tool definitions for example will need to consolidated in 
-\ref{subsubsec:toolchange}) which will need to be included in the projects which will 
-make use of said features until such time as they are added into the main 
-\texttt{gcodepreview.scad} file.
+It is most expedient to test out new features in a new/separate file insofar as the file structures will allow (tool definitions for example will need to consolidated in \ref{subsubsec:toolchange}) which will need to be included in the projects which will make use of said features until such time as they are added into the main \texttt{gcodepreview.scad} file.
 
-A basic requirement for two-dimensional regions will be to define them so as to cut them out.
-Two different geometric treatments will be necessary: modeling the geometry which 
-defines the region to be cut out (output as a DXF); and modeling the movement of the
-tool, the toolpath which will be used in creating the 3D model and outputting the 
-G-code.
+A basic requirement for two-dimensional regions will be to define them so as to cut them out. Two different geometric treatments will be necessary: modeling the geometry which defines the region to be cut out (output as a DXF); and modeling the movement of the tool, the toolpath which will be used in creating the 3D model and outputting the G-code.
 
-In the TUG presentation/paper: \url{http://tug.org/TUGboat/tb40-2/tb125adams-3d.pdf}
-a list of 2D shapes was put forward --- which of these will need to be created,
-or if some more general solution will be put forward is uncertain. For the time
-being, shapes will be implemented on an as-needed basis, as modified by the
-interaction with the requirements of toolpaths.
+In the TUG presentation/paper: \url{http://tug.org/TUGboat/tb40-2/tb125adams-3d.pdf} a list of 2D shapes was put forward --- which of these will need to be created, or if some more general solution will be put forward is uncertain. For the time being, shapes will be implemented on an as-needed basis, as modified by the interaction with the requirements of toolpaths.
 
 \begin{figure}
 \begin{outline}
@@ -2748,8 +3137,7 @@ interaction with the requirements of toolpaths.
 \end{outline}
 
 
-  Is the list of shapes for which there are not widely
- known names interesting for its lack of notoriety?
+Is the list of shapes for which there are not widely known names interesting for its lack of notoriety?
 
 \begin{itemize}
  \item two straight edges, one concave arc—oddly, an asymmetric form (hyperbolic sector) has a name,
@@ -2824,14 +3212,7 @@ Implementing arcs wants at least the following options for quadrant and directio
 \item cutcircleCCdxf
 \end{itemize}
  
-It will be necessary to have two separate representations of arcs --- the DXF may be easily 
-and directly supported with a single command, but representing the matching tool movement
-in OpenSCAD will require a series of short line movements which approximate the arc. 
-At this time, the current version of Carbide Create only imports circles in DXF as curves,
-any other example is converted into polylines --- unfortunately, the implementation of this
-is not such as would allow directly matching that representation. A work-around to import
-a DXF as curves is to convert the arc into a reasonable number of line segments so as to
-approximate the arc.
+It will be necessary to have two separate representations of arcs --- the DXF may be easily and directly supported with a single command, but representing the matching tool movement in OpenSCAD will require a series of short line movements which approximate the arc. At this time, the current version of Carbide Create only imports circles in DXF as curves, any other example is converted into polylines --- unfortunately, the implementation of this is not such as would allow directly matching that representation. A work-around to import a DXF as curves is to convert the arc into a reasonable number of line segments so as to approximate the arc.
  
 \begin{samepage}
 Note that there are the following representations/interfaces for representing an arc:
@@ -2847,14 +3228,9 @@ Note that there are the following representations/interfaces for representing an
 \end{itemize}
 \end{samepage}
  
-Cutting the quadrant arcs will greatly simplify the calculation and interface for the modules.
-A full set of 8 will be necessary, then circles may either be stitched together manually or
-a pair of modules made for them.
+Cutting the quadrant arcs will greatly simplify the calculation and interface for the modules. A full set of 8 will be necessary, then circles may either be stitched together manually or a pair of modules made for them.
  
-At this time, despite what the module names imply (\texttt{cutarcNWCWdxf}, \&c.), only cutting  
-and DXF generation is supported. Adding support for G-code will be done at a later time.
-Since these modules will ultimately support G-code, the interface will assume the stored
-\texttt{xpos} and \texttt{ypos} as the origin. Parameters which will need to be passed in are:
+At this time, despite what the module names imply (\texttt{cutarcNWCWdxf}, \&c.), only cutting and DXF generation is supported. Adding support for G-code will be done at a later time. Since these modules will ultimately support G-code, the interface will assume the stored \texttt{xpos} and \texttt{ypos} as the origin. Parameters which will need to be passed in are:
  
 \begin{itemize}
  \item \texttt{tn}
@@ -2870,117 +3246,215 @@ Since these modules will ultimately support G-code, the interface will assume th
       is both convenient and acts as a check on the other parameters
 \end{itemize}
 
-Since OpenSCAD does not have an arc movement command it is necessary to iterate through a loop: \DescribeRoutine{arcloop} (clockwise), \DescribeRoutine{narcloop}
-(counterclockwise) to handle the drawing and processing of the \texttt{cut()} toolpaths as 
-short line segments which additionally affords a single point of control for adding additional
-features such as allowing the depth to  vary as one cuts along an arc (two when the need to have 
-a version which steps down):
+Since OpenSCAD does not have an arc movement command it is necessary to iterate through a loop: \DescribeRoutine{arcloop} (clockwise), \DescribeRoutine{narcloop} (counterclockwise) to handle the drawing and processing of the \texttt{cut()} toolpaths as short line segments which additionally affords a single point of control for adding additional features such as allowing the depth to  vary as one cuts along an arc. Note that the definition matches the \verb|DXF| definition of defining the center position with a matching radius, but it will be necessary to move the tool to the actual origin, and to calculate the end position when writing out a \verb|G2/G3| arc.
 
-\lstset{firstnumber=\thegcpscad}
-\begin{writecode}{a}{gcodepreview.scad}{scad}
-module arcloop(barc,earc, xcenter, ycenter, radius) {
-  for (i = [barc : abs(1) : earc]) {
-        cut(xcenter + radius * cos(i),
-        ycenter + radius * sin(i),
-        getzpos()-(gettzpos())
-        );
-    setxpos(xcenter + radius * cos(i));
-    setypos(ycenter + radius * sin(i));
-  }
-}
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def arcloop(self, barc, earc, xcenter, ycenter, radius):
+#        global toolpath
+        toolpath = self.currenttool()
+        toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
+        i = barc
+        while i < earc: 
+            toolpath = toolpath.union(self.cutline(xcenter + radius * math.cos(math.radians(i)), ycenter + radius * math.sin(math.radians(i)), self.zpos()-(self.tzpos())))
+            self.setxpos(xcenter + radius * math.cos(math.radians(i)))
+            self.setypos(ycenter + radius * math.sin(math.radians(i)))
+            i += 1
+#        self.dxfarc(xcenter, ycenter, radius, barc, earc, self.currenttoolnumber())
+        return toolpath
 
-module narcloop(barc,earc, xcenter, ycenter, radius) {
-  for (i = [barc : -1 : earc]) {
-        cut(xcenter + radius * cos(i),
-        ycenter + radius * sin(i),
-        getzpos()-(gettzpos())
-        );
-    setxpos(xcenter + radius * cos(i));
-    setypos(ycenter + radius * sin(i));
-  }
-}
-
-\end{writecode}
-\addtocounter{gcpscad}{22}
- 
-The various textual versions are quite obvious:
-
-\lstset{firstnumber=\thegcpscad}
-\begin{writecode}{a}{gcodepreview.scad}{scad}
-module cutarcNECCdxf(ex, ey, ez, xcenter, ycenter, radius, tn) {
-  dxfarc(xcenter,ycenter,radius,0,90, tn);
-  settzpos((getzpos()-ez)/90);
-    arcloop(1,90, xcenter, ycenter, radius);
-}
-
-module cutarcNWCCdxf(ex, ey, ez, xcenter, ycenter, radius, tn) {
-  dxfarc(xcenter,ycenter,radius,90,180, tn);
-  settzpos((getzpos()-ez)/90);
-    arcloop(91,180, xcenter, ycenter, radius);
-}
-
-module cutarcSWCCdxf(ex, ey, ez, xcenter, ycenter, radius, tn) {
-  dxfarc(xcenter,ycenter,radius,180,270, tn);
-  settzpos((getzpos()-ez)/90);
-    arcloop(181,270, xcenter, ycenter, radius);
-}
-
-module cutarcSECCdxf(ex, ey, ez, xcenter, ycenter, radius, tn) {
-  dxfarc(xcenter,ycenter,radius,270,360, tn);
-  settzpos((getzpos()-ez)/90);
-    arcloop(271,360, xcenter, ycenter, radius);
-}
-
-module cutarcNECWdxf(ex, ey, ez, xcenter, ycenter, radius, tn) {
-  dxfarc(xcenter,ycenter,radius,0,90, tn);
-  settzpos((getzpos()-ez)/90);
-    narcloop(89,0, xcenter, ycenter, radius);
-}
-
-module cutarcSECWdxf(ex, ey, ez, xcenter, ycenter, radius, tn) {
-  dxfarc(xcenter,ycenter,radius,270,360, tn);
-  settzpos((getzpos()-ez)/90);
-    narcloop(359,270, xcenter, ycenter, radius);
-}
-
-module cutarcSWCWdxf(ex, ey, ez, xcenter, ycenter, radius, tn) {
-  dxfarc(xcenter,ycenter,radius,180,270, tn);
-  settzpos((getzpos()-ez)/90);
-    narcloop(269,180, xcenter, ycenter, radius);
-}
-
-module cutarcNWCWdxf(ex, ey, ez, xcenter, ycenter, radius, tn) {
-  dxfarc(xcenter,ycenter,radius,90,180, tn);
-  settzpos((getzpos()-ez)/90);
-    narcloop(179,90, xcenter, ycenter, radius);
-}
+    def narcloop(barc,earc, xcenter, ycenter, radius):
+#        global toolpath
+        toolpath = self.currenttool()
+        toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
+        i = barc
+        while i > earc: 
+            toolpath = toolpath.union(self.cutline(xcenter + radius * math.cos(math.radians(i)), ycenter + radius * math.sin(math.radians(i)), self.zpos()-(self.tzpos())))
+            self.setxpos(xcenter + radius * math.cos(math.radians(i)))
+            self.setypos(ycenter + radius * math.sin(math.radians(i)))
+            print(str(self.xpos()), str(self.ypos()))
+            i += -1
+#        self.dxfarc(xcenter, ycenter, radius, barc, earc, self.currenttoolnumber())
+        return toolpath
 
 \end{writecode}
-\addtocounter{gcpscad}{48}
+\addtocounter{gcpy}{27}
+
+There are specific commands for writing out the DXF and G-code files. Note that for the G-code version it will be necessary to calculate the end-position.
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def dxfarc(self, xcenter, ycenter, radius, anglebegin, endangle, tn):
+        if (self.generatedxf == True):
+            self.writedxf(tn, "0")
+            self.writedxf(tn, "ARC")
+            self.writedxf(tn, "10")
+            self.writedxf(tn, str(xcenter))
+            self.writedxf(tn, "20")
+            self.writedxf(tn, str(ycenter))
+            self.writedxf(tn, "40")
+            self.writedxf(tn, str(radius))
+            self.writedxf(tn, "50")
+            self.writedxf(tn, str(anglebegin))
+            self.writedxf(tn, "51")
+            self.writedxf(tn, str(endangle))
+
+    def gcodearc(self, xcenter, ycenter, radius, anglebegin, endangle, tn):
+        if (self.generategcode == True):
+            self.writegc(tn, "(0)")
+
+\end{writecode}
+\addtocounter{gcpy}{19}
+
+The various textual versions are quite obvious, and due to the requirements of G-code, it is easiest to include the G-code in them if it is wanted.
+
+%    def gcthreearc(self, xcenter, ycenter, radius, anglebegin, endangle, tn):
+%        if (self.generategcode == True):
+%            self.writegc(tn, "0")
+    
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def cutarcNECCdxf(self, ex, ey, ez, xcenter, ycenter, radius):
+#        global toolpath
+        toolpath = self.currenttool()
+        toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
+        self.dxfarc(xcenter,ycenter,radius,0,90, self.currenttoolnumber())
+        if (self.zpos == ez):
+            self.settzpos(0)
+        else:         
+            self.settzpos((self.zpos()-ez)/90)
+        toolpath = self.arcloop(1,90, xcenter, ycenter, radius)
+        self.setxpos(ex)
+        self.setypos(ey)
+        self.setzpos(ez)
+        return toolpath
+
+    def cutarcNWCCdxf(self, ex, ey, ez, xcenter, ycenter, radius):
+#        global toolpath
+        toolpath = self.currenttool()
+        toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
+        self.dxfarc(xcenter,ycenter,radius,90,180, self.currenttoolnumber())
+        if (self.zpos == ez):
+            self.settzpos(0)
+        else:         
+            self.settzpos((self.zpos()-ez)/90)
+        toolpath = self.arcloop(91,180, xcenter, ycenter, radius)
+        self.setxpos(ex)
+        self.setypos(ey)
+        self.setzpos(ez)
+        return toolpath
+
+    def cutarcSWCCdxf(self, ex, ey, ez, xcenter, ycenter, radius):
+#        global toolpath
+        toolpath = self.currenttool()
+        toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
+        self.dxfarc(xcenter,ycenter,radius,180,270, self.currenttoolnumber())
+        if (self.zpos == ez):
+            self.settzpos(0)
+        else:         
+            self.settzpos((self.zpos()-ez)/90)
+        toolpath = self.arcloop(181,270, xcenter, ycenter, radius)
+        self.setxpos(ex)
+        self.setypos(ey)
+        self.setzpos(ez)
+        return toolpath
+
+    def cutarcSECCdxf(self, ex, ey, ez, xcenter, ycenter, radius):
+#        global toolpath
+        toolpath = self.currenttool()
+        toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
+        self.dxfarc(xcenter,ycenter,radius,270,360, self.currenttoolnumber())
+        if (self.zpos == ez):
+            self.settzpos(0)
+        else:         
+            self.settzpos((self.zpos()-ez)/90)
+        toolpath = self.arcloop(271,360, xcenter, ycenter, radius)
+        self.setxpos(ex)
+        self.setypos(ey)
+        self.setzpos(ez)
+        return toolpath
+
+    def cutarcNECWdxf(self, ex, ey, ez, xcenter, ycenter, radius):
+#        global toolpath
+        toolpath = self.currenttool()
+        toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
+        self.dxfarc(xcenter,ycenter,radius,0,90, self.currenttoolnumber())
+        if (self.zpos == ez):
+            self.settzpos(0)
+        else:         
+            self.settzpos((self.zpos()-ez)/90)
+        toolpath = self.narcloop(89,0, xcenter, ycenter, radius)
+        self.setxpos(ex)
+        self.setypos(ey)
+        self.setzpos(ez)
+        return toolpath
+
+    def cutarcSECWdxf(self, ex, ey, ez, xcenter, ycenter, radius):
+#        global toolpath
+        toolpath = self.currenttool()
+        toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
+        self.dxfarc(xcenter,ycenter,radius,270,360, self.currenttoolnumber())
+        if (self.zpos == ez):
+            self.settzpos(0)
+        else:         
+            self.settzpos((self.zpos()-ez)/90)
+        toolpath = self.narcloop(359,270, xcenter, ycenter, radius)
+        self.setxpos(ex)
+        self.setypos(ey)
+        self.setzpos(ez)
+        return toolpath
+
+    def cutarcSWCWdxf(self, ex, ey, ez, xcenter, ycenter, radius):
+#        global toolpath
+        toolpath = self.currenttool()
+        toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
+        self.dxfarc(xcenter,ycenter,radius,180,270, self.currenttoolnumber())
+        if (self.zpos == ez):
+            self.settzpos(0)
+        else:         
+            self.settzpos((self.zpos()-ez)/90)
+        toolpath = self.narcloop(269,180, xcenter, ycenter, radius)
+        self.setxpos(ex)
+        self.setypos(ey)
+        self.setzpos(ez)
+        return toolpath
+
+    def cutarcNWCWdxf(self, ex, ey, ez, xcenter, ycenter, radius):
+#        global toolpath
+        toolpath = self.currenttool()
+        toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
+        self.dxfarc(xcenter,ycenter,radius,90,180, self.currenttoolnumber())
+        if (self.zpos == ez):
+            self.settzpos(0)
+        else:         
+            self.settzpos((self.zpos()-ez)/90)
+        toolpath = self.narcloop(179,90, xcenter, ycenter, radius)
+        self.setxpos(ex)
+        self.setypos(ey)
+        self.setzpos(ez)
+        return toolpath
+
+\end{writecode}
+\addtocounter{gcpy}{33}
 
 Using such commands to create a circle is quite straight-forward:
 
 \begin{verbatim}
-cutarcNECCdxf(-stocklength/4, stockwidth/4+stockwidth/16, -stockthickness, -stocklength/4, stockwidth/4, stockwidth/16, small_square_tool_no);
-cutarcNWCCdxf(-(stocklength/4+stockwidth/16), stockwidth/4, -stockthickness, -stocklength/4, stockwidth/4, stockwidth/16, small_square_tool_no);
-cutarcSWCCdxf(-stocklength/4, stockwidth/4-stockwidth/16, -stockthickness, -stocklength/4, stockwidth/4, stockwidth/16, small_square_tool_no);
-cutarcSECCdxf(-(stocklength/4-stockwidth/16), stockwidth/4, -stockthickness, -stocklength/4, stockwidth/4, stockwidth/16, small_square_tool_no);
+cutarcNECCdxf(-stockXwidth/4, stockYheight/4+stockYheight/16, -stockZthickness, -stockXwidth/4, stockYheight/4, stockYheight/16)
+cutarcNWCCdxf(-(stockXwidth/4+stockYheight/16), stockYheight/4, -stockZthickness, -stockXwidth/4, stockYheight/4, stockYheight/16)
+cutarcSWCCdxf(-stockXwidth/4, stockYheight/4-stockYheight/16, -stockZthickness, -stockXwidth/4, stockYheight/4, stockYheight/16)
+cutarcSECCdxf(-(stockXwidth/4-stockYheight/16), stockYheight/4, -stockZthickness, -stockXwidth/4, stockYheight/4, stockYheight/16)
 \end{verbatim}
  
 \subsection{Keyhole toolpath and undercut tooling}
  
 \label{subsec:keyholetoolpaths}
-The first topologically unusual toolpath is \DescribeRoutine{cutkeyhole toolpath} --- where 
-other toolpaths have a direct correspondence between the associated geometry and the area cut, 
-that Keyhole toolpaths may be used with tooling which undercuts will result in the creation of 
-two different physical physical regions: the visible surface matching the union of the tool
-perimeter at the entry point and the linear movement of the shaft and the larger region of the 
-tool perimeter at the depth which the tool is plunged to and moved along.
+The first topologically unusual toolpath is \DescribeRoutine{cutkeyhole toolpath} --- where other toolpaths have a direct correspondence between the associated geometry and the area cut, that Keyhole toolpaths may be used with tooling which undercuts will result in the creation of two different physical physical regions: the visible surface matching the union of the tool perimeter at the entry point and the linear movement of the shaft and the larger region of the tool perimeter at the depth which the tool is plunged to and moved along.
  
 Tooling for such toolpaths is defined at paragraph~\ref{para:undercuttooling}
 
-Due to the possibility of rotation, for the in-between positions there are more cases 
-than one would think — for each quadrant there are the following possibilities:
+Due to the possibility of rotation, for the in-between positions there are more cases than one would think — for each quadrant there are the following possibilities:
 
 \begin{itemize}
  \item one node on the clockwise side is outside of the quadrant
@@ -2990,42 +3464,37 @@ than one would think — for each quadrant there are the following possibilities
  \item two nodes on the counter-clockwise side are outside of the quadrant
 \end{itemize}
  
-Supporting all of these would require trigonometric comparisons in the If else blocks, 
-so only the 4 quadrants, N, S, E, and W will be supported in the initial version. 
-This will be done by wrapping the command with a version which only accepts those options: 
+Supporting all of these would require trigonometric comparisons in the If else blocks, so only the 4 quadrants, N, S, E, and W will be supported in the initial version. This will be done by wrapping the command with a version which only accepts those options: 
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
-module cutkeyhole_toolpath(kh_start_depth, kh_max_depth, kht_direction, kh_distance, kh_tool_no) {   
+module cutkeyhole_toolpath(kh_start_depth, kh_max_depth, kht_direction, kh_distance, kh_tool_num) {   
 if (kht_direction == "N") {
-  cutKH_toolpath_degrees(kh_start_depth, kh_max_depth, 90, kh_distance, kh_tool_no);
+  cutKH_toolpath_degrees(kh_start_depth, kh_max_depth, 90, kh_distance, kh_tool_num);
     } else if (kht_direction == "S") {
-  cutKH_toolpath_degrees(kh_start_depth, kh_max_depth, 270, kh_distance, kh_tool_no);
+  cutKH_toolpath_degrees(kh_start_depth, kh_max_depth, 270, kh_distance, kh_tool_num);
     } else if (kht_direction == "E") {
-  cutKH_toolpath_degrees(kh_start_depth, kh_max_depth, 0, kh_distance, kh_tool_no);
+  cutKH_toolpath_degrees(kh_start_depth, kh_max_depth, 0, kh_distance, kh_tool_num);
     } else if (kht_direction == "W") {
-  cutKH_toolpath_degrees(kh_start_depth, kh_max_depth, 180, kh_distance, kh_tool_no);
+  cutKH_toolpath_degrees(kh_start_depth, kh_max_depth, 180, kh_distance, kh_tool_num);
     }
 }
 
 \end{writecode}
 \addtocounter{gcpscad}{12}
  
-The original version of the command, \DescribeRoutine{cutKH toolpath degrees} retains 
-an interface which allows calling it for arbitrary beginning and ending points of an arc. 
-Note that code is still present for the partial calculation of one quadrant (for the case of 
-all nodes within the quadrant).
+The original version of the command, \DescribeRoutine{cutKH toolpath degrees} retains an interface which allows calling it for arbitrary beginning and ending points of an arc. Note that code is still present for the partial calculation of one quadrant (for the case of all nodes within the quadrant).
 
 The first task is to place a circle at the origin which is invariant of angle:
  
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
-module cutKH_toolpath_degrees(kh_start_depth, kh_max_depth, kh_angle, kh_distance, kh_tool_no) {
+module cutKH_toolpath_degrees(kh_start_depth, kh_max_depth, kh_angle, kh_distance, kh_tool_num) {
 //Circle at entry hole
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (7))/2,0,90, KH_tool_no);
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (7))/2,90,180, KH_tool_no);
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (7))/2,180,270, KH_tool_no);
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (7))/2,270,360, KH_tool_no);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_num, (7))/2,0,90, KH_tool_num);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_num, (7))/2,90,180, KH_tool_num);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_num, (7))/2,180,270, KH_tool_num);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_num, (7))/2,270,360, KH_tool_num);
 
 \end{writecode}
 \addtocounter{gcpscad}{7}
@@ -3037,35 +3506,35 @@ Then it will be necessary to test for each possible case in a series of If Else 
 //Outlines of entry hole and slot
   if (kh_angle == 0) {
     //Lower left of entry hole
-    dxfarc(getxpos(),getypos(),9.525/2,180,270, KH_tool_no);
+    dxfarc(getxpos(),getypos(),9.525/2,180,270, KH_tool_num);
     //Upper left of entry hole
-    dxfarc(getxpos(),getypos(),9.525/2,90,180, KH_tool_no);
+    dxfarc(getxpos(),getypos(),9.525/2,90,180, KH_tool_num);
     //Upper right of entry hole
-    dxfarc(getxpos(),getypos(),9.525/2,90-acos(tool_diameter(KH_tool_no, 5)/tool_diameter(KH_tool_no, 1)), 90, KH_tool_no);
+    dxfarc(getxpos(),getypos(),9.525/2,90-acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), 90, KH_tool_num);
     //Lower right of entry hole
-    dxfarc(getxpos(),getypos(),9.525/2,270, 270+acos(tool_diameter(KH_tool_no, 5)/tool_diameter(KH_tool_no, 1)), KH_tool_no);
+    dxfarc(getxpos(),getypos(),9.525/2,270, 270+acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), KH_tool_num);
     //Actual line of cut
     dxfpolyline(getxpos(),getypos(),getxpos()+kh_distance,getypos());
     //upper right of slot
-    dxfarc(getxpos()+kh_distance,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90, KH_tool_no);
+    dxfarc(getxpos()+kh_distance,getypos(),tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2,0,90, KH_tool_num);
     //lower right of slot
-    dxfarc(getxpos()+kh_distance,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360, KH_tool_no);
+    dxfarc(getxpos()+kh_distance,getypos(),tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2,270,360, KH_tool_num);
     //upper right slot
     dxfpolyline(
-        getxpos()+(sqrt((tool_diameter(KH_tool_no,1)^2)-(tool_diameter(KH_tool_no,5)^2))/2), 
-        getypos()+tool_diameter(KH_tool_no, (kh_max_depth))/2,//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth-6.34))/2)^2,
+        getxpos()+(sqrt((tool_diameter(KH_tool_num,1)^2)-(tool_diameter(KH_tool_num,5)^2))/2), 
+        getypos()+tool_diameter(KH_tool_num, (kh_max_depth))/2,//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_num, (kh_max_depth-6.34))/2)^2,
         getxpos()+kh_distance,
     //end position at top of slot
-        getypos()+tool_diameter(KH_tool_no, (kh_max_depth))/2, 
-        KH_tool_no);
+        getypos()+tool_diameter(KH_tool_num, (kh_max_depth))/2, 
+        KH_tool_num);
     //lower right slot
     dxfpolyline(
-        getxpos()+(sqrt((tool_diameter(KH_tool_no,1)^2)-(tool_diameter(KH_tool_no,5)^2))/2), 
-        getypos()-tool_diameter(KH_tool_no, (kh_max_depth))/2,//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth-6.34))/2)^2,
+        getxpos()+(sqrt((tool_diameter(KH_tool_num,1)^2)-(tool_diameter(KH_tool_num,5)^2))/2), 
+        getypos()-tool_diameter(KH_tool_num, (kh_max_depth))/2,//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_num, (kh_max_depth-6.34))/2)^2,
         getxpos()+kh_distance,
     //end position at top of slot
-        getypos()-tool_diameter(KH_tool_no, (kh_max_depth))/2, 
-        KH_tool_no);
+        getypos()-tool_diameter(KH_tool_num, (kh_max_depth))/2, 
+        KH_tool_num);
     hull(){
       translate([xpos(), ypos(), zpos()]){
         gcp_keyhole_shaft(6.35, 9.525);
@@ -3087,48 +3556,48 @@ Then it will be necessary to test for each possible case in a series of If Else 
     setxpos(getxpos()-kh_distance);
   } else if (kh_angle > 0 && kh_angle < 90) {
 //echo(kh_angle);
-  dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,90+kh_angle,180+kh_angle, KH_tool_no);
-  dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,180+kh_angle,270+kh_angle, KH_tool_no);
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,kh_angle+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)),90+kh_angle, KH_tool_no);
-dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_no, (kh_max_depth))/2,270+kh_angle,360+kh_angle-asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)), KH_tool_no);
+  dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_num, (kh_max_depth))/2,90+kh_angle,180+kh_angle, KH_tool_num);
+  dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_num, (kh_max_depth))/2,180+kh_angle,270+kh_angle, KH_tool_num);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_num, (kh_max_depth))/2,kh_angle+asin((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_num, (kh_max_depth))/2)),90+kh_angle, KH_tool_num);
+dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_num, (kh_max_depth))/2,270+kh_angle,360+kh_angle-asin((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_num, (kh_max_depth))/2)), KH_tool_num);
 dxfarc(getxpos()+(kh_distance*cos(kh_angle)),
-  getypos()+(kh_distance*sin(kh_angle)),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0+kh_angle,90+kh_angle, KH_tool_no);
-dxfarc(getxpos()+(kh_distance*cos(kh_angle)),getypos()+(kh_distance*sin(kh_angle)),tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270+kh_angle,360+kh_angle, KH_tool_no);
-dxfpolyline( getxpos()+tool_diameter(KH_tool_no, (kh_max_depth))/2*cos(kh_angle+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2))),
- getypos()+tool_diameter(KH_tool_no, (kh_max_depth))/2*sin(kh_angle+asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2))),
- getxpos()+(kh_distance*cos(kh_angle))-((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)*sin(kh_angle)),
- getypos()+(kh_distance*sin(kh_angle))+((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)*cos(kh_angle)), KH_tool_no);
-//echo("a",tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2);
-//echo("c",tool_diameter(KH_tool_no, (kh_max_depth))/2);
-echo("Aangle",asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_no, (kh_max_depth))/2)));
+  getypos()+(kh_distance*sin(kh_angle)),tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2,0+kh_angle,90+kh_angle, KH_tool_num);
+dxfarc(getxpos()+(kh_distance*cos(kh_angle)),getypos()+(kh_distance*sin(kh_angle)),tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2,270+kh_angle,360+kh_angle, KH_tool_num);
+dxfpolyline( getxpos()+tool_diameter(KH_tool_num, (kh_max_depth))/2*cos(kh_angle+asin((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_num, (kh_max_depth))/2))),
+ getypos()+tool_diameter(KH_tool_num, (kh_max_depth))/2*sin(kh_angle+asin((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_num, (kh_max_depth))/2))),
+ getxpos()+(kh_distance*cos(kh_angle))-((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)*sin(kh_angle)),
+ getypos()+(kh_distance*sin(kh_angle))+((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)*cos(kh_angle)), KH_tool_num);
+//echo("a",tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2);
+//echo("c",tool_diameter(KH_tool_num, (kh_max_depth))/2);
+echo("Aangle",asin((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_num, (kh_max_depth))/2)));
 //echo(kh_angle);
  cutwithfeed(getxpos()+(kh_distance*cos(kh_angle)),getypos()+(kh_distance*sin(kh_angle)),-kh_max_depth,feed);
  setxpos(getxpos()-(kh_distance*cos(kh_angle)));
  setypos(getypos()-(kh_distance*sin(kh_angle)));
   } else if (kh_angle == 90) {
     //Lower left of entry hole
-    dxfarc(getxpos(),getypos(),9.525/2,180,270, KH_tool_no);
+    dxfarc(getxpos(),getypos(),9.525/2,180,270, KH_tool_num);
     //Lower right of entry hole
-    dxfarc(getxpos(),getypos(),9.525/2,270,360, KH_tool_no);
+    dxfarc(getxpos(),getypos(),9.525/2,270,360, KH_tool_num);
     //Upper right of entry hole
-    dxfarc(getxpos(),getypos(),9.525/2,0,acos(tool_diameter(KH_tool_no, 5)/tool_diameter(KH_tool_no, 1)), KH_tool_no);
+    dxfarc(getxpos(),getypos(),9.525/2,0,acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), KH_tool_num);
     //Upper left of entry hole
-    dxfarc(getxpos(),getypos(),9.525/2,180-acos(tool_diameter(KH_tool_no, 5)/tool_diameter(KH_tool_no, 1)), 180,KH_tool_no);
+    dxfarc(getxpos(),getypos(),9.525/2,180-acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), 180,KH_tool_num);
     //Actual line of cut
     dxfpolyline(getxpos(),getypos(),getxpos(),getypos()+kh_distance);
     //upper right of slot
-    dxfarc(getxpos(),getypos()+kh_distance,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,0,90, KH_tool_no);
+    dxfarc(getxpos(),getypos()+kh_distance,tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2,0,90, KH_tool_num);
     //upper left of slot
-    dxfarc(getxpos(),getypos()+kh_distance,tool_diameter(KH_tool_no, (kh_max_depth+6.35))/2,90,180, KH_tool_no);
+    dxfarc(getxpos(),getypos()+kh_distance,tool_diameter(KH_tool_num, (kh_max_depth+6.35))/2,90,180, KH_tool_num);
     //right of slot
     dxfpolyline(
-        getxpos()+tool_diameter(KH_tool_no, (kh_max_depth))/2, 
-        getypos()+(sqrt((tool_diameter(KH_tool_no,1)^2)-(tool_diameter(KH_tool_no,5)^2))/2),//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth-6.34))/2)^2,
-        getxpos()+tool_diameter(KH_tool_no, (kh_max_depth))/2,
+        getxpos()+tool_diameter(KH_tool_num, (kh_max_depth))/2, 
+        getypos()+(sqrt((tool_diameter(KH_tool_num,1)^2)-(tool_diameter(KH_tool_num,5)^2))/2),//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_num, (kh_max_depth-6.34))/2)^2,
+        getxpos()+tool_diameter(KH_tool_num, (kh_max_depth))/2,
     //end position at top of slot
         getypos()+kh_distance, 
-        KH_tool_no);
-    dxfpolyline(getxpos()-tool_diameter(KH_tool_no, (kh_max_depth))/2, getypos()+(sqrt((tool_diameter(KH_tool_no,1)^2)-(tool_diameter(KH_tool_no,5)^2))/2), getxpos()-tool_diameter(KH_tool_no, (kh_max_depth+6.35))/2,getypos()+kh_distance, KH_tool_no);
+        KH_tool_num);
+    dxfpolyline(getxpos()-tool_diameter(KH_tool_num, (kh_max_depth))/2, getypos()+(sqrt((tool_diameter(KH_tool_num,1)^2)-(tool_diameter(KH_tool_num,5)^2))/2), getxpos()-tool_diameter(KH_tool_num, (kh_max_depth+6.35))/2,getypos()+kh_distance, KH_tool_num);
     hull(){
       translate([xpos(), ypos(), zpos()]){
         gcp_keyhole_shaft(6.35, 9.525);
@@ -3150,35 +3619,35 @@ echo("Aangle",asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diam
     setypos(getypos()-kh_distance);
   } else if (kh_angle == 180) {
     //Lower right of entry hole
-    dxfarc(getxpos(),getypos(),9.525/2,270,360, KH_tool_no);
+    dxfarc(getxpos(),getypos(),9.525/2,270,360, KH_tool_num);
     //Upper right of entry hole
-    dxfarc(getxpos(),getypos(),9.525/2,0,90, KH_tool_no);
+    dxfarc(getxpos(),getypos(),9.525/2,0,90, KH_tool_num);
     //Upper left of entry hole
-    dxfarc(getxpos(),getypos(),9.525/2,90, 90+acos(tool_diameter(KH_tool_no, 5)/tool_diameter(KH_tool_no, 1)), KH_tool_no);
+    dxfarc(getxpos(),getypos(),9.525/2,90, 90+acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), KH_tool_num);
     //Lower left of entry hole
-    dxfarc(getxpos(),getypos(),9.525/2, 270-acos(tool_diameter(KH_tool_no, 5)/tool_diameter(KH_tool_no, 1)), 270, KH_tool_no);
+    dxfarc(getxpos(),getypos(),9.525/2, 270-acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), 270, KH_tool_num);
     //upper left of slot
-    dxfarc(getxpos()-kh_distance,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+6.35))/2,90,180, KH_tool_no);
+    dxfarc(getxpos()-kh_distance,getypos(),tool_diameter(KH_tool_num, (kh_max_depth+6.35))/2,90,180, KH_tool_num);
     //lower left of slot
-    dxfarc(getxpos()-kh_distance,getypos(),tool_diameter(KH_tool_no, (kh_max_depth+6.35))/2,180,270, KH_tool_no);
+    dxfarc(getxpos()-kh_distance,getypos(),tool_diameter(KH_tool_num, (kh_max_depth+6.35))/2,180,270, KH_tool_num);
     //Actual line of cut
     dxfpolyline(getxpos(),getypos(),getxpos()-kh_distance,getypos());
     //upper left slot
     dxfpolyline(
-        getxpos()-(sqrt((tool_diameter(KH_tool_no,1)^2)-(tool_diameter(KH_tool_no,5)^2))/2), 
-        getypos()+tool_diameter(KH_tool_no, (kh_max_depth))/2,//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth-6.34))/2)^2,
+        getxpos()-(sqrt((tool_diameter(KH_tool_num,1)^2)-(tool_diameter(KH_tool_num,5)^2))/2), 
+        getypos()+tool_diameter(KH_tool_num, (kh_max_depth))/2,//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_num, (kh_max_depth-6.34))/2)^2,
         getxpos()-kh_distance,
     //end position at top of slot
-        getypos()+tool_diameter(KH_tool_no, (kh_max_depth))/2, 
-        KH_tool_no);
+        getypos()+tool_diameter(KH_tool_num, (kh_max_depth))/2, 
+        KH_tool_num);
     //lower right slot
     dxfpolyline(
-        getxpos()-(sqrt((tool_diameter(KH_tool_no,1)^2)-(tool_diameter(KH_tool_no,5)^2))/2), 
-        getypos()-tool_diameter(KH_tool_no, (kh_max_depth))/2,//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth-6.34))/2)^2,
+        getxpos()-(sqrt((tool_diameter(KH_tool_num,1)^2)-(tool_diameter(KH_tool_num,5)^2))/2), 
+        getypos()-tool_diameter(KH_tool_num, (kh_max_depth))/2,//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_num, (kh_max_depth-6.34))/2)^2,
         getxpos()-kh_distance,
     //end position at top of slot
-        getypos()-tool_diameter(KH_tool_no, (kh_max_depth))/2, 
-        KH_tool_no);
+        getypos()-tool_diameter(KH_tool_num, (kh_max_depth))/2, 
+        KH_tool_num);
     hull(){
       translate([xpos(), ypos(), zpos()]){
         gcp_keyhole_shaft(6.35, 9.525);
@@ -3200,35 +3669,35 @@ echo("Aangle",asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diam
     setxpos(getxpos()+kh_distance);
   } else if (kh_angle == 270) {
     //Upper right of entry hole
-    dxfarc(getxpos(),getypos(),9.525/2,0,90, KH_tool_no);
+    dxfarc(getxpos(),getypos(),9.525/2,0,90, KH_tool_num);
     //Upper left of entry hole
-    dxfarc(getxpos(),getypos(),9.525/2,90,180, KH_tool_no);
+    dxfarc(getxpos(),getypos(),9.525/2,90,180, KH_tool_num);
     //lower right of slot
-    dxfarc(getxpos(),getypos()-kh_distance,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,270,360, KH_tool_no);
+    dxfarc(getxpos(),getypos()-kh_distance,tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2,270,360, KH_tool_num);
     //lower left of slot
-    dxfarc(getxpos(),getypos()-kh_distance,tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2,180,270, KH_tool_no);
+    dxfarc(getxpos(),getypos()-kh_distance,tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2,180,270, KH_tool_num);
     //Actual line of cut
     dxfpolyline(getxpos(),getypos(),getxpos(),getypos()-kh_distance);
     //right of slot
     dxfpolyline(
-        getxpos()+tool_diameter(KH_tool_no, (kh_max_depth))/2, 
-        getypos()-(sqrt((tool_diameter(KH_tool_no,1)^2)-(tool_diameter(KH_tool_no,5)^2))/2),//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth-6.34))/2)^2,
-        getxpos()+tool_diameter(KH_tool_no, (kh_max_depth))/2,
+        getxpos()+tool_diameter(KH_tool_num, (kh_max_depth))/2, 
+        getypos()-(sqrt((tool_diameter(KH_tool_num,1)^2)-(tool_diameter(KH_tool_num,5)^2))/2),//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_num, (kh_max_depth-6.34))/2)^2,
+        getxpos()+tool_diameter(KH_tool_num, (kh_max_depth))/2,
     //end position at top of slot
         getypos()-kh_distance, 
-        KH_tool_no);
+        KH_tool_num);
     //left of slot
     dxfpolyline(
-        getxpos()-tool_diameter(KH_tool_no, (kh_max_depth))/2, 
-        getypos()-(sqrt((tool_diameter(KH_tool_no,1)^2)-(tool_diameter(KH_tool_no,5)^2))/2),//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_no, (kh_max_depth-6.34))/2)^2,
-        getxpos()-tool_diameter(KH_tool_no, (kh_max_depth))/2,
+        getxpos()-tool_diameter(KH_tool_num, (kh_max_depth))/2, 
+        getypos()-(sqrt((tool_diameter(KH_tool_num,1)^2)-(tool_diameter(KH_tool_num,5)^2))/2),//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_num, (kh_max_depth-6.34))/2)^2,
+        getxpos()-tool_diameter(KH_tool_num, (kh_max_depth))/2,
     //end position at top of slot
         getypos()-kh_distance, 
-        KH_tool_no);
+        KH_tool_num);
     //Lower right of entry hole
-    dxfarc(getxpos(),getypos(),9.525/2,360-acos(tool_diameter(KH_tool_no, 5)/tool_diameter(KH_tool_no, 1)), 360, KH_tool_no);
+    dxfarc(getxpos(),getypos(),9.525/2,360-acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), 360, KH_tool_num);
     //Lower left of entry hole
-    dxfarc(getxpos(),getypos(),9.525/2,180, 180+acos(tool_diameter(KH_tool_no, 5)/tool_diameter(KH_tool_no, 1)), KH_tool_no);
+    dxfarc(getxpos(),getypos(),9.525/2,180, 180+acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), KH_tool_num);
     hull(){
       translate([xpos(), ypos(), zpos()]){
         gcp_keyhole_shaft(6.35, 9.525);
@@ -3256,31 +3725,17 @@ echo("Aangle",asin((tool_diameter(KH_tool_no, (kh_max_depth+4.36))/2)/(tool_diam
  
 \subsection{Shapes and tool movement}
  
-The majority of commands will be more general, focusing on tooling which is generally
-supported by this library, moving in lines and arcs so as to describe shapes which
-lend themselves to representation with those tool and which match up with both
-toolpaths and supported geometry in Carbide Create, and the usage requirements of
-the typical user.
+The majority of commands will be more general, focusing on tooling which is generally supported by this library, moving in lines and arcs so as to describe shapes which lend themselves to representation with those tool and which match up with both toolpaths and supported geometry in Carbide Create, and the usage requirements of the typical user.
 
 \subsubsection{Generalized commands and cuts}
 
-The first consideration is a naming convention which will allow a generalized set of associated
-commands to be defined. The initial version will only create OpenSCAD commands for 3D modeling
-and write out matching DXF files. At a later time this will be extended with G-code support.
+The first consideration is a naming convention which will allow a generalized set of associated commands to be defined. The initial version will only create OpenSCAD commands for 3D modeling and write out matching DXF files. At a later time this will be extended with G-code support.
  
 \paragraph{begincutdxf}
  
-The first command, \DescribeRoutine{begincutdxf} will need to allow the machine to rapid to 
-the beginning point of the cut and then rapid down to the surface of the stock, and then 
-plunge down to the depth of the cut. The implementation will need to allow for a hook where 
-the Depth per Pass is applied to the plunge operation so that multiple passes are made.
+The first command, \DescribeRoutine{begincutdxf} will need to allow the machine to rapid to the beginning point of the cut and then rapid down to the surface of the stock, and then plunge down to the depth of the cut. The implementation will need to allow for a hook where the Depth per Pass is applied to the plunge operation so that multiple passes are made.
 
-The first module will ensure that the tool is safely up above
-the stock and will rapid to the position specified at the retract height (moving to that 
-position as an initial step, then will \texttt{cutwithfeed} to the specified position
-at the specified feed rate. Despite \texttt{dxf} being included in the filename no change
-is made to the dxf file at this time, this simply indicates that this file is preparatory to
-the use of \DescribeRoutine{continuecutdxf}.
+The first module will ensure that the tool is safely up above the stock and will rapid to the position specified at the retract height (moving to that position as an initial step, then will \texttt{cutwithfeed} to the specified position at the specified feed rate. Despite \texttt{dxf} being included in the filename no change is made to the dxf file at this time, this simply indicates that this file is preparatory to the use of \DescribeRoutine{continuecutdxf}.
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -3303,23 +3758,11 @@ module continuecutdxf(ex, ey, ez, fr) {
 
 \paragraph{Rectangles}
 
-Cutting rectangles while writing out their perimeter in the DXF files (so that they may
-be assigned a matching toolpath in a traditional CAM program upon import) will require
-the origin coordinates, height and width and depth of the pocket, and the tool \# so
-that the corners may have a radius equal to the tool which is used. Whether a given module
-is an interior pocket or an outline (interior or exterior) will be determined by the
-specifics of the module and its usage/positioning, with \texttt{outline} being added to 
-those modules which cut perimeter.
+Cutting rectangles while writing out their perimeter in the DXF files (so that they may be assigned a matching toolpath in a traditional CAM program upon import) will require the origin coordinates, height and width and depth of the pocket, and the tool \# so that the corners may have a radius equal to the tool which is used. Whether a given module is an interior pocket or an outline (interior or exterior) will be determined by the specifics of the module and its usage/positioning, with \texttt{outline} being added to those modules which cut perimeter.
 
-A further consideration is that cut orientation as an option should be accounted for
-if writing out G-code, as well as stepover, and the nature of initial
-entry (whether ramping in would be implemented, and if so, at what angle). Advanced 
-toolpath strategies such as trochoidal milling could also be implemented.
+A further consideration is that cut orientation as an option should be accounted for if writing out G-code, as well as stepover, and the nature of initial entry (whether ramping in would be implemented, and if so, at what angle). Advanced toolpath strategies such as trochoidal milling could also be implemented.
 
-Th routine \DescribeRoutine{cutrectangledxf}%
-cuts the outline of a rectangle creating sharp corners. Note that the initial 
-version would work as a beginning point for vertical cutting if the \texttt{hull()} operation 
-was removed and the loop was uncommented:
+Th routine \DescribeRoutine{cutrectangledxf} cuts the outline of a rectangle creating sharp corners. Note that the initial version would work as a beginning point for vertical cutting if the \texttt{hull()} operation was removed and the loop was uncommented:
  
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -3351,8 +3794,7 @@ module cutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {//passes
 \end{writecode}
 \addtocounter{gcpscad}{25}
 
-A matching command: \DescribeRoutine{cutrectangleoutlinedxf} 
-cuts the outline of a rounded rectangle and is a simplification of the above:
+A matching command: \DescribeRoutine{cutrectangleoutlinedxf} cuts the outline of a rounded rectangle and is a simplification of the above:
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -3375,10 +3817,7 @@ module cutrectangleoutlinedxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {//passe
 \end{writecode}
 \addtocounter{gcpscad}{16}
 
-Which suggests a further command, \DescribeRoutine{rectangleoutlinedxf}
-for simply adding a rectangle (a potential use of
-which would be in Job Setup to add the stock outline to DXFs to assist in registration 
-of jobs with multiple tools):
+Which suggests a further command, \DescribeRoutine{rectangleoutlinedxf} for simply adding a rectangle (a potential use of which would be in Job Setup to add the stock outline to DXFs to assist in registration of jobs with multiple tools):
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -3392,11 +3831,9 @@ module rectangleoutlinedxf(bx, by, bz, rwidth, rheight, rtn) {
 \end{writecode}
 \addtocounter{gcpscad}{7}
 
-\noindent the initial section performs the cutting operation for the 3D preview while the 
-latter section writes out the outline to the DXF files.
+\noindent the initial section performs the cutting operation for the 3D preview while the latter section writes out the outline to the DXF files.
 
-A variant of the  cutting version of that file, \DescribeRoutine{cutoutrectangledxf} 
-will cut to the outside:
+A variant of the  cutting version of that file, \DescribeRoutine{cutoutrectangledxf} will cut to the outside:
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -3416,28 +3853,26 @@ module cutoutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {
 \end{writecode}
 \addtocounter{gcpscad}{13}
 
-\subsection{Expansion}
-
-The balance of shapes will go into \texttt{cut2Dshapes.scad} and of course it will be 
-possible to create additional files for specific purposes.
-
-\lstset{firstnumber=1}
-\begin{writecode}{w}{cut2Dshapes.scad}{scad}
-//!OpenSCAD
-
-\end{writecode}
-\addtocounter{cuttwod}{2}
+%\subsection{Expansion}
+%
+%The balance of shapes will go into \texttt{cut2Dshapes.scad} and of course it will be possible to create additional files for specific purposes.
+%
+%\lstset{firstnumber=1}
+%\begin{writecode}{w}{cut2Dshapes.scad}{scad}
+%//!OpenSCAD
+%
+%\end{writecode}
+%\addtocounter{cuttwod}{2}
 
 \section{Future}
 
 \subsection{Images}
 
-Would it be helpful to re-create code algorithms/sections using OpenSCAD Graph Editor 
-so as to represent/illustrate the program?
+Would it be helpful to re-create code algorithms/sections using OpenSCAD Graph Editor so as to represent/illustrate the program?
 
-\subsection{Generalized DXF creation}
-
-Generalize the creation of DXFs based on the projection() of a toolpath?
+%\subsection{Generalized DXF creation}
+%
+%Generalize the creation of DXFs based on the projection() of a toolpath?
 
 \subsection{Import G-code}
 
@@ -3491,8 +3926,7 @@ c.f., \url{https://linuxcnc.org/docs/html/gcode/g-code.html#gcode:g5}
 
 \subsection{Bézier curves in 3 dimensions}
  
-One question is how many Bézier curves would it be necessary to have to define a surface
-in 3 dimensions. Attributes for this which are desirable/necessary:
+One question is how many Bézier curves would it be necessary to have to define a surface in 3 dimensions. Attributes for this which are desirable/necessary:
 
 \begin{itemize}
 \item concise --- a given Bézier curve should be represented by just the point coordinates, 
@@ -3515,9 +3949,7 @@ For the three planes:
  \item ZY
 \end{itemize}
  
-\noindent it should be possible to have three Bézier curves (left-most/right-most or front-back or 
-top/bottom for two, and a mid-line for the third), so a region which can be so represented would 
-be definable by:
+\noindent it should be possible to have three Bézier curves (left-most/right-most or front-back or top/bottom for two, and a mid-line for the third), so a region which can be so represented would be definable by:
  
 \begin{verbatim}
 3 planes * 3 Béziers * (2 on-curve + 2 off-curve points) == 36 coordinate pairs
@@ -3528,8 +3960,7 @@ be definable by:
  
 \url{https://github.com/DavidPhillipOster/Teapot}
 
-\noindent and regions which could not be so represented could be sub-divided until the 
-representation is workable.
+\noindent and regions which could not be so represented could be sub-divided until the representation is workable.
 
 Or, it may be that fewer (only two?) curves are needed:
 
@@ -3537,9 +3968,18 @@ Or, it may be that fewer (only two?) curves are needed:
 
 \url{https://pages.mtu.edu/~shene/COURSES/cs3621/NOTES/notes.html}
 
+c.f., \url{https://github.com/BelfrySCAD/BOSL2/wiki/nurbs.scad} and \url{https://old.reddit.com/r/OpenPythonSCAD/comments/1gjcz4z/pythonscad_will_get_a_new_spline_function/}
+
 \section{Other Resources}
  
 Holidays are from \url{https://nationaltoday.com/}
+
+\subsection{DXFs}
+
+\url{http://www.paulbourke.net/dataformats/dxf/}
+
+\noindent\url{https://paulbourke.net/dataformats/dxf/min3d.html}
+
 
 %This document was re-worked per: \url{https://tex.stackexchange.com/questions/47237/different-approach-to-literate-programming-for-latex}
  
@@ -3596,7 +4036,8 @@ Ousterhout, John K.
 \MergeAllFiles{pygcodepreview.scad}
 \MergeAllFiles{gcodepreview.scad}
 \MergeAllFiles{gcodepreviewtemplate.scad}
-\MergeAllFiles{cut2Dshapes.scad}
+\MergeAllFiles{gcodepreviewtemplate.py}
+%\MergeAllFiles{cut2Dshapes.scad}
 
 \end{document}
 

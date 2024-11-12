@@ -9,6 +9,8 @@
 \usepackage{textcomp}
 \usepackage{booktabs}
 
+\frenchspacing
+
 %\documentclass{article}
 
 \makeatletter
@@ -63,6 +65,7 @@
 \newcounter{pyscad}
 \newcounter{gcpscad}
 \newcounter{gcptmpl}
+\newcounter{gcptmplpy}
 \newcounter{cuttwod}
 \newcounter{rdme}
 \setcounter{rdme}{0}
@@ -117,6 +120,10 @@ Last line was \the\lst@lineno\ for #1\ gcpy\ \thegcpy\ pyscad\ \thepyscad\ gcpsc
         {
             \renewcommand{\lstprompt}{\ gcpscad}
 %            \lstset{firstnumber=\thegcpscad}
+        }
+        {gcodepreviewtemplate.py}
+        {
+            \renewcommand{\lstprompt}{\ gcptmplpy}
         }
         {gcodepreviewtemplate.scad}
         {
