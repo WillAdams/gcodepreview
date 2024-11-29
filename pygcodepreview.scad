@@ -1,32 +1,32 @@
 //!OpenSCAD
 
-//gcodepreview 0.61, see gcodepreview.scad
+//gcodepreview 0.7, see gcodepreview.scad
 
- module osetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin) {
-     psetupstock(stocklength, stockwidth, stockthickness, zeroheight, stockorigin);
+ module osetupstock(stockXwidth, stockYheight, stockZthickness, zeroheight, stockzero) {
+     psetupstock(stockXwidth, stockYheight, stockZthickness, zeroheight, stockzero);
  }
 
-function getxpos() = xpos();
-function getypos() = ypos();
-function getzpos() = zpos();
-function gettzpos() = tzpos();
-
-module setxpos(newxpos) {
-    psetxpos(newxpos);
-}
-
-module setypos(newypos) {
-    psetypos(newypos);
-}
-
-module setzpos(newzpos) {
-    psetzpos(newzpos);
-}
-
-module settzpos(newtzpos) {
-    psettzpos(newtzpos);
-}
-
+//function getxpos() = xpos();
+//function getypos() = ypos();
+//function getzpos() = zpos();
+//function gettzpos() = tzpos();
+//
+//module setxpos(newxpos) {
+//    psetxpos(newxpos);
+//}
+//
+//module setypos(newypos) {
+//    psetypos(newypos);
+//}
+//
+//module setzpos(newzpos) {
+//    psetzpos(newzpos);
+//}
+//
+//module settzpos(newtzpos) {
+//    psettzpos(newtzpos);
+//}
+//
 module osettool(tn){
     psettool(tn);
 }

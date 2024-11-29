@@ -48,7 +48,7 @@ DT_tool_num = 0; // [0:0,814:814]
 /* [CAM] */
 KH_tool_num = 0; // [0:0,374:374,375:375,376:376,378]
 /* [CAM] */
-Roundover_tool_num = 0; // [56125:56125, 56142:56142,312:312, 1570:1570]
+Roundover_tool_num = 0; // [56142:56142, 56125:56125, 1570:1570]
 /* [CAM] */
 MISC_tool_num = 0; //
 
@@ -95,7 +95,7 @@ begintoolpath(0,0,0.25);
 cutoneaxis_setfeed("Z",0,plunge*small_square_ratio);
 
 cutwithfeed(stockXwidth/2,stockYheight/2,-stockZthickness,feed);
-dxfpolyline(getxpos(),getypos(),stockXwidth/2,stockYheight/2, small_square_tool_num);
+dxfline(getxpos(),getypos(),stockXwidth/2,stockYheight/2, small_square_tool_num);
 
 endtoolpath();
 rapid(-(stockXwidth/4-stockYheight/16),stockYheight/4,0);
