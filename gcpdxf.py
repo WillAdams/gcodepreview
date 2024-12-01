@@ -30,20 +30,10 @@ gcp.opendxffiles(Base_filename,
                  Roundover_tool_num,
                  MISC_tool_num)
 
-gcp.dxfarc(large_square_tool_num, 88, 38, 12,   0,  90)
-gcp.dxfarc(large_square_tool_num, 12, 38, 12,  90, 180)
-gcp.dxfarc(large_square_tool_num, 12, 12, 12, 180, 270)
-gcp.dxfarc(large_square_tool_num, 88, 12, 12, 270, 360)
+gcp.dxfrectangle(large_square_tool_num, 0, 0, 100, 50)
+gcp.dxfrectangleround(large_square_tool_num, 1, 1, 98, 48, 11)
 
-gcp.dxfline(large_square_tool_num, 12, 0, 88, 0)
-gcp.dxfline(large_square_tool_num, 100, 12, 100, 38)
-gcp.dxfline(large_square_tool_num, 88, 50, 12, 50)
-gcp.dxfline(large_square_tool_num, 0, 38, 0, 12)
-
-gcp.dxfarc(large_square_tool_num, 50, 25, 12,   0,  90)
-gcp.dxfarc(large_square_tool_num, 50, 25, 12,  90, 180)
-gcp.dxfarc(large_square_tool_num, 50, 25, 12, 180, 270)
-gcp.dxfarc(large_square_tool_num, 50, 25, 12, 270, 360)
+gcp.dxfcircle(large_square_tool_num, 50, 25, 12)
 
 gcp.closedxffiles()
 gcp.closedxffile()

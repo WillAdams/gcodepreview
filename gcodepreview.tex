@@ -785,28 +785,16 @@ gcp.opendxffiles(Base_filename,
                  Roundover_tool_num,
                  MISC_tool_num)
 
-gcp.dxfarc(large_square_tool_num, 88, 38, 12,   0,  90)
-gcp.dxfarc(large_square_tool_num, 12, 38, 12,  90, 180)
-gcp.dxfarc(large_square_tool_num, 12, 12, 12, 180, 270)
-gcp.dxfarc(large_square_tool_num, 88, 12, 12, 270, 360)
+gcp.dxfrectangle(large_square_tool_num, 0, 0, 100, 50)
+gcp.dxfrectangleround(large_square_tool_num, 1, 1, 98, 48, 11)
 
-gcp.dxfline(large_square_tool_num, 12, 0, 88, 0)
-gcp.dxfline(large_square_tool_num, 100, 12, 100, 38)
-gcp.dxfline(large_square_tool_num, 88, 50, 12, 50)
-gcp.dxfline(large_square_tool_num, 0, 38, 0, 12)
-
-gcp.dxfarc(large_square_tool_num, 50, 25, 12,   0,  90)
-gcp.dxfarc(large_square_tool_num, 50, 25, 12,  90, 180)
-gcp.dxfarc(large_square_tool_num, 50, 25, 12, 180, 270)
-gcp.dxfarc(large_square_tool_num, 50, 25, 12, 270, 360)
+gcp.dxfcircle(large_square_tool_num, 50, 25, 12)
 
 gcp.closedxffiles()
 gcp.closedxffile()
 
 \end{writecode}
-\addtocounter{gcpdxfpy}{50}
-
-
+\addtocounter{gcpdxfpy}{40}
 
 \subsection{Implementation files and gcodepreview class}
  
@@ -4063,17 +4051,6 @@ Then it will be necessary to test for each possible case in a series of If Else 
 \end{writecode}
 \addtocounter{gcpy}{107}
 
-Lastly, to use the class it will be necessary to load it:
-
-\lstset{firstnumber=\thegcpy}
-\begin{writecode}{a}{gcodepreview.py}{python}
-from gcodepreview import *
-
-\end{writecode}
-\addtocounter{gcpy}{2}
-
-\noindent which may then allow loading the the class as expected. \url{https://github.com/gsohler/openscad/issues/48}
- 
 \subsection{Shapes and tool movement}
  
 The majority of commands will be more general, focusing on tooling which is generally supported by this library, moving in lines and arcs so as to describe shapes which lend themselves to representation with those tool and which match up with both toolpaths and supported geometry in Carbide Create, and the usage requirements of the typical user.
@@ -4106,6 +4083,46 @@ module continuecutdxf(ex, ey, ez, fr) {
 
 \end{writecode}
 \addtocounter{gcpscad}{4}
+
+\paragraph{dxfshapes}
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def dxfcircle(self, tool_num, xcenter, ycenter, radius):
+        self.dxfarc(tool_num, xcenter, ycenter, radius,   0,  90)
+        self.dxfarc(tool_num, xcenter, ycenter, radius,  90, 180)
+        self.dxfarc(tool_num, xcenter, ycenter, radius, 180, 270)
+        self.dxfarc(tool_num, xcenter, ycenter, radius, 270, 360)
+
+\end{writecode}
+\addtocounter{gcpy}{6}
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def dxfrectangle(self, tool_num, xorigin, yorigin, xwidth, yheight):
+        self.dxfline(tool_num, xorigin, yorigin, xorigin + xwidth, yorigin)
+        self.dxfline(tool_num, xorigin + xwidth, yorigin, xorigin + xwidth, yorigin + yheight)
+        self.dxfline(tool_num, xorigin + xwidth, yorigin + yheight, xorigin, yorigin + yheight)
+        self.dxfline(tool_num, xorigin, yorigin + yheight, xorigin, yorigin)
+
+\end{writecode}
+\addtocounter{gcpy}{6}
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def dxfrectangleround(self, tool_num, xorigin, yorigin, xwidth, yheight, radius):
+        self.dxfarc(tool_num, xorigin + xwidth - radius, yorigin + yheight - radius, radius,   0,  90)
+        self.dxfarc(tool_num, xorigin + radius, yorigin + yheight - radius, radius,  90, 180)
+        self.dxfarc(tool_num, xorigin + radius, yorigin + radius, radius, 180, 270)
+        self.dxfarc(tool_num, xorigin + xwidth - radius, yorigin + radius, radius, 270, 360)
+
+        self.dxfline(tool_num, xorigin + radius, yorigin, xorigin + xwidth - radius, yorigin)
+        self.dxfline(tool_num, xorigin + xwidth, yorigin + radius, xorigin + xwidth, yorigin + yheight - radius)
+        self.dxfline(tool_num, xorigin + xwidth - radius, yorigin + yheight, xorigin + radius, yorigin + yheight)
+        self.dxfline(tool_num, xorigin, yorigin + yheight - radius, xorigin, yorigin + radius)
+
+\end{writecode}
+\addtocounter{gcpy}{11}
 
 \paragraph{Rectangles}
 
@@ -4215,6 +4232,17 @@ module cutoutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {
 %\end{writecode}
 %\addtocounter{cuttwod}{2}
 
+%Lastly, to use the class it will be necessary to load it:
+%
+%\lstset{firstnumber=\thegcpy}
+%\begin{writecode}{a}{gcodepreview.py}{python}
+%from gcodepreview import *
+%
+%\end{writecode}
+%\addtocounter{gcpy}{2}
+%
+%\noindent which may then allow loading the the class as expected. \url{https://github.com/gsohler/openscad/issues/48}
+ 
 \section{Future}
 
 \subsection*{Images}

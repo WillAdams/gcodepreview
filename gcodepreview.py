@@ -1372,5 +1372,26 @@ class gcodepreview:
 #  }
 #}
 
-from gcodepreview import *
+    def dxfcircle(self, tool_num, xcenter, ycenter, radius):
+        self.dxfarc(tool_num, xcenter, ycenter, radius,   0,  90)
+        self.dxfarc(tool_num, xcenter, ycenter, radius,  90, 180)
+        self.dxfarc(tool_num, xcenter, ycenter, radius, 180, 270)
+        self.dxfarc(tool_num, xcenter, ycenter, radius, 270, 360)
+
+    def dxfrectangle(self, tool_num, xorigin, yorigin, xwidth, yheight):
+        self.dxfline(tool_num, xorigin, yorigin, xorigin + xwidth, yorigin)
+        self.dxfline(tool_num, xorigin + xwidth, yorigin, xorigin + xwidth, yorigin + yheight)
+        self.dxfline(tool_num, xorigin + xwidth, yorigin + yheight, xorigin, yorigin + yheight)
+        self.dxfline(tool_num, xorigin, yorigin + yheight, xorigin, yorigin)
+
+    def dxfrectangleround(self, tool_num, xorigin, yorigin, xwidth, yheight, radius):
+        self.dxfarc(tool_num, xorigin + xwidth - radius, yorigin + yheight - radius, radius,   0,  90)
+        self.dxfarc(tool_num, xorigin + radius, yorigin + yheight - radius, radius,  90, 180)
+        self.dxfarc(tool_num, xorigin + radius, yorigin + radius, radius, 180, 270)
+        self.dxfarc(tool_num, xorigin + xwidth - radius, yorigin + radius, radius, 270, 360)
+
+        self.dxfline(tool_num, xorigin + radius, yorigin, xorigin + xwidth - radius, yorigin)
+        self.dxfline(tool_num, xorigin + xwidth, yorigin + radius, xorigin + xwidth, yorigin + yheight - radius)
+        self.dxfline(tool_num, xorigin + xwidth - radius, yorigin + yheight, xorigin + radius, yorigin + yheight)
+        self.dxfline(tool_num, xorigin, yorigin + yheight - radius, xorigin, yorigin + radius)
 
