@@ -1,19 +1,13 @@
 #!/usr/bin/env python
 
-# getting openscad functions into namespace
-#https://github.com/gsohler/openscad/issues/39
-from openscad import *
-
-#import math
-
 import sys
+
 try:
     if 'gcodepreview' in sys.modules:
         del sys.modules['gcodepreview']
 except AttributeError:
     pass
 
-#Below command only works within OpenPythonSCAD
 from gcodepreview import *
 
 fa = 2
@@ -87,20 +81,10 @@ RO_ratio = 0.5 # [0.25:2]
 # [Feeds and Speeds] */
 MISC_ratio = 0.5 # [0.25:2]
 
-gcp = gcodepreview(Base_filename, #"export", basefilename
+gcp = gcodepreview(True, #generatescad
                    True, #generategcode
                    True, #generatedxf
-                   stockXwidth,
-                   stockYheight,
-                   stockZthickness,
-                   zeroheight,
-                   stockzero,
-                   retractheight,
-                   large_square_tool_num,
-                   toolradius,
-                   plunge,
-                   feed,
-                   speed)
+                   )
 
 gcp.opengcodefile(Base_filename)
 gcp.opendxffile(Base_filename)

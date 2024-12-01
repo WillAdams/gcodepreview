@@ -4,54 +4,78 @@
 #gcodepreview 0.7, for use with OpenPythonSCAD,
 #if using from OpenPythonSCAD see gcodepreview.scad
 
+import sys
+
 # getting openscad functions into namespace
 #https://github.com/gsohler/openscad/issues/39
-from openscad import *
+try:
+    from openscad import *
+except ModuleNotFoundError as e:
+    print("OpenSCAD module not loaded.")
 
 # add math functions (using radians by default, convert to degrees where necessary)
 import math
 
+def gcpversion():
+    return 0.71
+
 class gcodepreview:
 
-    def __init__(self, basefilename = "export",
+    def __init__(self, #basefilename = "export",
+                 generatescad = False,
                  generategcode = False,
                  generatedxf = False,
-                 stockXwidth = 25,
-                 stockYheight = 25,
-                 stockZthickness = 1,
-                 zeroheight = "Top",
-                 stockzero = "Lower-left" ,
-                 retractheight = 6,
-                 currenttoolnum = 102,
-                 toolradius = 3.175,
-                 plunge = 100,
-                 feed = 400,
-                 speed = 10000):
-        self.basefilename = basefilename
+#                 stockXwidth = 25,
+#                 stockYheight = 25,
+#                 stockZthickness = 1,
+#                 zeroheight = "Top",
+#                 stockzero = "Lower-left" ,
+#                 retractheight = 6,
+#                 currenttoolnum = 102,
+#                 toolradius = 3.175,
+#                 plunge = 100,
+#                 feed = 400,
+#                 speed = 10000
+                  ):
+#        self.basefilename = basefilename
+        self.generatescad = generatescad
         self.generategcode = generategcode
         self.generatedxf = generatedxf
-        self.stockXwidth = stockXwidth
-        self.stockYheight = stockYheight
-        self.stockZthickness = stockZthickness
-        self.zeroheight = zeroheight
-        self.stockzero = stockzero
-        self.retractheight = retractheight
+#        self.stockXwidth = stockXwidth
+#        self.stockYheight = stockYheight
+#        self.stockZthickness = stockZthickness
+#        self.zeroheight = zeroheight
+#        self.stockzero = stockzero
+#        self.retractheight = retractheight
+#        self.currenttoolnum = currenttoolnum
+#        self.toolradius = toolradius
+#        self.plunge = plunge
+#        self.feed = feed
+#        self.speed = speed
+#        global toolpaths
+#        self.toolpaths = cylinder(1.5875, 12.7)
+#        global generatedxfs
+#        if (self.generatescad == True):
+        self.generatedxfs = False
+
+    def opengcodefile(self, basefilename = "export",
+                      currenttoolnum = 102,
+                      toolradius = 3.175,
+                      plunge = 400,
+                      feed = 1600,
+                      speed = 10000
+                      ):
         self.currenttoolnum = currenttoolnum
         self.toolradius = toolradius
         self.plunge = plunge
         self.feed = feed
         self.speed = speed
-#        global toolpaths
-#        self.toolpaths = cylinder(1.5875, 12.7)
-#        global generatedxfs
-        self.generatedxfs = False
-
-    def opengcodefile(self, basefilename = "export"):
         if self.generategcode == True:
             self.gcodefilename = basefilename + ".nc"
             self.gc = open(self.gcodefilename, "w")
 
     def opendxffile(self, basefilename = "export"):
+        self.basefilename = basefilename
 #        global generatedxfs
 #        global dxfclosed
         self.dxfclosed = False
@@ -73,6 +97,7 @@ class gcodepreview:
                      Roundover_tool_num = 0,
                      MISC_tool_num = 0):
 #        global generatedxfs
+        self.basefilename = basefilename
         self.generatedxfs = True
         self.large_square_tool_num = large_square_tool_num
         self.small_square_tool_num = small_square_tool_num
@@ -210,6 +235,12 @@ class gcodepreview:
                  zeroheight,
                  stockzero,
                  retractheight):
+        self.stockXwidth = stockXwidth
+        self.stockYheight = stockYheight
+        self.stockZthickness = stockZthickness
+        self.zeroheight = zeroheight
+        self.stockzero = stockzero
+        self.retractheight = retractheight
 #        global mpx
         self.mpx = float(0)
 #        global mpy
@@ -844,7 +875,7 @@ class gcodepreview:
             self.setxpos(xcenter + radius * math.cos(math.radians(i)))
             self.setypos(ycenter + radius * math.sin(math.radians(i)))
             i += 1
-#        self.dxfarc(xcenter, ycenter, radius, barc, earc, self.currenttoolnumber())
+#        self.dxfarc(self.currenttoolnumber(), xcenter, ycenter, radius, barc, earc)
         return toolpath
 
     def narcloop(barc,earc, xcenter, ycenter, radius):
@@ -858,10 +889,10 @@ class gcodepreview:
             self.setypos(ycenter + radius * math.sin(math.radians(i)))
 #            print(str(self.xpos()), str(self.ypos()))
             i += -1
-#        self.dxfarc(xcenter, ycenter, radius, barc, earc, self.currenttoolnumber())
+#        self.dxfarc(self.currenttoolnumber(), xcenter, ycenter, radius, barc, earc)
         return toolpath
 
-    def dxfarc(self, xcenter, ycenter, radius, anglebegin, endangle, tn):
+    def dxfarc(self, tn, xcenter, ycenter, radius, anglebegin, endangle):
         if (self.generatedxf == True):
             self.writedxf(tn, "0")
             self.writedxf(tn, "ARC")
@@ -884,7 +915,7 @@ class gcodepreview:
 #        global toolpath
         toolpath = self.currenttool()
         toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
-        self.dxfarc(xcenter,ycenter,radius,0,90, self.currenttoolnumber())
+        self.dxfarc(self.currenttoolnumber(), xcenter,ycenter,radius,0,90)
         if (self.zpos == ez):
             self.settzpos(0)
         else:
@@ -899,7 +930,7 @@ class gcodepreview:
 #        global toolpath
         toolpath = self.currenttool()
         toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
-        self.dxfarc(xcenter,ycenter,radius,90,180, self.currenttoolnumber())
+        self.dxfarc(self.currenttoolnumber(), xcenter,ycenter,radius,90,180)
         if (self.zpos == ez):
             self.settzpos(0)
         else:
@@ -914,7 +945,7 @@ class gcodepreview:
 #        global toolpath
         toolpath = self.currenttool()
         toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
-        self.dxfarc(xcenter,ycenter,radius,180,270, self.currenttoolnumber())
+        self.dxfarc(self.currenttoolnumber(), xcenter,ycenter,radius,180,270)
         if (self.zpos == ez):
             self.settzpos(0)
         else:
@@ -929,7 +960,7 @@ class gcodepreview:
 #        global toolpath
         toolpath = self.currenttool()
         toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
-        self.dxfarc(xcenter,ycenter,radius,270,360, self.currenttoolnumber())
+        self.dxfarc(self.currenttoolnumber(), xcenter,ycenter,radius,270,360)
         if (self.zpos == ez):
             self.settzpos(0)
         else:
@@ -944,7 +975,7 @@ class gcodepreview:
 #        global toolpath
         toolpath = self.currenttool()
         toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
-        self.dxfarc(xcenter,ycenter,radius,0,90, self.currenttoolnumber())
+        self.dxfarc(self.currenttoolnumber(), xcenter,ycenter,radius,0,90)
         if (self.zpos == ez):
             self.settzpos(0)
         else:
@@ -959,7 +990,7 @@ class gcodepreview:
 #        global toolpath
         toolpath = self.currenttool()
         toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
-        self.dxfarc(xcenter,ycenter,radius,270,360, self.currenttoolnumber())
+        self.dxfarc(self.currenttoolnumber(), xcenter,ycenter,radius,270,360)
         if (self.zpos == ez):
             self.settzpos(0)
         else:
@@ -974,7 +1005,7 @@ class gcodepreview:
 #        global toolpath
         toolpath = self.currenttool()
         toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
-        self.dxfarc(xcenter,ycenter,radius,180,270, self.currenttoolnumber())
+        self.dxfarc(self.currenttoolnumber(), xcenter,ycenter,radius,180,270)
         if (self.zpos == ez):
             self.settzpos(0)
         else:
@@ -989,7 +1020,7 @@ class gcodepreview:
 #        global toolpath
         toolpath = self.currenttool()
         toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
-        self.dxfarc(xcenter,ycenter,radius,90,180, self.currenttoolnumber())
+        self.dxfarc(self.currenttoolnumber(), xcenter,ycenter,radius,90,180)
         if (self.zpos == ez):
             self.settzpos(0)
         else:
@@ -1058,10 +1089,10 @@ class gcodepreview:
 #Circle at entry hole
 #    def dxfarc(self, xcenter, ycenter, radius, anglebegin, endangle, tn):
 #        print(self.tool_radius(kh_tool_num, 7))
-        self.dxfarc(self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 7),  0, 90, kh_tool_num)
-        self.dxfarc(self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 7), 90,180, kh_tool_num)
-        self.dxfarc(self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 7),180,270, kh_tool_num)
-        self.dxfarc(self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 7),270,360, kh_tool_num)
+        self.dxfarc(kh_tool_num, self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 7),  0, 90)
+        self.dxfarc(kh_tool_num, self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 7), 90,180)
+        self.dxfarc(kh_tool_num, self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 7),180,270)
+        self.dxfarc(kh_tool_num, self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 7),270,360)
         toolpath = self.cutline(self.xpos(), self.ypos(), -kh_max_depth)
 
 #pre-calculate needed values
@@ -1075,21 +1106,21 @@ class gcodepreview:
 #Outlines of entry hole and slot
         if (kh_angle == 0):
 #Lower left of entry hole
-            self.dxfarc(self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 1),180,270, kh_tool_num)
+            self.dxfarc(kh_tool_num, self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 1),180,270)
 #Upper left of entry hole
-            self.dxfarc(self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 1),90,180, kh_tool_num)
+            self.dxfarc(kh_tool_num, self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 1),90,180)
 #Upper right of entry hole
-#            self.dxfarc(self.xpos(), self.ypos(), rt, 41.810, 90, kh_tool_num)
-            self.dxfarc(self.xpos(), self.ypos(), rt, angle, 90, kh_tool_num)
+#            self.dxfarc(kh_tool_num, self.xpos(), self.ypos(), rt, 41.810, 90)
+            self.dxfarc(kh_tool_num, self.xpos(), self.ypos(), rt, angle, 90)
 #Lower right of entry hole
-            self.dxfarc(self.xpos(), self.ypos(), rt, 270, 360-angle, kh_tool_num)
-#            self.dxfarc(self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 1),270, 270+math.acos(math.radians(self.tool_diameter(kh_tool_num, 5)/self.tool_diameter(kh_tool_num, 1))), kh_tool_num)
+            self.dxfarc(kh_tool_num, self.xpos(), self.ypos(), rt, 270, 360-angle)
+#            self.dxfarc(kh_tool_num, self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 1),270, 270+math.acos(math.radians(self.tool_diameter(kh_tool_num, 5)/self.tool_diameter(kh_tool_num, 1))))
 #Actual line of cut
 #            self.dxfline(kh_tool_num, self.xpos(),self.ypos(),self.xpos()+kh_distance,self.ypos())
 #upper right of end of slot (kh_max_depth+4.36))/2
-            self.dxfarc(self.xpos()+kh_distance,self.ypos(),self.tool_diameter(kh_tool_num, (kh_max_depth+4.36))/2,0,90, kh_tool_num)
+            self.dxfarc(kh_tool_num, self.xpos()+kh_distance,self.ypos(),self.tool_diameter(kh_tool_num, (kh_max_depth+4.36))/2,0,90)
 #lower right of end of slot
-            self.dxfarc(self.xpos()+kh_distance,self.ypos(),self.tool_diameter(kh_tool_num, (kh_max_depth+4.36))/2,270,360, kh_tool_num)
+            self.dxfarc(kh_tool_num, self.xpos()+kh_distance,self.ypos(),self.tool_diameter(kh_tool_num, (kh_max_depth+4.36))/2,270,360)
 #upper right slot
             self.dxfline(kh_tool_num, self.xpos()+ro, self.ypos()-(self.tool_diameter(kh_tool_num,7)/2), self.xpos()+kh_distance, self.ypos()-(self.tool_diameter(kh_tool_num,7)/2))
 #            self.dxfline(kh_tool_num, self.xpos()+(sqrt((self.tool_diameter(kh_tool_num,1)^2)-(self.tool_diameter(kh_tool_num,5)^2))/2), self.ypos()+self.tool_diameter(kh_tool_num, (kh_max_depth))/2, ( (kh_max_depth-6.34))/2)^2-(self.tool_diameter(kh_tool_num, (kh_max_depth-6.34))/2)^2, self.xpos()+kh_distance, self.ypos()+self.tool_diameter(kh_tool_num, (kh_max_depth))/2, kh_tool_num)
@@ -1138,57 +1169,57 @@ class gcodepreview:
             toolpath = toolpath.union(self.cutline(self.xpos()+kh_distance, self.ypos(), -kh_max_depth))
         elif (kh_angle == 90):
 #Lower left of entry hole
-            self.dxfarc(self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 1),180,270, kh_tool_num)
+            self.dxfarc(kh_tool_num, self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 1),180,270)
 #Lower right of entry hole
-            self.dxfarc(self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 1),270,360, kh_tool_num)
+            self.dxfarc(kh_tool_num, self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 1),270,360)
 #left slot
             self.dxfline(kh_tool_num, self.xpos()-r, self.ypos()+ro, self.xpos()-r, self.ypos()+kh_distance)
 #right slot
             self.dxfline(kh_tool_num, self.xpos()+r, self.ypos()+ro, self.xpos()+r, self.ypos()+kh_distance)
 #upper left of end of slot
-            self.dxfarc(self.xpos(),self.ypos()+kh_distance,r,90,180, kh_tool_num)
+            self.dxfarc(kh_tool_num, self.xpos(),self.ypos()+kh_distance,r,90,180)
 #upper right of end of slot
-            self.dxfarc(self.xpos(),self.ypos()+kh_distance,r,0,90, kh_tool_num)
+            self.dxfarc(kh_tool_num, self.xpos(),self.ypos()+kh_distance,r,0,90)
 #Upper right of entry hole
-            self.dxfarc(self.xpos(), self.ypos(), rt, 0, 90-angle, kh_tool_num)
+            self.dxfarc(kh_tool_num, self.xpos(), self.ypos(), rt, 0, 90-angle)
 #Upper left of entry hole
-            self.dxfarc(self.xpos(), self.ypos(), rt, 90+angle, 180, kh_tool_num)
+            self.dxfarc(kh_tool_num, self.xpos(), self.ypos(), rt, 90+angle, 180)
             toolpath = toolpath.union(self.cutline(self.xpos(), self.ypos()+kh_distance, -kh_max_depth))
         elif (kh_angle == 180):
 #Lower right of entry hole
-            self.dxfarc(self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 1),270,360, kh_tool_num)
+            self.dxfarc(kh_tool_num, self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 1),270,360)
 #Upper right of entry hole
-            self.dxfarc(self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 1),0,90, kh_tool_num)
+            self.dxfarc(kh_tool_num, self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 1),0,90)
 #Upper left of entry hole
-            self.dxfarc(self.xpos(), self.ypos(), rt, 90, 180-angle, kh_tool_num)
+            self.dxfarc(kh_tool_num, self.xpos(), self.ypos(), rt, 90, 180-angle)
 #Lower left of entry hole
-            self.dxfarc(self.xpos(), self.ypos(), rt, 180+angle, 270, kh_tool_num)
+            self.dxfarc(kh_tool_num, self.xpos(), self.ypos(), rt, 180+angle, 270)
 #upper slot
             self.dxfline(kh_tool_num, self.xpos()-ro, self.ypos()-r, self.xpos()-kh_distance, self.ypos()-r)
 #lower slot
             self.dxfline(kh_tool_num, self.xpos()-ro, self.ypos()+r, self.xpos()-kh_distance, self.ypos()+r)
 #upper left of end of slot
-            self.dxfarc(self.xpos()-kh_distance,self.ypos(),r,90,180, kh_tool_num)
+            self.dxfarc(kh_tool_num, self.xpos()-kh_distance,self.ypos(),r,90,180)
 #lower left of end of slot
-            self.dxfarc(self.xpos()-kh_distance,self.ypos(),r,180,270, kh_tool_num)
+            self.dxfarc(kh_tool_num, self.xpos()-kh_distance,self.ypos(),r,180,270)
             toolpath = toolpath.union(self.cutline(self.xpos()-kh_distance, self.ypos(), -kh_max_depth))
         elif (kh_angle == 270):
 #Upper left of entry hole
-            self.dxfarc(self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 1),90,180, kh_tool_num)
+            self.dxfarc(kh_tool_num, self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 1),90,180)
 #Upper right of entry hole
-            self.dxfarc(self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 1),0,90, kh_tool_num)
+            self.dxfarc(kh_tool_num, self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 1),0,90)
 #left slot
             self.dxfline(kh_tool_num, self.xpos()-r, self.ypos()-ro, self.xpos()-r, self.ypos()-kh_distance)
 #right slot
             self.dxfline(kh_tool_num, self.xpos()+r, self.ypos()-ro, self.xpos()+r, self.ypos()-kh_distance)
 #lower left of end of slot
-            self.dxfarc(self.xpos(),self.ypos()-kh_distance,r,180,270, kh_tool_num)
+            self.dxfarc(kh_tool_num, self.xpos(),self.ypos()-kh_distance,r,180,270)
 #lower right of end of slot
-            self.dxfarc(self.xpos(),self.ypos()-kh_distance,r,270,360, kh_tool_num)
+            self.dxfarc(kh_tool_num, self.xpos(),self.ypos()-kh_distance,r,270,360)
 #lower right of entry hole
-            self.dxfarc(self.xpos(), self.ypos(), rt, 180, 270-angle, kh_tool_num)
+            self.dxfarc(kh_tool_num, self.xpos(), self.ypos(), rt, 180, 270-angle)
 #lower left of entry hole
-            self.dxfarc(self.xpos(), self.ypos(), rt, 270+angle, 360, kh_tool_num)
+            self.dxfarc(kh_tool_num, self.xpos(), self.ypos(), rt, 270+angle, 360)
             toolpath = toolpath.union(self.cutline(self.xpos(), self.ypos()-kh_distance, -kh_max_depth))
 #        print(self.zpos())
         self.setxpos(oXpos)
@@ -1340,3 +1371,6 @@ class gcodepreview:
 #    setypos(getypos()+kh_distance);
 #  }
 #}
+
+from gcodepreview import *
+

@@ -66,6 +66,7 @@
 \newcounter{gcpscad}
 \newcounter{gcptmpl}
 \newcounter{gcptmplpy}
+\newcounter{gcpdxfpy}
 \newcounter{cuttwod}
 \newcounter{rdme}
 \setcounter{rdme}{0}
@@ -132,6 +133,10 @@ Last line was \the\lst@lineno\ for #1\ gcpy\ \thegcpy\ pyscad\ \thepyscad\ gcpsc
         {cut2Dshapes.scad}
         {
             \renewcommand{\lstprompt}{\ cut2D}
+        }
+        {gcpdxf.py}
+        {
+            \renewcommand{\lstprompt}{\ gcpdxfpy}
         }
     }
     {
