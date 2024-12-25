@@ -2,7 +2,7 @@
 
 OpenPythonSCAD library for moving a tool in lines and arcs so as to model how a part would be cut using G-Code, so as to allow OpenPythonSCAD to function as a compleat CAD/CAM solution for subtractive 3-axis CNC (mills and routers) by writing out G-code in addition to 3D modeling (in some cases toolpaths which would not normally be feasible), and to write out DXF files which may be imported into a traditional CAM program to create toolpaths.
 
-![OpenSCAD Cut Joinery Module](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/gcodepreview_unittests.png?raw=true)
+![OpenSCAD gcodepreview Unit Tests](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/gcodepreview_unittests.png?raw=true)
 
 Updated to make use of Python in OpenSCAD:[^rapcad]
 
@@ -32,10 +32,10 @@ Since it is now programmed using Literate Programming (initially a .dtx, now a .
 The files for this library are:
 
  - gcodepreview.py (gcpy) --- the Python functions and variables
- - pygcodepreview.scad (pyscad) --- the Python functions wrapped in OpenSCAD
+ - pygcodepreview.scad (pyscad) --- the Python functions wrapped in OpenSCAD (deprecated)
  - gcodepreview.scad (gcpscad) --- OpenSCAD modules and variables
- - gcodepreview_template.scad (gcptmpl) --- example file
- - cut2Dshapes.scad (cut2D) --- code for cutting 2D shapes 
+ - gcodepreview_template.scad (gcptmpl) --- .scad example file
+ - gcodepreviewtemplate.py (gcptmplpy) --- .py example file
 
 If using from OpenPythonSCAD, place the files in C:\Users\\\~\Documents\OpenSCAD\libraries and call as:[^libraries]
 
@@ -45,7 +45,7 @@ If using from OpenPythonSCAD, place the files in C:\Users\\\~\Documents\OpenSCAD
     use <pygcodepreview.scad>;
     include <gcodepreview.scad>;
 
-Note that it is necessary to use the first two files (this allows loading the Python commands and then wrapping them in OpenSCAD commands) and then include the last file (which allows using OpenSCAD variables to selectively implement the Python commands via their being wrapped in OpenSCAD modules) and define variables which match the project and then use commands such as:
+Note that it is necessary to use the first file (this allows loading the Python commands (it used to be necessary to use an intermediary .scad file so as to wrap them in OpenSCAD commands) and then include the last file (which allows using OpenSCAD variables to selectively implement the Python commands via their being wrapped in OpenSCAD modules) and define variables which match the project and then use commands such as:
 
     opengcodefile(Gcode_filename);
     opendxffile(DXF_filename);
@@ -89,7 +89,7 @@ Tool numbers match those of tooling sold by Carbide 3D (ob. discl., I work for t
 
 Comments are included in the G-code to match those expected by CutViewer.
 
-A complete example file is: gcodepreview_template.scad Note that a Python template has since been developed as well, allowing usage without OpenSCAD code, and another example is openscad_gcodepreview_cutjoinery.tres.scad which is made from an OpenSCAD Graph Editor file:
+Supporting OpenSCAD usage makes possible such examples as: openscad_gcodepreview_cutjoinery.tres.scad which is made from an OpenSCAD Graph Editor file:
 
 ![OpenSCAD Graph Editor Cut Joinery File](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/OSGE_cutjoinery.png?raw=true)
 
@@ -138,9 +138,8 @@ Version 0.61
 
 Possible future improvements:
 
- - rewrite OpenSCAD wrapper
- - restore support for additional tooling shapes (dovetail, roundover)
- - support for additional tooling shapes such as tapered ball-nose tools or lollipop cutters or thread-cutting tools
+ - support for additional tooling shapes (bowl bits with flat bottom, tapered ball nose, lollipop cutters)
+ - create a single line font for use where text is wanted
 
 Note for G-code generation that it is up to the user to implement Depth per Pass so as to not take a single full-depth pass. Working from a DXF of course allows one to off-load such considerations to a specialized CAM tool.
 
