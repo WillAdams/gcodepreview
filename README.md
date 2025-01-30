@@ -102,3 +102,47 @@ Note for G-code generation that it is up to the user to implement Depth per Pass
 Deprecated feature:
 
  - exporting SVGs --- coordinate system differences between OpenSCAD/DXFs and SVGs would require managing the inversion of the coordinate system (using METAPOST, which shares the same orientation and which can write out SVGs may be used for future versions)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+To-do:
+
+ - fix line numbers
+ - fix OpenSCAD wrapper
+ - reposition cutroundover command into cutshape
+ - work on rotary axis option
