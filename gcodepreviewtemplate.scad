@@ -1,11 +1,12 @@
 //!OpenSCAD
 
-use <gcodepreview.py>;
-use <pygcodepreview.scad>;
-include <gcodepreview.scad>;
+use <gcodepreview.py>
+include <gcodepreview.scad>
 
 $fa = 2;
 $fs = 0.125;
+fa = 2;
+fs = 0.125;
 
 /* [Stock] */
 stockXwidth = 219;
@@ -23,11 +24,11 @@ retractheight = 9;
 /* [Export] */
 Base_filename = "export";
 /* [Export] */
+generatepaths = true;
+/* [Export] */
 generatedxf = true;
 /* [Export] */
 generategcode = true;
-///* [Export] */
-//generatesvg = false;
 
 /* [CAM] */
 toolradius = 1.5875;
@@ -50,7 +51,7 @@ KH_tool_num = 0; // [0:0,374:374,375:375,376:376,378]
 /* [CAM] */
 Roundover_tool_num = 0; // [56142:56142, 56125:56125, 1570:1570]
 /* [CAM] */
-MISC_tool_num = 0; //
+MISC_tool_num = 0; // [648:648]
 
 /* [Feeds and Speeds] */
 plunge = 100;
@@ -77,80 +78,144 @@ RO_ratio = 0.5; // [0.25:2]
 /* [Feeds and Speeds] */
 MISC_ratio = 0.5; // [0.25:2]
 
-filename_gcode = str(Base_filename, ".nc");
-filename_dxf = str(Base_filename);
+thegeneratepaths = generatepaths == true ? 1 : 0;
+thegeneratedxf = generatedxf == true ? 1 : 0;
+thegenerategcode = generategcode == true ? 1 : 0;
 
-opengcodefile(filename_gcode);
-opendxffile(filename_dxf);
+gcp = gcodepreview(thegeneratepaths,
+                   thegenerategcode,
+                   thegeneratedxf,
+                   );
 
-difference() {
+opengcodefile(Base_filename);
+opendxffile(Base_filename);
+opendxffiles(Base_filename,
+                 large_square_tool_num,
+                 small_square_tool_num,
+                 large_ball_tool_num,
+                 small_ball_tool_num,
+                 large_V_tool_num,
+                 small_V_tool_num,
+                 DT_tool_num,
+                 KH_tool_num,
+                 Roundover_tool_num,
+                 MISC_tool_num);
+
 setupstock(stockXwidth, stockYheight, stockZthickness, zeroheight, stockzero);
 
-movetosafez();
+//echo(gcp);
+//gcpversion();
 
-toolchange(small_square_tool_num,speed * small_square_ratio);
+//c = myfunc(4);
+//echo(c);
 
-begintoolpath(0,0,0.25);
+//echo(getvv());
 
-cutoneaxis_setfeed("Z",0,plunge*small_square_ratio);
+cutline(stockXwidth/2,stockYheight/2,-stockZthickness);
 
-cutwithfeed(stockXwidth/2,stockYheight/2,-stockZthickness,feed);
-dxfline(getxpos(),getypos(),stockXwidth/2,stockYheight/2, small_square_tool_num);
+rapidZ(retractheight);
+toolchange(201,10000);
+rapidXY(0, stockYheight/16);
+rapidZ(0);
+cutlinedxfgc(stockXwidth/16*7, stockYheight/2, -stockZthickness);
 
-endtoolpath();
-rapid(-(stockXwidth/4-stockYheight/16),stockYheight/4,0);
-cutoneaxis_setfeed("Z",-stockZthickness,plunge*small_square_ratio);
 
-cutarcNECCdxf(-stockXwidth/4, stockYheight/4+stockYheight/16, -stockZthickness, -stockXwidth/4, stockYheight/4, stockYheight/16, small_square_tool_num);
-cutarcNWCCdxf(-(stockXwidth/4+stockYheight/16), stockYheight/4, -stockZthickness, -stockXwidth/4, stockYheight/4, stockYheight/16, small_square_tool_num);
-cutarcSWCCdxf(-stockXwidth/4, stockYheight/4-stockYheight/16, -stockZthickness, -stockXwidth/4, stockYheight/4, stockYheight/16, small_square_tool_num);
-cutarcSECCdxf(-(stockXwidth/4-stockYheight/16), stockYheight/4, -stockZthickness, -stockXwidth/4, stockYheight/4, stockYheight/16, small_square_tool_num);
+rapidZ(retractheight);
+toolchange(202,10000);
+rapidXY(0, stockYheight/8);
+rapidZ(0);
+cutlinedxfgc(stockXwidth/16*6, stockYheight/2, -stockZthickness);
 
-rapid(getxpos(),getypos(),stockZthickness);
-toolchange(KH_tool_num,speed * KH_ratio);
-rapid(-stockXwidth/8,-stockYheight/4,0);
+rapidZ(retractheight);
+toolchange(101,10000);
+rapidXY(0, stockYheight/16*3);
+rapidZ(0);
+cutlinedxfgc(stockXwidth/16*5, stockYheight/2, -stockZthickness);
 
-cutkeyhole_toolpath((stockZthickness), (stockZthickness), "N", stockYheight/8, KH_tool_num);
-rapid(getxpos(),getypos(),stockZthickness);
-rapid(-stockXwidth/4,-stockYheight/4,0);
-cutkeyhole_toolpath((stockZthickness), (stockZthickness), "S", stockYheight/8, KH_tool_num);
-rapid(getxpos(),getypos(),stockZthickness);
-rapid(-stockXwidth/4,-stockYheight/8,0);
-cutkeyhole_toolpath((stockZthickness), (stockZthickness), "E", stockYheight/8, KH_tool_num);
-rapid(getxpos(),getypos(),stockZthickness);
-rapid(-stockXwidth/8,-stockYheight/8*3,0);
-cutkeyhole_toolpath((stockZthickness), (stockZthickness), "W", stockYheight/8, KH_tool_num);
+rapidZ(retractheight);
+toolchange(390,10000);
+rapidXY(0, stockYheight/16*4);
+rapidZ(0);
 
-rapid(getxpos(),getypos(),stockZthickness);
-toolchange(DT_tool_num,speed * DT_ratio);
-rapid(0,-(stockYheight/2+tool_diameter(DT_tool_num,0)),0);
+cutlinedxfgc(stockXwidth/16*4, stockYheight/2, -stockZthickness);
+rapidZ(retractheight);
 
-cutoneaxis_setfeed("Z",-stockZthickness,plunge*DT_ratio);
-cutwithfeed(0,-(stockYheight/4),-stockZthickness,feed*DT_ratio);
-rapid(0,-(stockYheight/2+tool_diameter(DT_tool_num,0)),-stockZthickness);
+toolchange(301,10000);
+rapidXY(0, stockYheight/16*6);
+rapidZ(0);
 
-rapid(getxpos(),getypos(),stockZthickness);
-toolchange(Roundover_tool_num, speed * RO_ratio);
-rapid(-(stockXwidth/2),-(stockYheight/2),0);
-cutoneaxis_setfeed("Z",-4.509,plunge*RO_ratio);
+cutlinedxfgc(stockXwidth/16*2, stockYheight/2, -stockZthickness);
 
-cutroundovertool(-(stockXwidth/2++0.507/2), -(stockYheight/2+0.507/2), -4.509, stockXwidth/2+0.507/2, -(stockYheight/2+0.507/2), -4.509, 0.507/2, 4.509);
 
-cutroundover(stockXwidth/2+0.507/2, -(stockYheight/2+0.507/2), -4.509, stockXwidth/2+0.507/2, stockYheight/2+0.507/2, -4.509, 1570);
-cutroundover(stockXwidth/2+0.507/2, stockYheight/2+0.507/2, -4.509, -(stockXwidth/2+0.507/2), stockYheight/2+0.507/2, -4.509, 1570);
-cutroundover(-(stockXwidth/2+0.507/2), stockYheight/2+0.507/2, -4.509, -(stockXwidth/2+0.507/2), -(stockYheight/2+0.507/2), -4.509, 1570);
+movetosafeZ();
+rapid(gcp.xpos(),gcp.ypos(),retractheight);
+toolchange(102,10000);
 
-//for (i = [0 : abs(1) : 80]) {
-//  cutwithfeed(stockXwidth/4,-stockYheight/4,-stockZthickness/4,feed);
-//  cutwithfeed(stockXwidth/8+(stockXwidth/256*i),-stockYheight/2,-stockZthickness*3/4,feed);
-//  }
+//rapidXY(stockXwidth/4+stockYheight/8+stockYheight/16, +stockYheight/8);
+rapidXY(-stockXwidth/4+stockXwidth/16, (stockYheight/4));//+stockYheight/16
+rapidZ(0);
 
-hull(){
-  cutwithfeed(stockXwidth/4,-stockYheight/4,-stockZthickness/4,feed);
-  cutwithfeed(stockXwidth/8,-stockYheight/2,-stockZthickness*3/4,feed);
-  cutwithfeed(stockXwidth/8+(stockXwidth*0.3125),-stockYheight/2,-stockZthickness*3/4,feed);
-  }
-}
+//cutarcCW(360,270, gcp.xpos()-stockYheight/16, gcp.ypos(), stockYheight/16,-stockZthickness);
+//gcp.cutarcCW(270,180, gcp.xpos(), gcp.ypos()+stockYheight/16, stockYheight/16))
+cutarcCC(0,90, gcp.xpos()-stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4);
+cutarcCC(90,180, gcp.xpos(), gcp.ypos()-stockYheight/16, stockYheight/16, -stockZthickness/4);
+cutarcCC(180,270, gcp.xpos()+stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4);
+cutarcCC(270,360, gcp.xpos(), gcp.ypos()+stockYheight/16, stockYheight/16, -stockZthickness/4);
+
+movetosafeZ();
+//rapidXY(stockXwidth/4+stockYheight/8-stockYheight/16, -stockYheight/8);
+rapidXY(stockXwidth/4-stockYheight/16, -(stockYheight/4));
+rapidZ(0);
+
+cutarcCW(180,90, gcp.xpos()+stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4);
+cutarcCW(90,0, gcp.xpos(), gcp.ypos()-stockYheight/16, stockYheight/16, -stockZthickness/4);
+cutarcCW(360,270, gcp.xpos()-stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4);
+cutarcCW(270,180, gcp.xpos(), gcp.ypos()+stockYheight/16, stockYheight/16, -stockZthickness/4);
+
+movetosafeZ();
+toolchange(201, 10000);
+rapidXY(stockXwidth /2 -6.34, - stockYheight /2);
+rapidZ(0);
+cutarcCW(180, 90, stockXwidth /2 , -stockYheight/2, 6.34, - stockZthickness);
+
+movetosafeZ();
+rapidXY(stockXwidth/2, -stockYheight/2);
+rapidZ(0);
+
+gcp.cutlinedxfgc(gcp.xpos(), gcp.ypos(), -stockZthickness);
+
+movetosafeZ();
+toolchange(814, 10000);
+rapidXY(0, -(stockYheight/2+12.7));
+rapidZ(0);
+
+cutlinedxfgc(xpos(), ypos(), -stockZthickness);
+cutlinedxfgc(xpos(), -12.7 , -stockZthickness);
+rapidXY(0, -(stockYheight/2+12.7));
+
+//rapidXY(stockXwidth/2-6.34, -stockYheight/2);
+//rapidZ(0);
+
+//movetosafeZ();
+//toolchange(374, 10000);
+//rapidXY(-(stockXwidth/4 - stockXwidth /16), -(stockYheight/4 + stockYheight/16))
+
+//cutline(xpos(), ypos(), (stockZthickness/2) * -1);
+//cutlinedxfgc(xpos() + stockYheight /9, ypos(), zpos());
+//cutline(xpos() - stockYheight /9, ypos(), zpos());
+//cutline(xpos(), ypos(), 0);
+
+movetosafeZ();
+
+stockandtoolpaths();
+//stockwotoolpaths();
+//outputtoolpaths();
+
+//makecube(3, 2, 1);
+
+//instantiatecube();
 
 closegcodefile();
+closedxffiles();
 closedxffile();
+

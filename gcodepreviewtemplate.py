@@ -16,6 +16,8 @@ fs = 0.125
 # [Export] */
 Base_filename = "aexport"
 # [Export] */
+generatepaths = False
+# [Export] */
 generatedxf = True
 # [Export] */
 generategcode = True
@@ -81,9 +83,9 @@ RO_ratio = 0.5 # [0.25:2]
 # [Feeds and Speeds] */
 MISC_ratio = 0.5 # [0.25:2]
 
-gcp = gcodepreview(True, #generatescad
-                   True, #generategcode
-                   True, #generatedxf
+gcp = gcodepreview(generatepaths,
+                   generategcode,
+                   generatedxf,
                    )
 
 gcp.opengcodefile(Base_filename)
@@ -99,8 +101,16 @@ gcp.opendxffiles(Base_filename,
                  KH_tool_num,
                  Roundover_tool_num,
                  MISC_tool_num)
-
 gcp.setupstock(stockXwidth,stockYheight,stockZthickness,"Top","Center",retractheight)
+
+#print(pygcpversion())
+
+#print(gcp.myfunc(4))
+
+#print(gcp.getvv())
+
+#ts = cylinder(12.7, 1.5875, 1.5875)
+#toolpaths = gcp.cutshape(stockXwidth/2,stockYheight/2,-stockZthickness)
 
 gcp.movetosafeZ()
 
@@ -121,6 +131,7 @@ gcp.rapidZ(0)
 
 toolpaths = gcp.currenttool()
 
+#toolpaths = gcp.cutline(stockXwidth/2,stockYheight/2,-stockZthickness)
 toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/2, stockYheight/2, -stockZthickness))
 
 gcp.rapidZ(retractheight)
@@ -153,125 +164,132 @@ gcp.rapidXY(0, stockYheight/16*6)
 gcp.rapidZ(0)
 toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/16*2, stockYheight/2, -stockZthickness))
 
-#gcp.setzpos(retractheight)
-#gcp.toolchange(102,10000)
-#gcp.rapidXY(stockXwidth/4+stockYheight/16, -(stockYheight/4))
-#gcp.rapidZ(0)
-##arcloop(barc, earc, xcenter, ycenter, radius)
-#gcp.settzpos(stockZthickness/90)
-#toolpaths = toolpaths.union(gcp.arcloop(0, 90, stockXwidth/4, -stockYheight/4, stockYheight/16))
-
-gcp.rapidZ(retractheight)
+rapids = gcp.rapid(gcp.xpos(),gcp.ypos(),retractheight)
 gcp.toolchange(102,10000)
-gcp.rapidXY(stockXwidth/4+stockYheight/8+stockYheight/16, +stockYheight/8)
-gcp.rapidZ(0)
-#gcp.settzpos(stockZthickness/90)
-#toolpaths = toolpaths.union(gcp.arcloop(0, 90, stockXwidth/4+stockYheight/8, stockYheight/8, stockYheight/16))
-toolpaths = toolpaths.union(gcp.cutarcNECCdxfgc(stockXwidth/4+stockYheight/8, stockYheight/8+stockYheight/16, -stockZthickness, stockXwidth/4+stockYheight/8, stockYheight/8, stockYheight/16))
-toolpaths = toolpaths.union(gcp.cutarcNWCCdxfgc(stockXwidth/4+stockYheight/8-stockYheight/16, stockYheight/8, -stockZthickness, stockXwidth/4+stockYheight/8, stockYheight/8, stockYheight/16))
-toolpaths = toolpaths.union(gcp.cutarcSWCCdxfgc(stockXwidth/4+stockYheight/8, stockYheight/8-stockYheight/16, -stockZthickness, stockXwidth/4+stockYheight/8, stockYheight/8, stockYheight/16))
-toolpaths = toolpaths.union(gcp.cutarcSECCdxfgc(stockXwidth/4+stockYheight/8+stockYheight/16, stockYheight/8, -stockZthickness, stockXwidth/4+stockYheight/8, stockYheight/8, stockYheight/16))
 
-#a = gcp.currenttool()
-#arcbegin = a.translate([64.37357214209116, -37.33638368965047,-stockZthickness])
-#arcend = a.translate([55.16361631034953, -28.12642785790883,-stockZthickness])
-#toolpaths = toolpaths.union(arcbegin)
-#toolpaths = toolpaths.union(arcend)
+rapids = gcp.rapid(-stockXwidth/4+stockYheight/16, +stockYheight/4,0)
 
-#cu = cube([10,20,30])
-#c = cu.translate([0,0,gcp.zpos()])
+toolpaths = toolpaths.union(gcp.cutarcCC(0,90, gcp.xpos()-stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4))
+toolpaths = toolpaths.union(gcp.cutarcCC(90,180, gcp.xpos(), gcp.ypos()-stockYheight/16, stockYheight/16, -stockZthickness/4))
+toolpaths = toolpaths.union(gcp.cutarcCC(180,270, gcp.xpos()+stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4))
+toolpaths = toolpaths.union(gcp.cutarcCC(270,360, gcp.xpos(), gcp.ypos()+stockYheight/16, stockYheight/16, -stockZthickness/4))
 
-#def cutroundovertool(bx, by, bz, ex, ey, ez, tool_radius_tip, tool_radius_width):
-#    n = 90 + fn*3
-#    step = 360/n
-#    shaft = cylinder(step,tool_radius_tip,tool_radius_tip)
-#    toolpath = hull(shaft.translate([bx,by,bz]), shaft.translate([ex,ey,ez]))
-#    shaft = cylinder(tool_radius_width*2,tool_radius_tip+tool_radius_width,tool_radius_tip+tool_radius_width)
-#    toolpath = toolpath.union(hull(shaft.translate([bx,by,bz+tool_radius_width]), shaft.translate([ex,ey,ez+tool_radius_width])))
-#    for i in range(1, 90, 1):
-#        angle = i
-#        dx = tool_radius_width*math.cos(math.radians(angle))
-#        dxx = tool_radius_width*math.cos(math.radians(angle+1))
-#        dzz = tool_radius_width*math.sin(math.radians(angle))
-#        dz = tool_radius_width*math.sin(math.radians(angle+1))
-#        dh = abs(dzz-dz)+0.0001
-#        slice = cylinder(dh,tool_radius_tip+tool_radius_width-dx,tool_radius_tip+tool_radius_width-dxx)
-#        toolpath = toolpath.union(hull(slice.translate([bx,by,bz+dz]), slice.translate([ex,ey,ez+dz])))
-#    return toolpath
+rapids = gcp.movetosafeZ()
+rapids = gcp.rapidXY(stockXwidth/4-stockYheight/16, -stockYheight/4)
+rapids = gcp.rapidZ(0)
+
+toolpaths = toolpaths.union(gcp.cutarcCW(180,90, gcp.xpos()+stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4))
+toolpaths = toolpaths.union(gcp.cutarcCW(90,0, gcp.xpos(), gcp.ypos()-stockYheight/16, stockYheight/16, -stockZthickness/4))
+toolpaths = toolpaths.union(gcp.cutarcCW(360,270, gcp.xpos()-stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4))
+toolpaths = toolpaths.union(gcp.cutarcCW(270,180, gcp.xpos(), gcp.ypos()+stockYheight/16, stockYheight/16, -stockZthickness/4))
+
+rapids = gcp.movetosafeZ()
+gcp.toolchange(201,10000)
+rapids = gcp.rapidXY(stockXwidth/2, -stockYheight/2)
+rapids = gcp.rapidZ(0)
+
+toolpaths = toolpaths.union(gcp.cutlinedxfgc(gcp.xpos(), gcp.ypos(), -stockZthickness))
+#test = gcp.cutlinedxfgc(gcp.xpos(), gcp.ypos(), -stockZthickness)
+
+rapids = gcp.movetosafeZ()
+rapids = gcp.rapidXY(stockXwidth/2-6.34, -stockYheight/2)
+rapids = gcp.rapidZ(0)
+
+toolpaths = toolpaths.union(gcp.cutarcCW(180,90, stockXwidth/2, -stockYheight/2, 6.34, -stockZthickness))
+
+rapids = gcp.movetosafeZ()
+gcp.toolchange(814,10000)
+rapids = gcp.rapidXY(0, -(stockYheight/2+12.7))
+rapids = gcp.rapidZ(0)
+
+toolpaths = toolpaths.union(gcp.cutlinedxfgc(gcp.xpos(), gcp.ypos(), -stockZthickness))
+toolpaths = toolpaths.union(gcp.cutlinedxfgc(gcp.xpos(), -12.7, -stockZthickness))
+
+rapids = gcp.rapidXY(0, -(stockYheight/2+12.7))
+rapids = gcp.movetosafeZ()
+gcp.toolchange(374,10000)
+rapids = gcp.rapidXY(stockXwidth/4-stockXwidth/16, -(stockYheight/4+stockYheight/16))
+rapids = gcp.rapidZ(0)
 
 gcp.rapidZ(retractheight)
-gcp.toolchange(814,10000)
-gcp.rapidXY(0, -(stockYheight/2+12.7))
-gcp.cutZgcfeed(-stockZthickness,plunge)
-toolpaths = toolpaths.union(gcp.cutlinedxfgcfeed(0, -(stockYheight/16), -stockZthickness, feed))
-
-
+gcp.toolchange(374,10000)
+gcp.rapidXY(-stockXwidth/4-stockXwidth/16, -(stockYheight/4+stockYheight/16))
 gcp.rapidZ(0)
 
-#print(gcp.currenttoolnumber())
+toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), -stockZthickness/2))
+toolpaths = toolpaths.union(gcp.cutlinedxfgc(gcp.xpos()+stockYheight/9, gcp.ypos(), gcp.zpos()))
+#below should probably be cutlinegc
+toolpaths = toolpaths.union(gcp.cutline(gcp.xpos()-stockYheight/9, gcp.ypos(), gcp.zpos()))
+toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), 0))
+
+#key = gcp.cutkeyholegcdxf(KH_tool_num, 0, stockZthickness*0.75, "E", stockYheight/9)
+#key = gcp.cutKHgcdxf(374, 0, stockZthickness*0.75, 90, stockYheight/9)
+#toolpaths = toolpaths.union(key)
+
+gcp.rapidZ(retractheight)
+gcp.rapidXY(-stockXwidth/4+stockXwidth/16, -(stockYheight/4+stockYheight/16))
+gcp.rapidZ(0)
+#toolpaths = toolpaths.union(gcp.cutkeyholegcdxf(KH_tool_num, 0, stockZthickness*0.75, "N", stockYheight/9))
+toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), -stockZthickness/2))
+toolpaths = toolpaths.union(gcp.cutlinedxfgc(gcp.xpos(), gcp.ypos()+stockYheight/9, gcp.zpos()))
+#below should probably be cutlinegc
+toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos()-stockYheight/9, gcp.zpos()))
+toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), 0))
+
+gcp.rapidZ(retractheight)
+gcp.rapidXY(-stockXwidth/4+stockXwidth/16, -(stockYheight/4-stockYheight/8))
+gcp.rapidZ(0)
+#toolpaths = toolpaths.union(gcp.cutkeyholegcdxf(KH_tool_num, 0, stockZthickness*0.75, "W", stockYheight/9))
+toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), -stockZthickness/2))
+toolpaths = toolpaths.union(gcp.cutlinedxfgc(gcp.xpos()-stockYheight/9, gcp.ypos(), gcp.zpos()))
+#below should probably be cutlinegc
+toolpaths = toolpaths.union(gcp.cutline(gcp.xpos()+stockYheight/9, gcp.ypos(), gcp.zpos()))
+toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), 0))
+
+gcp.rapidZ(retractheight)
+gcp.rapidXY(-stockXwidth/4-stockXwidth/16, -(stockYheight/4-stockYheight/8))
+gcp.rapidZ(0)
+#toolpaths = toolpaths.union(gcp.cutkeyholegcdxf(KH_tool_num, 0, stockZthickness*0.75, "S", stockYheight/9))
+toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), -stockZthickness/2))
+toolpaths = toolpaths.union(gcp.cutlinedxfgc(gcp.xpos(), gcp.ypos()-stockYheight/9, gcp.zpos()))
+#below should probably be cutlinegc
+toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos()+stockYheight/9, gcp.zpos()))
+toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), 0))
 
 gcp.rapidZ(retractheight)
 gcp.toolchange(56142,10000)
 gcp.rapidXY(-stockXwidth/2, -(stockYheight/2+0.508/2))
-gcp.cutZgcfeed(-1.531,plunge)
-toolpaths = toolpaths.union(gcp.cutlinedxfgcfeed(stockXwidth/2+0.508/2, -(stockYheight/2+0.508/2), -1.531, feed))
+#gcp.cutZgcfeed(-1.531,plunge)
+toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), -1.531))
+toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/2+0.508/2, -(stockYheight/2+0.508/2), -1.531))
 
 gcp.rapidZ(retractheight)
 #gcp.toolchange(56125,10000)
-gcp.cutZgcfeed(-1.531,plunge)
-toolpaths = toolpaths.union(gcp.cutlinedxfgcfeed(stockXwidth/2+0.508/2, (stockYheight/2+0.508/2), -1.531, feed))
+#gcp.cutZgcfeed(-1.531,plunge)
+toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), -1.531))
+toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/2+0.508/2, (stockYheight/2+0.508/2), -1.531))
 
-gcp.rapidZ(retractheight)
-gcp.toolchange(374,10000)
-gcp.rapidXY(stockXwidth/4-stockXwidth/16, -(stockYheight/4+stockYheight/16))
-gcp.rapidZ(0)
-#toolpaths = toolpaths.union(gcp.cutlinedxfgcfeed(gcp.xpos(), gcp.ypos(), -4, feed))
-#toolpaths = toolpaths.union(gcp.cutZgcfeed(-4,plunge))
-#toolpaths = toolpaths.union(gcp.cutlinedxfgcfeed(stockXwidth/4, -(stockYheight/4)+25.4, -4, feed))
-#key = gcp.cutlinedxfgcfeed(stockXwidth/2+0.508/2, (stockYheight/2+0.508/2), -1.531, feed)
-
-#cutkeyholegcdxf(stockZthickness/2, stockZthickness/2, "N", stockYheight/8, KH_tool_num)
-#rapid(getxpos(),getypos(),stockZthickness);
-#rapid(-stockXwidth/4,-stockYheight/4,0);
-#cutkeyhole_toolpath((stockZthickness), (stockZthickness), "S", stockYheight/8, KH_tool_num);
-#rapid(getxpos(),getypos(),stockZthickness);
-#rapid(-stockXwidth/4,-stockYheight/8,0);
-key = gcp.cutkeyholegcdxf(0, stockZthickness*0.75, "E", stockYheight/9, KH_tool_num)
-toolpaths = toolpaths.union(key)
-#rapid(getxpos(),getypos(),stockZthickness);
-#rapid(-stockXwidth/8,-stockYheight/8*3,0);
-#cutkeyhole_toolpath((stockZthickness), (stockZthickness), "W", stockYheight/8, KH_tool_num);
-
-gcp.rapidZ(retractheight)
-gcp.rapidXY(stockXwidth/4+stockXwidth/16, -(stockYheight/4+stockYheight/16))
-gcp.rapidZ(0)
-toolpaths = toolpaths.union(gcp.cutkeyholegcdxf(0, stockZthickness*0.75, "N", stockYheight/9, KH_tool_num))
-
-gcp.rapidZ(retractheight)
-gcp.rapidXY(stockXwidth/4+stockXwidth/16, -(stockYheight/4-stockYheight/8))
-gcp.rapidZ(0)
-toolpaths = toolpaths.union(gcp.cutkeyholegcdxf(0, stockZthickness*0.75, "W", stockYheight/9, KH_tool_num))
-
-gcp.rapidZ(retractheight)
-gcp.rapidXY(stockXwidth/4-stockXwidth/16, -(stockYheight/4-stockYheight/8))
-gcp.rapidZ(0)
-toolpaths = toolpaths.union(gcp.cutkeyholegcdxf(0, stockZthickness*0.75, "S", stockYheight/9, KH_tool_num))
-
-gcp.rapidZ(retractheight)
-
-#Last dxf command not being written...
-#empty = gcp.cutlinedxfgcfeed(stockXwidth/2, -(stockYheight/2+0.508/2), 1, feed)
 
 part = gcp.stock.difference(toolpaths)
-#part = gcp.stock.union(key)
 
-output(part)
-#output(toolpaths)
-#output(key)
+output (part)
+#output(test)
+#output (key)
+#output(dt)
+#gcp.stockandtoolpaths()
+#gcp.stockandtoolpaths("stock")
+#output (gcp.stock)
+#output (gcp.toolpaths)
+#output (toolpaths)
 
-gcp.setzpos(retractheight)
+#gcp.makecube(3, 2, 1)
+#
+#gcp.placecube()
+#
+#c = gcp.instantiatecube()
+#
+#output(c)
 
 gcp.closegcodefile()
 gcp.closedxffiles()
 gcp.closedxffile()
-

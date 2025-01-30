@@ -59,10 +59,10 @@ gcp.opendxffile(Base_filename)
 
 gcp.dxfrectangle(large_square_tool_num, 0, 0, stockXwidth, stockYheight)
 
-gcp.dxfarc(large_square_tool_num,  inset,  inset, radius,   0,  90)
+gcp.dxfarc(large_square_tool_num, inset,  inset, radius,   0,  90)
 gcp.dxfarc(large_square_tool_num, stockXwidth - inset,  inset, radius,  90, 180)
 gcp.dxfarc(large_square_tool_num, stockXwidth - inset, stockYheight - inset, radius, 180, 270)
-gcp.dxfarc(large_square_tool_num,  inset, stockYheight - inset, radius, 270, 360)
+gcp.dxfarc(large_square_tool_num, inset, stockYheight - inset, radius, 270, 360)
 
 gcp.dxfline(large_square_tool_num, inset, inset + radius, inset,stockYheight - (inset + radius))
 gcp.dxfline(large_square_tool_num, inset + radius, inset,stockXwidth - (inset + radius), inset)
@@ -77,7 +77,7 @@ gcp.dxfrectangle(large_square_tool_num, stockXwidth/2 + (radius * 2) + inset, ra
 
 gcp.dxfcircle(large_square_tool_num, stockXwidth/2, stockYheight/2, radius * 2)
 
-gcp.dxfKH(stockXwidth/2, stockYheight/5*3, 0, -7, 270, 11.5875, 374)
+gcp.dxfKH(374, stockXwidth/2, stockYheight/5*3, 0, -7, 270, 11.5875)
 
 #gcp.closedxffiles()
 gcp.closedxffile()
