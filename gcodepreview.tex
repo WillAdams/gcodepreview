@@ -660,6 +660,15 @@ gcp.closedxffile()
 \end{writecode}
 \addtocounter{gcptmplpy}{138}
 
+\begin{samepage}
+\noindent Which generates a \textsc{3d} model which previews in PythonSCAD as:
+
+\bigskip
+
+%\includeimage{gcodepreview_unittests.png}
+\includeimage{gcodepreviewtemplate.png}
+\end{samepage}
+
 %TODO ADD BELOW !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 %
 %\begin{verbatim}
@@ -1075,90 +1084,90 @@ closedxffile();
 
 \bigskip
 
-%\includeimage{gcodepreview_unittests.png}
-\includeimage{gcodepreviewtemplate.png}
+\includeimage{gcodepreview_unittests_scad.png}
+%\includeimage{gcodepreviewtemplate.png}
 \end{samepage}
 
 %TODO UPDATE GRAPHIC!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 %TODO ADD BELOW
-
-\begin{verbatim}
-opengcodefile(filename_gcode);
-opendxffile(filename_dxf);
-
-difference() {
-%setupstock(stockXwidth, stockYheight, stockZthickness, zeroheight, stockzero);
-
-movetosafez();
-
-toolchange(small_square_tool_num,speed * small_square_ratio);
-
-begintoolpath(0,0,0.25);
-
-cutoneaxis_setfeed("Z",0,plunge*small_square_ratio);
-
-cutwithfeed(stockXwidth/2,stockYheight/2,-stockZthickness,feed);
-dxfline(getxpos(),getypos(),stockXwidth/2,stockYheight/2, small_square_tool_num);
-
-endtoolpath();
-rapid(-(stockXwidth/4-stockYheight/16),stockYheight/4,0);
-cutoneaxis_setfeed("Z",-stockZthickness,plunge*small_square_ratio);
-
-cutarcNECCdxf(-stockXwidth/4, stockYheight/4+stockYheight/16, -stockZthickness, -stockXwidth/4, stockYheight/4, stockYheight/16, small_square_tool_num);
-cutarcNWCCdxf(-(stockXwidth/4+stockYheight/16), stockYheight/4, -stockZthickness, -stockXwidth/4, stockYheight/4, stockYheight/16, small_square_tool_num);
-cutarcSWCCdxf(-stockXwidth/4, stockYheight/4-stockYheight/16, -stockZthickness, -stockXwidth/4, stockYheight/4, stockYheight/16, small_square_tool_num);
-cutarcSECCdxf(-(stockXwidth/4-stockYheight/16), stockYheight/4, -stockZthickness, -stockXwidth/4, stockYheight/4, stockYheight/16, small_square_tool_num);
-
-rapid(getxpos(),getypos(),stockZthickness);
-toolchange(KH_tool_num,speed * KH_ratio);
-rapid(-stockXwidth/8,-stockYheight/4,0);
-
-cutkeyhole_toolpath((stockZthickness), (stockZthickness), "N", stockYheight/8, KH_tool_num);
-rapid(getxpos(),getypos(),stockZthickness);
-rapid(-stockXwidth/4,-stockYheight/4,0);
-cutkeyhole_toolpath((stockZthickness), (stockZthickness), "S", stockYheight/8, KH_tool_num);
-rapid(getxpos(),getypos(),stockZthickness);
-rapid(-stockXwidth/4,-stockYheight/8,0);
-cutkeyhole_toolpath((stockZthickness), (stockZthickness), "E", stockYheight/8, KH_tool_num);
-rapid(getxpos(),getypos(),stockZthickness);
-rapid(-stockXwidth/8,-stockYheight/8*3,0);
-cutkeyhole_toolpath((stockZthickness), (stockZthickness), "W", stockYheight/8, KH_tool_num);
-
-rapid(getxpos(),getypos(),stockZthickness);
-toolchange(DT_tool_num,speed * DT_ratio);
-rapid(0,-(stockYheight/2+tool_diameter(DT_tool_num,0)),0);
-
-cutoneaxis_setfeed("Z",-stockZthickness,plunge*DT_ratio);
-cutwithfeed(0,-(stockYheight/4),-stockZthickness,feed*DT_ratio);
-rapid(0,-(stockYheight/2+tool_diameter(DT_tool_num,0)),-stockZthickness);
-
-rapid(getxpos(),getypos(),stockZthickness);
-toolchange(Roundover_tool_num, speed * RO_ratio);
-rapid(-(stockXwidth/2),-(stockYheight/2),0);
-cutoneaxis_setfeed("Z",-4.509,plunge*RO_ratio);
-
-cutroundovertool(-(stockXwidth/2++0.507/2), -(stockYheight/2+0.507/2), -4.509, stockXwidth/2+0.507/2, -(stockYheight/2+0.507/2), -4.509, 0.507/2, 4.509);
-
-cutroundover(stockXwidth/2+0.507/2, -(stockYheight/2+0.507/2), -4.509, stockXwidth/2+0.507/2, stockYheight/2+0.507/2, -4.509, 1570);
-cutroundover(stockXwidth/2+0.507/2, stockYheight/2+0.507/2, -4.509, -(stockXwidth/2+0.507/2), stockYheight/2+0.507/2, -4.509, 1570);
-cutroundover(-(stockXwidth/2+0.507/2), stockYheight/2+0.507/2, -4.509, -(stockXwidth/2+0.507/2), -(stockYheight/2+0.507/2), -4.509, 1570);
-
-//for (i = [0 : abs(1) : 80]) {
-//  cutwithfeed(stockXwidth/4,-stockYheight/4,-stockZthickness/4,feed);
-//  cutwithfeed(stockXwidth/8+(stockXwidth/256*i),-stockYheight/2,-stockZthickness*3/4,feed);
-//  }
-
-hull(){
-  cutwithfeed(stockXwidth/4,-stockYheight/4,-stockZthickness/4,feed);
-  cutwithfeed(stockXwidth/8,-stockYheight/2,-stockZthickness*3/4,feed);
-  cutwithfeed(stockXwidth/8+(stockXwidth*0.3125),-stockYheight/2,-stockZthickness*3/4,feed);
-  }
-}
-
-closegcodefile();
-closedxffile();
-
-\end{verbatim}
+%
+%\begin{verbatim}
+%opengcodefile(filename_gcode);
+%opendxffile(filename_dxf);
+%
+%difference() {
+%%setupstock(stockXwidth, stockYheight, stockZthickness, zeroheight, stockzero);
+%
+%movetosafez();
+%
+%toolchange(small_square_tool_num,speed * small_square_ratio);
+%
+%begintoolpath(0,0,0.25);
+%
+%cutoneaxis_setfeed("Z",0,plunge*small_square_ratio);
+%
+%cutwithfeed(stockXwidth/2,stockYheight/2,-stockZthickness,feed);
+%dxfline(getxpos(),getypos(),stockXwidth/2,stockYheight/2, small_square_tool_num);
+%
+%endtoolpath();
+%rapid(-(stockXwidth/4-stockYheight/16),stockYheight/4,0);
+%cutoneaxis_setfeed("Z",-stockZthickness,plunge*small_square_ratio);
+%
+%cutarcNECCdxf(-stockXwidth/4, stockYheight/4+stockYheight/16, -stockZthickness, -stockXwidth/4, stockYheight/4, stockYheight/16, small_square_tool_num);
+%cutarcNWCCdxf(-(stockXwidth/4+stockYheight/16), stockYheight/4, -stockZthickness, -stockXwidth/4, stockYheight/4, stockYheight/16, small_square_tool_num);
+%cutarcSWCCdxf(-stockXwidth/4, stockYheight/4-stockYheight/16, -stockZthickness, -stockXwidth/4, stockYheight/4, stockYheight/16, small_square_tool_num);
+%cutarcSECCdxf(-(stockXwidth/4-stockYheight/16), stockYheight/4, -stockZthickness, -stockXwidth/4, stockYheight/4, stockYheight/16, small_square_tool_num);
+%
+%rapid(getxpos(),getypos(),stockZthickness);
+%toolchange(KH_tool_num,speed * KH_ratio);
+%rapid(-stockXwidth/8,-stockYheight/4,0);
+%
+%cutkeyhole_toolpath((stockZthickness), (stockZthickness), "N", stockYheight/8, KH_tool_num);
+%rapid(getxpos(),getypos(),stockZthickness);
+%rapid(-stockXwidth/4,-stockYheight/4,0);
+%cutkeyhole_toolpath((stockZthickness), (stockZthickness), "S", stockYheight/8, KH_tool_num);
+%rapid(getxpos(),getypos(),stockZthickness);
+%rapid(-stockXwidth/4,-stockYheight/8,0);
+%cutkeyhole_toolpath((stockZthickness), (stockZthickness), "E", stockYheight/8, KH_tool_num);
+%rapid(getxpos(),getypos(),stockZthickness);
+%rapid(-stockXwidth/8,-stockYheight/8*3,0);
+%cutkeyhole_toolpath((stockZthickness), (stockZthickness), "W", stockYheight/8, KH_tool_num);
+%
+%rapid(getxpos(),getypos(),stockZthickness);
+%toolchange(DT_tool_num,speed * DT_ratio);
+%rapid(0,-(stockYheight/2+tool_diameter(DT_tool_num,0)),0);
+%
+%cutoneaxis_setfeed("Z",-stockZthickness,plunge*DT_ratio);
+%cutwithfeed(0,-(stockYheight/4),-stockZthickness,feed*DT_ratio);
+%rapid(0,-(stockYheight/2+tool_diameter(DT_tool_num,0)),-stockZthickness);
+%
+%rapid(getxpos(),getypos(),stockZthickness);
+%toolchange(Roundover_tool_num, speed * RO_ratio);
+%rapid(-(stockXwidth/2),-(stockYheight/2),0);
+%cutoneaxis_setfeed("Z",-4.509,plunge*RO_ratio);
+%
+%cutroundovertool(-(stockXwidth/2++0.507/2), -(stockYheight/2+0.507/2), -4.509, stockXwidth/2+0.507/2, -(stockYheight/2+0.507/2), -4.509, 0.507/2, 4.509);
+%
+%cutroundover(stockXwidth/2+0.507/2, -(stockYheight/2+0.507/2), -4.509, stockXwidth/2+0.507/2, stockYheight/2+0.507/2, -4.509, 1570);
+%cutroundover(stockXwidth/2+0.507/2, stockYheight/2+0.507/2, -4.509, -(stockXwidth/2+0.507/2), stockYheight/2+0.507/2, -4.509, 1570);
+%cutroundover(-(stockXwidth/2+0.507/2), stockYheight/2+0.507/2, -4.509, -(stockXwidth/2+0.507/2), -(stockYheight/2+0.507/2), -4.509, 1570);
+%
+%//for (i = [0 : abs(1) : 80]) {
+%//  cutwithfeed(stockXwidth/4,-stockYheight/4,-stockZthickness/4,feed);
+%//  cutwithfeed(stockXwidth/8+(stockXwidth/256*i),-stockYheight/2,-stockZthickness*3/4,feed);
+%//  }
+%
+%hull(){
+%  cutwithfeed(stockXwidth/4,-stockYheight/4,-stockZthickness/4,feed);
+%  cutwithfeed(stockXwidth/8,-stockYheight/2,-stockZthickness*3/4,feed);
+%  cutwithfeed(stockXwidth/8+(stockXwidth*0.3125),-stockYheight/2,-stockZthickness*3/4,feed);
+%  }
+%}
+%
+%closegcodefile();
+%closedxffile();
+%
+%\end{verbatim}
 
 %///* [Export] */
 %//generatesvg = false; 
@@ -1347,7 +1356,7 @@ Ideally, there would be \emph{no} hard-coded values --- every value used for cal
 
 \noindent\url{https://stackoverflow.com/questions/9539921/how-do-i-define-a-function-with-optional-arguments}
 
-In short, rather than hard-code numbers, for example in loops, they will be assigned as default values, and thus afford the user/programmer the option of changing them after.
+In short, rather than hard-code numbers, for example in loops, they will be assigned as default values, and thus afford the user/programmer the option of changing them after. See \DescribeVariable{stepsizearc} and \DescribeVariable{stepsizeroundover}.
 
 \subsection{Implementation files and gcodepreview class}
  
@@ -2467,7 +2476,7 @@ The Python commands \DescribeRoutine{cut...} add the \verb|currenttool| to the \
 #        if self.generatepaths == False:
         return self.cutline(ex, ey, ez)
 
-    def cutroundovertool(self, bx, by, bz, ex, ey, ez, tool_radius_tip, tool_radius_width):
+    def cutroundovertool(self, bx, by, bz, ex, ey, ez, tool_radius_tip, tool_radius_width, stepsizeroundover = 1):
 #        n = 90 + fn*3
 #        print("Tool dimensions", tool_radius_tip, tool_radius_width, "begin ",bx, by, bz,"end ", ex, ey, ez)
         step = 4 #360/n
@@ -2475,7 +2484,7 @@ The Python commands \DescribeRoutine{cut...} add the \verb|currenttool| to the \
         toolpath = hull(shaft.translate([bx,by,bz]), shaft.translate([ex,ey,ez]))
         shaft = cylinder(tool_radius_width*2,tool_radius_tip+tool_radius_width,tool_radius_tip+tool_radius_width)
         toolpath = toolpath.union(hull(shaft.translate([bx,by,bz+tool_radius_width]), shaft.translate([ex,ey,ez+tool_radius_width])))
-        for i in range(1, 90, 1):
+        for i in range(1, 90, stepsizeroundover):
             angle = i
             dx = tool_radius_width*math.cos(math.radians(angle))
             dxx = tool_radius_width*math.cos(math.radians(angle+1))
@@ -2762,7 +2771,7 @@ Note that it is necessary to move to the beginning cutting position before calli
 
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
-    def cutarcCC(self, barc, earc, xcenter, ycenter, radius, tpzreldim, steps=1):
+    def cutarcCC(self, barc, earc, xcenter, ycenter, radius, tpzreldim, stepsizearc=1):
 #        tpzinc = ez - self.zpos() / (earc - barc)
         tpzinc = tpzreldim / (earc - barc)
         cts = self.currenttoolshape
@@ -2771,13 +2780,13 @@ Note that it is necessary to move to the beginning cutting position before calli
         i = barc
         while i < earc: 
             toolpath = toolpath.union(self.cutline(xcenter + radius * math.cos(math.radians(i)), ycenter + radius * math.sin(math.radians(i)), self.zpos()+tpzinc))
-            i += steps
+            i += stepsizearc
         if self.generatepaths == False:
             return toolpath
         else:
             return cube([0.01,0.01,0.01])
 
-    def cutarcCW(self, barc,earc, xcenter, ycenter, radius, tpzreldim, steps=1):
+    def cutarcCW(self, barc,earc, xcenter, ycenter, radius, tpzreldim, stepsizearc=1):
 #        print(str(self.zpos()))
 #        print(str(ez))
 #        print(str(barc - earc))
@@ -2796,7 +2805,7 @@ Note that it is necessary to move to the beginning cutting position before calli
 #            self.setypos(ycenter + radius * math.sin(math.radians(i)))
 #            print(str(self.xpos()), str(self.ypos(), str(self.zpos())))
 #            self.setzpos(self.zpos()+tpzinc)
-            i += abs(steps) * -1
+            i += abs(stepsizearc) * -1
 #        self.dxfarc(self.currenttoolnumber(), xcenter, ycenter, radius, barc, earc)
 #        if self.generatepaths == True:
 #            print("Unioning n toolpath")

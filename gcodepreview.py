@@ -502,7 +502,7 @@ class gcodepreview:
 #        if self.generatepaths == False:
         return self.cutline(ex, ey, ez)
 
-    def cutroundovertool(self, bx, by, bz, ex, ey, ez, tool_radius_tip, tool_radius_width):
+    def cutroundovertool(self, bx, by, bz, ex, ey, ez, tool_radius_tip, tool_radius_width, stepsizeroundover = 1):
 #        n = 90 + fn*3
 #        print("Tool dimensions", tool_radius_tip, tool_radius_width, "begin ",bx, by, bz,"end ", ex, ey, ez)
         step = 4 #360/n
@@ -510,7 +510,7 @@ class gcodepreview:
         toolpath = hull(shaft.translate([bx,by,bz]), shaft.translate([ex,ey,ez]))
         shaft = cylinder(tool_radius_width*2,tool_radius_tip+tool_radius_width,tool_radius_tip+tool_radius_width)
         toolpath = toolpath.union(hull(shaft.translate([bx,by,bz+tool_radius_width]), shaft.translate([ex,ey,ez+tool_radius_width])))
-        for i in range(1, 90, 1):
+        for i in range(1, 90, stepsizeroundover):
             angle = i
             dx = tool_radius_width*math.cos(math.radians(angle))
             dxx = tool_radius_width*math.cos(math.radians(angle+1))
@@ -524,7 +524,7 @@ class gcodepreview:
         else:
             return toolpath
 
-    def cutarcCC(self, barc, earc, xcenter, ycenter, radius, tpzreldim, steps=1):
+    def cutarcCC(self, barc, earc, xcenter, ycenter, radius, tpzreldim, stepsizearc=1):
 #        tpzinc = ez - self.zpos() / (earc - barc)
         tpzinc = tpzreldim / (earc - barc)
         cts = self.currenttoolshape
@@ -533,13 +533,13 @@ class gcodepreview:
         i = barc
         while i < earc:
             toolpath = toolpath.union(self.cutline(xcenter + radius * math.cos(math.radians(i)), ycenter + radius * math.sin(math.radians(i)), self.zpos()+tpzinc))
-            i += steps
+            i += stepsizearc
         if self.generatepaths == False:
             return toolpath
         else:
             return cube([0.01,0.01,0.01])
 
-    def cutarcCW(self, barc,earc, xcenter, ycenter, radius, tpzreldim, steps=1):
+    def cutarcCW(self, barc,earc, xcenter, ycenter, radius, tpzreldim, stepsizearc=1):
 #        print(str(self.zpos()))
 #        print(str(ez))
 #        print(str(barc - earc))
@@ -558,7 +558,7 @@ class gcodepreview:
 #            self.setypos(ycenter + radius * math.sin(math.radians(i)))
 #            print(str(self.xpos()), str(self.ypos(), str(self.zpos())))
 #            self.setzpos(self.zpos()+tpzinc)
-            i += abs(steps) * -1
+            i += abs(stepsizearc) * -1
 #        self.dxfarc(self.currenttoolnumber(), xcenter, ycenter, radius, barc, earc)
 #        if self.generatepaths == True:
 #            print("Unioning n toolpath")
