@@ -75,7 +75,7 @@ Author: William F. Adams\\
 \begin{readme}
 # gcodepreview
 
-PythonSCAD library for moving a tool in lines and arcs so as to model how a part would be cut using G-Code, so as to allow PythonSCAD to function as a compleat CAD/CAM solution for subtractive 3-axis CNC (mills and routers) by writing out G-code in addition to 3D modeling (in some cases toolpaths which would not normally be feasible), and to write out DXF files which may be imported into a traditional CAM program to create toolpaths.
+PythonSCAD library for moving a tool in lines and arcs so as to model how a part would be cut using G-Code, so as to allow PythonSCAD to function as a compleat CAD/CAM solution for subtractive 3-axis CNC (mills and routers at this time, 4th-axis support may come in a future version) by writing out G-code in addition to 3D modeling (in some cases toolpaths which would not normally be feasible), and to write out DXF files which may be imported into a traditional CAM program to create toolpaths. 
 
 ![OpenSCAD gcodepreview Unit Tests](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/gcodepreview_unittests.png?raw=true)
 
@@ -189,11 +189,16 @@ Deprecated feature:
 
 \section{Usage and Templates}
 
-The gcodepreview library allows the modeling of \textsc{2d} geometry and \textsc{3d} shapes using Python or by calling Python from within (Open)PythonSCAD, enabling the creation of \textsc{2d} \textsc{dxf}s, G-code, or \textsc{3d}~models as a preview of how the file will cut. These abilities may be accessed in ``plain'' Python (to make \textsc{dxf}s), or Python or OpenSCAD in PythonSCAD (to make G-code and/or for \textsc{3d}~modeling)
+The gcodepreview library allows the modeling of \textsc{2d} geometry and \textsc{3d} shapes using Python or by calling Python from within (Open)PythonSCAD, enabling the creation of \textsc{2d} \textsc{dxf}s, G-code, or \textsc{3d}~models as a preview of how the file will cut. These abilities may be accessed in ``plain'' Python (to make \textsc{dxf}s), or Python or OpenSCAD in PythonSCAD (to make G-code and/or for \textsc{3d}~modeling). Providing them in a programmatic context allows making parts or design elements of parts (e.g., joinery) which would be tedious to draw by hand in a traditional CAD or vector drawing application. A further consideration is that this is ``Design for Manufacture'' taken to its ultimate extreme, and that a part so designed is inherently manufacturable.
 
 The various commands are shown all together in templates so as to provide examples of usage, and to ensure that the various files are used/included as necessary, all variables are set up with the correct names (note that the sparse template in \verb|readme.md| eschews variables), and that files are opened before being written to, and that each is closed at the end in the correct order. Note that while the template files seem overly verbose, they specifically incorporate variables for each tool shape, possibly in two different sizes, and a feed rate parameter or ratio for each, which may be used (by setting a tool \#) or ignored (by leaving the variable at zero (0). 
 
-It should be that the readme at the project page which serves as an overview, and this section (which serves as a tutorial) is all the documentation which most users will need (and arguably is still too much). A command glossary may be added in a future version. The balance of the document after this section shows all the code and implementation details, and will where appropriate show examples of usage excerpted from the template files  (serving as a how-to guide as well as documenting the code) as well as Indices (which serve as a front-end for reference).
+It should be that the readme at the project page which serves as an overview, and this section (which serves as a tutorial) is all the documentation which most users will need (and arguably is still too much). 
+%TODO
+%A command glossary may be added in a future version. 
+The balance of the document after this section shows all the code and implementation details, and will where appropriate show examples of usage excerpted from the template files (serving as a how-to guide as well as documenting the code) as well as Indices (which serve as a front-end for reference).
+
+\includeimage{panorama.pdf}
 
 %TODO Implement command glossary
 
@@ -213,6 +218,8 @@ Some comments on the templates:
                     Depth per Pass (but note that this will lose the previewing of scalloped tool 
                     marks in places where they might appear otherwise)
 \end{itemize}
+
+One fundamental aspect of this tool is the question of \emph{Layers of Abstraction} (as put forward by Dr. Donald Knuth as the crux of computer science) and \emph{Problem Decomposition} (Prof. John Ousterhout's answer to that topic). To a great degree, the basic implementation of this tool will use G-code as a reference implementation, simultaneously using the abstraction from the mechanical task of machining which it affords as a decomposed version of that task, and creating what is in essence, both a front-end, and a tool, and an API for working with G-code programmatically. This then requires an architecture which allows \textsc{3d} modeling (OpenSCAD), and writing out files (Python).
 
 Further features will be added to the templates as they are created, and the main image updated to reflect the capabilities of the system.
 
@@ -339,7 +346,7 @@ gcp.closedxffile()
 
 \bigskip
 
-\noindent Note that the lines referencing multiple files (\verb|open/closedxffiles|) may be uncommented if the project wants separate \verb|dxf| files for different tools.
+\noindent and which may be imported into pretty much any CAD or CAM application. Note that the lines referencing multiple files (\verb|open/closedxffiles|) may be uncommented if the project wants separate \verb|dxf| files for different tools.
 
 As shown/implied by the above code, the following commands/shapes are implemented:
 
@@ -1088,6 +1095,8 @@ closedxffile();
 %\includeimage{gcodepreviewtemplate.png}
 \end{samepage}
 
+\noindent Obviously, the use of OpenSCAD to generate keyhole toolpaths and to make use of roundover tooling remains to be implemented.
+
 %TODO UPDATE GRAPHIC!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 %TODO ADD BELOW
 %
@@ -1188,7 +1197,7 @@ Note that there are several possible ways to work with the \textsc{3d} models of
 
 %\noindent This behaviour is handled by the \DescribeVariable{generatepaths} Boolean. If set to \verb|True| then each toolpath/cut will be added to a \DescribeVariable{toolpaths} variable (identified as either \verb|self| or \verb|gcp| depending on the context) which then will be used in the command \DescribeRoutine{stockandtoolpaths}. If this variable is set to \verb|False|, then it will be the responsibility of the user to manage the return of the \textsc{3d} model by the module/routine.
 
-\noindent the templates set up these options as noted, and for OpenSCAD, implement code to ensure that \verb|True == true|, and a set of commands are provided to output the stock, toolpaths, or part (toolpaths and rapids differenced from stock).
+\noindent The templates set up these options as noted, and for OpenSCAD, implement code to ensure that \verb|True == true|, and a set of commands are provided to output the stock, toolpaths, or part (toolpaths and rapids differenced from stock).
 
 \section{gcodepreview}
 
@@ -1216,13 +1225,13 @@ This library for PythonSCAD works by using Python code as a back-end so as to pe
 
 \subsection{Module Naming Convention}
 
-The original implementation required three files and used a convention for prefacing commands with \verb|o| or \verb|p|, but this requirement was obviated in the full Python re-write. The current implentation depends upon the class being instantiated as \verb|gcp| as a sufficent differentation between the Python and the OpenSCAD version of a command.
+The original implementation required three files and used a convention for prefacing commands with \verb|o| or \verb|p|, but this requirement was obviated in the full Python re-write. The current implentation depends upon the class being instantiated as \verb|gcp| as a sufficent differentation between the Python and the OpenSCAD versions of commands which will share the same name.
 
 %Note that for certain implementations, where it is necessary for a module to coordinate between Python~and OpenSCAD, in certain cases it will be necessary for there to be three separate  versions: a Python definition for the manipulation of Python variables and any file routines, originally these were identified as \texttt{p}<foo>, but with the use of an object-oriented programming style and dot notation, since v0.7 they will be identified as \verb|gcp.foo| (where \verb|gcp| is the identifier used to import the class); which differentiates the twain sufficiently that the Python function name may be directly re-used (previously an \texttt{o}<foo> OpenSCAD module which will wrap up the Python function call, and lastly a <foo> OpenSCAD module which will be \texttt{<include>}d so as to be able to make use of OpenSCAD variables were required).
 
 Number will be abbreviated as \verb|num| rather than \verb|no|, and the short form will be used internally for variable names, while the compleat word will be used in commands.
 
-Tool \#s where used will always be the first argument --- this makes it obvious if they are not used --- the negative, that it then doesn't allow for a usage where a \textsc{default} tool is used is not an issue since the command \verb|currenttoolnum()| may be used to access that number, and is arguably the preferred mechanism. An exception is when there are multiple tool \#s as when opening a file --- collecting them all at the end is a more straight-forward approach.
+Tool \#s where used will be the first argument where possible --- this makes it obvious if they are not used --- the negative consideration, that it then doesn't allow for a usage where a \textsc{default} tool is used is not an issue since the command \verb|currenttoolnum()| may be used to access that number, and is arguably the preferred mechanism. An exception is when there are multiple tool \#s as when opening a file --- collecting them all at the end is a more straight-forward approach.
 
 In natural languages such as English, there is an order to various parts of speech such as adjectives 
 %(determiner, opinion/observation, size, age, shape, color, origin/nationality, material, purpose/qualifier) 
@@ -1421,7 +1430,7 @@ echo(pygcpversion());
 //}
 //
 \end{writecode}
-\addtocounter{gcpscad}{29}
+\addtocounter{gcpscad}{30}
 
 If all functions are to be handled within Python, then they will need to be gathered into a class which contains them and which is initialized so as to define shared variables, and then there will need to be objects/commands for each aspect of the program, each of which will utilise needed variables and will contain appropriate functionality. Note that they will be divided between mandatory and optional functions/variables/objects:
 
@@ -1454,7 +1463,7 @@ If all functions are to be handled within Python, then they will need to be gath
       \3 MISC\_tool\_num, MISC\_ratio
 \end{outline}
 
-The class which is defined is \DescribeRoutine{gcodepreview} which includes the \DescribeRoutine{init} method which allows passing in and defining the variables which will be used by the other methods in this class.
+The class which is defined is \DescribeRoutine{gcodepreview} which begins with the \DescribeRoutine{init} method which allows passing in and defining the variables which will be used by the other methods in this class. Part of this includes handling various definitions for Boolean values.
 
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
@@ -1534,7 +1543,7 @@ class gcodepreview:
 #        return self.c
 #
 \end{writecode}
-\addtocounter{gcpy}{74}
+\addtocounter{gcpy}{75}
 
 %\newglossaryentry{init}
 %{
@@ -1578,6 +1587,8 @@ It will further be necessary to have a variable for the current tool:
 
 \noindent Note that the \verb|currenttoolnum| variable should always be accessed and used for any specification of a tool, being read in whenever a tool is to be made use of, or a parameter or aspect of the tool needs to be used in a calculation. %(Which implies that the tool parameters in modules other than \verb|toolchange(tool_number, speed);| should be removed.)
 
+Similarly, a \textsc{3d} model of the tool will be available as \verb|currenttool| itself and used where appropriate.
+
 It will be necessary to have Python functions (\DescribeRoutine{xpos}, \DescribeRoutine{ypos}, and \DescribeRoutine{zpos}) which return the current values of the machine position in Cartesian coordinates: 
 
 \lstset{firstnumber=\thegcpy}
@@ -1612,7 +1623,7 @@ function ypos() = gcp.ypos();
 function zpos() = gcp.zpos();
 
 \end{writecode}
-\addtocounter{gcpscad}{9}
+\addtocounter{gcpscad}{6}
 
 \noindent and in turn, functions which set the positions: 
 \DescribeRoutine{setxpos},
@@ -2131,7 +2142,7 @@ module toolchange(tool_number,speed){
 }
 
 \end{writecode}
-\addtocounter{gcpscad}{2}
+\addtocounter{gcpscad}{4}
 
 \noindent For example:
 
@@ -2402,7 +2413,7 @@ G53G0Z-5.000
             return rapid
 
 \end{writecode}
-\addtocounter{gcpy}{27}
+\addtocounter{gcpy}{30}
 
 %Note that a hard-coded cylinder is used since the command will be used prior to a toolchange. In the future there may be a command for initializing the \DescribeVariable{toolpaths} so that later cut commands may add to it.
 
@@ -2499,7 +2510,7 @@ The Python commands \DescribeRoutine{cut...} add the \verb|currenttool| to the \
             return toolpath
 
 \end{writecode}
-\addtocounter{gcpy}{102}      
+\addtocounter{gcpy}{63}      
 
 %CODE TO RESTORE
 %
@@ -2610,7 +2621,7 @@ module cutlinedxfgc(ex, ey, ez){
 }
 
 \end{writecode}
-\addtocounter{gcpscad}{4}      
+\addtocounter{gcpscad}{8}      
 
 \subsubsection{Arcs for toolpaths and DXFs}
  
@@ -2817,7 +2828,7 @@ Note that it is necessary to move to the beginning cutting position before calli
             return cube([0.01,0.01,0.01])
 
 \end{writecode}
-\addtocounter{gcpy}{51}
+\addtocounter{gcpy}{45}
 
 Matching OpenSCAD modules are easily made:
 
@@ -2996,7 +3007,7 @@ There are two forms for rectangles, square cornered and rounded:
             self.dxfrectangleflippedfillet(tool_num, xorigin, yorigin, xwidth, yheight, radius)
 
 \end{writecode}
-\addtocounter{gcpy}{6}
+\addtocounter{gcpy}{13}
 
 Note that the rounded shape below would be described as a rectangle with the ``Fillet'' corner treatment in Carbide Create.
 
@@ -3053,104 +3064,104 @@ Flipped Fillet:
 \addtocounter{gcpy}{11}
 
 
-\begin{verbatim}
-\paragraph{Rectangles}
-
-Cutting rectangles while writing out their perimeter in the DXF files (so that they may be assigned a matching toolpath in a traditional CAM program upon import) will require the origin coordinates, height and width and depth of the pocket, and the tool \# so that the corners may have a radius equal to the tool which is used. Whether a given module is an interior pocket or an outline (interior or exterior) will be determined by the specifics of the module and its usage/positioning, with \texttt{outline} being added to those modules which cut perimeter.
-
-A further consideration is that cut orientation as an option should be accounted for if writing out G-code, as well as stepover, and the nature of initial entry (whether ramping in would be implemented, and if so, at what angle). Advanced toolpath strategies such as trochoidal milling could also be implemented.
-
-Th routine \DescribeRoutine{cutrectangledxf} cuts the outline of a rectangle creating sharp corners. Note that the initial version would work as a beginning point for vertical cutting if the \texttt{hull()} operation was removed and the loop was uncommented:
- 
-\lstset{firstnumber=\thegcpscad}
-\begin{writecode}{a}{gcodepreview.scad}{scad}
-module cutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {//passes
-  movetosafez();
-  hull(){
-    //  for (i = [0 : abs(1) : passes]) {
-    //      rapid(bx+tool_radius(rtn)+i*(rwidth-tool_diameter(current_tool()))/passes,bx+tool_radius(rtn),1);
-    //      cutwithfeed(bx+tool_radius(rtn)+i*(rwidth-tool_diameter(current_tool()))/passes,by+tool_radius(rtn),bz-rdepth,feed);
-    //      cutwithfeed(bx+tool_radius(rtn)+i*(rwidth-tool_diameter(current_tool()))/passes,by+rheight-tool_radius(rtn),bz-rdepth,feed);
-  
-    cutwithfeed(bx+tool_radius(rtn),by+tool_radius(rtn),bz-rdepth,feed);
-    cutwithfeed(bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),bz-rdepth,feed);
-    cutwithfeed(bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),bz-rdepth,feed);
-    cutwithfeed(bx+tool_radius(rtn),by+rheight-tool_radius(rtn),bz-rdepth,feed);
-  }
-  //dxfarc(xcenter,ycenter,radius,anglebegin,endangle, tn)
-  dxfarc(bx+tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),180,270, rtn);
-  //dxfline(xbegin,ybegin,xend,yend, tn)
-  dxfline(bx,by+tool_radius(rtn),bx,by+rheight-tool_radius(rtn), rtn);
-  dxfarc(bx+tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),90,180, rtn);
-  dxfline(bx+tool_radius(rtn),by+rheight,bx+rwidth-tool_radius(rtn),by+rheight, rtn);
-  dxfarc(bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),0,90, rtn);
-  dxfline(bx+rwidth,by+rheight-tool_radius(rtn),bx+rwidth,by+tool_radius(rtn), rtn);
-  dxfarc(bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),270,360, rtn);
-  dxfline(bx+rwidth-tool_radius(rtn),by,bx+tool_radius(rtn),by, rtn);
-}
-
-\end{writecode}
-\addtocounter{gcpscad}{25}
-
-A matching command: \DescribeRoutine{cutrectangleoutlinedxf} cuts the outline of a rounded rectangle and is a simplification of the above:
-
-\lstset{firstnumber=\thegcpscad}
-\begin{writecode}{a}{gcodepreview.scad}{scad}
-module cutrectangleoutlinedxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {//passes
-  movetosafez();
-  cutwithfeed(bx+tool_radius(rtn),by+tool_radius(rtn),bz-rdepth,feed);
-  cutwithfeed(bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),bz-rdepth,feed);
-  cutwithfeed(bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),bz-rdepth,feed);
-  cutwithfeed(bx+tool_radius(rtn),by+rheight-tool_radius(rtn),bz-rdepth,feed);
-  dxfarc(bx+tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),180,270, rtn);
-  dxfline(bx,by+tool_radius(rtn),bx,by+rheight-tool_radius(rtn), rtn);
-  dxfarc(bx+tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),90,180, rtn);
-  dxfline(bx+tool_radius(rtn),by+rheight,bx+rwidth-tool_radius(rtn),by+rheight, rtn);
-  dxfarc(bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),0,90, rtn);
-  dxfline(bx+rwidth,by+rheight-tool_radius(rtn),bx+rwidth,by+tool_radius(rtn), rtn);
-  dxfarc(bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),270,360, rtn);
-  dxfline(bx+rwidth-tool_radius(rtn),by,bx+tool_radius(rtn),by, rtn);
-}
-
-\end{writecode}
-\addtocounter{gcpscad}{16}
-
-Which suggests a further command, \DescribeRoutine{rectangleoutlinedxf} for simply adding a rectangle (a potential use of which would be in Job Setup to add the stock outline to \textsc{dxf}s to assist in registration of jobs with multiple tools):
-
-\lstset{firstnumber=\thegcpscad}
-\begin{writecode}{a}{gcodepreview.scad}{scad}
-module rectangleoutlinedxf(bx, by, bz, rwidth, rheight, rtn) {
-  dxfline(bx,by,bx,by+rheight, rtn);
-  dxfline(bx,by+rheight,bx+rwidth,by+rheight, rtn);
-  dxfline(bx+rwidth,by+rheight,bx+rwidth,by, rtn);
-  dxfline(bx+rwidth,by,bx,by, rtn);
-}
-
-\end{writecode}
-\addtocounter{gcpscad}{7}
-
-\noindent the initial section performs the cutting operation for the 3D preview while the latter section writes out the outline to the DXF files.
-
-A variant of the  cutting version of that file, \DescribeRoutine{cutoutrectangledxf} will cut to the outside:
-
-\lstset{firstnumber=\thegcpscad}
-\begin{writecode}{a}{gcodepreview.scad}{scad}
-module cutoutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {
-  movetosafez();
-  cutwithfeed(bx-tool_radius(rtn),by-tool_radius(rtn),bz-rdepth,feed);
-  cutwithfeed(bx+rwidth+tool_radius(rtn),by-tool_radius(rtn),bz-rdepth,feed);
-  cutwithfeed(bx+rwidth+tool_radius(rtn),by+rheight+tool_radius(rtn),bz-rdepth,feed);
-  cutwithfeed(bx-tool_radius(rtn),by+rheight+tool_radius(rtn),bz-rdepth,feed);
-  cutwithfeed(bx-tool_radius(rtn),by-tool_radius(rtn),bz-rdepth,feed);
-  dxfline(bx,by,bx,by+rheight, rtn);
-  dxfline(bx,by+rheight,bx+rwidth,by+rheight, rtn);
-  dxfline(bx+rwidth,by+rheight,bx+rwidth,by, rtn);
-  dxfline(bx+rwidth,by,bx,by, rtn);
-}
-
-\end{writecode}
-\addtocounter{gcpscad}{13}
-\end{verbatim}
+%\begin{verbatim}
+%\paragraph{Rectangles}
+%
+%Cutting rectangles while writing out their perimeter in the DXF files (so that they may be assigned a matching toolpath in a traditional CAM program upon import) will require the origin coordinates, height and width and depth of the pocket, and the tool \# so that the corners may have a radius equal to the tool which is used. Whether a given module is an interior pocket or an outline (interior or exterior) will be determined by the specifics of the module and its usage/positioning, with \texttt{outline} being added to those modules which cut perimeter.
+%
+%A further consideration is that cut orientation as an option should be accounted for if writing out G-code, as well as stepover, and the nature of initial entry (whether ramping in would be implemented, and if so, at what angle). Advanced toolpath strategies such as trochoidal milling could also be implemented.
+%
+%Th routine \DescribeRoutine{cutrectangledxf} cuts the outline of a rectangle creating sharp corners. Note that the initial version would work as a beginning point for vertical cutting if the \texttt{hull()} operation was removed and the loop was uncommented:
+% 
+%\lstset{firstnumber=\thegcpscad}
+%\begin{writecode}{a}{gcodepreview.scad}{scad}
+%module cutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {//passes
+%  movetosafez();
+%  hull(){
+%    //  for (i = [0 : abs(1) : passes]) {
+%    //      rapid(bx+tool_radius(rtn)+i*(rwidth-tool_diameter(current_tool()))/passes,bx+tool_radius(rtn),1);
+%    //      cutwithfeed(bx+tool_radius(rtn)+i*(rwidth-tool_diameter(current_tool()))/passes,by+tool_radius(rtn),bz-rdepth,feed);
+%    //      cutwithfeed(bx+tool_radius(rtn)+i*(rwidth-tool_diameter(current_tool()))/passes,by+rheight-tool_radius(rtn),bz-rdepth,feed);
+%  
+%    cutwithfeed(bx+tool_radius(rtn),by+tool_radius(rtn),bz-rdepth,feed);
+%    cutwithfeed(bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),bz-rdepth,feed);
+%    cutwithfeed(bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),bz-rdepth,feed);
+%    cutwithfeed(bx+tool_radius(rtn),by+rheight-tool_radius(rtn),bz-rdepth,feed);
+%  }
+%  //dxfarc(xcenter,ycenter,radius,anglebegin,endangle, tn)
+%  dxfarc(bx+tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),180,270, rtn);
+%  //dxfline(xbegin,ybegin,xend,yend, tn)
+%  dxfline(bx,by+tool_radius(rtn),bx,by+rheight-tool_radius(rtn), rtn);
+%  dxfarc(bx+tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),90,180, rtn);
+%  dxfline(bx+tool_radius(rtn),by+rheight,bx+rwidth-tool_radius(rtn),by+rheight, rtn);
+%  dxfarc(bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),0,90, rtn);
+%  dxfline(bx+rwidth,by+rheight-tool_radius(rtn),bx+rwidth,by+tool_radius(rtn), rtn);
+%  dxfarc(bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),270,360, rtn);
+%  dxfline(bx+rwidth-tool_radius(rtn),by,bx+tool_radius(rtn),by, rtn);
+%}
+%
+%\end{writecode}
+%\addtocounter{gcpscad}{25}
+%
+%A matching command: \DescribeRoutine{cutrectangleoutlinedxf} cuts the outline of a rounded rectangle and is a simplification of the above:
+%
+%\lstset{firstnumber=\thegcpscad}
+%\begin{writecode}{a}{gcodepreview.scad}{scad}
+%module cutrectangleoutlinedxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {//passes
+%  movetosafez();
+%  cutwithfeed(bx+tool_radius(rtn),by+tool_radius(rtn),bz-rdepth,feed);
+%  cutwithfeed(bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),bz-rdepth,feed);
+%  cutwithfeed(bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),bz-rdepth,feed);
+%  cutwithfeed(bx+tool_radius(rtn),by+rheight-tool_radius(rtn),bz-rdepth,feed);
+%  dxfarc(bx+tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),180,270, rtn);
+%  dxfline(bx,by+tool_radius(rtn),bx,by+rheight-tool_radius(rtn), rtn);
+%  dxfarc(bx+tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),90,180, rtn);
+%  dxfline(bx+tool_radius(rtn),by+rheight,bx+rwidth-tool_radius(rtn),by+rheight, rtn);
+%  dxfarc(bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),0,90, rtn);
+%  dxfline(bx+rwidth,by+rheight-tool_radius(rtn),bx+rwidth,by+tool_radius(rtn), rtn);
+%  dxfarc(bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),270,360, rtn);
+%  dxfline(bx+rwidth-tool_radius(rtn),by,bx+tool_radius(rtn),by, rtn);
+%}
+%
+%\end{writecode}
+%\addtocounter{gcpscad}{16}
+%
+%Which suggests a further command, \DescribeRoutine{rectangleoutlinedxf} for simply adding a rectangle (a potential use of which would be in Job Setup to add the stock outline to \textsc{dxf}s to assist in registration of jobs with multiple tools):
+%
+%\lstset{firstnumber=\thegcpscad}
+%\begin{writecode}{a}{gcodepreview.scad}{scad}
+%module rectangleoutlinedxf(bx, by, bz, rwidth, rheight, rtn) {
+%  dxfline(bx,by,bx,by+rheight, rtn);
+%  dxfline(bx,by+rheight,bx+rwidth,by+rheight, rtn);
+%  dxfline(bx+rwidth,by+rheight,bx+rwidth,by, rtn);
+%  dxfline(bx+rwidth,by,bx,by, rtn);
+%}
+%
+%\end{writecode}
+%\addtocounter{gcpscad}{7}
+%
+%\noindent the initial section performs the cutting operation for the 3D preview while the latter section writes out the outline to the DXF files.
+%
+%A variant of the  cutting version of that file, \DescribeRoutine{cutoutrectangledxf} will cut to the outside:
+%
+%\lstset{firstnumber=\thegcpscad}
+%\begin{writecode}{a}{gcodepreview.scad}{scad}
+%module cutoutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {
+%  movetosafez();
+%  cutwithfeed(bx-tool_radius(rtn),by-tool_radius(rtn),bz-rdepth,feed);
+%  cutwithfeed(bx+rwidth+tool_radius(rtn),by-tool_radius(rtn),bz-rdepth,feed);
+%  cutwithfeed(bx+rwidth+tool_radius(rtn),by+rheight+tool_radius(rtn),bz-rdepth,feed);
+%  cutwithfeed(bx-tool_radius(rtn),by+rheight+tool_radius(rtn),bz-rdepth,feed);
+%  cutwithfeed(bx-tool_radius(rtn),by-tool_radius(rtn),bz-rdepth,feed);
+%  dxfline(bx,by,bx,by+rheight, rtn);
+%  dxfline(bx,by+rheight,bx+rwidth,by+rheight, rtn);
+%  dxfline(bx+rwidth,by+rheight,bx+rwidth,by, rtn);
+%  dxfline(bx+rwidth,by,bx,by, rtn);
+%}
+%
+%\end{writecode}
+%\addtocounter{gcpscad}{13}
+%\end{verbatim}
 
 \subparagraph{Keyhole toolpath and undercut tooling}
  
@@ -3209,8 +3220,9 @@ Supporting all of these would require trigonometric comparisons in the \verb|if.
             return cube([0.01,0.01,0.01])
 
 \end{writecode}
-\addtocounter{gcpy}{14}
+\addtocounter{gcpy}{15}
 
+\lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
 module cutkeyholegcdxf(kh_tool_num, kh_start_depth, kh_max_depth, kht_direction, kh_distance){
     gcp.cutkeyholegcdxf(kh_tool_num, kh_start_depth, kh_max_depth, kht_direction, kh_distance);
@@ -3253,7 +3265,7 @@ Note that code is still present for the partial calculation of one quadrant (for
         self.dxfarc(kh_tool_num, oXpos,oYpos,self.tool_radius(kh_tool_num, 7),270,360)
 
 \end{writecode}
-\addtocounter{gcpy}{12}
+\addtocounter{gcpy}{9}
 
 Then it will be necessary to test for each possible case in a series of If Else blocks:
  
@@ -3538,7 +3550,7 @@ Then it will be necessary to test for each possible case in a series of If Else 
 #}
 
 \end{writecode}
-\addtocounter{gcpy}{107}
+\addtocounter{gcpy}{278}
 
 
 \subsubsection{Difference of Stock, Rapids, and Toolpaths}
@@ -3572,7 +3584,7 @@ At the end of cutting it will be necessary to subtract the accumulated toolpaths
                 return part
                     
 \end{writecode}
-\addtocounter{gcpy}{23}
+\addtocounter{gcpy}{24}
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -3593,7 +3605,7 @@ module outputrapids(){
 }
 
 \end{writecode}
-\addtocounter{gcpscad}{50}
+\addtocounter{gcpscad}{16}
 
 \subsection{Output files}
 
@@ -3781,7 +3793,7 @@ The class \verb|gcodepreview| will need additional commands for opening files. T
                 self.dxfMt.write("\n")
 
 \end{writecode}
-\addtocounter{gcpy}{58}
+\addtocounter{gcpy}{59}
 
 \noindent which commands will accept a series of arguments and then write them out to a file object for the appropriate file. Note that the \textsc{dxf} files for specific tools will expect that the tool numbers be set in the matching variables from the template. Further note that while it is possible to use tools which are not so defined, the toolpaths will not be written into \textsc{dxf} files for any tool numbers which do not match the variables from the template (but will appear in the main \verb|.dxf|).
  
@@ -3922,7 +3934,7 @@ module opengcodefile(basefilename, currenttoolnum, toolradius, plunge, feed, spe
                 self.dxfMtfilename = basefilename + str(MISC_tool_num) + ".dxf"
                 self.dxfMt = open(self.dxfMtfilename, "w")
 \end{writecode}
-\addtocounter{gcpy}{79}
+\addtocounter{gcpy}{93}
 
 For each \textsc{dxf} file, there will need to be a Preamble in addition to opening the file in the file system:
 
@@ -4235,7 +4247,7 @@ The various textual versions are quite obvious, and due to the requirements of G
             return toolpath
 
 \end{writecode}
-\addtocounter{gcpy}{120}
+\addtocounter{gcpy}{154}
 
 Using such commands to create a circle is quite straight-forward:
 
@@ -4304,7 +4316,7 @@ The above commands may be called if G-code is also wanted with writing out G-cod
             return self.cutarcNWCWdxf(ex, ey, ez, xcenter, ycenter, radius)
 
 \end{writecode}
-\addtocounter{gcpy}{32}
+\addtocounter{gcpy}{42}
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -4324,7 +4336,7 @@ module cutarcSECCdxfgc(ex, ey, ez, xcenter, ycenter, radius){
     gcp.cutarcSECCdxfgc(ex, ey, ez, xcenter, ycenter, radius);
 }
 \end{writecode}
-\addtocounter{gcpscad}{50}
+\addtocounter{gcpscad}{16}
 
 %Integrating G-code and \textsc{dxf} generation with everything else would be ideal, but will require ensuring that each command which moves the tool creates a matching command for both files.
 %
@@ -4482,7 +4494,6 @@ The commands: \DescribeRoutine{closegcodefile}, and \DescribeRoutine{closedxffil
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
-
 module closegcodefile(){
     gcp.closegcodefile();
 }
@@ -4496,7 +4507,7 @@ module closedxffile(){
 }
 
 \end{writecode}
-\addtocounter{gcpscad}{50}
+\addtocounter{gcpscad}{12}
 
 \section{Notes}
 
@@ -4513,7 +4524,7 @@ module closedxffile(){
 
 \noindent resulting in a matrix of:
 
-\include{diataxis_overview.png}
+\includeimage{diataxis_overview.png}
 
 \noindent where:
 
