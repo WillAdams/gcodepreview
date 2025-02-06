@@ -134,7 +134,6 @@ module cutarcSWCCdxfgc(ex, ey, ez, xcenter, ycenter, radius){
 module cutarcSECCdxfgc(ex, ey, ez, xcenter, ycenter, radius){
     gcp.cutarcSECCdxfgc(ex, ey, ez, xcenter, ycenter, radius);
 }
-
 module closegcodefile(){
     gcp.closegcodefile();
 }

@@ -207,6 +207,40 @@ rapidXY(0, -(stockYheight/2+12.7));
 
 movetosafeZ();
 
+toolchange(374, 10000);
+rapidXY(-stockXwidth/4-stockXwidth/16, -(stockYheight/4+stockYheight/16))
+//rapidXY(-(stockXwidth/4 - stockXwidth /16), -(stockYheight/4 + stockYheight/16))
+rapidZ(0);
+
+cutline(xpos(), ypos(), (stockZthickness/2) * -1);
+cutlinedxfgc(xpos() + stockYheight /9, ypos(), zpos());
+cutline(xpos() - stockYheight /9, ypos(), zpos());
+cutline(xpos(), ypos(), 0);
+
+rapidZ(retractheight);
+rapidXY(-stockXwidth/4+stockXwidth/16, -(stockYheight/4+stockYheight/16));
+rapidZ(0);
+cutline(gcp.xpos(), gcp.ypos(), -stockZthickness/2);
+cutlinedxfgc(gcp.xpos(), gcp.ypos()+stockYheight/9, gcp.zpos());
+cutline(gcp.xpos(), gcp.ypos()-stockYheight/9, gcp.zpos());
+cutline(gcp.xpos(), gcp.ypos(), 0);
+
+rapidZ(retractheight);
+rapidXY(-stockXwidth/4+stockXwidth/16, -(stockYheight/4-stockYheight/8));
+rapidZ(0);
+cutline(gcp.xpos(), gcp.ypos(), -stockZthickness/2);
+cutlinedxfgc(gcp.xpos()-stockYheight/9, gcp.ypos(), gcp.zpos());
+cutline(gcp.xpos()+stockYheight/9, gcp.ypos(), gcp.zpos());
+cutline(gcp.xpos(), gcp.ypos(), 0);
+
+rapidZ(retractheight);
+rapidXY(-stockXwidth/4-stockXwidth/16, -(stockYheight/4-stockYheight/8));
+rapidZ(0);
+cutline(gcp.xpos(), gcp.ypos(), -stockZthickness/2);
+cutlinedxfgc(gcp.xpos(), gcp.ypos()-stockYheight/9, gcp.zpos());
+cutline(gcp.xpos(), gcp.ypos()+stockYheight/9, gcp.zpos());
+cutline(gcp.xpos(), gcp.ypos(), 0);
+
 stockandtoolpaths();
 //stockwotoolpaths();
 //outputtoolpaths();
