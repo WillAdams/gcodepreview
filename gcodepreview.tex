@@ -1104,6 +1104,21 @@ cutlinedxfgc(gcp.xpos(), gcp.ypos()-stockYheight/9, gcp.zpos());
 cutline(gcp.xpos(), gcp.ypos()+stockYheight/9, gcp.zpos());
 cutline(gcp.xpos(), gcp.ypos(), 0);
 
+
+
+rapidZ(retractheight);
+gcp.toolchange(56142,10000);
+gcp.rapidXY(-stockXwidth/2, -(stockYheight/2+0.508/2));
+cutZgcfeed(-1.531,plunge);
+//cutline(gcp.xpos(), gcp.ypos(), -1.531);
+cutlinedxfgc(stockXwidth/2+0.508/2, -(stockYheight/2+0.508/2), -1.531);
+
+rapidZ(retractheight);
+//#gcp.toolchange(56125,10000)
+cutZgcfeed(-1.531,plunge);
+//toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), -1.531))
+cutlinedxfgc(stockXwidth/2+0.508/2, (stockYheight/2+0.508/2), -1.531);
+
 stockandtoolpaths();
 //stockwotoolpaths();
 //outputtoolpaths();
@@ -1130,7 +1145,6 @@ closedxffile();
 
 \noindent Obviously, the use of OpenSCAD to make use of roundover tooling remains to be implemented. Similarly, generate keyhole dxfs needs to be updated to function as expected.
 
-%TODO UPDATE GRAPHIC!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 %TODO ADD BELOW
 %
 %\begin{verbatim}
@@ -2542,8 +2556,13 @@ The Python commands \DescribeRoutine{cut...} add the \verb|currenttool| to the \
         else:
             return toolpath
 
+    def cutZgcfeed(self, ez, feed):
+        self.writegc("G01 Z", str(ez), "F",str(feed))
+#        if self.generatepaths == False:
+        return self.cutline(self.xpos(),self.ypos(),ez)
+
 \end{writecode}
-\addtocounter{gcpy}{63}      
+\addtocounter{gcpy}{68}      
 
 %CODE TO RESTORE
 %
@@ -2626,11 +2645,6 @@ The Python commands \DescribeRoutine{cut...} add the \verb|currenttool| to the \
 %%            self.toolpaths = union([self.toolpaths, toolpath])
 %%        else:
 %%            return toolpath
-%
-%    def cutZgcfeed(self, ez, feed):
-%        self.writegc("G01 Z", str(ez), "F",str(feed))
-%#        if self.generatepaths == False:
-%        return self.cutline(self.xpos(),self.ypos(),ez)
 %   
 %    def cutlinedxfgcfeed(self,ex, ey, ez, feed):
 %        self.dxfline(self.currenttoolnumber(), self.xpos(), self.ypos(), ex, ey)
@@ -2653,8 +2667,12 @@ module cutlinedxfgc(ex, ey, ez){
     gcp.cutlinedxfgc(ex, ey, ez);
 }
 
+module cutZgcfeed(ez, feed){
+    gcp.cutZgcfeed(ez, feed);
+}
+
 \end{writecode}
-\addtocounter{gcpscad}{8}      
+\addtocounter{gcpscad}{12}      
 
 \subsubsection{Arcs for toolpaths and DXFs}
  

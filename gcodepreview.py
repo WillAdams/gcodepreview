@@ -524,6 +524,11 @@ class gcodepreview:
         else:
             return toolpath
 
+    def cutZgcfeed(self, ez, feed):
+        self.writegc("G01 Z", str(ez), "F",str(feed))
+#        if self.generatepaths == False:
+        return self.cutline(self.xpos(),self.ypos(),ez)
+
     def cutarcCC(self, barc, earc, xcenter, ycenter, radius, tpzreldim, stepsizearc=1):
 #        tpzinc = ez - self.zpos() / (earc - barc)
         tpzinc = tpzreldim / (earc - barc)

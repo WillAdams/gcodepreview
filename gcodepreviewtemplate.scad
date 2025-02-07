@@ -241,6 +241,21 @@ cutlinedxfgc(gcp.xpos(), gcp.ypos()-stockYheight/9, gcp.zpos());
 cutline(gcp.xpos(), gcp.ypos()+stockYheight/9, gcp.zpos());
 cutline(gcp.xpos(), gcp.ypos(), 0);
 
+
+
+rapidZ(retractheight);
+gcp.toolchange(56142,10000);
+gcp.rapidXY(-stockXwidth/2, -(stockYheight/2+0.508/2));
+cutZgcfeed(-1.531,plunge);
+//cutline(gcp.xpos(), gcp.ypos(), -1.531);
+cutlinedxfgc(stockXwidth/2+0.508/2, -(stockYheight/2+0.508/2), -1.531);
+
+rapidZ(retractheight);
+//#gcp.toolchange(56125,10000)
+cutZgcfeed(-1.531,plunge);
+//toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), -1.531))
+cutlinedxfgc(stockXwidth/2+0.508/2, (stockYheight/2+0.508/2), -1.531);
+
 stockandtoolpaths();
 //stockwotoolpaths();
 //outputtoolpaths();

@@ -79,6 +79,10 @@ module cutlinedxfgc(ex, ey, ez){
     gcp.cutlinedxfgc(ex, ey, ez);
 }
 
+module cutZgcfeed(ez, feed){
+    gcp.cutZgcfeed(ez, feed);
+}
+
 module cutarcCC(barc, earc, xcenter, ycenter, radius, tpzreldim){
     gcp.cutarcCC(barc, earc, xcenter, ycenter, radius, tpzreldim);
 }
