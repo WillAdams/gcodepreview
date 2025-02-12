@@ -1,6 +1,6 @@
 # gcodepreview
 
-PythonSCAD library for moving a tool in lines and arcs so as to model how a part would be cut using G-Code, so as to allow PythonSCAD to function as a compleat CAD/CAM solution for subtractive 3-axis CNC (mills and routers) by writing out G-code in addition to 3D modeling (in some cases toolpaths which would not normally be feasible), and to write out DXF files which may be imported into a traditional CAM program to create toolpaths.
+PythonSCAD library for moving a tool in lines and arcs so as to model how a part would be cut using G-Code, so as to allow PythonSCAD to function as a compleat CAD/CAM solution for subtractive 3-axis CNC (mills and routers at this time, 4th-axis support may come in a future version) by writing out G-code in addition to 3D modeling (in some cases toolpaths which would not normally be feasible), and to write out DXF files which may be imported into a traditional CAM program to create toolpaths. 
 
 ![OpenSCAD gcodepreview Unit Tests](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/gcodepreview_unittests.png?raw=true)
 
@@ -29,9 +29,11 @@ The files for this library are:
  - gcodepreviewtemplate.py (gcptmplpy) --- .py example file (which requires PythonSCAD)
  - gcpdxf.py (gcpdxfpy) --- .py example file which only makes dxf file(s) and which will run in "normal" Python
 
-If using from PythonSCAD, place the files in C:\Users\\\~\Documents\OpenSCAD\libraries and call as:[^libraries]
+If using from PythonSCAD, place the files in C:\Users\\\~\Documents\OpenSCAD\libraries [^libraries]
 
-[^libraries]: C:\Users\\\~\Documents\RapCAD\libraries is deprecated since RapCAD is no longer needed since Python is now used for writing out files)
+[^libraries]: C:\Users\\\~\Documents\RapCAD\libraries is deprecated since RapCAD is no longer needed since Python is now used for writing out files.
+
+and call as:
 
     use <gcodepreview.py>
     include <gcodepreview.scad>
@@ -78,22 +80,23 @@ Supporting OpenSCAD usage makes possible such examples as: openscad_gcodepreview
 
 | Version       | Notes         |
 | ------------- | ------------- |
-| 0.1 | Version  supports setting up stock, origin, rapid positioning, making cuts, and writing out matching G-code, and creating a DXF with polylines. |
-|     |  - separate dxf files are written out for each tool where tool is ball/square/V and small/large (10/31/23)           |
-|     |  - re-writing as a Literate Program using the LaTeX package docmfp (begun 4/12/24)                                   |
-|     |  - support for additional tooling shapes such as dovetail and keyhole tools                                          |
-| 0.2 | Adds support for arcs, specialty toolpaths such as Keyhole which may be used for dovetail as well as keyhole cutters |
-| 0.3 | Support for curves along the 3rd dimension, roundover tooling                                                        |
-| 0.4 | Rewrite using literati documentclass, suppression of SVG code, dxfrectangle                                          |
-| 0.5 | More shapes, consolidate rectangles, arcs, and circles in gcodepreview.scad                                          |
-| 0.6 | Notes on modules, change file for setupstock                                                                         |
-| 0.61| Validate all code so that it runs without errors from sample (NEW: Note that this version is archived as gcodepreview-openscad_0_6.tex and the matching PDF is available as well|
-| 0.7 | Re-write completely in Python                                                                                        |
-| 0.8 | Re-re-write completely in Python and OpenSCAD, iteratively testing |
+| 0.1           | Version  supports setting up stock, origin, rapid positioning, making cuts, and writing out matching G-code, and creating a DXF with polylines.                                 |
+|               |  - separate dxf files are written out for each tool where tool is ball/square/V and small/large (10/31/23)                                                                      |
+|               |  - re-writing as a Literate Program using the LaTeX package docmfp (begun 4/12/24)                                                                                              |
+|               |  - support for additional tooling shapes such as dovetail and keyhole tools                                                                                                     |
+| 0.2           | Adds support for arcs, specialty toolpaths such as Keyhole which may be used for dovetail as well as keyhole cutters                                                            |
+| 0.3           | Support for curves along the 3rd dimension, roundover tooling                                                                                                                   |
+| 0.4           | Rewrite using literati documentclass, suppression of SVG code, dxfrectangle                                                                                                     |
+| 0.5           | More shapes, consolidate rectangles, arcs, and circles in gcodepreview.scad                                                                                                     |
+| 0.6           | Notes on modules, change file for setupstock                                                                                                                                    |
+| 0.61          | Validate all code so that it runs without errors from sample (NEW: Note that this version is archived as gcodepreview-openscad_0_6.tex and the matching PDF is available as well|
+| 0.7           | Re-write completely in Python                                                                                                                                                   |
+| 0.8           | Re-re-write completely in Python and OpenSCAD, iteratively testing                                                                                                              |
+| 0.801         | Add support for bowl bits with flat bottom                                                                                                                                      |
 
 Possible future improvements:
 
- - support for additional tooling shapes (bowl bits with flat bottom, tapered ball nose, lollipop cutters)
+ - support for additional tooling shapes (tapered ball nose, lollipop cutters)
  - create a single line font for use where text is wanted
  - Support Bézier curves (required for fonts if not to be limited to lines and arcs) and surfaces
 
@@ -103,46 +106,9 @@ Deprecated feature:
 
  - exporting SVGs --- coordinate system differences between OpenSCAD/DXFs and SVGs would require managing the inversion of the coordinate system (using METAPOST, which shares the same orientation and which can write out SVGs may be used for future versions)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 To-do:
 
- - fix line numbers
- - fix OpenSCAD wrapper
- - reposition cutroundover command into cutshape
- - work on rotary axis option
+ -  fix OpenSCAD wrapper and add any missing commands for Python
+ -  reposition cutroundover command into cutshape
+ -  work on rotary axis option
+

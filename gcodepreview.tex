@@ -15,6 +15,11 @@
 \usepackage{literati}
 \usepackage[paper=legalpaper,left=1.75in,right=0.75in,top=1in,bottom=1in]{geometry}
 
+\usepackage[debug,acronym]{glossaries}
+
+% Generate the glossary
+\makeglossaries
+
 \newcommand{\includeimage}[1]{\bigskip\noindent\includegraphics[width=\linewidth]{images/#1}\bigskip}
 
 %\usepackage{glossaries}
@@ -155,22 +160,23 @@ Supporting OpenSCAD usage makes possible such examples as: openscad_gcodepreview
 
 | Version       | Notes         |
 | ------------- | ------------- |
-| 0.1 | Version  supports setting up stock, origin, rapid positioning, making cuts, and writing out matching G-code, and creating a DXF with polylines. |
-|     |  - separate dxf files are written out for each tool where tool is ball/square/V and small/large (10/31/23)           |
-|     |  - re-writing as a Literate Program using the LaTeX package docmfp (begun 4/12/24)                                   |
-|     |  - support for additional tooling shapes such as dovetail and keyhole tools                                          |
-| 0.2 | Adds support for arcs, specialty toolpaths such as Keyhole which may be used for dovetail as well as keyhole cutters |
-| 0.3 | Support for curves along the 3rd dimension, roundover tooling                                                        |
-| 0.4 | Rewrite using literati documentclass, suppression of SVG code, dxfrectangle                                          |
-| 0.5 | More shapes, consolidate rectangles, arcs, and circles in gcodepreview.scad                                          |
-| 0.6 | Notes on modules, change file for setupstock                                                                         |
-| 0.61| Validate all code so that it runs without errors from sample (NEW: Note that this version is archived as gcodepreview-openscad_0_6.tex and the matching PDF is available as well|
-| 0.7 | Re-write completely in Python                                                                                        |
-| 0.8 | Re-re-write completely in Python and OpenSCAD, iteratively testing |
+| 0.1           | Version  supports setting up stock, origin, rapid positioning, making cuts, and writing out matching G-code, and creating a DXF with polylines.                                 |
+|               |  - separate dxf files are written out for each tool where tool is ball/square/V and small/large (10/31/23)                                                                      |
+|               |  - re-writing as a Literate Program using the LaTeX package docmfp (begun 4/12/24)                                                                                              |
+|               |  - support for additional tooling shapes such as dovetail and keyhole tools                                                                                                     |
+| 0.2           | Adds support for arcs, specialty toolpaths such as Keyhole which may be used for dovetail as well as keyhole cutters                                                            |
+| 0.3           | Support for curves along the 3rd dimension, roundover tooling                                                                                                                   |
+| 0.4           | Rewrite using literati documentclass, suppression of SVG code, dxfrectangle                                                                                                     |
+| 0.5           | More shapes, consolidate rectangles, arcs, and circles in gcodepreview.scad                                                                                                     |
+| 0.6           | Notes on modules, change file for setupstock                                                                                                                                    |
+| 0.61          | Validate all code so that it runs without errors from sample (NEW: Note that this version is archived as gcodepreview-openscad_0_6.tex and the matching PDF is available as well|
+| 0.7           | Re-write completely in Python                                                                                                                                                   |
+| 0.8           | Re-re-write completely in Python and OpenSCAD, iteratively testing                                                                                                              |
+| 0.801         | Add support for bowl bits with flat bottom                                                                                                                                      |
 
 Possible future improvements:
 
- - support for additional tooling shapes (bowl bits with flat bottom, tapered ball nose, lollipop cutters)
+ - support for additional tooling shapes (tapered ball nose, lollipop cutters)
  - create a single line font for use where text is wanted
  - Support Bézier curves (required for fonts if not to be limited to lines and arcs) and surfaces
 
@@ -179,6 +185,12 @@ Note for G-code generation that it is up to the user to implement Depth per Pass
 Deprecated feature:
 
  - exporting SVGs --- coordinate system differences between OpenSCAD/DXFs and SVGs would require managing the inversion of the coordinate system (using METAPOST, which shares the same orientation and which can write out SVGs may be used for future versions)
+
+To-do:
+
+ -  fix OpenSCAD wrapper and add any missing commands for Python
+ -  reposition cutroundover command into cutshape
+ -  work on rotary axis option
 
 \end{readme}
 
@@ -191,7 +203,7 @@ Deprecated feature:
 
 The gcodepreview library allows the modeling of \textsc{2d} geometry and \textsc{3d} shapes using Python or by calling Python from within (Open)PythonSCAD, enabling the creation of \textsc{2d} \textsc{dxf}s, G-code, or \textsc{3d}~models as a preview of how the file will cut. These abilities may be accessed in ``plain'' Python (to make \textsc{dxf}s), or Python or OpenSCAD in PythonSCAD (to make G-code and/or for \textsc{3d}~modeling). Providing them in a programmatic context allows making parts or design elements of parts (e.g., joinery) which would be tedious to draw by hand in a traditional CAD or vector drawing application. A further consideration is that this is ``Design for Manufacture'' taken to its ultimate extreme, and that a part so designed is inherently manufacturable.
 
-The various commands are shown all together in templates so as to provide examples of usage, and to ensure that the various files are used/included as necessary, all variables are set up with the correct names (note that the sparse template in \verb|readme.md| eschews variables), and that files are opened before being written to, and that each is closed at the end in the correct order. Note that while the template files seem overly verbose, they specifically incorporate variables for each tool shape, possibly in two different sizes, and a feed rate parameter or ratio for each, which may be used (by setting a tool \#) or ignored (by leaving the variable at zero (0). 
+The various commands are shown all together in templates so as to provide examples of usage, and to ensure that the various files are used/included as necessary, all variables are set up with the correct names (note that the sparse template in \verb|readme.md| eschews variables), and that files are opened before being written to, and that each is closed at the end in the correct order. Note that while the template files seem overly verbose, they specifically incorporate variables for each tool shape, possibly in two different sizes, and a feed rate parameter or ratio for each, which may be used (by setting a tool \#) or ignored (by leaving the variable for a given tool at zero (0). 
 
 It should be that the readme at the project page which serves as an overview, and this section (which serves as a tutorial) is all the documentation which most users will need (and arguably is still too much). 
 %TODO
@@ -423,11 +435,13 @@ small_V_tool_num = 390 # [0:0,390:390,301:301]
 # [CAM] */
 DT_tool_num = 814 # [0:0,814:814]
 # [CAM] */
-KH_tool_num = 374 # [0:0,374:374,375:375,376:376,378]
+KH_tool_num = 374 # [0:0,374:374,375:375,376:376,378:378]
 # [CAM] */
 Roundover_tool_num = 56142 # [56142:56142, 56125:56125, 1570:1570]
 # [CAM] */
-MISC_tool_num = 0 #
+MISC_tool_num = 0 # [648:648, 45982:45982]
+#648 threadmill_shaft(2.4, 0.75, 18)
+#45982 Carbide Tipped Bowl & Tray 1/4 Radius x 3/4 Dia x 5/8 x 1/4 Inch Shank
 
 # [Feeds and Speeds] */
 plunge = 100
@@ -640,6 +654,13 @@ gcp.rapidZ(retractheight)
 toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), -1.531))
 toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/2+0.508/2, (stockYheight/2+0.508/2), -1.531))
 
+gcp.rapidZ(retractheight)
+gcp.toolchange(45982,10000)
+gcp.rapidXY(stockXwidth/8,0)
+toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), -(stockZthickness*7/8)))
+toolpaths = toolpaths.union(gcp.cutlinedxfgc(gcp.xpos(),-stockYheight/2, -(stockZthickness*7/8)))
+
+gcp.rapidZ(retractheight)
 
 part = gcp.stock.difference(toolpaths)
 
@@ -910,11 +931,13 @@ small_V_tool_num = 0; // [0:0,390:390,301:301]
 /* [CAM] */
 DT_tool_num = 0; // [0:0,814:814]
 /* [CAM] */
-KH_tool_num = 0; // [0:0,374:374,375:375,376:376,378]
+KH_tool_num = 0; // [0:0,374:374,375:375,376:376,378:378]
 /* [CAM] */
 Roundover_tool_num = 0; // [56142:56142, 56125:56125, 1570:1570]
 /* [CAM] */
-MISC_tool_num = 0; // [648:648]
+MISC_tool_num = 0; // [648:648, 45982:45982]
+//648 threadmill_shaft(2.4, 0.75, 18)
+//45982 Carbide Tipped Bowl & Tray 1/4 Radius x 3/4 Dia x 5/8 x 1/4 Inch Shank
 
 /* [Feeds and Speeds] */
 plunge = 100;
@@ -1592,14 +1615,6 @@ class gcodepreview:
 \end{writecode}
 \addtocounter{gcpy}{75}
 
-%\newglossaryentry{init}
-%{
-%    name=init,
-%    description={The class gcodepreview must be initialized when first instantiated.}
-%}
-%
-%The \gls{init} command is used to initialize the \verb|gcodepreview| object.
-
 \subsubsection{Position and Variables}
  
 In modeling the machine motion and G-code it will be necessary to have the machine track several variables for machine position, current tool, and the current depth in the current toolpath. This will be done using paired functions (which will set and return the  matching variable) and a matching variable.
@@ -1750,6 +1765,12 @@ Since part of a class, it will be called as \DescribeRoutine{gcp.setupstock}. It
 \end{writecode}
 \addtocounter{gcpy}{30}
 
+\newglossaryentry{setupstock}
+{
+    name=setupstock,
+    description={setupstock(200, 100, 8.35, "Top", "Lower-left", 8.35)}
+}
+
 %%BELOW IS TEMPORARY TO GET CORRECT POSITION FOR TOP CENTER
 %%
 %\lstset{firstnumber=\thegcpy}
@@ -1763,7 +1784,7 @@ Since part of a class, it will be called as \DescribeRoutine{gcp.setupstock}. It
 %%
 %%ABOVE IS TEMPORARY TO GET CORRECT POSITION FOR TOP CENTER
 
-\noindent Note that since Python in PythonSCAD defers output of the \textsc{3d} model, it is possible to define it once, then set up all the specifics for each possible positioning of the stock in terms of origin. The internal variable \verb|stockzero| is used in an \verb|<if then else>| structure to position the \textsc{3d} model of the stock and write out the G-code comment which describes it in comments using the terms described for CutViewer. 
+\noindent The \gls{setupstock} command is required if working with a \textsc{3d} project, creating the block of stock which the following toolpath commands will cut away. Note that since Python in PythonSCAD defers output of the \textsc{3d} model, it is possible to define it once, then set up all the specifics for each possible positioning of the stock in terms of origin. The internal variable \verb|stockzero| is used in an \verb|<if then else>| structure to position the \textsc{3d} model of the stock and write out the G-code comment which describes it in using the terms described for CutViewer. 
 
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
@@ -1872,6 +1893,14 @@ Similarly Python functions and variables will be used in: \DescribeRoutine{curre
 \end{writecode}
 \addtocounter{gcpy}{12}
 
+\newglossaryentry{settool}
+{
+    name=settool,
+    description={settool(102)}
+}
+
+The \gls{settool} command will normally be set using one of the variables as defined in the template, and the \verb|gcodepreview| object is hard-coded to use the tool numbers which Carbide \textsc{3d} uses for their tooling.
+
 \subsubsection{3D Shapes for Tools}
 
 Each tool must be modeled in \textsc{3d} using an OpenSCAD module. 
@@ -1940,6 +1969,50 @@ The \DescribeRoutine{endmill v} is modeled as a cylinder with a zero width base 
 
 \end{writecode}
 \addtocounter{gcpy}{7}
+
+The \DescribeRoutine{bowl tool} is modeled as a series of cylinders stacked on top of each other and \verb|hull()|ed together:
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def bowl_tool(self, radius, diameter, height):
+        bts = cylinder(height - radius, diameter / 2, diameter / 2, center=False)
+        bts = bts.translate([0, 0, radius])
+        bts = bts.union(cylinder(height, diameter / 2 - radius, diameter / 2 - radius, center=False))
+        for i in range(90):
+#            print(math.sin(math.radians(i)))
+            slice = cylinder((radius / 90), ((diameter / 2 - radius) + radius * math.sin(math.radians(i))), ((diameter / 2 - radius) + radius * math.sin(math.radians(i + 1))), center=False)
+            bts = hull(bts, slice.translate([0, 0, (radius - radius * math.cos(math.radians(i)))]))
+        return bts
+
+\end{writecode}
+\addtocounter{gcpy}{10}
+
+%\begin{verbatim}
+%//!OpenSCAD
+%
+%module bowl_tool(radius, diameter, height) {
+%  union(){
+%    // chain hull
+%    for (i = [1 : abs(1) : 90 - 1]) {
+%      hull() {
+%      translate([0, 0, (radius - radius * cos(i))]){
+%        cylinder(r1=((diameter / 2 - radius) + radius * sin(i)), r2=((diameter / 2 - radius) + radius * sin((i + 1))), h=(radius / 90), center=false);
+%      }
+%      translate([0, 0, (radius - radius * cos((i + 1)))]){
+%        cylinder(r1=((diameter / 2 - radius) + radius * sin((i + 1))), r2=((diameter / 2 - radius) + radius * sin(((i + 1) + 1))), h=(radius / 90), center=false);
+%      }
+%      }  // end hull (in loop)
+%     } // end loop
+%
+%    translate([0, 0, radius]){
+%      cylinder(r1=(diameter / 2), r2=(diameter / 2), h=(height - radius), center=false);
+%    }
+%    cylinder(r1=(diameter / 2 - radius), r2=(diameter / 2 - radius), h=height, center=false);
+%  }
+%}
+%
+%bowl_tool(6.35, 19.05, 15.875);
+%\end{verbatim}
 
 \paragraph{Tooling for Undercutting Toolpaths}
 
@@ -2165,8 +2238,12 @@ The Python definition for toolchange requires the tool number (used to write out
 #            self.writegc("(TOOL/CRMILL, Diameter1, Diameter2,Radius, Height, Length)")
         elif (tool_number == 1570):#0.507/2, 4.509
             self.writegc("(TOOL/CRMILL, 0.17018, 9.525, 4.7625, 12.7, 4.7625)")
+#https://www.amanatool.com/45982-carbide-tipped-bowl-tray-1-4-radius-x-3-4-dia-x-5-8-x-1-4-inch-shank.html 
+        elif (tool_number == 45982):#0.507/2, 4.509
+            self.writegc("(TOOL/MILL, 15.875, 6.35, 19.05, 0.00)")
+            self.currenttoolshape = self.bowl_tool(6.35, 19.05, 15.875)
 \end{writecode}
-\addtocounter{gcpy}{65}
+\addtocounter{gcpy}{69}
 
 \noindent With the tools delineated, the module is closed out and the toolchange information written into the G-code as well as the command to start the spindle at the specified speed.
  
@@ -2284,9 +2361,15 @@ appropriate values based on the specified tool number and depth:
                 return 6.35
             else:
                 return 12.7
+#https://www.amanatool.com/45982-carbide-tipped-bowl-tray-1-4-radius-x-3-4-dia-x-5-8-x-1-4-inch-shank.html 
+        if ptd_tool == 45982:
+            if ptd_depth > 6.35:
+                return 15.875
+            else:
+                return 0
 
 \end{writecode}
-\addtocounter{gcpy}{66}
+\addtocounter{gcpy}{72}
 
 Since it is often necessary to utilise the radius of the tool, an additional command, \DescribeRoutine{tool radius} to return this value is worthwhile:
  
@@ -4564,6 +4647,115 @@ module closedxffile(){
 
 \subsection*{Other Resources}
 
+\subsubsection*{Coding Style}
+
+A notable influence on the coding style in this project is John Ousterhout's \emph{A Philosophy of Software Design}\cite{Ousterhout2018APO}. Complexity is managed by the overall design and structure of the code, structuring it so that each component may be worked with on an individual basis, hiding the maximum information, and exposing the maximum functionality, with names selected so as to express their functionality/usage.
+
+Red Flags to avoid include:
+
+\begin{itemize}
+\item Shallow Module
+\item Information Leakage
+\item Temporal Decomposition 
+\item Overexposure
+\item Pass-Through Method
+\item Repetition
+\item Special-General Mixture
+\item Conjoined Methods
+\item Comment Repeats Code
+\item Implementation Documentation Contaminates Interface
+\item Vague Name
+\item Hard to Pick Name
+\item Hard to Describe
+\item Nonobvious Code
+\end{itemize}
+
+%\paragraph*{Complexity} ``If you can visualize a system, you can probably implement it in a computer program.... This means that the greatest limitation in writing software is our ability to understand the systems we are creating.'' (Chapter 1 Introduction)
+%
+%\paragraph*{Red Flags} ``...learn to recognize \emph{red flags}: signs that a piece of code is probably more complicated than it needs to be.'' (Section 1.1 How to use this book)
+%
+%\paragraph*{Complexity Defined} ``Complexity is anything related to the structure of a software system that makes it hard to understand and modify the system.'' (Section 2.1 The Nature of Complexity)
+%
+%\paragraph*{Symptoms of complexity} ``Change Amplification ... Cognitive Load ... Sometimes an approach that requires more lines of code is actually simpler, because it reduces cognitive load.... Unknown unknowns... One of the most important goals of good design is for a system to be obvious.'' (Section 2.2 Symptoms of Complexity)
+%
+%\paragraph*{Causes of complexity} ``Complexity is caused by two things: \emph{dependencies} and \emph{obscurity}.... Obscurity occurs when important information is not obvious.'' (Section 2.3)
+%
+%\paragraph*{Strategic vs. Tactical Programming} ``If you program tactically, each programming task will contribute a few of these complexities.... Your primary goal must be to produce a great design, which also happens to work. This is \emph{strategic programming}.'' (Chapter 3 Working Code Isn't Enough)
+%
+%\paragraph*{Modules Should Be Deep} ``Typically, the interface describes \emph{what} the module does but not \emph{how} it does it.'' (Section 4.1 Modular Design) ``An abstraction is a simplified view of an entity, which omits unimportant details.... An abstraction that omits important details is a false abstraction: it might appear simple, but in reality it isn’t.'' (Section 4.3 Abstractions)
+%%Figure 4.1
+%``An abstraction that omits important details is a false abstraction: it might appear simple, but in reality it isn’t.'' (Section 4.4 Deep modules)
+%
+%\paragraph*{Red Flag: Shallow Module} ``the interface for a class or method isn’t much simpler than its implementation'' (Section 4.5 Shallow modules)
+%%A shallow module is one whose interface is complicated relative to the functionality it provides
+%
+%\paragraph*{Information Hiding (and Leakage)} One of the most important techniques for achieving deep modules is information hiding.... first described in a classic paper by David Parnas.'' (Chapter 5) ``Information leakage occurs when a design decision is reflected in multiple modules.... simpler interfaces tend to correlate with better information hiding.'' (Section 5.2 Information leakage)
+%
+%\paragraph*{Red Flags: Information Leakage/Temporal Decomposition} ``a design decision is reflected in multiple modules/the code structure is based on the order in which operations are executed, not on information hiding'' (Section 5.3 Temporal decomposition)
+%%Information leakage occurs when the same knowledge is used in multiple places.... \emph{When designing modules, focus on the knowledge that’s needed to perform each task, not the order in which tasks occur.} In temporal decomposition, execution order is reflected in the code structure.... If the same knowledge is used at different points in execution, it gets encoded in multiple places, resulting in information leakage.
+%
+%\paragraph*{Red Flag: Overexposure} ``An API forces callers to be aware of rarely used features
+%in order to use commonly used features'' (Section 5.7 Example: defaults in HTTP responses)
+%%If the API for a commonly used feature forces users to learn about other features that are rarely used, this increases the cognitive load on users who don’t need the rarely used features.
+%
+%\paragraph*{General-Purpose Modules are Deeper} ``...code that is more general-purpose is simpler,
+%cleaner, and easier to understand...'' (Chapter 6) 
+%
+%\paragraph*{Different Layer, Different Abstraction} (Chapter 7)
+%
+%\paragraph*{Red Flag: Pass-Through Method} ``a method does almost nothing except pass its arguments to another method with a similar signature''(Section 7.1 Pass-through methods)
+%%A pass-through method is one that does nothing except pass its arguments to another method, usually with the same API as the passthrough method. This typically indicates that there is not a clean division of responsibility between the classes.
+%
+%``The decorator design pattern (also known as a “wrapper”) is one that encourages API duplication across layers.'' (Section 7.3 Decorators)
+%
+%\paragraph*{Pull Complexity Downwards} ``... it is more important for a module to have a simple interface than a simple implementation.'' (Chapter 8)
+%
+%\paragraph*{Better Together Or Better Apart?} ``Separate general-purpose and special-purpose code'' (Chapter 9)
+%
+%\paragraph*{Red Flags: Repetition/Special-General Mixture/Conjoined Methods} ``a nontrivial piece of code is repeated over and over/special-purpose code is not cleanly separated from general purpose code/two methods have so many dependencies that its hard to understand the implementation of one without understanding the implementation of the other''
+%%If the same piece of code (or code that is almost the same) appears over and over again, that’s a red flag that you haven’t found the right abstractions.... This red flag occurs when a general-purpose mechanism also contains code specialized for a particular use of that mechanism.... It should be possible to understand each method independently
+%%Figure 9.3
+%
+%\paragraph*{Define Errors Out Of Existence} (Chapter 10)
+%
+%\paragraph*{Design it Twice} (Chapter 11)
+%
+%\paragraph*{Why Write Comments? The Four Excuses} (Chapter 12)
+%
+%\paragraph*{Comments Should Describe Things that Aren’t Obvious from the Code} ``Developers should be able to understand the abstraction provided by a module without reading any code other than its externally visible declarations.'' (Chapter 13) ``Comments augment the code by providing information at a different level of detail.'' (Section 13.3) ``If you want code that presents good abstractions, you must document those abstractions with comments.... If interface comments must also describe the
+%implementation, then the class or method is shallow.'' (Section 13.5) ``The main goal of implementation comments is to help readers understand what the code is doing (not how it does it).'' (Section 13.6)
+%
+%\paragraph*{Red Flag: Comment Repeats Code/Implementation Documentation Contaminates Interface} ``all of the information in a comment is immediately obvious from the code next to the comment/an interface comment describes implementation details not needed by users of the thing being documented'' (Section 13.2 Don’t repeat the code/Section 13.5 Interface documentation)
+%%If the information in a comment is already obvious from the code next to the comment, then the comment isn’t helpful.'' (Section 13.2 Don’t repeat the code) ``This red flag occurs when interface documentation, such as that for a method, describes implementation details that aren’t needed in order to use the thing being documented
+%
+%\paragraph*{Choosing Names} (Chapter 14)
+%
+%\paragraph*{Red Flags: Vague Name/Hard to Pick Name} ``the name of a variable or method is so imprecise that it doesn’t convey much useful information/it is difficult to come up with a precise and intuitive name for an entity'' (Section 14.3 Names should be precise)
+%%If a variable or method name is broad enough to refer to many different things, then it doesn’t convey much information to the developer and the underlying entity is more likely to be misused.... If it’s hard to find a simple name for a variable or method that creates a clear image of the underlying object, that’s a hint that the underlying object may not have a clean design
+%
+%\paragraph*{Write The Comments First} ``Use Comments As Part Of The Design Process'' (Chapter 15)
+%
+%\paragraph*{Red Flag: Hard to Describe} ``in order to be complete, the documentation for a variable or method must be long'' (Section 15.3 Comments are a design tool)
+%%The comment that describes a method or variable should be simple and yet complete. If you find it difficult to write such a comment, that’s an indicator that there may be a problem with the design of the thing you are describing.
+%
+%\paragraph*{Modifying Existing Code} ``If you’re not making the design better, you are probably making it worse.'' (Chapter 16)
+%
+%\paragraph*{Consistency} ``Coding style/Interfaces/Design patterns/Invariants''(Chapter 17) ``Document/Enforce. Having a `better idea' is not a sufficient excuse to introduce inconsistencies.''(Section 17.2 Ensuring consistency)
+%
+%\paragraph*{Code Should be Obvious} (Chapter 18) ``...(S)oftware should be designed for ease of reading, not ease of writing.''
+%
+%\paragraph*{Red Flag: Nonobvious Code} ``the behavior or meaning of a piece of code cannot be
+%understood easily'' (Section 18.2 Things that make code less obvious)
+%%If the meaning and behavior of code cannot be understood with a quick reading, it is a red flag. Often this means that there is important information that is not immediately clear to someone reading the code.
+%
+%\paragraph*{Software Trends} (Chapter 19)
+%
+%\paragraph*{Designing for Performance} (Chapter 20)
+%
+%\paragraph*{Decide What Matters} ``To decide what matters, look for leverage, where the solution to one problem also allows many other problems to be solved, or where knowing one piece of information makes it easy to understand many other things.'' (Chapter 21)
+%
+%\paragraph*{Conclusion} (Chapter 22)
+
 \subsubsection*{Documentation Style}
  
 \url{https://diataxis.fr/} (originally developed at: \url{https://docs.divio.com/documentation-system/}) --- divides documentation along two axes:
@@ -4586,7 +4778,7 @@ module closedxffile(){
 \item Index --- Reference (information-oriented)
 \end{enumerate}
 
-Adding a Command Glossary may be a useful addition or alternative to the Index.
+%Adding a Command Glossary may be a useful addition or alternative to the Index.
 
 \subsubsection*{Holidays}
 
@@ -4747,8 +4939,12 @@ Ousterhout, John K.
 
 
 \end{thebibliography}
+\thispagestyle{plain}
+\clearpage
 
-%\printglossaries
+%Print the glossary
+\printglossary[type=main,title={Command Glossary}]
+\thispagestyle{plain}
 
 \createindexes
 

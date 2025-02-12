@@ -239,6 +239,16 @@ class gcodepreview:
         sh = s.translate([0, 0, ((es_diameter / 2) / math.tan((es_v_angle / 2)))])
         return union(v,sh)
 
+    def bowl_tool(self, radius, diameter, height):
+        bts = cylinder(height - radius, diameter / 2, diameter / 2, center=False)
+        bts = bts.translate([0, 0, radius])
+        bts = bts.union(cylinder(height, diameter / 2 - radius, diameter / 2 - radius, center=False))
+        for i in range(90):
+#            print(math.sin(math.radians(i)))
+            slice = cylinder((radius / 90), ((diameter / 2 - radius) + radius * math.sin(math.radians(i))), ((diameter / 2 - radius) + radius * math.sin(math.radians(i + 1))), center=False)
+            bts = hull(bts, slice.translate([0, 0, (radius - radius * math.cos(math.radians(i)))]))
+        return bts
+
     def keyhole(self, es_diameter, es_flute_length):
         return cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=es_flute_length, center=False)
 
@@ -329,6 +339,10 @@ class gcodepreview:
 #            self.writegc("(TOOL/CRMILL, Diameter1, Diameter2,Radius, Height, Length)")
         elif (tool_number == 1570):#0.507/2, 4.509
             self.writegc("(TOOL/CRMILL, 0.17018, 9.525, 4.7625, 12.7, 4.7625)")
+#https://www.amanatool.com/45982-carbide-tipped-bowl-tray-1-4-radius-x-3-4-dia-x-5-8-x-1-4-inch-shank.html
+        elif (tool_number == 45982):#0.507/2, 4.509
+            self.writegc("(TOOL/MILL, 15.875, 6.35, 19.05, 0.00)")
+            self.currenttoolshape = self.bowl_tool(6.35, 19.05, 15.875)
         self.writegc("M6T",str(tool_number))
         self.writegc("M03S",str(speed))
 
@@ -397,6 +411,12 @@ class gcodepreview:
                 return 6.35
             else:
                 return 12.7
+#https://www.amanatool.com/45982-carbide-tipped-bowl-tray-1-4-radius-x-3-4-dia-x-5-8-x-1-4-inch-shank.html
+        if ptd_tool == 45982:
+            if ptd_depth > 6.35:
+                return 15.875
+            else:
+                return 0
 
     def tool_radius(self, ptd_tool, ptd_depth):
         tr = self.tool_diameter(ptd_tool, ptd_depth)/2

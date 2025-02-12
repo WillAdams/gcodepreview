@@ -52,11 +52,13 @@ small_V_tool_num = 390 # [0:0,390:390,301:301]
 # [CAM] */
 DT_tool_num = 814 # [0:0,814:814]
 # [CAM] */
-KH_tool_num = 374 # [0:0,374:374,375:375,376:376,378]
+KH_tool_num = 374 # [0:0,374:374,375:375,376:376,378:378]
 # [CAM] */
 Roundover_tool_num = 56142 # [56142:56142, 56125:56125, 1570:1570]
 # [CAM] */
-MISC_tool_num = 0 #
+MISC_tool_num = 0 # [648:648, 45982:45982]
+#648 threadmill_shaft(2.4, 0.75, 18)
+#45982 Carbide Tipped Bowl & Tray 1/4 Radius x 3/4 Dia x 5/8 x 1/4 Inch Shank
 
 # [Feeds and Speeds] */
 plunge = 100
@@ -269,6 +271,13 @@ gcp.rapidZ(retractheight)
 toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), -1.531))
 toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/2+0.508/2, (stockYheight/2+0.508/2), -1.531))
 
+gcp.rapidZ(retractheight)
+gcp.toolchange(45982,10000)
+gcp.rapidXY(stockXwidth/8,0)
+toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), -(stockZthickness*7/8)))
+toolpaths = toolpaths.union(gcp.cutlinedxfgc(gcp.xpos(),-stockYheight/2, -(stockZthickness*7/8)))
+
+gcp.rapidZ(retractheight)
 
 part = gcp.stock.difference(toolpaths)
 

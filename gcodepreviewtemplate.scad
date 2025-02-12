@@ -47,11 +47,13 @@ small_V_tool_num = 0; // [0:0,390:390,301:301]
 /* [CAM] */
 DT_tool_num = 0; // [0:0,814:814]
 /* [CAM] */
-KH_tool_num = 0; // [0:0,374:374,375:375,376:376,378]
+KH_tool_num = 0; // [0:0,374:374,375:375,376:376,378:378]
 /* [CAM] */
 Roundover_tool_num = 0; // [56142:56142, 56125:56125, 1570:1570]
 /* [CAM] */
-MISC_tool_num = 0; // [648:648]
+MISC_tool_num = 0; // [648:648, 45982:45982]
+//648 threadmill_shaft(2.4, 0.75, 18)
+//45982 Carbide Tipped Bowl & Tray 1/4 Radius x 3/4 Dia x 5/8 x 1/4 Inch Shank
 
 /* [Feeds and Speeds] */
 plunge = 100;
