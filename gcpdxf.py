@@ -1,10 +1,10 @@
 from openscad import *
-#nimport("https://raw.githubusercontent.com/WillAdams/gcodepreview/refs/heads/main/gcodepreview.py")
+# nimport("https://raw.githubusercontent.com/WillAdams/gcodepreview/refs/heads/main/gcodepreview.py")
 from gcodepreview import *
 
-gcp = gcodepreview(False, #generatepaths
-                   False, #generategcode
-                   True #generatedxf
+gcp = gcodepreview(False, # generatepaths
+                   False, # generategcode
+                   True   # generatedxf
                    )
 
 # [Stock] */
@@ -42,7 +42,7 @@ inset = 3
 # [Design] */
 radius = 6
 # [Design] */
-cornerstyle = "Fillet" # "Chamfer", "Flipped Fillet"
+cornerstyle = "Fillet"  # "Chamfer", "Flipped Fillet"
 
 gcp.opendxffile(Base_filename)
 #gcp.opendxffiles(Base_filename,
@@ -59,15 +59,15 @@ gcp.opendxffile(Base_filename)
 
 gcp.dxfrectangle(large_square_tool_num, 0, 0, stockXwidth, stockYheight)
 
-gcp.dxfarc(large_square_tool_num, inset,  inset, radius,   0,  90)
-gcp.dxfarc(large_square_tool_num, stockXwidth - inset,  inset, radius,  90, 180)
+gcp.dxfarc(large_square_tool_num, inset, inset, radius,  0, 90)
+gcp.dxfarc(large_square_tool_num, stockXwidth - inset, inset, radius, 90, 180)
 gcp.dxfarc(large_square_tool_num, stockXwidth - inset, stockYheight - inset, radius, 180, 270)
 gcp.dxfarc(large_square_tool_num, inset, stockYheight - inset, radius, 270, 360)
 
-gcp.dxfline(large_square_tool_num, inset, inset + radius, inset,stockYheight - (inset + radius))
-gcp.dxfline(large_square_tool_num, inset + radius, inset,stockXwidth - (inset + radius), inset)
-gcp.dxfline(large_square_tool_num, stockXwidth - inset, inset + radius,stockXwidth - inset,stockYheight - (inset + radius))
-gcp.dxfline(large_square_tool_num, inset + radius,stockYheight-inset,stockXwidth - (inset + radius),stockYheight - inset)
+gcp.dxfline(large_square_tool_num, inset, inset + radius, inset, stockYheight - (inset + radius))
+gcp.dxfline(large_square_tool_num, inset + radius, inset, stockXwidth - (inset + radius), inset)
+gcp.dxfline(large_square_tool_num, stockXwidth - inset, inset + radius, stockXwidth - inset, stockYheight - (inset + radius))
+gcp.dxfline(large_square_tool_num, inset + radius, stockYheight-inset, stockXwidth - (inset + radius), stockYheight - inset)
 
 gcp.dxfrectangle(large_square_tool_num, radius +inset, radius, stockXwidth/2 - (radius * 4), stockYheight - (radius * 2), cornerstyle, radius)
 gcp.dxfrectangle(large_square_tool_num, stockXwidth/2 + (radius * 2) + inset, radius, stockXwidth/2 - (radius * 4), stockYheight - (radius * 2), cornerstyle, radius)

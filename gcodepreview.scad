@@ -49,14 +49,14 @@ module cutroundover(bx, by, bz, ex, ey, ez, radiustn) {
     }
 }
 
-module toolchange(tool_number,speed){
-    gcp.toolchange(tool_number,speed);
+module toolchange(tool_number, speed){
+    gcp.toolchange(tool_number, speed);
 }
 
 function tool_diameter(td_tool, td_depth) = otool_diameter(td_tool, td_depth);
 
 module movetosafeZ(){
-    gcp.rapid(gcp.xpos(),gcp.ypos(),retractheight);
+    gcp.rapid(gcp.xpos(), gcp.ypos(), retractheight);
 }
 
 module rapid(ex, ey, ez) {
@@ -68,7 +68,7 @@ module rapidXY(ex, ey) {
 }
 
 module rapidZ(ez) {
-    gcp.rapid(gcp.xpos(),gcp.ypos(),ez);
+    gcp.rapid(gcp.xpos(), gcp.ypos(), ez);
 }
 
 module cutline(ex, ey, ez){

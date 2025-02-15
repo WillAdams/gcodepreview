@@ -13,9 +13,9 @@
 \documentclass{ltxdoc}
 %https://tex.stackexchange.com/questions/722886/how-to-write-out-multiple-text-files-from-multiple-instances-of-latex-environmen
 \usepackage{literati}
-\usepackage[paper=legalpaper,left=1.75in,right=0.75in,top=1in,bottom=1in]{geometry}
+\usepackage[paper=legalpaper, left=1.75in, right=0.75in, top=1in, bottom=1in]{geometry}
 
-\usepackage[debug,acronym]{glossaries}
+\usepackage[debug, acronym]{glossaries}
 
 % Generate the glossary
 \makeglossaries
@@ -129,9 +129,9 @@ Note that it is necessary to use the first file (this allows loading the Python 
     
     movetosafeZ();
     
-    toolchange(102,17000);
+    toolchange(102, 17000);
     
-    cutline(219/2,150/2,-8.35);
+    cutline(219/2, 150/2, -8.35);
 
     stockandtoolpaths();
     
@@ -190,6 +190,7 @@ To-do:
 
  -  fix OpenSCAD wrapper and add any missing commands for Python
  -  reposition cutroundover command into cutshape
+ -  re-work architecture so that shaft is always defined/included (in a different colour so as to identify instances of rubbing)
  -  work on rotary axis option
 
 \end{readme}
@@ -231,7 +232,7 @@ Some comments on the templates:
                     marks in places where they might appear otherwise)
 \end{itemize}
 
-One fundamental aspect of this tool is the question of \emph{Layers of Abstraction} (as put forward by Dr. Donald Knuth as the crux of computer science) and \emph{Problem Decomposition} (Prof. John Ousterhout's answer to that topic). To a great degree, the basic implementation of this tool will use G-code as a reference implementation, simultaneously using the abstraction from the mechanical task of machining which it affords as a decomposed version of that task, and creating what is in essence, both a front-end, and a tool, and an API for working with G-code programmatically. This then requires an architecture which allows \textsc{3d} modeling (OpenSCAD), and writing out files (Python).
+One fundamental aspect of this tool is the question of \emph{Layers of Abstraction} (as put forward by Dr. Donald Knuth as the crux of computer science) and \emph{Problem Decomposition} (Prof. John Ousterhout's answer to that question). To a great degree, the basic implementation of this tool will use G-code as a reference implementation, simultaneously using the abstraction from the mechanical task of machining which it affords as a decomposed version of that task, and creating what is in essence, both a front-end, and a tool, and an API for working with G-code programmatically. This then requires an architecture which allows \textsc{3d} modeling (OpenSCAD), and writing out files (Python).
 
 Further features will be added to the templates as they are created, and the main image updated to reflect the capabilities of the system.
 
@@ -264,12 +265,12 @@ The most basic usage, with the fewest dependencies is to use ``plain'' Python to
 \lstset{firstnumber=1}%\thegcpdxf}
 \begin{writecode}{w}{gcpdxf.py}{python}
 from openscad import *
-#nimport("https://raw.githubusercontent.com/WillAdams/gcodepreview/refs/heads/main/gcodepreview.py")
+# nimport("https://raw.githubusercontent.com/WillAdams/gcodepreview/refs/heads/main/gcodepreview.py")
 from gcodepreview import *
 
-gcp = gcodepreview(False, #generatepaths
-                   False, #generategcode
-                   True #generatedxf
+gcp = gcodepreview(False, # generatepaths
+                   False, # generategcode
+                   True   # generatedxf
                    )
 
 # [Stock] */
@@ -307,32 +308,32 @@ inset = 3
 # [Design] */
 radius = 6
 # [Design] */
-cornerstyle = "Fillet" # "Chamfer", "Flipped Fillet"
+cornerstyle = "Fillet"  # "Chamfer", "Flipped Fillet"
 
 gcp.opendxffile(Base_filename)
-#gcp.opendxffiles(Base_filename,
-#                 large_square_tool_num,
-#                 small_square_tool_num,
-#                 large_ball_tool_num,
-#                 small_ball_tool_num,
-#                 large_V_tool_num,
-#                 small_V_tool_num,
-#                 DT_tool_num,
-#                 KH_tool_num,
-#                 Roundover_tool_num,
+#gcp.opendxffiles(Base_filename, 
+#                 large_square_tool_num, 
+#                 small_square_tool_num, 
+#                 large_ball_tool_num, 
+#                 small_ball_tool_num, 
+#                 large_V_tool_num, 
+#                 small_V_tool_num, 
+#                 DT_tool_num, 
+#                 KH_tool_num, 
+#                 Roundover_tool_num, 
 #                 MISC_tool_num)
 
 gcp.dxfrectangle(large_square_tool_num, 0, 0, stockXwidth, stockYheight)
 
-gcp.dxfarc(large_square_tool_num, inset,  inset, radius,   0,  90)
-gcp.dxfarc(large_square_tool_num, stockXwidth - inset,  inset, radius,  90, 180)
+gcp.dxfarc(large_square_tool_num, inset, inset, radius,  0, 90)
+gcp.dxfarc(large_square_tool_num, stockXwidth - inset, inset, radius, 90, 180)
 gcp.dxfarc(large_square_tool_num, stockXwidth - inset, stockYheight - inset, radius, 180, 270)
 gcp.dxfarc(large_square_tool_num, inset, stockYheight - inset, radius, 270, 360)
 
-gcp.dxfline(large_square_tool_num, inset, inset + radius, inset,stockYheight - (inset + radius))
-gcp.dxfline(large_square_tool_num, inset + radius, inset,stockXwidth - (inset + radius), inset)
-gcp.dxfline(large_square_tool_num, stockXwidth - inset, inset + radius,stockXwidth - inset,stockYheight - (inset + radius))
-gcp.dxfline(large_square_tool_num, inset + radius,stockYheight-inset,stockXwidth - (inset + radius),stockYheight - inset)
+gcp.dxfline(large_square_tool_num, inset, inset + radius, inset, stockYheight - (inset + radius))
+gcp.dxfline(large_square_tool_num, inset + radius, inset, stockXwidth - (inset + radius), inset)
+gcp.dxfline(large_square_tool_num, stockXwidth - inset, inset + radius, stockXwidth - inset, stockYheight - (inset + radius))
+gcp.dxfline(large_square_tool_num, inset + radius, stockYheight-inset, stockXwidth - (inset + radius), stockYheight - inset)
     
 gcp.dxfrectangle(large_square_tool_num, radius +inset, radius, stockXwidth/2 - (radius * 4), stockYheight - (radius * 2), cornerstyle, radius) 
 gcp.dxfrectangle(large_square_tool_num, stockXwidth/2 + (radius * 2) + inset, radius, stockXwidth/2 - (radius * 4), stockYheight - (radius * 2), cornerstyle, radius) 
@@ -412,36 +413,41 @@ stockYheight = 150
 # [Stock] */
 stockZthickness = 8.35
 # [Stock] */
-zeroheight = "Top" # [Top, Bottom]
+zeroheight = "Top"  # [Top, Bottom]
 # [Stock] */
-stockzero = "Center" # [Lower-Left, Center-Left, Top-Left, Center]
+stockzero = "Center"  # [Lower-Left, Center-Left, Top-Left, Center]
 # [Stock] */
 retractheight = 9
 
 # [CAM] */
 toolradius = 1.5875
 # [CAM] */
-large_square_tool_num = 201 # [0:0,112:112,102:102,201:201]
+large_square_tool_num = 201  # [0:0, 112:112, 102:102, 201:201]
 # [CAM] */
-small_square_tool_num = 102 # [0:0,122:122,112:112,102:102]
+small_square_tool_num = 102  # [0:0, 122:122, 112:112, 102:102]
 # [CAM] */
-large_ball_tool_num = 202 # [0:0,111:111,101:101,202:202]
+large_ball_tool_num = 202  # [0:0, 111:111, 101:101, 202:202]
 # [CAM] */
-small_ball_tool_num = 101 # [0:0,121:121,111:111,101:101]
+small_ball_tool_num = 101  # [0:0, 121:121, 111:111, 101:101]
 # [CAM] */
-large_V_tool_num = 301 # [0:0,301:301,690:690]
+large_V_tool_num = 301  # [0:0, 301:301, 690:690]
 # [CAM] */
-small_V_tool_num = 390 # [0:0,390:390,301:301]
+small_V_tool_num = 390  # [0:0, 390:390, 301:301]
 # [CAM] */
-DT_tool_num = 814 # [0:0,814:814]
+DT_tool_num = 814  # [0:0, 814:814]
 # [CAM] */
-KH_tool_num = 374 # [0:0,374:374,375:375,376:376,378:378]
+KH_tool_num = 374  # [0:0, 374:374, 375:375, 376:376, 378:378]
 # [CAM] */
-Roundover_tool_num = 56142 # [56142:56142, 56125:56125, 1570:1570]
+Roundover_tool_num = 56142  # [56142:56142, 56125:56125, 1570:1570]
 # [CAM] */
-MISC_tool_num = 0 # [648:648, 45982:45982]
+MISC_tool_num = 0  # [501:501, 502:502, 45982:45982]
+#501 https://shop.carbide3d.com/collections/cutters/products/501-engraving-bit
+#502 https://shop.carbide3d.com/collections/cutters/products/502-engraving-bit
+#204 tapered ball nose 0.0625", 0.2500", 1.50", 3.6°
+#304 tapered ball nose 0.1250", 0.2500", 1.50", 2.4°
 #648 threadmill_shaft(2.4, 0.75, 18)
 #45982 Carbide Tipped Bowl & Tray 1/4 Radius x 3/4 Dia x 5/8 x 1/4 Inch Shank
+#13921 https://www.amazon.com/Yonico-Groove-Bottom-Router-Degree/dp/B0CPJPTMPP
 
 # [Feeds and Speeds] */
 plunge = 100
@@ -450,43 +456,43 @@ feed = 400
 # [Feeds and Speeds] */
 speed = 16000
 # [Feeds and Speeds] */
-small_square_ratio = 0.75 # [0.25:2]
+small_square_ratio = 0.75  # [0.25:2]
 # [Feeds and Speeds] */
-large_ball_ratio = 1.0 # [0.25:2]
+large_ball_ratio = 1.0  # [0.25:2]
 # [Feeds and Speeds] */
-small_ball_ratio = 0.75 # [0.25:2]
+small_ball_ratio = 0.75  # [0.25:2]
 # [Feeds and Speeds] */
-large_V_ratio = 0.875 # [0.25:2]
+large_V_ratio = 0.875  # [0.25:2]
 # [Feeds and Speeds] */
-small_V_ratio = 0.625 # [0.25:2]
+small_V_ratio = 0.625  # [0.25:2]
 # [Feeds and Speeds] */
-DT_ratio = 0.75 # [0.25:2]
+DT_ratio = 0.75  # [0.25:2]
 # [Feeds and Speeds] */
-KH_ratio = 0.75 # [0.25:2]
+KH_ratio = 0.75  # [0.25:2]
 # [Feeds and Speeds] */
-RO_ratio = 0.5 # [0.25:2]
+RO_ratio = 0.5  # [0.25:2]
 # [Feeds and Speeds] */
-MISC_ratio = 0.5 # [0.25:2]
+MISC_ratio = 0.5  # [0.25:2]
 
-gcp = gcodepreview(generatepaths,
-                   generategcode,
-                   generatedxf,
+gcp = gcodepreview(generatepaths, 
+                   generategcode, 
+                   generatedxf, 
                    )
 
 gcp.opengcodefile(Base_filename)
 gcp.opendxffile(Base_filename)
-gcp.opendxffiles(Base_filename,
+gcp.opendxffiles(Base_filename, 
                  large_square_tool_num, 
                  small_square_tool_num, 
-                 large_ball_tool_num,
-                 small_ball_tool_num,
-                 large_V_tool_num,
-                 small_V_tool_num,
-                 DT_tool_num,
-                 KH_tool_num,
-                 Roundover_tool_num,
+                 large_ball_tool_num, 
+                 small_ball_tool_num, 
+                 large_V_tool_num, 
+                 small_V_tool_num, 
+                 DT_tool_num, 
+                 KH_tool_num, 
+                 Roundover_tool_num, 
                  MISC_tool_num)
-gcp.setupstock(stockXwidth,stockYheight,stockZthickness,"Top","Center",retractheight)
+gcp.setupstock(stockXwidth, stockYheight, stockZthickness, "Top", "Center", retractheight)
 
 #print(pygcpversion())
 
@@ -495,13 +501,13 @@ gcp.setupstock(stockXwidth,stockYheight,stockZthickness,"Top","Center",retracthe
 #print(gcp.getvv())
 
 #ts = cylinder(12.7, 1.5875, 1.5875)
-#toolpaths = gcp.cutshape(stockXwidth/2,stockYheight/2,-stockZthickness)
+#toolpaths = gcp.cutshape(stockXwidth/2, stockYheight/2, -stockZthickness)
 
 gcp.movetosafeZ()
 
-gcp.toolchange(102,10000)
+gcp.toolchange(102, 10000)
 
-#gcp.rapidXY(6,12)
+#gcp.rapidXY(6, 12)
 gcp.rapidZ(0)
 
 #print (gcp.xpos())
@@ -516,60 +522,60 @@ gcp.rapidZ(0)
 
 toolpaths = gcp.currenttool()
 
-#toolpaths = gcp.cutline(stockXwidth/2,stockYheight/2,-stockZthickness)
+#toolpaths = gcp.cutline(stockXwidth/2, stockYheight/2, -stockZthickness)
 toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/2, stockYheight/2, -stockZthickness))
 
 gcp.rapidZ(retractheight)
-gcp.toolchange(201,10000)
+gcp.toolchange(201, 10000)
 gcp.rapidXY(0, stockYheight/16)
 gcp.rapidZ(0)
 toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/16*7, stockYheight/2, -stockZthickness))
 
 gcp.rapidZ(retractheight)
-gcp.toolchange(202,10000)
+gcp.toolchange(202, 10000)
 gcp.rapidXY(0, stockYheight/8)
 gcp.rapidZ(0)
 toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/16*6, stockYheight/2, -stockZthickness))
 
 gcp.rapidZ(retractheight)
-gcp.toolchange(101,10000)
+gcp.toolchange(101, 10000)
 gcp.rapidXY(0, stockYheight/16*3)
 gcp.rapidZ(0)
 toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/16*5, stockYheight/2, -stockZthickness))
 
 gcp.setzpos(retractheight)
-gcp.toolchange(390,10000)
+gcp.toolchange(390, 10000)
 gcp.rapidXY(0, stockYheight/16*4)
 gcp.rapidZ(0)
 toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/16*4, stockYheight/2, -stockZthickness))
 gcp.rapidZ(retractheight)
 
-gcp.toolchange(301,10000)
+gcp.toolchange(301, 10000)
 gcp.rapidXY(0, stockYheight/16*6)
 gcp.rapidZ(0)
 toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/16*2, stockYheight/2, -stockZthickness))
 
-rapids = gcp.rapid(gcp.xpos(),gcp.ypos(),retractheight)
-gcp.toolchange(102,10000)
+rapids = gcp.rapid(gcp.xpos(), gcp.ypos(), retractheight)
+gcp.toolchange(102, 10000)
 
-rapids = gcp.rapid(-stockXwidth/4+stockYheight/16, +stockYheight/4,0)
+rapids = gcp.rapid(-stockXwidth/4+stockYheight/16, +stockYheight/4, 0)
 
-toolpaths = toolpaths.union(gcp.cutarcCC(0,90, gcp.xpos()-stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4))
-toolpaths = toolpaths.union(gcp.cutarcCC(90,180, gcp.xpos(), gcp.ypos()-stockYheight/16, stockYheight/16, -stockZthickness/4))
-toolpaths = toolpaths.union(gcp.cutarcCC(180,270, gcp.xpos()+stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4))
-toolpaths = toolpaths.union(gcp.cutarcCC(270,360, gcp.xpos(), gcp.ypos()+stockYheight/16, stockYheight/16, -stockZthickness/4))
+toolpaths = toolpaths.union(gcp.cutarcCC(0, 90, gcp.xpos()-stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4))
+toolpaths = toolpaths.union(gcp.cutarcCC(90, 180, gcp.xpos(), gcp.ypos()-stockYheight/16, stockYheight/16, -stockZthickness/4))
+toolpaths = toolpaths.union(gcp.cutarcCC(180, 270, gcp.xpos()+stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4))
+toolpaths = toolpaths.union(gcp.cutarcCC(270, 360, gcp.xpos(), gcp.ypos()+stockYheight/16, stockYheight/16, -stockZthickness/4))
 
 rapids = gcp.movetosafeZ()
 rapids = gcp.rapidXY(stockXwidth/4-stockYheight/16, -stockYheight/4)
 rapids = gcp.rapidZ(0)
 
-toolpaths = toolpaths.union(gcp.cutarcCW(180,90, gcp.xpos()+stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4))
-toolpaths = toolpaths.union(gcp.cutarcCW(90,0, gcp.xpos(), gcp.ypos()-stockYheight/16, stockYheight/16, -stockZthickness/4))
-toolpaths = toolpaths.union(gcp.cutarcCW(360,270, gcp.xpos()-stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4))
-toolpaths = toolpaths.union(gcp.cutarcCW(270,180, gcp.xpos(), gcp.ypos()+stockYheight/16, stockYheight/16, -stockZthickness/4))
+toolpaths = toolpaths.union(gcp.cutarcCW(180, 90, gcp.xpos()+stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4))
+toolpaths = toolpaths.union(gcp.cutarcCW(90, 0, gcp.xpos(), gcp.ypos()-stockYheight/16, stockYheight/16, -stockZthickness/4))
+toolpaths = toolpaths.union(gcp.cutarcCW(360, 270, gcp.xpos()-stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4))
+toolpaths = toolpaths.union(gcp.cutarcCW(270, 180, gcp.xpos(), gcp.ypos()+stockYheight/16, stockYheight/16, -stockZthickness/4))
 
 rapids = gcp.movetosafeZ()
-gcp.toolchange(201,10000)
+gcp.toolchange(201, 10000)
 rapids = gcp.rapidXY(stockXwidth/2, -stockYheight/2)
 rapids = gcp.rapidZ(0)
 
@@ -580,10 +586,10 @@ rapids = gcp.movetosafeZ()
 rapids = gcp.rapidXY(stockXwidth/2-6.34, -stockYheight/2)
 rapids = gcp.rapidZ(0)
 
-toolpaths = toolpaths.union(gcp.cutarcCW(180,90, stockXwidth/2, -stockYheight/2, 6.34, -stockZthickness))
+toolpaths = toolpaths.union(gcp.cutarcCW(180, 90, stockXwidth/2, -stockYheight/2, 6.34, -stockZthickness))
 
 rapids = gcp.movetosafeZ()
-gcp.toolchange(814,10000)
+gcp.toolchange(814, 10000)
 rapids = gcp.rapidXY(0, -(stockYheight/2+12.7))
 rapids = gcp.rapidZ(0)
 
@@ -592,12 +598,12 @@ toolpaths = toolpaths.union(gcp.cutlinedxfgc(gcp.xpos(), -12.7, -stockZthickness
 
 rapids = gcp.rapidXY(0, -(stockYheight/2+12.7))
 rapids = gcp.movetosafeZ()
-gcp.toolchange(374,10000)
+gcp.toolchange(374, 10000)
 rapids = gcp.rapidXY(stockXwidth/4-stockXwidth/16, -(stockYheight/4+stockYheight/16))
 rapids = gcp.rapidZ(0)
 
 gcp.rapidZ(retractheight)
-gcp.toolchange(374,10000)
+gcp.toolchange(374, 10000)
 gcp.rapidXY(-stockXwidth/4-stockXwidth/16, -(stockYheight/4+stockYheight/16))
 gcp.rapidZ(0)
 
@@ -642,23 +648,41 @@ toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos()+stockYheight/9, g
 toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), 0))
 
 gcp.rapidZ(retractheight)
-gcp.toolchange(56142,10000)
+gcp.toolchange(56142, 10000)
 gcp.rapidXY(-stockXwidth/2, -(stockYheight/2+0.508/2))
-#gcp.cutZgcfeed(-1.531,plunge)
+#gcp.cutZgcfeed(-1.531, plunge)
 toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), -1.531))
 toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/2+0.508/2, -(stockYheight/2+0.508/2), -1.531))
 
 gcp.rapidZ(retractheight)
-#gcp.toolchange(56125,10000)
-#gcp.cutZgcfeed(-1.531,plunge)
+#gcp.toolchange(56125, 10000)
+#gcp.cutZgcfeed(-1.531, plunge)
 toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), -1.531))
 toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/2+0.508/2, (stockYheight/2+0.508/2), -1.531))
 
 gcp.rapidZ(retractheight)
-gcp.toolchange(45982,10000)
-gcp.rapidXY(stockXwidth/8,0)
+gcp.toolchange(45982, 10000)
+gcp.rapidXY(stockXwidth/8, 0)
 toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), -(stockZthickness*7/8)))
-toolpaths = toolpaths.union(gcp.cutlinedxfgc(gcp.xpos(),-stockYheight/2, -(stockZthickness*7/8)))
+toolpaths = toolpaths.union(gcp.cutlinedxfgc(gcp.xpos(), -stockYheight/2, -(stockZthickness*7/8)))
+
+gcp.rapidZ(retractheight)
+gcp.toolchange(204, 10000)
+gcp.rapidXY(stockXwidth*0.3125, 0)
+toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), -(stockZthickness*7/8)))
+toolpaths = toolpaths.union(gcp.cutlinedxfgc(gcp.xpos(), -stockYheight/2, -(stockZthickness*7/8)))
+
+gcp.rapidZ(retractheight)
+gcp.toolchange(502, 10000)
+gcp.rapidXY(stockXwidth*0.375, 0)
+toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), -4.24))
+toolpaths = toolpaths.union(gcp.cutlinedxfgc(gcp.xpos(), -stockYheight/2, -4.24))
+
+gcp.rapidZ(retractheight)
+gcp.toolchange(13921, 10000)
+gcp.rapidXY(-stockXwidth*0.375, 0)
+toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), -stockZthickness/2))
+toolpaths = toolpaths.union(gcp.cutlinedxfgc(gcp.xpos(), -stockYheight/2, -stockZthickness/2))
 
 gcp.rapidZ(retractheight)
 
@@ -703,9 +727,9 @@ gcp.closedxffile()
 %
 %gcp.movetosafeZ()
 %
-%gcp.toolchange(102,10000)
+%gcp.toolchange(102, 10000)
 %
-%#gcp.rapidXY(6,12)
+%#gcp.rapidXY(6, 12)
 %gcp.rapidZ(0)
 %
 %#print (gcp.xpos())
@@ -723,37 +747,37 @@ gcp.closedxffile()
 %toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/2, stockYheight/2, -stockZthickness))
 %
 %gcp.rapidZ(retractheight)
-%gcp.toolchange(201,10000)
+%gcp.toolchange(201, 10000)
 %gcp.rapidXY(0, stockYheight/16)
 %gcp.rapidZ(0)
 %toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/16*7, stockYheight/2, -stockZthickness))
 %
 %gcp.rapidZ(retractheight)
-%gcp.toolchange(202,10000)
+%gcp.toolchange(202, 10000)
 %gcp.rapidXY(0, stockYheight/8)
 %gcp.rapidZ(0)
 %toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/16*6, stockYheight/2, -stockZthickness))
 %
 %gcp.rapidZ(retractheight)
-%gcp.toolchange(101,10000)
+%gcp.toolchange(101, 10000)
 %gcp.rapidXY(0, stockYheight/16*3)
 %gcp.rapidZ(0)
 %toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/16*5, stockYheight/2, -stockZthickness))
 %
 %gcp.setzpos(retractheight)
-%gcp.toolchange(390,10000)
+%gcp.toolchange(390, 10000)
 %gcp.rapidXY(0, stockYheight/16*4)
 %gcp.rapidZ(0)
 %toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/16*4, stockYheight/2, -stockZthickness))
 %gcp.rapidZ(retractheight)
 %
-%gcp.toolchange(301,10000)
+%gcp.toolchange(301, 10000)
 %gcp.rapidXY(0, stockYheight/16*6)
 %gcp.rapidZ(0)
 %toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/16*2, stockYheight/2, -stockZthickness))
 %
 %#gcp.setzpos(retractheight)
-%#gcp.toolchange(102,10000)
+%#gcp.toolchange(102, 10000)
 %#gcp.rapidXY(stockXwidth/4+stockYheight/16, -(stockYheight/4))
 %#gcp.rapidZ(0)
 %##arcloop(barc, earc, xcenter, ycenter, radius)
@@ -761,7 +785,7 @@ gcp.closedxffile()
 %#toolpaths = toolpaths.union(gcp.arcloop(0, 90, stockXwidth/4, -stockYheight/4, stockYheight/16))
 %
 %gcp.rapidZ(retractheight)
-%gcp.toolchange(102,10000)
+%gcp.toolchange(102, 10000)
 %gcp.rapidXY(stockXwidth/4+stockYheight/8+stockYheight/16, +stockYheight/8)
 %gcp.rapidZ(0)
 %#gcp.settzpos(stockZthickness/90)
@@ -772,21 +796,21 @@ gcp.closedxffile()
 %toolpaths = toolpaths.union(gcp.cutarcSECCdxfgc(stockXwidth/4+stockYheight/8+stockYheight/16, stockYheight/8, -stockZthickness, stockXwidth/4+stockYheight/8, stockYheight/8, stockYheight/16))
 %
 %#a = gcp.currenttool()
-%#arcbegin = a.translate([64.37357214209116, -37.33638368965047,-stockZthickness])
-%#arcend = a.translate([55.16361631034953, -28.12642785790883,-stockZthickness])
+%#arcbegin = a.translate([64.37357214209116, -37.33638368965047, -stockZthickness])
+%#arcend = a.translate([55.16361631034953, -28.12642785790883, -stockZthickness])
 %#toolpaths = toolpaths.union(arcbegin)
 %#toolpaths = toolpaths.union(arcend)
 %
-%#cu = cube([10,20,30])
-%#c = cu.translate([0,0,gcp.zpos()])
+%#cu = cube([10, 20, 30])
+%#c = cu.translate([0, 0, gcp.zpos()])
 %
 %#def cutroundovertool(bx, by, bz, ex, ey, ez, tool_radius_tip, tool_radius_width):
 %#    n = 90 + fn*3
 %#    step = 360/n
-%#    shaft = cylinder(step,tool_radius_tip,tool_radius_tip)
-%#    toolpath = hull(shaft.translate([bx,by,bz]), shaft.translate([ex,ey,ez]))
-%#    shaft = cylinder(tool_radius_width*2,tool_radius_tip+tool_radius_width,tool_radius_tip+tool_radius_width)
-%#    toolpath = toolpath.union(hull(shaft.translate([bx,by,bz+tool_radius_width]), shaft.translate([ex,ey,ez+tool_radius_width])))
+%#    shaft = cylinder(step, tool_radius_tip, tool_radius_tip)
+%#    toolpath = hull(shaft.translate([bx, by, bz]), shaft.translate([ex, ey, ez]))
+%#    shaft = cylinder(tool_radius_width*2, tool_radius_tip+tool_radius_width, tool_radius_tip+tool_radius_width)
+%#    toolpath = toolpath.union(hull(shaft.translate([bx, by, bz+tool_radius_width]), shaft.translate([ex, ey, ez+tool_radius_width])))
 %#    for i in range(1, 90, 1):
 %#        angle = i
 %#        dx = tool_radius_width*math.cos(math.radians(angle))
@@ -794,14 +818,14 @@ gcp.closedxffile()
 %#        dzz = tool_radius_width*math.sin(math.radians(angle))
 %#        dz = tool_radius_width*math.sin(math.radians(angle+1))
 %#        dh = abs(dzz-dz)+0.0001
-%#        slice = cylinder(dh,tool_radius_tip+tool_radius_width-dx,tool_radius_tip+tool_radius_width-dxx)
-%#        toolpath = toolpath.union(hull(slice.translate([bx,by,bz+dz]), slice.translate([ex,ey,ez+dz])))
+%#        slice = cylinder(dh, tool_radius_tip+tool_radius_width-dx, tool_radius_tip+tool_radius_width-dxx)
+%#        toolpath = toolpath.union(hull(slice.translate([bx, by, bz+dz]), slice.translate([ex, ey, ez+dz])))
 %#    return toolpath
 %
 %gcp.rapidZ(retractheight)
-%gcp.toolchange(814,10000)
+%gcp.toolchange(814, 10000)
 %gcp.rapidXY(0, -(stockYheight/2+12.7))
-%gcp.cutZgcfeed(-stockZthickness,plunge)
+%gcp.cutZgcfeed(-stockZthickness, plunge)
 %toolpaths = toolpaths.union(gcp.cutlinedxfgcfeed(0, -(stockYheight/16), -stockZthickness, feed))
 %
 %gcp.rapidZ(0)
@@ -809,35 +833,35 @@ gcp.closedxffile()
 %#print(gcp.currenttoolnumber())
 %
 %gcp.rapidZ(retractheight)
-%gcp.toolchange(56142,10000)
+%gcp.toolchange(56142, 10000)
 %gcp.rapidXY(-stockXwidth/2, -(stockYheight/2+0.508/2))
-%gcp.cutZgcfeed(-1.531,plunge)
+%gcp.cutZgcfeed(-1.531, plunge)
 %toolpaths = toolpaths.union(gcp.cutlinedxfgcfeed(stockXwidth/2+0.508/2, -(stockYheight/2+0.508/2), -1.531, feed))
 %
 %gcp.rapidZ(retractheight)
-%#gcp.toolchange(56125,10000)
-%gcp.cutZgcfeed(-1.531,plunge)
+%#gcp.toolchange(56125, 10000)
+%gcp.cutZgcfeed(-1.531, plunge)
 %toolpaths = toolpaths.union(gcp.cutlinedxfgcfeed(stockXwidth/2+0.508/2, (stockYheight/2+0.508/2), -1.531, feed))
 %
 %gcp.rapidZ(retractheight)
-%gcp.toolchange(374,10000)
+%gcp.toolchange(374, 10000)
 %gcp.rapidXY(stockXwidth/4-stockXwidth/16, -(stockYheight/4+stockYheight/16))
 %gcp.rapidZ(0)
 %#toolpaths = toolpaths.union(gcp.cutlinedxfgcfeed(gcp.xpos(), gcp.ypos(), -4, feed))
-%#toolpaths = toolpaths.union(gcp.cutZgcfeed(-4,plunge))
+%#toolpaths = toolpaths.union(gcp.cutZgcfeed(-4, plunge))
 %#toolpaths = toolpaths.union(gcp.cutlinedxfgcfeed(stockXwidth/4, -(stockYheight/4)+25.4, -4, feed))
 %#key = gcp.cutlinedxfgcfeed(stockXwidth/2+0.508/2, (stockYheight/2+0.508/2), -1.531, feed)
 %
 %#cutkeyholegcdxf(KH_tool_num, stockZthickness/2, stockZthickness/2, "N", stockYheight/8)
-%#rapid(getxpos(),getypos(),stockZthickness);
-%#rapid(-stockXwidth/4,-stockYheight/4,0);
+%#rapid(getxpos(), getypos(), stockZthickness);
+%#rapid(-stockXwidth/4, -stockYheight/4, 0);
 %#cutkeyhole_toolpath((stockZthickness), (stockZthickness), "S", stockYheight/8, KH_tool_num);
-%#rapid(getxpos(),getypos(),stockZthickness);
-%#rapid(-stockXwidth/4,-stockYheight/8,0);
+%#rapid(getxpos(), getypos(), stockZthickness);
+%#rapid(-stockXwidth/4, -stockYheight/8, 0);
 %key = gcp.cutkeyholegcdxf(KH_tool_num, 0, stockZthickness*0.75, "E", stockYheight/9)
 %toolpaths = toolpaths.union(key)
-%#rapid(getxpos(),getypos(),stockZthickness);
-%#rapid(-stockXwidth/8,-stockYheight/8*3,0);
+%#rapid(getxpos(), getypos(), stockZthickness);
+%#rapid(-stockXwidth/8, -stockYheight/8*3, 0);
 %#cutkeyhole_toolpath((stockZthickness), (stockZthickness), "W", stockYheight/8, KH_tool_num);
 %
 %gcp.rapidZ(retractheight)
@@ -917,21 +941,21 @@ generategcode = true;
 /* [CAM] */
 toolradius = 1.5875;
 /* [CAM] */
-large_square_tool_num = 0; // [0:0,112:112,102:102,201:201]
+large_square_tool_num = 0; // [0:0, 112:112, 102:102, 201:201]
 /* [CAM] */
-small_square_tool_num = 102; // [0:0,122:122,112:112,102:102]
+small_square_tool_num = 102; // [0:0, 122:122, 112:112, 102:102]
 /* [CAM] */
-large_ball_tool_num = 0; // [0:0,111:111,101:101,202:202]
+large_ball_tool_num = 0; // [0:0, 111:111, 101:101, 202:202]
 /* [CAM] */
-small_ball_tool_num = 0; // [0:0,121:121,111:111,101:101]
+small_ball_tool_num = 0; // [0:0, 121:121, 111:111, 101:101]
 /* [CAM] */
-large_V_tool_num = 0; // [0:0,301:301,690:690]
+large_V_tool_num = 0; // [0:0, 301:301, 690:690]
 /* [CAM] */
-small_V_tool_num = 0; // [0:0,390:390,301:301]
+small_V_tool_num = 0; // [0:0, 390:390, 301:301]
 /* [CAM] */
-DT_tool_num = 0; // [0:0,814:814]
+DT_tool_num = 0; // [0:0, 814:814]
 /* [CAM] */
-KH_tool_num = 0; // [0:0,374:374,375:375,376:376,378:378]
+KH_tool_num = 0; // [0:0, 374:374, 375:375, 376:376, 378:378]
 /* [CAM] */
 Roundover_tool_num = 0; // [56142:56142, 56125:56125, 1570:1570]
 /* [CAM] */
@@ -968,23 +992,23 @@ thegeneratepaths = generatepaths == true ? 1 : 0;
 thegeneratedxf = generatedxf == true ? 1 : 0;
 thegenerategcode = generategcode == true ? 1 : 0;
 
-gcp = gcodepreview(thegeneratepaths,
-                   thegenerategcode,
-                   thegeneratedxf,
+gcp = gcodepreview(thegeneratepaths, 
+                   thegenerategcode, 
+                   thegeneratedxf, 
                    );
 
 opengcodefile(Base_filename);
 opendxffile(Base_filename);
-opendxffiles(Base_filename,
-                 large_square_tool_num,
-                 small_square_tool_num,
-                 large_ball_tool_num,
-                 small_ball_tool_num,
-                 large_V_tool_num,
-                 small_V_tool_num,
-                 DT_tool_num,
-                 KH_tool_num,
-                 Roundover_tool_num,
+opendxffiles(Base_filename, 
+                 large_square_tool_num, 
+                 small_square_tool_num, 
+                 large_ball_tool_num, 
+                 small_ball_tool_num, 
+                 large_V_tool_num, 
+                 small_V_tool_num, 
+                 DT_tool_num, 
+                 KH_tool_num, 
+                 Roundover_tool_num, 
                  MISC_tool_num);
 
 setupstock(stockXwidth, stockYheight, stockZthickness, zeroheight, stockzero);
@@ -997,36 +1021,36 @@ setupstock(stockXwidth, stockYheight, stockZthickness, zeroheight, stockzero);
 
 //echo(getvv());
 
-cutline(stockXwidth/2,stockYheight/2,-stockZthickness);
+cutline(stockXwidth/2, stockYheight/2, -stockZthickness);
 
 rapidZ(retractheight);
-toolchange(201,10000);
+toolchange(201, 10000);
 rapidXY(0, stockYheight/16);
 rapidZ(0);
 cutlinedxfgc(stockXwidth/16*7, stockYheight/2, -stockZthickness);
 
 
 rapidZ(retractheight);
-toolchange(202,10000);
+toolchange(202, 10000);
 rapidXY(0, stockYheight/8);
 rapidZ(0);
 cutlinedxfgc(stockXwidth/16*6, stockYheight/2, -stockZthickness);
 
 rapidZ(retractheight);
-toolchange(101,10000);
+toolchange(101, 10000);
 rapidXY(0, stockYheight/16*3);
 rapidZ(0);
 cutlinedxfgc(stockXwidth/16*5, stockYheight/2, -stockZthickness);
 
 rapidZ(retractheight);
-toolchange(390,10000);
+toolchange(390, 10000);
 rapidXY(0, stockYheight/16*4);
 rapidZ(0);
 
 cutlinedxfgc(stockXwidth/16*4, stockYheight/2, -stockZthickness);
 rapidZ(retractheight);
 
-toolchange(301,10000);
+toolchange(301, 10000);
 rapidXY(0, stockYheight/16*6);
 rapidZ(0);
 
@@ -1034,35 +1058,35 @@ cutlinedxfgc(stockXwidth/16*2, stockYheight/2, -stockZthickness);
 
 
 movetosafeZ();
-rapid(gcp.xpos(),gcp.ypos(),retractheight);
-toolchange(102,10000);
+rapid(gcp.xpos(), gcp.ypos(), retractheight);
+toolchange(102, 10000);
 
 //rapidXY(stockXwidth/4+stockYheight/8+stockYheight/16, +stockYheight/8);
 rapidXY(-stockXwidth/4+stockXwidth/16, (stockYheight/4));//+stockYheight/16
 rapidZ(0);
 
-//cutarcCW(360,270, gcp.xpos()-stockYheight/16, gcp.ypos(), stockYheight/16,-stockZthickness);
-//gcp.cutarcCW(270,180, gcp.xpos(), gcp.ypos()+stockYheight/16, stockYheight/16))
-cutarcCC(0,90, gcp.xpos()-stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4);
-cutarcCC(90,180, gcp.xpos(), gcp.ypos()-stockYheight/16, stockYheight/16, -stockZthickness/4);
-cutarcCC(180,270, gcp.xpos()+stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4);
-cutarcCC(270,360, gcp.xpos(), gcp.ypos()+stockYheight/16, stockYheight/16, -stockZthickness/4);
+//cutarcCW(360, 270, gcp.xpos()-stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness);
+//gcp.cutarcCW(270, 180, gcp.xpos(), gcp.ypos()+stockYheight/16, stockYheight/16))
+cutarcCC(0, 90, gcp.xpos()-stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4);
+cutarcCC(90, 180, gcp.xpos(), gcp.ypos()-stockYheight/16, stockYheight/16, -stockZthickness/4);
+cutarcCC(180, 270, gcp.xpos()+stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4);
+cutarcCC(270, 360, gcp.xpos(), gcp.ypos()+stockYheight/16, stockYheight/16, -stockZthickness/4);
 
 movetosafeZ();
 //rapidXY(stockXwidth/4+stockYheight/8-stockYheight/16, -stockYheight/8);
 rapidXY(stockXwidth/4-stockYheight/16, -(stockYheight/4));
 rapidZ(0);
 
-cutarcCW(180,90, gcp.xpos()+stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4);
-cutarcCW(90,0, gcp.xpos(), gcp.ypos()-stockYheight/16, stockYheight/16, -stockZthickness/4);
-cutarcCW(360,270, gcp.xpos()-stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4);
-cutarcCW(270,180, gcp.xpos(), gcp.ypos()+stockYheight/16, stockYheight/16, -stockZthickness/4);
+cutarcCW(180, 90, gcp.xpos()+stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4);
+cutarcCW(90, 0, gcp.xpos(), gcp.ypos()-stockYheight/16, stockYheight/16, -stockZthickness/4);
+cutarcCW(360, 270, gcp.xpos()-stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4);
+cutarcCW(270, 180, gcp.xpos(), gcp.ypos()+stockYheight/16, stockYheight/16, -stockZthickness/4);
 
 movetosafeZ();
 toolchange(201, 10000);
 rapidXY(stockXwidth /2 -6.34, - stockYheight /2);
 rapidZ(0);
-cutarcCW(180, 90, stockXwidth /2 , -stockYheight/2, 6.34, - stockZthickness);
+cutarcCW(180, 90, stockXwidth /2, -stockYheight/2, 6.34, - stockZthickness);
 
 movetosafeZ();
 rapidXY(stockXwidth/2, -stockYheight/2);
@@ -1076,7 +1100,7 @@ rapidXY(0, -(stockYheight/2+12.7));
 rapidZ(0);
 
 cutlinedxfgc(xpos(), ypos(), -stockZthickness);
-cutlinedxfgc(xpos(), -12.7 , -stockZthickness);
+cutlinedxfgc(xpos(), -12.7, -stockZthickness);
 rapidXY(0, -(stockYheight/2+12.7));
 
 //rapidXY(stockXwidth/2-6.34, -stockYheight/2);
@@ -1130,15 +1154,15 @@ cutline(gcp.xpos(), gcp.ypos(), 0);
 
 
 rapidZ(retractheight);
-gcp.toolchange(56142,10000);
+gcp.toolchange(56142, 10000);
 gcp.rapidXY(-stockXwidth/2, -(stockYheight/2+0.508/2));
-cutZgcfeed(-1.531,plunge);
+cutZgcfeed(-1.531, plunge);
 //cutline(gcp.xpos(), gcp.ypos(), -1.531);
 cutlinedxfgc(stockXwidth/2+0.508/2, -(stockYheight/2+0.508/2), -1.531);
 
 rapidZ(retractheight);
-//#gcp.toolchange(56125,10000)
-cutZgcfeed(-1.531,plunge);
+//#gcp.toolchange(56125, 10000)
+cutZgcfeed(-1.531, plunge);
 //toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), -1.531))
 cutlinedxfgc(stockXwidth/2+0.508/2, (stockYheight/2+0.508/2), -1.531);
 
@@ -1166,8 +1190,6 @@ closedxffile();
 %\includeimage{gcodepreviewtemplate.png}
 \end{samepage}
 
-\noindent Obviously, the use of OpenSCAD to make use of roundover tooling remains to be implemented. Similarly, generate keyhole dxfs needs to be updated to function as expected.
-
 %TODO ADD BELOW
 %
 %\begin{verbatim}
@@ -1179,51 +1201,51 @@ closedxffile();
 %
 %movetosafez();
 %
-%toolchange(small_square_tool_num,speed * small_square_ratio);
+%toolchange(small_square_tool_num, speed * small_square_ratio);
 %
-%begintoolpath(0,0,0.25);
+%begintoolpath(0, 0, 0.25);
 %
-%cutoneaxis_setfeed("Z",0,plunge*small_square_ratio);
+%cutoneaxis_setfeed("Z", 0, plunge*small_square_ratio);
 %
-%cutwithfeed(stockXwidth/2,stockYheight/2,-stockZthickness,feed);
-%dxfline(getxpos(),getypos(),stockXwidth/2,stockYheight/2, small_square_tool_num);
+%cutwithfeed(stockXwidth/2, stockYheight/2, -stockZthickness, feed);
+%dxfline(getxpos(), getypos(), stockXwidth/2, stockYheight/2, small_square_tool_num);
 %
 %endtoolpath();
-%rapid(-(stockXwidth/4-stockYheight/16),stockYheight/4,0);
-%cutoneaxis_setfeed("Z",-stockZthickness,plunge*small_square_ratio);
+%rapid(-(stockXwidth/4-stockYheight/16), stockYheight/4, 0);
+%cutoneaxis_setfeed("Z", -stockZthickness, plunge*small_square_ratio);
 %
 %cutarcNECCdxf(-stockXwidth/4, stockYheight/4+stockYheight/16, -stockZthickness, -stockXwidth/4, stockYheight/4, stockYheight/16, small_square_tool_num);
 %cutarcNWCCdxf(-(stockXwidth/4+stockYheight/16), stockYheight/4, -stockZthickness, -stockXwidth/4, stockYheight/4, stockYheight/16, small_square_tool_num);
 %cutarcSWCCdxf(-stockXwidth/4, stockYheight/4-stockYheight/16, -stockZthickness, -stockXwidth/4, stockYheight/4, stockYheight/16, small_square_tool_num);
 %cutarcSECCdxf(-(stockXwidth/4-stockYheight/16), stockYheight/4, -stockZthickness, -stockXwidth/4, stockYheight/4, stockYheight/16, small_square_tool_num);
 %
-%rapid(getxpos(),getypos(),stockZthickness);
-%toolchange(KH_tool_num,speed * KH_ratio);
-%rapid(-stockXwidth/8,-stockYheight/4,0);
+%rapid(getxpos(), getypos(), stockZthickness);
+%toolchange(KH_tool_num, speed * KH_ratio);
+%rapid(-stockXwidth/8, -stockYheight/4, 0);
 %
 %cutkeyhole_toolpath((stockZthickness), (stockZthickness), "N", stockYheight/8, KH_tool_num);
-%rapid(getxpos(),getypos(),stockZthickness);
-%rapid(-stockXwidth/4,-stockYheight/4,0);
+%rapid(getxpos(), getypos(), stockZthickness);
+%rapid(-stockXwidth/4, -stockYheight/4, 0);
 %cutkeyhole_toolpath((stockZthickness), (stockZthickness), "S", stockYheight/8, KH_tool_num);
-%rapid(getxpos(),getypos(),stockZthickness);
-%rapid(-stockXwidth/4,-stockYheight/8,0);
+%rapid(getxpos(), getypos(), stockZthickness);
+%rapid(-stockXwidth/4, -stockYheight/8, 0);
 %cutkeyhole_toolpath((stockZthickness), (stockZthickness), "E", stockYheight/8, KH_tool_num);
-%rapid(getxpos(),getypos(),stockZthickness);
-%rapid(-stockXwidth/8,-stockYheight/8*3,0);
+%rapid(getxpos(), getypos(), stockZthickness);
+%rapid(-stockXwidth/8, -stockYheight/8*3, 0);
 %cutkeyhole_toolpath((stockZthickness), (stockZthickness), "W", stockYheight/8, KH_tool_num);
 %
-%rapid(getxpos(),getypos(),stockZthickness);
-%toolchange(DT_tool_num,speed * DT_ratio);
-%rapid(0,-(stockYheight/2+tool_diameter(DT_tool_num,0)),0);
+%rapid(getxpos(), getypos(), stockZthickness);
+%toolchange(DT_tool_num, speed * DT_ratio);
+%rapid(0, -(stockYheight/2+tool_diameter(DT_tool_num, 0)), 0);
 %
-%cutoneaxis_setfeed("Z",-stockZthickness,plunge*DT_ratio);
-%cutwithfeed(0,-(stockYheight/4),-stockZthickness,feed*DT_ratio);
-%rapid(0,-(stockYheight/2+tool_diameter(DT_tool_num,0)),-stockZthickness);
+%cutoneaxis_setfeed("Z", -stockZthickness, plunge*DT_ratio);
+%cutwithfeed(0, -(stockYheight/4), -stockZthickness, feed*DT_ratio);
+%rapid(0, -(stockYheight/2+tool_diameter(DT_tool_num, 0)), -stockZthickness);
 %
-%rapid(getxpos(),getypos(),stockZthickness);
+%rapid(getxpos(), getypos(), stockZthickness);
 %toolchange(Roundover_tool_num, speed * RO_ratio);
-%rapid(-(stockXwidth/2),-(stockYheight/2),0);
-%cutoneaxis_setfeed("Z",-4.509,plunge*RO_ratio);
+%rapid(-(stockXwidth/2), -(stockYheight/2), 0);
+%cutoneaxis_setfeed("Z", -4.509, plunge*RO_ratio);
 %
 %cutroundovertool(-(stockXwidth/2++0.507/2), -(stockYheight/2+0.507/2), -4.509, stockXwidth/2+0.507/2, -(stockYheight/2+0.507/2), -4.509, 0.507/2, 4.509);
 %
@@ -1232,14 +1254,14 @@ closedxffile();
 %cutroundover(-(stockXwidth/2+0.507/2), stockYheight/2+0.507/2, -4.509, -(stockXwidth/2+0.507/2), -(stockYheight/2+0.507/2), -4.509, 1570);
 %
 %//for (i = [0 : abs(1) : 80]) {
-%//  cutwithfeed(stockXwidth/4,-stockYheight/4,-stockZthickness/4,feed);
-%//  cutwithfeed(stockXwidth/8+(stockXwidth/256*i),-stockYheight/2,-stockZthickness*3/4,feed);
+%//  cutwithfeed(stockXwidth/4, -stockYheight/4, -stockZthickness/4, feed);
+%//  cutwithfeed(stockXwidth/8+(stockXwidth/256*i), -stockYheight/2, -stockZthickness*3/4, feed);
 %//  }
 %
 %hull(){
-%  cutwithfeed(stockXwidth/4,-stockYheight/4,-stockZthickness/4,feed);
-%  cutwithfeed(stockXwidth/8,-stockYheight/2,-stockZthickness*3/4,feed);
-%  cutwithfeed(stockXwidth/8+(stockXwidth*0.3125),-stockYheight/2,-stockZthickness*3/4,feed);
+%  cutwithfeed(stockXwidth/4, -stockYheight/4, -stockZthickness/4, feed);
+%  cutwithfeed(stockXwidth/8, -stockYheight/2, -stockZthickness*3/4, feed);
+%  cutwithfeed(stockXwidth/8+(stockXwidth*0.3125), -stockYheight/2, -stockZthickness*3/4, feed);
 %  }
 %}
 %
@@ -1292,6 +1314,10 @@ This library for PythonSCAD works by using Python code as a back-end so as to pe
 \end{itemize}
 
 \noindent Note that this architecture requires that many OpenSCAD modules are essentially ``Dispatchers'' (another term is ``Descriptors'') which pass information from one aspect of the environment to another, but in some instances it will be necessary to re-write Python definitions in OpenSCAD rather than calling the matching Python function directly.
+
+\smallskip
+
+\noindent\textsc{Python coding considerations:} Python style may be checked using a tool such as: \url{https://www.codewof.co.nz/style/python3/}. Not all conventions will necessarily be adhered to --- limiting line length in particular conflicts with the flexibility of Literate Programming. Note that \verb|numpydoc|-style docstrings will be added to help define the functionality of each defined module in Python. \url{https://numpydoc.readthedocs.io/en/latest/}.
 
 \subsection{Module Naming Convention}
 
@@ -1450,6 +1476,9 @@ Each file will begin with a comment indicating the file type and further notes/c
 
 import sys
 
+# add math functions (using radians by default, convert to degrees where necessary)
+import math
+
 # getting openscad functions into namespace
 #https://github.com/gsohler/openscad/issues/39
 try:
@@ -1457,9 +1486,6 @@ try:
 except ModuleNotFoundError as e:
     print("OpenSCAD module not loaded.")
     
-# add math functions (using radians by default, convert to degrees where necessary)
-import math
-
 def pygcpversion():
     thegcpversion = 0.8
     return thegcpversion
@@ -1540,21 +1566,38 @@ The class which is defined is \DescribeRoutine{gcodepreview} which begins with t
 class gcodepreview:
 
     def __init__(self, #basefilename = "export", 
-                 generatepaths = False,
-                 generategcode = False,
-                 generatedxf = False,
+                 generatepaths = False, 
+                 generategcode = False, 
+                 generatedxf = False, 
 #                 stockXwidth = 25, 
 #                 stockYheight = 25, 
 #                 stockZthickness = 1, 
 #                 zeroheight = "Top", 
-#                 stockzero = "Lower-left" , 
+#                 stockzero = "Lower-left", 
 #                 retractheight = 6, 
-#                 currenttoolnum = 102,
-#                 toolradius = 3.175,
-#                 plunge = 100,
-#                 feed = 400,
+#                 currenttoolnum = 102, 
+#                 toolradius = 3.175, 
+#                 plunge = 100, 
+#                 feed = 400, 
 #                 speed = 10000
                   ):
+        """
+        Initialize gcodepreview object.
+    
+        Parameters
+        ----------
+        generatepaths : boolean
+                        Determines if toolpaths will be stored internally or returned directly
+        generategcode : boolean
+                        Enables writing out G-code.
+        generatedxf   : boolean
+                        Enables writing out DXF file(s).
+        
+        Returns
+        -------
+        object
+            The initialized gcodepreview object.
+        """
 #        self.basefilename = basefilename
         if (generatepaths == 1):
             self.generatepaths = True
@@ -1613,7 +1656,7 @@ class gcodepreview:
 #        return self.c
 #
 \end{writecode}
-\addtocounter{gcpy}{75}
+\addtocounter{gcpy}{82}
 
 \subsubsection{Position and Variables}
  
@@ -1688,7 +1731,7 @@ function zpos() = gcp.zpos();
 \addtocounter{gcpscad}{6}
 
 \noindent and in turn, functions which set the positions: 
-\DescribeRoutine{setxpos},
+\DescribeRoutine{setxpos}, 
 \DescribeRoutine{setypos}, and
 \DescribeRoutine{setzpos}.%, and
 %\DescribeRoutine{settpzinc}.
@@ -1732,12 +1775,34 @@ Since part of a class, it will be called as \DescribeRoutine{gcp.setupstock}. It
  
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
-    def setupstock(self, stockXwidth,
-                 stockYheight,
-                 stockZthickness,
-                 zeroheight,
-                 stockzero,
+    def setupstock(self, stockXwidth, 
+                 stockYheight, 
+                 stockZthickness, 
+                 zeroheight, 
+                 stockzero, 
                  retractheight):
+        """
+        Set up blank/stock for material and position/zero.
+        
+        Parameters
+        ----------
+        stockXwidth :   float
+                        X extent/dimension
+        stockYheight :  float
+                        Y extent/dimension
+        stockZthickness : boolean
+                        Z extent/dimension
+        zeroheight :    string
+                        Top or Bottom, determines if Z extent will be positive or negative
+        stockzero :     string
+                        Lower-Left, Center-Left, Top-Left, Center, determines XY position of stock 
+        retractheight : float
+                        Distance which tool retracts above surface of stock.
+        
+        Returns
+        -------
+        none
+        """
         self.stockXwidth = stockXwidth
         self.stockYheight = stockYheight
         self.stockZthickness = stockZthickness
@@ -1763,11 +1828,11 @@ Since part of a class, it will be called as \DescribeRoutine{gcp.setupstock}. It
 #%WRITEGC            self.writegc("(Design File: " + self.basefilename + ")")
         self.toolpaths = cylinder(0.1, 0.1)
 \end{writecode}
-\addtocounter{gcpy}{30}
+\addtocounter{gcpy}{52}
 
 \newglossaryentry{setupstock}
 {
-    name=setupstock,
+    name=setupstock, 
     description={setupstock(200, 100, 8.35, "Top", "Lower-left", 8.35)}
 }
 
@@ -1777,7 +1842,7 @@ Since part of a class, it will be called as \DescribeRoutine{gcp.setupstock}. It
 %\begin{writecode}{a}{gcodepreview.py}{python}
 %        if self.zeroheight == "Top":
 %            if self.stockzero == "Center":
-%                self.stock = self.stock.translate([-self.stockXwidth / 2,-self.stockYheight / 2,-self.stockZthickness])
+%                self.stock = self.stock.translate([-self.stockXwidth / 2, -self.stockYheight / 2, -self.stockZthickness])
 %    
 %\end{writecode}
 %\addtocounter{gcpy}{5}
@@ -1790,54 +1855,54 @@ Since part of a class, it will be called as \DescribeRoutine{gcp.setupstock}. It
 \begin{writecode}{a}{gcodepreview.py}{python}
         if self.zeroheight == "Top":
             if self.stockzero == "Lower-Left":
-                self.stock = stock.translate([0,0,-self.stockZthickness])
+                self.stock = stock.translate([0, 0, -self.stockZthickness])
                 if self.generategcode == True:
-                    self.writegc("(stockMin:0.00mm, 0.00mm, -",str(self.stockZthickness),"mm)")
-                    self.writegc("(stockMax:",str(self.stockXwidth),"mm, ",str(stockYheight),"mm, 0.00mm)")
-                    self.writegc("(STOCK/BLOCK, ",str(self.stockXwidth),", ",str(self.stockYheight),", ",str(self.stockZthickness),", 0.00, 0.00, ",str(self.stockZthickness),")")
+                    self.writegc("(stockMin:0.00mm, 0.00mm, -", str(self.stockZthickness), "mm)")
+                    self.writegc("(stockMax:", str(self.stockXwidth), "mm, ", str(stockYheight), "mm, 0.00mm)")
+                    self.writegc("(STOCK/BLOCK, ", str(self.stockXwidth), ", ", str(self.stockYheight), ", ", str(self.stockZthickness), ", 0.00, 0.00, ", str(self.stockZthickness), ")")
             if self.stockzero == "Center-Left":
-                self.stock = self.stock.translate([0,-stockYheight / 2,-stockZthickness])
+                self.stock = self.stock.translate([0, -stockYheight / 2, -stockZthickness])
                 if self.generategcode == True:
-                    self.writegc("(stockMin:0.00mm, -",str(self.stockYheight/2),"mm, -",str(self.stockZthickness),"mm)")
-                    self.writegc("(stockMax:",str(self.stockXwidth),"mm, ",str(self.stockYheight/2),"mm, 0.00mm)")
-                    self.writegc("(STOCK/BLOCK, ",str(self.stockXwidth),", ",str(self.stockYheight),", ",str(self.stockZthickness),", 0.00, ",str(self.stockYheight/2),", ",str(self.stockZthickness),")");
+                    self.writegc("(stockMin:0.00mm, -", str(self.stockYheight/2), "mm, -", str(self.stockZthickness), "mm)")
+                    self.writegc("(stockMax:", str(self.stockXwidth), "mm, ", str(self.stockYheight/2), "mm, 0.00mm)")
+                    self.writegc("(STOCK/BLOCK, ", str(self.stockXwidth), ", ", str(self.stockYheight), ", ", str(self.stockZthickness), ", 0.00, ", str(self.stockYheight/2), ", ", str(self.stockZthickness), ")");
             if self.stockzero == "Top-Left":
-                self.stock = self.stock.translate([0,-self.stockYheight,-self.stockZthickness])
+                self.stock = self.stock.translate([0, -self.stockYheight, -self.stockZthickness])
                 if self.generategcode == True:
-                    self.writegc("(stockMin:0.00mm, -",str(self.stockYheight),"mm, -",str(self.stockZthickness),"mm)")
-                    self.writegc("(stockMax:",str(self.stockXwidth),"mm, 0.00mm, 0.00mm)")
-                    self.writegc("(STOCK/BLOCK, ",str(self.stockXwidth),", ",str(self.stockYheight),", ",str(self.stockZthickness),", 0.00, ",str(self.stockYheight),", ",str(self.stockZthickness),")")
+                    self.writegc("(stockMin:0.00mm, -", str(self.stockYheight), "mm, -", str(self.stockZthickness), "mm)")
+                    self.writegc("(stockMax:", str(self.stockXwidth), "mm, 0.00mm, 0.00mm)")
+                    self.writegc("(STOCK/BLOCK, ", str(self.stockXwidth), ", ", str(self.stockYheight), ", ", str(self.stockZthickness), ", 0.00, ", str(self.stockYheight), ", ", str(self.stockZthickness), ")")
             if self.stockzero == "Center":
-                self.stock = self.stock.translate([-self.stockXwidth / 2,-self.stockYheight / 2,-self.stockZthickness])
+                self.stock = self.stock.translate([-self.stockXwidth / 2, -self.stockYheight / 2, -self.stockZthickness])
                 if self.generategcode == True:
-                    self.writegc("(stockMin: -",str(self.stockXwidth/2),", -",str(self.stockYheight/2),"mm, -",str(self.stockZthickness),"mm)")
-                    self.writegc("(stockMax:",str(self.stockXwidth/2),"mm, ",str(self.stockYheight/2),"mm, 0.00mm)")
-                    self.writegc("(STOCK/BLOCK, ",str(self.stockXwidth),", ",str(self.stockYheight),", ",str(self.stockZthickness),", ",str(self.stockXwidth/2),", ", str(self.stockYheight/2),", ",str(self.stockZthickness),")")
+                    self.writegc("(stockMin: -", str(self.stockXwidth/2), ", -", str(self.stockYheight/2), "mm, -", str(self.stockZthickness), "mm)")
+                    self.writegc("(stockMax:", str(self.stockXwidth/2), "mm, ", str(self.stockYheight/2), "mm, 0.00mm)")
+                    self.writegc("(STOCK/BLOCK, ", str(self.stockXwidth), ", ", str(self.stockYheight), ", ", str(self.stockZthickness), ", ", str(self.stockXwidth/2), ", ", str(self.stockYheight/2), ", ", str(self.stockZthickness), ")")
         if self.zeroheight == "Bottom":
             if self.stockzero == "Lower-Left":
-                 self.stock = self.stock.translate([0,0,0])
+                 self.stock = self.stock.translate([0, 0, 0])
                  if self.generategcode == True:
                      self.writegc("(stockMin:0.00mm, 0.00mm, 0.00mm)")
-                     self.writegc("(stockMax:",str(self.stockXwidth),"mm, ",str(self.stockYheight),"mm,  ",str(self.stockZthickness),"mm)")
-                     self.writegc("(STOCK/BLOCK, ",str(self.stockXwidth),", ",str(self.stockYheight),", ",str(self.stockZthickness),", 0.00, 0.00, 0.00)")
+                     self.writegc("(stockMax:", str(self.stockXwidth), "mm, ", str(self.stockYheight), "mm, ", str(self.stockZthickness), "mm)")
+                     self.writegc("(STOCK/BLOCK, ", str(self.stockXwidth), ", ", str(self.stockYheight), ", ", str(self.stockZthickness), ", 0.00, 0.00, 0.00)")
             if self.stockzero == "Center-Left":
-                self.stock = self.stock.translate([0,-self.stockYheight / 2,0])
+                self.stock = self.stock.translate([0, -self.stockYheight / 2, 0])
                 if self.generategcode == True:
-                    self.writegc("(stockMin:0.00mm, -",str(self.stockYheight/2),"mm, 0.00mm)")
-                    self.writegc("(stockMax:",str(self.stockXwidth),"mm, ",str(self.stockYheight/2),"mm, -",str(self.stockZthickness),"mm)")
-                    self.writegc("(STOCK/BLOCK, ",str(self.stockXwidth),", ",str(self.stockYheight),", ",str(self.stockZthickness),", 0.00, ",str(self.stockYheight/2),", 0.00mm)");
+                    self.writegc("(stockMin:0.00mm, -", str(self.stockYheight/2), "mm, 0.00mm)")
+                    self.writegc("(stockMax:", str(self.stockXwidth), "mm, ", str(self.stockYheight/2), "mm, -", str(self.stockZthickness), "mm)")
+                    self.writegc("(STOCK/BLOCK, ", str(self.stockXwidth), ", ", str(self.stockYheight), ", ", str(self.stockZthickness), ", 0.00, ", str(self.stockYheight/2), ", 0.00mm)");
             if self.stockzero == "Top-Left":
-                self.stock = self.stock.translate([0,-self.stockYheight,0])
+                self.stock = self.stock.translate([0, -self.stockYheight, 0])
                 if self.generategcode == True:
-                    self.writegc("(stockMin:0.00mm, -",str(self.stockYheight),"mm, 0.00mm)")
-                    self.writegc("(stockMax:",str(self.stockXwidth),"mm, 0.00mm, ",str(self.stockZthickness),"mm)")
-                    self.writegc("(STOCK/BLOCK, ",str(self.stockXwidth),", ",str(self.stockYheight),", ",str(self.stockZthickness),", 0.00, ",str(self.stockYheight),", 0.00)")
+                    self.writegc("(stockMin:0.00mm, -", str(self.stockYheight), "mm, 0.00mm)")
+                    self.writegc("(stockMax:", str(self.stockXwidth), "mm, 0.00mm, ", str(self.stockZthickness), "mm)")
+                    self.writegc("(STOCK/BLOCK, ", str(self.stockXwidth), ", ", str(self.stockYheight), ", ", str(self.stockZthickness), ", 0.00, ", str(self.stockYheight), ", 0.00)")
             if self.stockzero == "Center":
-                self.stock = self.stock.translate([-self.stockXwidth / 2,-self.stockYheight / 2,0])
+                self.stock = self.stock.translate([-self.stockXwidth / 2, -self.stockYheight / 2, 0])
                 if self.generategcode == True:
-                    self.writegc("(stockMin: -",str(self.stockXwidth/2),", -",str(self.stockYheight/2),"mm, 0.00mm)")
-                    self.writegc("(stockMax:",str(self.stockXwidth/2),"mm, ",str(self.stockYheight/2),"mm, ",str(self.stockZthickness),"mm)")
-                    self.writegc("(STOCK/BLOCK, ",str(self.stockXwidth),", ",str(self.stockYheight),", ",str(self.stockZthickness),", ",str(self.stockXwidth/2),", ", str(self.stockYheight/2),", 0.00)")
+                    self.writegc("(stockMin: -", str(self.stockXwidth/2), ", -", str(self.stockYheight/2), "mm, 0.00mm)")
+                    self.writegc("(stockMax:", str(self.stockXwidth/2), "mm, ", str(self.stockYheight/2), "mm, ", str(self.stockZthickness), "mm)")
+                    self.writegc("(STOCK/BLOCK, ", str(self.stockXwidth), ", ", str(self.stockYheight), ", ", str(self.stockZthickness), ", ", str(self.stockXwidth/2), ", ", str(self.stockYheight/2), ", 0.00)")
         if self.generategcode == True:
             self.writegc("G90");
             self.writegc("G21");
@@ -1863,7 +1928,7 @@ For Python, the initial \textsc{3d} model is stored in the variable \verb|stock|
 \begin{verbatim}
 setupstock(stockXwidth, stockYheight, stockZthickness, zeroheight, stockzero)
 
-cy = cube([1,2,stockZthickness*2])
+cy = cube([1, 2, stockZthickness*2])
 
 diff = stock.difference(cy)
 #output(diff)
@@ -1878,7 +1943,7 @@ Similarly Python functions and variables will be used in: \DescribeRoutine{curre
  
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
-    def settool(self,tn):
+    def settool(self, tn):
 #        global currenttoolnum
         self.currenttoolnum = tn
 
@@ -1895,7 +1960,7 @@ Similarly Python functions and variables will be used in: \DescribeRoutine{curre
 
 \newglossaryentry{settool}
 {
-    name=settool,
+    name=settool, 
     description={settool(102)}
 }
 
@@ -1927,11 +1992,11 @@ and are defined by their profile:
                                          angles and diameters and may be used for decorative
                                          V carving, or for chamfering or cutting specific angles
                                          (note that the commonly available radiused form is not
-                                         implemented at this time, \emph{e.g.},~\#501 and 502)
+                                         implemented at this time, \emph{e.g.}, ~\#501 and 502)
 \end{itemize}
 \end{samepage}
 
-Most tools are easily implemented with concise \textsc{3d} descriptions which may be connected with a simple \texttt{hull} operation:
+Most tools are easily implemented with concise \textsc{3d} descriptions which may be connected with a simple \texttt{hull} operation. Note that extending the normal case to a pair of such operations, one for the shaft, the other for the cutting shape will markedly simplify the code, and will make it possible to colour-code the shaft which may afford indication of instances of it rubbing against the stock.
 
 The \DescribeRoutine{endmill square} is a simple cylinder:
 
@@ -1950,7 +2015,7 @@ The \DescribeRoutine{ballnose} is modeled as a hemisphere joined with a cylinder
     def ballnose(self, es_diameter, es_flute_length):
         b = sphere(r=(es_diameter / 2))
         s = cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=es_flute_length, center=False)
-        p = union(b,s)
+        p = union(b, s)
         return p.translate([0, 0, (es_diameter / 2)])
 
 \end{writecode}
@@ -1965,7 +2030,7 @@ The \DescribeRoutine{endmill v} is modeled as a cylinder with a zero width base 
         v = cylinder(r1=0, r2=(es_diameter / 2), h=((es_diameter / 2) / math.tan((es_v_angle / 2))), center=False)
         s = cylinder(r1=(es_diameter / 2), r2=(es_diameter / 2), h=((es_diameter * 8) ), center=False)
         sh = s.translate([0, 0, ((es_diameter / 2) / math.tan((es_v_angle / 2)))])
-        return union(v,sh)
+        return union(v, sh)
 
 \end{writecode}
 \addtocounter{gcpy}{7}
@@ -1986,6 +2051,34 @@ The \DescribeRoutine{bowl tool} is modeled as a series of cylinders stacked on t
 
 \end{writecode}
 \addtocounter{gcpy}{10}
+
+The \DescribeRoutine{tapered ball} nose tool is modeled as a sphere at the tip and a pair of cylinders, where one (a cone) describes the taper, while the other represents the shaft.
+
+One vendor which provides such tooling is Precise Bits: \url{https://www.precisebits.com/products/carbidebits/taperedcarve250b2f.asp&filter=7}, but unfortunately, their tool numbering is ambiguous, the version of each major number (204 and 304) for their $1/4^{\prime\prime}$ shank tooling which is sufficiently popular to also be offered in a ZRN coating will be used.
+
+Similarly, the \#501 and \#502 PCB engravers from Carbide \textsc{3d} will also be supported.
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def tapered_ball(self, es_tip, es_diameter, es_flute_length, es_angle):
+        b = sphere(r=(es_tip / 2))
+        s = cylinder(r1=(es_tip / 2), r2=(es_diameter / 2), h=es_flute_length, center=False)
+        p = union(b, s)
+        return p.translate([0, 0, (es_tip / 2)])
+
+\end{writecode}
+\addtocounter{gcpy}{6}
+
+The \DescribeRoutine{flat V} tool is modeled as a cylinder with two different diameters, forming a truncated cone.
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def flat_V(self, es_tip, es_diameter, es_flute_length, es_angle):
+        c = cylinder(r1=(es_tip / 2), r2=(es_diameter / 2), h=es_flute_length, center=False)
+        return c
+
+\end{writecode}
+\addtocounter{gcpy}{6}
 
 %\begin{verbatim}
 %//!OpenSCAD
@@ -2028,7 +2121,7 @@ There are several notable candidates for undercutting tooling. \label{para:under
                            area at the bottom which slants up to a narrower region
                            at a defined angle
 \item Lollipop cutters --- normally used for \textsc{3d} work, as their name suggests they are
-                           essentially a (cutting) ball on a narrow stick (the tool shaft),
+                           essentially a (cutting) ball on a narrow stick (the tool shaft), 
                            they are mentioned here only for compleatness' sake and are not
                            (at this time) implemented
 \item Threadmill --- used for cutting threads, normally a single form geometry is used on a CNC.
@@ -2160,7 +2253,7 @@ TOOL/MILL, Diameter, Corner radius, Height, Taper Angle
 \paragraph{Roundover (corner rounding)}
 
 \begin{verbatim}
-TOOL/CRMILL, Diameter1, Diameter2,Radius, Height, Length
+TOOL/CRMILL, Diameter1, Diameter2, Radius, Height, Length
 \end{verbatim}
 
 \paragraph{Dovetails}
@@ -2173,7 +2266,7 @@ The Python definition for toolchange requires the tool number (used to write out
 
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
-    def toolchange(self,tool_number,speed = 10000):
+    def toolchange(self, tool_number, speed = 10000):
 #        global currenttoolshape
         self.currenttoolshape = self.endmill_square(0.001, 0.001)    
             
@@ -2182,51 +2275,51 @@ The Python definition for toolchange requires the tool number (used to write out
             self.writegc("(Toolpath)")
             self.writegc("M05")
         if (tool_number == 201):
-            self.writegc("(TOOL/MILL,6.35, 0.00, 0.00, 0.00)")
+            self.writegc("(TOOL/MILL, 6.35, 0.00, 0.00, 0.00)")
             self.currenttoolshape = self.endmill_square(6.35, 19.05)
         elif (tool_number == 102):
-            self.writegc("(TOOL/MILL,3.175, 0.00, 0.00, 0.00)")
+            self.writegc("(TOOL/MILL, 3.175, 0.00, 0.00, 0.00)")
             self.currenttoolshape = self.endmill_square(3.175, 12.7)
         elif (tool_number == 112):
-            self.writegc("(TOOL/MILL,1.5875, 0.00, 0.00, 0.00)")
+            self.writegc("(TOOL/MILL, 1.5875, 0.00, 0.00, 0.00)")
             self.currenttoolshape = self.endmill_square(1.5875, 6.35)
         elif (tool_number == 122):
-            self.writegc("(TOOL/MILL,0.79375, 0.00, 0.00, 0.00)")
+            self.writegc("(TOOL/MILL, 0.79375, 0.00, 0.00, 0.00)")
             self.currenttoolshape = self.endmill_square(0.79375, 1.5875)
         elif (tool_number == 202):
-            self.writegc("(TOOL/MILL,6.35, 3.175, 0.00, 0.00)")
+            self.writegc("(TOOL/MILL, 6.35, 3.175, 0.00, 0.00)")
             self.currenttoolshape = self.ballnose(6.35, 19.05)
         elif (tool_number == 101):
-            self.writegc("(TOOL/MILL,3.175, 1.5875, 0.00, 0.00)")
+            self.writegc("(TOOL/MILL, 3.175, 1.5875, 0.00, 0.00)")
             self.currenttoolshape = self.ballnose(3.175, 12.7)
         elif (tool_number == 111):
-            self.writegc("(TOOL/MILL,1.5875, 0.79375, 0.00, 0.00)")
+            self.writegc("(TOOL/MILL, 1.5875, 0.79375, 0.00, 0.00)")
             self.currenttoolshape = self.ballnose(1.5875, 6.35)
         elif (tool_number == 121):
-            self.writegc("(TOOL/MILL,3.175, 0.79375, 0.00, 0.00)")
+            self.writegc("(TOOL/MILL, 3.175, 0.79375, 0.00, 0.00)")
             self.currenttoolshape = self.ballnose(0.79375, 1.5875)
         elif (tool_number == 327):
-            self.writegc("(TOOL/MILL,0.03, 0.00, 13.4874, 30.00)")
+            self.writegc("(TOOL/MILL, 0.03, 0.00, 13.4874, 30.00)")
             self.currenttoolshape = self.endmill_v(60, 26.9748)
         elif (tool_number == 301):
-            self.writegc("(TOOL/MILL,0.03, 0.00, 6.35, 45.00)")
+            self.writegc("(TOOL/MILL, 0.03, 0.00, 6.35, 45.00)")
             self.currenttoolshape = self.endmill_v(90, 12.7)
         elif (tool_number == 302):
-            self.writegc("(TOOL/MILL,0.03, 0.00, 10.998, 30.00)")
+            self.writegc("(TOOL/MILL, 0.03, 0.00, 10.998, 30.00)")
             self.currenttoolshape = self.endmill_v(60, 12.7)
         elif (tool_number == 390):
-            self.writegc("(TOOL/MILL,0.03, 0.00, 1.5875, 45.00)")
+            self.writegc("(TOOL/MILL, 0.03, 0.00, 1.5875, 45.00)")
             self.currenttoolshape = self.endmill_v(90, 3.175)
         elif (tool_number == 374):
-            self.writegc("(TOOL/MILL,9.53, 0.00, 3.17, 0.00)")
+            self.writegc("(TOOL/MILL, 9.53, 0.00, 3.17, 0.00)")
         elif (tool_number == 375):
-            self.writegc("(TOOL/MILL,9.53, 0.00, 3.17, 0.00)")
+            self.writegc("(TOOL/MILL, 9.53, 0.00, 3.17, 0.00)")
         elif (tool_number == 376):
-            self.writegc("(TOOL/MILL,12.7, 0.00, 4.77, 0.00)")
+            self.writegc("(TOOL/MILL, 12.7, 0.00, 4.77, 0.00)")
         elif (tool_number == 378):
-            self.writegc("(TOOL/MILL,12.7, 0.00, 4.77, 0.00)")
+            self.writegc("(TOOL/MILL, 12.7, 0.00, 4.77, 0.00)")
         elif (tool_number == 814):
-            self.writegc("(TOOL/MILL,12.7, 6.367, 12.7, 0.00)")
+            self.writegc("(TOOL/MILL, 12.7, 6.367, 12.7, 0.00)")
             #dt_bottomdiameter, dt_topdiameter, dt_height, dt_angle)
             #https://www.leevalley.com/en-us/shop/tools/power-tool-accessories/router-bits/30172-dovetail-bits?item=18J1607
             self.currenttoolshape = self.dovetail(12.7, 6.367, 12.7, 14)
@@ -2235,22 +2328,37 @@ The Python definition for toolchange requires the tool number (used to write out
         elif (tool_number == 56142):#0.508/2, 2.921
             self.writegc("(TOOL/CRMILL, 0.508, 3.571875, 1.5875, 5.55625, 1.5875)")
 #        elif (tool_number == 312):#1.524/2, 3.175
-#            self.writegc("(TOOL/CRMILL, Diameter1, Diameter2,Radius, Height, Length)")
+#            self.writegc("(TOOL/CRMILL, Diameter1, Diameter2, Radius, Height, Length)")
         elif (tool_number == 1570):#0.507/2, 4.509
             self.writegc("(TOOL/CRMILL, 0.17018, 9.525, 4.7625, 12.7, 4.7625)")
 #https://www.amanatool.com/45982-carbide-tipped-bowl-tray-1-4-radius-x-3-4-dia-x-5-8-x-1-4-inch-shank.html 
         elif (tool_number == 45982):#0.507/2, 4.509
             self.writegc("(TOOL/MILL, 15.875, 6.35, 19.05, 0.00)")
             self.currenttoolshape = self.bowl_tool(6.35, 19.05, 15.875)
+        elif (tool_number == 204):#
+            self.writegc("()")
+            self.currenttoolshape = self.tapered_ball(1.5875, 6.35, 38.1, 3.6)
+        elif (tool_number == 304):#
+            self.writegc("()")
+            self.currenttoolshape = self.tapered_ball(3.175, 6.35, 38.1, 2.4)
+        elif (tool_number == 501):#
+            self.writegc("()")
+            self.currenttoolshape = self.tapered_ball(0.127, 3.175, 2.688, 60)
+        elif (tool_number == 502):#
+            self.writegc("()")
+            self.currenttoolshape = self.tapered_ball(0.127, 3.175, 4.25, 40)
+        elif (tool_number == 13921):#
+            self.writegc("()")
+            self.currenttoolshape = self.flat_V(6.35, 31.75, 12.7, 45)
 \end{writecode}
-\addtocounter{gcpy}{69}
+\addtocounter{gcpy}{81}
 
 \noindent With the tools delineated, the module is closed out and the toolchange information written into the G-code as well as the command to start the spindle at the specified speed.
  
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
-        self.writegc("M6T",str(tool_number))
-        self.writegc("M03S",str(speed))
+        self.writegc("M6T", str(tool_number))
+        self.writegc("M03S", str(speed))
 
 \end{writecode}
 \addtocounter{gcpy}{3}
@@ -2261,8 +2369,8 @@ As per usual, the OpenSCAD command is simply a dispatcher:
 
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
-module toolchange(tool_number,speed){
-    gcp.toolchange(tool_number,speed);
+module toolchange(tool_number, speed){
+    gcp.toolchange(tool_number, speed);
 }
 
 \end{writecode}
@@ -2271,7 +2379,7 @@ module toolchange(tool_number,speed){
 \noindent For example:
 
 \begin{verbatim}
-toolchange(small_square_tool_num,speed);
+toolchange(small_square_tool_num, speed);
 \end{verbatim}
 
 \noindent (the assumption is that all speed rates in a file will be the same, so as to account for the most frequent use case of a trim router with speed controlled by a dial setting and feed rates/ratios being calculated to provide the correct chipload at that setting.)
@@ -2297,7 +2405,7 @@ appropriate values based on the specified tool number and depth:
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
     def tool_diameter(self, ptd_tool, ptd_depth):
-# Square 122,112,102,201
+# Square 122, 112, 102, 201
         if ptd_tool == 122:
             return 0.79375
         if ptd_tool == 112:
@@ -2306,7 +2414,7 @@ appropriate values based on the specified tool number and depth:
             return 3.175
         if ptd_tool == 201:
             return 6.35
-# Ball 121,111,101,202
+# Ball 121, 111, 101, 202
         if ptd_tool == 122:
             if ptd_depth > 0.396875:
                 return 0.79375
@@ -2361,15 +2469,23 @@ appropriate values based on the specified tool number and depth:
                 return 6.35
             else:
                 return 12.7
+# Bowl Bit
 #https://www.amanatool.com/45982-carbide-tipped-bowl-tray-1-4-radius-x-3-4-dia-x-5-8-x-1-4-inch-shank.html 
         if ptd_tool == 45982:
             if ptd_depth > 6.35:
                 return 15.875
+# Tapered Ball Nose
+        if ptd_tool == 204:
+            if ptd_depth > 6.35:
+                return 0
+        if ptd_tool == 304:
+            if ptd_depth > 6.35:
+                return 0
             else:
                 return 0
 
 \end{writecode}
-\addtocounter{gcpy}{72}
+\addtocounter{gcpy}{80}
 
 Since it is often necessary to utilise the radius of the tool, an additional command, \DescribeRoutine{tool radius} to return this value is worthwhile:
  
@@ -2414,11 +2530,11 @@ In order to manage the various options when cutting it will be necessary to have
 
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
-    def rcs(self,ex, ey, ez, shape):
+    def rcs(self, ex, ey, ez, shape):
         start = shape
         end = shape
-        toolpath = hull(start.translate([self.xpos(), self.ypos(), self.zpos()]),
-                        end.translate([ex,ey,ez]))
+        toolpath = hull(start.translate([self.xpos(), self.ypos(), self.zpos()]), 
+                        end.translate([ex, ey, ez]))
         return toolpath
 
 \end{writecode}
@@ -2451,8 +2567,8 @@ The code for diagramming this is quite straight-forward. A BlockSCAD implementat
 %\lstset{firstnumber=\thegcpscad}
 %\begin{writecode}{a}{gcodepreview.scad}{scad}
 %module begincutdxf(rh, ex, ey, ez, fr) {
-%  rapid(getxpos(),getypos(),rh);
-%  cutwithfeed(ex,ey,ez,fr);
+%  rapid(getxpos(), getypos(), rh);
+%  cutwithfeed(ex, ey, ez, fr);
 %}
 %
 %\end{writecode}
@@ -2461,7 +2577,7 @@ The code for diagramming this is quite straight-forward. A BlockSCAD implementat
 %\lstset{firstnumber=\thegcpscad}
 %\begin{writecode}{a}{gcodepreview.scad}{scad}
 %module continuecutdxf(ex, ey, ez, fr) {
-%  cutwithfeed(ex,ey,ez,fr);
+%  cutwithfeed(ex, ey, ez, fr);
 %}
 %
 %\end{writecode}
@@ -2474,7 +2590,7 @@ There are three different movements in G-code which will need to be handled. Rap
 
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
-    def rapid(self,ex, ey, ez):
+    def rapid(self, ex, ey, ez):
         cts = self.currenttoolshape
         toolpath = self.rcs(ex, ey, ez, cts)
         self.setxpos(ex)
@@ -2483,16 +2599,16 @@ There are three different movements in G-code which will need to be handled. Rap
         if self.generatepaths == True:
             self.rapids = self.rapids.union(toolpath)
 #            return cylinder(0.01, 0, 0.01, center = False, fn = 3)
-            return cube([0.001,0.001,0.001])
+            return cube([0.001, 0.001, 0.001])
         else:
             return toolpath
 
-    def cutshape(self,ex, ey, ez):
+    def cutshape(self, ex, ey, ez):
         cts = self.currenttoolshape
         toolpath = self.rcs(ex, ey, ez, cts)
         if self.generatepaths == True:
             self.toolpaths = self.toolpaths.union(toolpath)
-            return cube([0.001,0.001,0.001])
+            return cube([0.001, 0.001, 0.001])
         else:
             return toolpath
 
@@ -2513,21 +2629,21 @@ G53G0Z-5.000
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
     def movetosafeZ(self):
-        rapid = self.rapid(self.xpos(),self.ypos(),self.retractheight)
+        rapid = self.rapid(self.xpos(), self.ypos(), self.retractheight)
 #        if self.generatepaths == True:
-#            rapid = self.rapid(self.xpos(),self.ypos(),self.retractheight)
+#            rapid = self.rapid(self.xpos(), self.ypos(), self.retractheight)
 #            self.rapids = self.rapids.union(rapid)
 #        else:
 #  if (generategcode == true) {
 #  //    writecomment("PREPOSITION FOR RAPID PLUNGE");Z25.650
-#  //G1Z24.663F381.0 ,"F",str(plunge)
+#  //G1Z24.663F381.0, "F", str(plunge)
         if self.generatepaths == False:
             return rapid
         else:
-            return cube([0.001,0.001,0.001])
+            return cube([0.001, 0.001, 0.001])
 
     def rapidXY(self, ex, ey):
-        rapid = self.rapid(ex,ey,self.zpos())
+        rapid = self.rapid(ex, ey, self.zpos())
 #        if self.generatepaths == True:
 #            self.rapids = self.rapids.union(rapid)
 #        else:
@@ -2535,7 +2651,7 @@ G53G0Z-5.000
             return rapid
 
     def rapidZ(self, ez):
-        rapid = self.rapid(self.xpos(),self.ypos(),ez)
+        rapid = self.rapid(self.xpos(), self.ypos(), ez)
 #        if self.generatepaths == True:
 #            self.rapids = self.rapids.union(rapid)
 #        else:
@@ -2552,7 +2668,7 @@ Note that rather than re-create the matching OpenSCAD commands as descriptors, d
 \lstset{firstnumber=\thegcpscad}
 \begin{writecode}{a}{gcodepreview.scad}{scad}
 module movetosafeZ(){
-    gcp.rapid(gcp.xpos(),gcp.ypos(),retractheight);
+    gcp.rapid(gcp.xpos(), gcp.ypos(), retractheight);
 }
 
 module rapid(ex, ey, ez) {
@@ -2564,7 +2680,7 @@ module rapidXY(ex, ey) {
 }
 
 module rapidZ(ez) {
-    gcp.rapid(gcp.xpos(),gcp.ypos(),ez);
+    gcp.rapid(gcp.xpos(), gcp.ypos(), ez);
 }
 
 \end{writecode}
@@ -2576,21 +2692,21 @@ The Python commands \DescribeRoutine{cut...} add the \verb|currenttool| to the \
 
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
-    def cutline(self,ex, ey, ez):\
+    def cutline(self, ex, ey, ez):\
 #below will need to be integrated into if/then structure not yet copied
 #        cts = self.currenttoolshape
         if (self.currenttoolnumber() == 374):
-#            self.writegc("(TOOL/MILL,9.53, 0.00, 3.17, 0.00)")
+#            self.writegc("(TOOL/MILL, 9.53, 0.00, 3.17, 0.00)")
             self.currenttoolshape = self.keyhole(9.53/2, 3.175)
             toolpath = self.cutshape(ex, ey, ez)
             self.currenttoolshape = self.keyhole_shaft(6.35/2, 12.7)
             toolpath = toolpath.union(self.cutshape(ex, ey, ez))
 #        elif (self.currenttoolnumber() == 375):
-#            self.writegc("(TOOL/MILL,9.53, 0.00, 3.17, 0.00)")
+#            self.writegc("(TOOL/MILL, 9.53, 0.00, 3.17, 0.00)")
 #        elif (self.currenttoolnumber() == 376):
-#            self.writegc("(TOOL/MILL,12.7, 0.00, 4.77, 0.00)")
+#            self.writegc("(TOOL/MILL, 12.7, 0.00, 4.77, 0.00)")
 #        elif (self.currenttoolnumber() == 378):
-#            self.writegc("(TOOL/MILL,12.7, 0.00, 4.77, 0.00)")
+#            self.writegc("(TOOL/MILL, 12.7, 0.00, 4.77, 0.00)")
 #        elif (self.currenttoolnumber() == 56125):#0.508/2, 1.531
 #            self.writegc("(TOOL/CRMILL, 0.508, 6.35, 3.175, 7.9375, 3.175)")
         elif (self.currenttoolnumber() == 56142):#0.508/2, 2.921
@@ -2609,9 +2725,9 @@ The Python commands \DescribeRoutine{cut...} add the \verb|currenttool| to the \
         if self.generatepaths == False:
             return toolpath
         else:
-            return cube([0.001,0.001,0.001])
+            return cube([0.001, 0.001, 0.001])
 
-    def cutlinedxfgc(self,ex, ey, ez):
+    def cutlinedxfgc(self, ex, ey, ez):
         self.dxfline(self.currenttoolnumber(), self.xpos(), self.ypos(), ex, ey)
         self.writegc("G01 X", str(ex), " Y", str(ey), " Z", str(ez))
 #        if self.generatepaths == False:
@@ -2619,12 +2735,12 @@ The Python commands \DescribeRoutine{cut...} add the \verb|currenttool| to the \
 
     def cutroundovertool(self, bx, by, bz, ex, ey, ez, tool_radius_tip, tool_radius_width, stepsizeroundover = 1):
 #        n = 90 + fn*3
-#        print("Tool dimensions", tool_radius_tip, tool_radius_width, "begin ",bx, by, bz,"end ", ex, ey, ez)
+#        print("Tool dimensions", tool_radius_tip, tool_radius_width, "begin ", bx, by, bz, "end ", ex, ey, ez)
         step = 4 #360/n
-        shaft = cylinder(step,tool_radius_tip,tool_radius_tip)
-        toolpath = hull(shaft.translate([bx,by,bz]), shaft.translate([ex,ey,ez]))
-        shaft = cylinder(tool_radius_width*2,tool_radius_tip+tool_radius_width,tool_radius_tip+tool_radius_width)
-        toolpath = toolpath.union(hull(shaft.translate([bx,by,bz+tool_radius_width]), shaft.translate([ex,ey,ez+tool_radius_width])))
+        shaft = cylinder(step, tool_radius_tip, tool_radius_tip)
+        toolpath = hull(shaft.translate([bx, by, bz]), shaft.translate([ex, ey, ez]))
+        shaft = cylinder(tool_radius_width*2, tool_radius_tip+tool_radius_width, tool_radius_tip+tool_radius_width)
+        toolpath = toolpath.union(hull(shaft.translate([bx, by, bz+tool_radius_width]), shaft.translate([ex, ey, ez+tool_radius_width])))
         for i in range(1, 90, stepsizeroundover):
             angle = i
             dx = tool_radius_width*math.cos(math.radians(angle))
@@ -2632,17 +2748,17 @@ The Python commands \DescribeRoutine{cut...} add the \verb|currenttool| to the \
             dzz = tool_radius_width*math.sin(math.radians(angle))
             dz = tool_radius_width*math.sin(math.radians(angle+1))
             dh = abs(dzz-dz)+0.0001
-            slice = cylinder(dh,tool_radius_tip+tool_radius_width-dx,tool_radius_tip+tool_radius_width-dxx)
-            toolpath = toolpath.union(hull(slice.translate([bx,by,bz+dz]), slice.translate([ex,ey,ez+dz])))
+            slice = cylinder(dh, tool_radius_tip+tool_radius_width-dx, tool_radius_tip+tool_radius_width-dxx)
+            toolpath = toolpath.union(hull(slice.translate([bx, by, bz+dz]), slice.translate([ex, ey, ez+dz])))
         if self.generatepaths == True:
             self.toolpaths = self.toolpaths.union(toolpath)
         else:
             return toolpath
 
     def cutZgcfeed(self, ez, feed):
-        self.writegc("G01 Z", str(ez), "F",str(feed))
+        self.writegc("G01 Z", str(ez), "F", str(feed))
 #        if self.generatepaths == False:
-        return self.cutline(self.xpos(),self.ypos(),ez)
+        return self.cutline(self.xpos(), self.ypos(), ez)
 
 \end{writecode}
 \addtocounter{gcpy}{68}      
@@ -2663,64 +2779,64 @@ The Python commands \DescribeRoutine{cut...} add the \verb|currenttool| to the \
 %        elif (self.currenttoolnumber() == 1570):
 %            toolpath = self.cutroundovertool(self.xpos(), self.ypos(), self.zpos(), ex, ey, ez, 0.507/2, 4.509)
 %        elif (self.currenttoolnumber() == 374):
-%#            self.writegc("(TOOL/MILL,9.53, 0.00, 3.17, 0.00)")
+%#            self.writegc("(TOOL/MILL, 9.53, 0.00, 3.17, 0.00)")
 %            shaft = cylinder(9.525, 6.35/2, 6.35/2)
 %            shaftend = shaft
 %            shaftbegin = shaft.translate([self.xpos(), self.ypos(), self.zpos()])
-%            shaftpath = hull(shaftbegin, shaftend.translate([ex,ey,ez]))
+%            shaftpath = hull(shaftbegin, shaftend.translate([ex, ey, ez]))
 %            start = cylinder(3.175, 9.525/2, 9.525/2)
 %            end = start
 %            start = start.translate([self.xpos(), self.ypos(), self.zpos()])
-%            cutpath = hull(start, end.translate([ex,ey,ez]))
+%            cutpath = hull(start, end.translate([ex, ey, ez]))
 %            toolpath = union(shaftpath, cutpath)
 %        elif (self.currenttoolnumber() == 375):
-%#            self.writegc("(TOOL/MILL,9.53, 0.00, 3.17, 0.00)")
+%#            self.writegc("(TOOL/MILL, 9.53, 0.00, 3.17, 0.00)")
 %            shaft = cylinder(9.525, 8/2, 8/2)
 %            shaftend = shaft
 %            shaftbegin = shaft.translate([self.xpos(), self.ypos(), self.zpos()])
-%            shaftpath = hull(shaftbegin, shaftend.translate([ex,ey,ez]))
+%            shaftpath = hull(shaftbegin, shaftend.translate([ex, ey, ez]))
 %            start = cylinder(3.175, 9.525/2, 9.525/2)
 %            end = start
 %            start = start.translate([self.xpos(), self.ypos(), self.zpos()])
-%            cutpath = hull(start, end.translate([ex,ey,ez]))
+%            cutpath = hull(start, end.translate([ex, ey, ez]))
 %            toolpath = union(shaftpath, cutpath)
 %        elif (self.currenttoolnumber() == 376):
-%#            self.writegc("(TOOL/MILL,12.7, 0.00, 4.77, 0.00)")
+%#            self.writegc("(TOOL/MILL, 12.7, 0.00, 4.77, 0.00)")
 %            shaft = cylinder(9.525, 6.35/2, 6.35/2)
 %            shaftend = shaft
 %            shaftbegin = shaft.translate([self.xpos(), self.ypos(), self.zpos()])
-%            shaftpath = hull(shaftbegin, shaftend.translate([ex,ey,ez]))
+%            shaftpath = hull(shaftbegin, shaftend.translate([ex, ey, ez]))
 %            start = cylinder(3.175, 12.7/2, 12.7/2)
 %            end = start
 %            start = start.translate([self.xpos(), self.ypos(), self.zpos()])
-%            cutpath = hull(start, end.translate([ex,ey,ez]))
+%            cutpath = hull(start, end.translate([ex, ey, ez]))
 %            toolpath = union(shaftpath, cutpath)
 %        elif (self.currenttoolnumber() == 378):
-%#            self.writegc("(TOOL/MILL,12.7, 0.00, 4.77, 0.00)")
+%#            self.writegc("(TOOL/MILL, 12.7, 0.00, 4.77, 0.00)")
 %            shaft = cylinder(9.525, 8/2, 8/2)
 %            shaftend = shaft
 %            shaftbegin = shaft.translate([self.xpos(), self.ypos(), self.zpos()])
-%            shaftpath = hull(shaftbegin, shaftend.translate([ex,ey,ez]))
+%            shaftpath = hull(shaftbegin, shaftend.translate([ex, ey, ez]))
 %            start = cylinder(3.175, 12.7/2, 12.7/2)
 %            end = start
 %            start = start.translate([self.xpos(), self.ypos(), self.zpos()])
-%            cutpath = hull(start, end.translate([ex,ey,ez]))
+%            cutpath = hull(start, end.translate([ex, ey, ez]))
 %            toolpath = union(shaftpath, cutpath)
 %        elif (self.currenttoolnumber() == 648):
 %            shaft = self.threadmill_shaft(2.4, 0.75, 18)
 %            shaftend = shaft
 %            shaftbegin = shaft.translate([self.xpos(), self.ypos(), self.zpos()])
-%            shaftpath = hull(shaftbegin, shaftend.translate([ex,ey,ez]))
+%            shaftpath = hull(shaftbegin, shaftend.translate([ex, ey, ez]))
 %            start = self.threadmill(2.4, 4.8, 0.75)
 %            end = start
 %            start = start.translate([self.xpos(), self.ypos(), self.zpos()])
-%            cutpath = union(start, end.translate([ex,ey,ez]))
+%            cutpath = union(start, end.translate([ex, ey, ez]))
 %            toolpath = union(shaftpath, cutpath)
 %        else:
 %%            start = self.currenttool()
 %%            start = start.translate([self.xpos(), self.ypos(), self.zpos()])
 %%            end = self.currenttool()
-%%            toolpath = hull(start, end.translate([ex,ey,ez]))
+%%            toolpath = hull(start, end.translate([ex, ey, ez]))
 %%        self.setxpos(ex)
 %%        self.setypos(ey)
 %%        self.setzpos(ez)
@@ -2729,7 +2845,7 @@ The Python commands \DescribeRoutine{cut...} add the \verb|currenttool| to the \
 %%        else:
 %%            return toolpath
 %   
-%    def cutlinedxfgcfeed(self,ex, ey, ez, feed):
+%    def cutlinedxfgcfeed(self, ex, ey, ez, feed):
 %        self.dxfline(self.currenttoolnumber(), self.xpos(), self.ypos(), ex, ey)
 %        self.writegc("G01 X", str(ex), " Y", str(ey), " Z", str(ez), " F", str(feed))
 %#        if self.generatepaths == False:
@@ -2810,7 +2926,7 @@ Parameters which will need to be passed in are:
  \item \texttt{ez} --- allowing a different Z position will make possible threading and
                        similar helical toolpaths
 \item \texttt{xcenter} --- the center position will be specified as an absolute position
-      which will require calculating the offset when it is used for G-code's \texttt{IJ},
+      which will require calculating the offset when it is used for G-code's \texttt{IJ}, 
       for which \texttt{xctr/yctr} are suggested 
 \item \texttt{ycenter}
 \item \texttt{radius} --- while this could be calculated, passing it in as a parameter
@@ -2850,9 +2966,9 @@ radius = 50;
 $fa = 2;
 $fs = 0.125;
 
-plot_arc(radius, 0, 0, 0, radius, 0, 0,0, radius, 0,90, 5);
+plot_arc(radius, 0, 0, 0, radius, 0, 0, 0, radius, 0, 90, 5);
 
-module plot_arc(bx, by, bz, ex, ey, ez, acx,acy, radius, barc,earc, inc){
+module plot_arc(bx, by, bz, ex, ey, ez, acx, acy, radius, barc, earc, inc){
 for (i = [barc : inc : earc-inc]) {
   union(){
     hull()
@@ -2921,7 +3037,7 @@ Note that it is necessary to move to the beginning cutting position before calli
         tpzinc = tpzreldim / (earc - barc)
         cts = self.currenttoolshape
         toolpath = cts
-        toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
+        toolpath = toolpath.translate([self.xpos(), self.ypos(), self.zpos()])
         i = barc
         while i < earc: 
             toolpath = toolpath.union(self.cutline(xcenter + radius * math.cos(math.radians(i)), ycenter + radius * math.sin(math.radians(i)), self.zpos()+tpzinc))
@@ -2929,9 +3045,9 @@ Note that it is necessary to move to the beginning cutting position before calli
         if self.generatepaths == False:
             return toolpath
         else:
-            return cube([0.01,0.01,0.01])
+            return cube([0.01, 0.01, 0.01])
 
-    def cutarcCW(self, barc,earc, xcenter, ycenter, radius, tpzreldim, stepsizearc=1):
+    def cutarcCW(self, barc, earc, xcenter, ycenter, radius, tpzreldim, stepsizearc=1):
 #        print(str(self.zpos()))
 #        print(str(ez))
 #        print(str(barc - earc))
@@ -2942,7 +3058,7 @@ Note that it is necessary to move to the beginning cutting position before calli
         tpzinc = tpzreldim / (barc - earc)
         cts = self.currenttoolshape
         toolpath = cts
-        toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
+        toolpath = toolpath.translate([self.xpos(), self.ypos(), self.zpos()])
         i = barc
         while i > earc: 
             toolpath = toolpath.union(self.cutline(xcenter + radius * math.cos(math.radians(i)), ycenter + radius * math.sin(math.radians(i)), self.zpos()+tpzinc))
@@ -2959,7 +3075,7 @@ Note that it is necessary to move to the beginning cutting position before calli
         if self.generatepaths == False:
             return toolpath
         else:
-            return cube([0.01,0.01,0.01])
+            return cube([0.01, 0.01, 0.01])
 
 \end{writecode}
 \addtocounter{gcpy}{45}
@@ -3039,8 +3155,8 @@ In the TUG presentation/paper: \url{http://tug.org/TUGboat/tb40-2/tb125adams-3d.
    \2 two convex, one concave arc
 \1 4
    \2 rectangle (including square) --- \verb|dxfrectangle|, \verb|dxfrectangleround|
-                                       %\hyperref[routine:cutrectangledxf]{cutrectangledxf},
-                                       %\hyperref[routine:cutoutrectangledxf]{cutoutrectangledxf},
+                                       %\hyperref[routine:cutrectangledxf]{cutrectangledxf}, 
+                                       %\hyperref[routine:cutoutrectangledxf]{cutoutrectangledxf}, 
                                        %\hyperref[routine:rectangleoutlinedxf]{rectangleoutlinedxf} 
    \2 parallelogram
    \2 rhombus
@@ -3057,7 +3173,7 @@ Note that most shapes will also exist in a rounded form where sharp angles/point
 Is the list of shapes for which there are not widely known names interesting for its lack of notoriety?
 
 \begin{itemize}
- \item two straight edges, one concave arc---oddly, an asymmetric form (hyperbolic sector) has a name,
+ \item two straight edges, one concave arc---oddly, an asymmetric form (hyperbolic sector) has a name, 
        but not the symmetrical---while the colloquial/prosaic “arrowhead” was considered, it was
        rejected as being better applied to the shape below. (It’s also the shape used for the
        spaceship in the game Asteroids (or Hyperspace), but that  is potentially confusing with
@@ -3091,7 +3207,7 @@ Some further considerations:
 \begin{itemize}
  \item relationship of geometry to toolpath --- arguably there should be an option for each
        toolpath (we will use Carbide Create as a reference implementation) which is to be 
-       supported. Note that there are several possibilities: modeling the tool movement,
+       supported. Note that there are several possibilities: modeling the tool movement, 
        describing the outline which the tool will cut, modeling a reference shape for the toolpath
  \item tool geometry --- it should be possible to include support for specialty tooling 
        such as dovetail cutters and to get an accurate \textsc{3d} model, esp. for tooling which
@@ -3111,8 +3227,8 @@ Circles are made up of a series of arcs:
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
     def dxfcircle(self, tool_num, xcenter, ycenter, radius):
-        self.dxfarc(tool_num, xcenter, ycenter, radius,   0,  90)
-        self.dxfarc(tool_num, xcenter, ycenter, radius,  90, 180)
+        self.dxfarc(tool_num, xcenter, ycenter, radius,  0, 90)
+        self.dxfarc(tool_num, xcenter, ycenter, radius, 90, 180)
         self.dxfarc(tool_num, xcenter, ycenter, radius, 180, 270)
         self.dxfarc(tool_num, xcenter, ycenter, radius, 270, 360)
 
@@ -3148,8 +3264,8 @@ Note that the rounded shape below would be described as a rectangle with the ``F
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
     def dxfrectangleround(self, tool_num, xorigin, yorigin, xwidth, yheight, radius):
-        self.dxfarc(tool_num, xorigin + xwidth - radius, yorigin + yheight - radius, radius,   0,  90)
-        self.dxfarc(tool_num, xorigin + radius, yorigin + yheight - radius, radius,  90, 180)
+        self.dxfarc(tool_num, xorigin + xwidth - radius, yorigin + yheight - radius, radius,  0, 90)
+        self.dxfarc(tool_num, xorigin + radius, yorigin + yheight - radius, radius, 90, 180)
         self.dxfarc(tool_num, xorigin + radius, yorigin + radius, radius, 180, 270)
         self.dxfarc(tool_num, xorigin + xwidth - radius, yorigin + radius, radius, 270, 360)
 
@@ -3184,8 +3300,8 @@ Flipped Fillet:
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
     def dxfrectangleflippedfillet(self, tool_num, xorigin, yorigin, xwidth, yheight, radius):
-        self.dxfarc(tool_num, xorigin, yorigin, radius,   0,  90)
-        self.dxfarc(tool_num, xorigin + xwidth, yorigin, radius,  90, 180)
+        self.dxfarc(tool_num, xorigin, yorigin, radius,  0, 90)
+        self.dxfarc(tool_num, xorigin + xwidth, yorigin, radius, 90, 180)
         self.dxfarc(tool_num, xorigin + xwidth, yorigin + yheight, radius, 180, 270)
         self.dxfarc(tool_num, xorigin, yorigin + yheight, radius, 270, 360)
 
@@ -3213,25 +3329,25 @@ Flipped Fillet:
 %  movetosafez();
 %  hull(){
 %    //  for (i = [0 : abs(1) : passes]) {
-%    //      rapid(bx+tool_radius(rtn)+i*(rwidth-tool_diameter(current_tool()))/passes,bx+tool_radius(rtn),1);
-%    //      cutwithfeed(bx+tool_radius(rtn)+i*(rwidth-tool_diameter(current_tool()))/passes,by+tool_radius(rtn),bz-rdepth,feed);
-%    //      cutwithfeed(bx+tool_radius(rtn)+i*(rwidth-tool_diameter(current_tool()))/passes,by+rheight-tool_radius(rtn),bz-rdepth,feed);
+%    //      rapid(bx+tool_radius(rtn)+i*(rwidth-tool_diameter(current_tool()))/passes, bx+tool_radius(rtn), 1);
+%    //      cutwithfeed(bx+tool_radius(rtn)+i*(rwidth-tool_diameter(current_tool()))/passes, by+tool_radius(rtn), bz-rdepth, feed);
+%    //      cutwithfeed(bx+tool_radius(rtn)+i*(rwidth-tool_diameter(current_tool()))/passes, by+rheight-tool_radius(rtn), bz-rdepth, feed);
 %  
-%    cutwithfeed(bx+tool_radius(rtn),by+tool_radius(rtn),bz-rdepth,feed);
-%    cutwithfeed(bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),bz-rdepth,feed);
-%    cutwithfeed(bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),bz-rdepth,feed);
-%    cutwithfeed(bx+tool_radius(rtn),by+rheight-tool_radius(rtn),bz-rdepth,feed);
+%    cutwithfeed(bx+tool_radius(rtn), by+tool_radius(rtn), bz-rdepth, feed);
+%    cutwithfeed(bx+rwidth-tool_radius(rtn), by+tool_radius(rtn), bz-rdepth, feed);
+%    cutwithfeed(bx+rwidth-tool_radius(rtn), by+rheight-tool_radius(rtn), bz-rdepth, feed);
+%    cutwithfeed(bx+tool_radius(rtn), by+rheight-tool_radius(rtn), bz-rdepth, feed);
 %  }
-%  //dxfarc(xcenter,ycenter,radius,anglebegin,endangle, tn)
-%  dxfarc(bx+tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),180,270, rtn);
-%  //dxfline(xbegin,ybegin,xend,yend, tn)
-%  dxfline(bx,by+tool_radius(rtn),bx,by+rheight-tool_radius(rtn), rtn);
-%  dxfarc(bx+tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),90,180, rtn);
-%  dxfline(bx+tool_radius(rtn),by+rheight,bx+rwidth-tool_radius(rtn),by+rheight, rtn);
-%  dxfarc(bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),0,90, rtn);
-%  dxfline(bx+rwidth,by+rheight-tool_radius(rtn),bx+rwidth,by+tool_radius(rtn), rtn);
-%  dxfarc(bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),270,360, rtn);
-%  dxfline(bx+rwidth-tool_radius(rtn),by,bx+tool_radius(rtn),by, rtn);
+%  //dxfarc(xcenter, ycenter, radius, anglebegin, endangle, tn)
+%  dxfarc(bx+tool_radius(rtn), by+tool_radius(rtn), tool_radius(rtn), 180, 270, rtn);
+%  //dxfline(xbegin, ybegin, xend, yend, tn)
+%  dxfline(bx, by+tool_radius(rtn), bx, by+rheight-tool_radius(rtn), rtn);
+%  dxfarc(bx+tool_radius(rtn), by+rheight-tool_radius(rtn), tool_radius(rtn), 90, 180, rtn);
+%  dxfline(bx+tool_radius(rtn), by+rheight, bx+rwidth-tool_radius(rtn), by+rheight, rtn);
+%  dxfarc(bx+rwidth-tool_radius(rtn), by+rheight-tool_radius(rtn), tool_radius(rtn), 0, 90, rtn);
+%  dxfline(bx+rwidth, by+rheight-tool_radius(rtn), bx+rwidth, by+tool_radius(rtn), rtn);
+%  dxfarc(bx+rwidth-tool_radius(rtn), by+tool_radius(rtn), tool_radius(rtn), 270, 360, rtn);
+%  dxfline(bx+rwidth-tool_radius(rtn), by, bx+tool_radius(rtn), by, rtn);
 %}
 %
 %\end{writecode}
@@ -3243,18 +3359,18 @@ Flipped Fillet:
 %\begin{writecode}{a}{gcodepreview.scad}{scad}
 %module cutrectangleoutlinedxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {//passes
 %  movetosafez();
-%  cutwithfeed(bx+tool_radius(rtn),by+tool_radius(rtn),bz-rdepth,feed);
-%  cutwithfeed(bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),bz-rdepth,feed);
-%  cutwithfeed(bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),bz-rdepth,feed);
-%  cutwithfeed(bx+tool_radius(rtn),by+rheight-tool_radius(rtn),bz-rdepth,feed);
-%  dxfarc(bx+tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),180,270, rtn);
-%  dxfline(bx,by+tool_radius(rtn),bx,by+rheight-tool_radius(rtn), rtn);
-%  dxfarc(bx+tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),90,180, rtn);
-%  dxfline(bx+tool_radius(rtn),by+rheight,bx+rwidth-tool_radius(rtn),by+rheight, rtn);
-%  dxfarc(bx+rwidth-tool_radius(rtn),by+rheight-tool_radius(rtn),tool_radius(rtn),0,90, rtn);
-%  dxfline(bx+rwidth,by+rheight-tool_radius(rtn),bx+rwidth,by+tool_radius(rtn), rtn);
-%  dxfarc(bx+rwidth-tool_radius(rtn),by+tool_radius(rtn),tool_radius(rtn),270,360, rtn);
-%  dxfline(bx+rwidth-tool_radius(rtn),by,bx+tool_radius(rtn),by, rtn);
+%  cutwithfeed(bx+tool_radius(rtn), by+tool_radius(rtn), bz-rdepth, feed);
+%  cutwithfeed(bx+rwidth-tool_radius(rtn), by+tool_radius(rtn), bz-rdepth, feed);
+%  cutwithfeed(bx+rwidth-tool_radius(rtn), by+rheight-tool_radius(rtn), bz-rdepth, feed);
+%  cutwithfeed(bx+tool_radius(rtn), by+rheight-tool_radius(rtn), bz-rdepth, feed);
+%  dxfarc(bx+tool_radius(rtn), by+tool_radius(rtn), tool_radius(rtn), 180, 270, rtn);
+%  dxfline(bx, by+tool_radius(rtn), bx, by+rheight-tool_radius(rtn), rtn);
+%  dxfarc(bx+tool_radius(rtn), by+rheight-tool_radius(rtn), tool_radius(rtn), 90, 180, rtn);
+%  dxfline(bx+tool_radius(rtn), by+rheight, bx+rwidth-tool_radius(rtn), by+rheight, rtn);
+%  dxfarc(bx+rwidth-tool_radius(rtn), by+rheight-tool_radius(rtn), tool_radius(rtn), 0, 90, rtn);
+%  dxfline(bx+rwidth, by+rheight-tool_radius(rtn), bx+rwidth, by+tool_radius(rtn), rtn);
+%  dxfarc(bx+rwidth-tool_radius(rtn), by+tool_radius(rtn), tool_radius(rtn), 270, 360, rtn);
+%  dxfline(bx+rwidth-tool_radius(rtn), by, bx+tool_radius(rtn), by, rtn);
 %}
 %
 %\end{writecode}
@@ -3265,10 +3381,10 @@ Flipped Fillet:
 %\lstset{firstnumber=\thegcpscad}
 %\begin{writecode}{a}{gcodepreview.scad}{scad}
 %module rectangleoutlinedxf(bx, by, bz, rwidth, rheight, rtn) {
-%  dxfline(bx,by,bx,by+rheight, rtn);
-%  dxfline(bx,by+rheight,bx+rwidth,by+rheight, rtn);
-%  dxfline(bx+rwidth,by+rheight,bx+rwidth,by, rtn);
-%  dxfline(bx+rwidth,by,bx,by, rtn);
+%  dxfline(bx, by, bx, by+rheight, rtn);
+%  dxfline(bx, by+rheight, bx+rwidth, by+rheight, rtn);
+%  dxfline(bx+rwidth, by+rheight, bx+rwidth, by, rtn);
+%  dxfline(bx+rwidth, by, bx, by, rtn);
 %}
 %
 %\end{writecode}
@@ -3282,15 +3398,15 @@ Flipped Fillet:
 %\begin{writecode}{a}{gcodepreview.scad}{scad}
 %module cutoutrectangledxf(bx, by, bz, rwidth, rheight, rdepth, rtn) {
 %  movetosafez();
-%  cutwithfeed(bx-tool_radius(rtn),by-tool_radius(rtn),bz-rdepth,feed);
-%  cutwithfeed(bx+rwidth+tool_radius(rtn),by-tool_radius(rtn),bz-rdepth,feed);
-%  cutwithfeed(bx+rwidth+tool_radius(rtn),by+rheight+tool_radius(rtn),bz-rdepth,feed);
-%  cutwithfeed(bx-tool_radius(rtn),by+rheight+tool_radius(rtn),bz-rdepth,feed);
-%  cutwithfeed(bx-tool_radius(rtn),by-tool_radius(rtn),bz-rdepth,feed);
-%  dxfline(bx,by,bx,by+rheight, rtn);
-%  dxfline(bx,by+rheight,bx+rwidth,by+rheight, rtn);
-%  dxfline(bx+rwidth,by+rheight,bx+rwidth,by, rtn);
-%  dxfline(bx+rwidth,by,bx,by, rtn);
+%  cutwithfeed(bx-tool_radius(rtn), by-tool_radius(rtn), bz-rdepth, feed);
+%  cutwithfeed(bx+rwidth+tool_radius(rtn), by-tool_radius(rtn), bz-rdepth, feed);
+%  cutwithfeed(bx+rwidth+tool_radius(rtn), by+rheight+tool_radius(rtn), bz-rdepth, feed);
+%  cutwithfeed(bx-tool_radius(rtn), by+rheight+tool_radius(rtn), bz-rdepth, feed);
+%  cutwithfeed(bx-tool_radius(rtn), by-tool_radius(rtn), bz-rdepth, feed);
+%  dxfline(bx, by, bx, by+rheight, rtn);
+%  dxfline(bx, by+rheight, bx+rwidth, by+rheight, rtn);
+%  dxfline(bx+rwidth, by+rheight, bx+rwidth, by, rtn);
+%  dxfline(bx+rwidth, by, bx, by, rtn);
 %}
 %
 %\end{writecode}
@@ -3351,7 +3467,7 @@ Supporting all of these would require trigonometric comparisons in the \verb|if.
             self.toolpaths = union([self.toolpaths, toolpath])
             return toolpath
         else:
-            return cube([0.01,0.01,0.01])
+            return cube([0.01, 0.01, 0.01])
 
 \end{writecode}
 \addtocounter{gcpy}{15}
@@ -3382,7 +3498,7 @@ Note that code is still present for the partial calculation of one quadrant (for
         if self.generatepaths == False:
             return toolpath
         else: 
-            return cube([0.001,0.001,0.001])
+            return cube([0.001, 0.001, 0.001])
 
 \end{writecode}
 \addtocounter{gcpy}{12}
@@ -3393,10 +3509,10 @@ Note that code is still present for the partial calculation of one quadrant (for
 #        oXpos = self.xpos()
 #        oYpos = self.ypos()
 #Circle at entry hole
-        self.dxfarc(kh_tool_num, oXpos,oYpos,self.tool_radius(kh_tool_num, 7),  0, 90)
-        self.dxfarc(kh_tool_num, oXpos,oYpos,self.tool_radius(kh_tool_num, 7), 90,180)
-        self.dxfarc(kh_tool_num, oXpos,oYpos,self.tool_radius(kh_tool_num, 7),180,270)
-        self.dxfarc(kh_tool_num, oXpos,oYpos,self.tool_radius(kh_tool_num, 7),270,360)
+        self.dxfarc(kh_tool_num, oXpos, oYpos, self.tool_radius(kh_tool_num, 7), 0, 90)
+        self.dxfarc(kh_tool_num, oXpos, oYpos, self.tool_radius(kh_tool_num, 7), 90, 180)
+        self.dxfarc(kh_tool_num, oXpos, oYpos, self.tool_radius(kh_tool_num, 7), 180, 270)
+        self.dxfarc(kh_tool_num, oXpos, oYpos, self.tool_radius(kh_tool_num, 7), 270, 360)
 
 \end{writecode}
 \addtocounter{gcpy}{9}
@@ -3416,28 +3532,28 @@ Then it will be necessary to test for each possible case in a series of If Else 
 #Outlines of entry hole and slot
         if (kh_angle == 0):
 #Lower left of entry hole
-            self.dxfarc(kh_tool_num, self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 1),180,270)
+            self.dxfarc(kh_tool_num, self.xpos(), self.ypos(), self.tool_radius(kh_tool_num, 1), 180, 270)
 #Upper left of entry hole
-            self.dxfarc(kh_tool_num, self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 1),90,180)
+            self.dxfarc(kh_tool_num, self.xpos(), self.ypos(), self.tool_radius(kh_tool_num, 1), 90, 180)
 #Upper right of entry hole
 #            self.dxfarc(kh_tool_num, self.xpos(), self.ypos(), rt, 41.810, 90)
             self.dxfarc(kh_tool_num, self.xpos(), self.ypos(), rt, angle, 90)
 #Lower right of entry hole
             self.dxfarc(kh_tool_num, self.xpos(), self.ypos(), rt, 270, 360-angle)
-#            self.dxfarc(kh_tool_num, self.xpos(),self.ypos(),self.tool_radius(kh_tool_num, 1),270, 270+math.acos(math.radians(self.tool_diameter(kh_tool_num, 5)/self.tool_diameter(kh_tool_num, 1))))
+#            self.dxfarc(kh_tool_num, self.xpos(), self.ypos(), self.tool_radius(kh_tool_num, 1), 270, 270+math.acos(math.radians(self.tool_diameter(kh_tool_num, 5)/self.tool_diameter(kh_tool_num, 1))))
 #Actual line of cut
-#            self.dxfline(kh_tool_num, self.xpos(),self.ypos(),self.xpos()+kh_distance,self.ypos())
+#            self.dxfline(kh_tool_num, self.xpos(), self.ypos(), self.xpos()+kh_distance, self.ypos())
 #upper right of end of slot (kh_max_depth+4.36))/2
-            self.dxfarc(kh_tool_num, self.xpos()+kh_distance,self.ypos(),self.tool_diameter(kh_tool_num, (kh_max_depth+4.36))/2,0,90)
+            self.dxfarc(kh_tool_num, self.xpos()+kh_distance, self.ypos(), self.tool_diameter(kh_tool_num, (kh_max_depth+4.36))/2, 0, 90)
 #lower right of end of slot
-            self.dxfarc(kh_tool_num, self.xpos()+kh_distance,self.ypos(),self.tool_diameter(kh_tool_num, (kh_max_depth+4.36))/2,270,360)
+            self.dxfarc(kh_tool_num, self.xpos()+kh_distance, self.ypos(), self.tool_diameter(kh_tool_num, (kh_max_depth+4.36))/2, 270, 360)
 #upper right slot
-            self.dxfline(kh_tool_num, self.xpos()+ro, self.ypos()-(self.tool_diameter(kh_tool_num,7)/2), self.xpos()+kh_distance, self.ypos()-(self.tool_diameter(kh_tool_num,7)/2))
-#            self.dxfline(kh_tool_num, self.xpos()+(sqrt((self.tool_diameter(kh_tool_num,1)^2)-(self.tool_diameter(kh_tool_num,5)^2))/2), self.ypos()+self.tool_diameter(kh_tool_num, (kh_max_depth))/2, ( (kh_max_depth-6.34))/2)^2-(self.tool_diameter(kh_tool_num, (kh_max_depth-6.34))/2)^2, self.xpos()+kh_distance, self.ypos()+self.tool_diameter(kh_tool_num, (kh_max_depth))/2, kh_tool_num)
+            self.dxfline(kh_tool_num, self.xpos()+ro, self.ypos()-(self.tool_diameter(kh_tool_num, 7)/2), self.xpos()+kh_distance, self.ypos()-(self.tool_diameter(kh_tool_num, 7)/2))
+#            self.dxfline(kh_tool_num, self.xpos()+(sqrt((self.tool_diameter(kh_tool_num, 1)^2)-(self.tool_diameter(kh_tool_num, 5)^2))/2), self.ypos()+self.tool_diameter(kh_tool_num, (kh_max_depth))/2, ( (kh_max_depth-6.34))/2)^2-(self.tool_diameter(kh_tool_num, (kh_max_depth-6.34))/2)^2, self.xpos()+kh_distance, self.ypos()+self.tool_diameter(kh_tool_num, (kh_max_depth))/2, kh_tool_num)
 #end position at top of slot
 #lower right slot
-            self.dxfline(kh_tool_num, self.xpos()+ro, self.ypos()+(self.tool_diameter(kh_tool_num,7)/2), self.xpos()+kh_distance, self.ypos()+(self.tool_diameter(kh_tool_num,7)/2))
-#        dxfline(kh_tool_num, self.xpos()+(sqrt((self.tool_diameter(kh_tool_num,1)^2)-(self.tool_diameter(kh_tool_num,5)^2))/2), self.ypos()-self.tool_diameter(kh_tool_num, (kh_max_depth))/2, ( (kh_max_depth-6.34))/2)^2-(self.tool_diameter(kh_tool_num, (kh_max_depth-6.34))/2)^2, self.xpos()+kh_distance, self.ypos()-self.tool_diameter(kh_tool_num, (kh_max_depth))/2, KH_tool_num)
+            self.dxfline(kh_tool_num, self.xpos()+ro, self.ypos()+(self.tool_diameter(kh_tool_num, 7)/2), self.xpos()+kh_distance, self.ypos()+(self.tool_diameter(kh_tool_num, 7)/2))
+#        dxfline(kh_tool_num, self.xpos()+(sqrt((self.tool_diameter(kh_tool_num, 1)^2)-(self.tool_diameter(kh_tool_num, 5)^2))/2), self.ypos()-self.tool_diameter(kh_tool_num, (kh_max_depth))/2, ( (kh_max_depth-6.34))/2)^2-(self.tool_diameter(kh_tool_num, (kh_max_depth-6.34))/2)^2, self.xpos()+kh_distance, self.ypos()-self.tool_diameter(kh_tool_num, (kh_max_depth))/2, KH_tool_num)
 #end position at top of slot
 #    hull(){
 #      translate([xpos(), ypos(), zpos()]){
@@ -3455,41 +3571,41 @@ Then it will be necessary to test for each possible case in a series of If Else 
 #        keyhole_shaft(6.35, 9.525);
 #      }
 #    }
-#    cutwithfeed(getxpos(),getypos(),-kh_max_depth,feed);
-#    cutwithfeed(getxpos()+kh_distance,getypos(),-kh_max_depth,feed);
+#    cutwithfeed(getxpos(), getypos(), -kh_max_depth, feed);
+#    cutwithfeed(getxpos()+kh_distance, getypos(), -kh_max_depth, feed);
 #    setxpos(getxpos()-kh_distance);
 #  } else if (kh_angle > 0 && kh_angle < 90) {
 #//echo(kh_angle);
-#  dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_num, (kh_max_depth))/2,90+kh_angle,180+kh_angle, KH_tool_num);
-#  dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_num, (kh_max_depth))/2,180+kh_angle,270+kh_angle, KH_tool_num);
-#dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_num, (kh_max_depth))/2,kh_angle+asin((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_num, (kh_max_depth))/2)),90+kh_angle, KH_tool_num);
-#dxfarc(getxpos(),getypos(),tool_diameter(KH_tool_num, (kh_max_depth))/2,270+kh_angle,360+kh_angle-asin((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_num, (kh_max_depth))/2)), KH_tool_num);
-#dxfarc(getxpos()+(kh_distance*cos(kh_angle)),
-#  getypos()+(kh_distance*sin(kh_angle)),tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2,0+kh_angle,90+kh_angle, KH_tool_num);
-#dxfarc(getxpos()+(kh_distance*cos(kh_angle)),getypos()+(kh_distance*sin(kh_angle)),tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2,270+kh_angle,360+kh_angle, KH_tool_num);
-#dxfline( getxpos()+tool_diameter(KH_tool_num, (kh_max_depth))/2*cos(kh_angle+asin((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_num, (kh_max_depth))/2))),
-# getypos()+tool_diameter(KH_tool_num, (kh_max_depth))/2*sin(kh_angle+asin((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_num, (kh_max_depth))/2))),
-# getxpos()+(kh_distance*cos(kh_angle))-((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)*sin(kh_angle)),
+#  dxfarc(getxpos(), getypos(), tool_diameter(KH_tool_num, (kh_max_depth))/2, 90+kh_angle, 180+kh_angle, KH_tool_num);
+#  dxfarc(getxpos(), getypos(), tool_diameter(KH_tool_num, (kh_max_depth))/2, 180+kh_angle, 270+kh_angle, KH_tool_num);
+#dxfarc(getxpos(), getypos(), tool_diameter(KH_tool_num, (kh_max_depth))/2, kh_angle+asin((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_num, (kh_max_depth))/2)), 90+kh_angle, KH_tool_num);
+#dxfarc(getxpos(), getypos(), tool_diameter(KH_tool_num, (kh_max_depth))/2, 270+kh_angle, 360+kh_angle-asin((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_num, (kh_max_depth))/2)), KH_tool_num);
+#dxfarc(getxpos()+(kh_distance*cos(kh_angle)), 
+#  getypos()+(kh_distance*sin(kh_angle)), tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2, 0+kh_angle, 90+kh_angle, KH_tool_num);
+#dxfarc(getxpos()+(kh_distance*cos(kh_angle)), getypos()+(kh_distance*sin(kh_angle)), tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2, 270+kh_angle, 360+kh_angle, KH_tool_num);
+#dxfline( getxpos()+tool_diameter(KH_tool_num, (kh_max_depth))/2*cos(kh_angle+asin((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_num, (kh_max_depth))/2))), 
+# getypos()+tool_diameter(KH_tool_num, (kh_max_depth))/2*sin(kh_angle+asin((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_num, (kh_max_depth))/2))), 
+# getxpos()+(kh_distance*cos(kh_angle))-((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)*sin(kh_angle)), 
 # getypos()+(kh_distance*sin(kh_angle))+((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)*cos(kh_angle)), KH_tool_num);
-#//echo("a",tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2);
-#//echo("c",tool_diameter(KH_tool_num, (kh_max_depth))/2);
-#echo("Aangle",asin((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_num, (kh_max_depth))/2)));
+#//echo("a", tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2);
+#//echo("c", tool_diameter(KH_tool_num, (kh_max_depth))/2);
+#echo("Aangle", asin((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_num, (kh_max_depth))/2)));
 #//echo(kh_angle);
-# cutwithfeed(getxpos()+(kh_distance*cos(kh_angle)),getypos()+(kh_distance*sin(kh_angle)),-kh_max_depth,feed);
+# cutwithfeed(getxpos()+(kh_distance*cos(kh_angle)), getypos()+(kh_distance*sin(kh_angle)), -kh_max_depth, feed);
 #            toolpath = toolpath.union(self.cutline(self.xpos()+kh_distance, self.ypos(), -kh_max_depth))
         elif (kh_angle == 90):
 #Lower left of entry hole
-            self.dxfarc(kh_tool_num, oXpos,oYpos,self.tool_radius(kh_tool_num, 1),180,270)
+            self.dxfarc(kh_tool_num, oXpos, oYpos, self.tool_radius(kh_tool_num, 1), 180, 270)
 #Lower right of entry hole
-            self.dxfarc(kh_tool_num, oXpos,oYpos,self.tool_radius(kh_tool_num, 1),270,360)
+            self.dxfarc(kh_tool_num, oXpos, oYpos, self.tool_radius(kh_tool_num, 1), 270, 360)
 #left slot
             self.dxfline(kh_tool_num, oXpos-r, oYpos+ro, oXpos-r, oYpos+kh_distance)
 #right slot
             self.dxfline(kh_tool_num, oXpos+r, oYpos+ro, oXpos+r, oYpos+kh_distance)
 #upper left of end of slot
-            self.dxfarc(kh_tool_num, oXpos,oYpos+kh_distance,r,90,180)
+            self.dxfarc(kh_tool_num, oXpos, oYpos+kh_distance, r, 90, 180)
 #upper right of end of slot
-            self.dxfarc(kh_tool_num, oXpos,oYpos+kh_distance,r,0,90)
+            self.dxfarc(kh_tool_num, oXpos, oYpos+kh_distance, r, 0, 90)
 #Upper right of entry hole
             self.dxfarc(kh_tool_num, oXpos, oYpos, rt, 0, 90-angle)
 #Upper left of entry hole
@@ -3497,9 +3613,9 @@ Then it will be necessary to test for each possible case in a series of If Else 
 #            toolpath = toolpath.union(self.cutline(oXpos, oYpos+kh_distance, -kh_max_depth))
         elif (kh_angle == 180):
 #Lower right of entry hole
-            self.dxfarc(kh_tool_num, oXpos,oYpos,self.tool_radius(kh_tool_num, 1),270,360)
+            self.dxfarc(kh_tool_num, oXpos, oYpos, self.tool_radius(kh_tool_num, 1), 270, 360)
 #Upper right of entry hole
-            self.dxfarc(kh_tool_num, oXpos,oYpos,self.tool_radius(kh_tool_num, 1),0,90)
+            self.dxfarc(kh_tool_num, oXpos, oYpos, self.tool_radius(kh_tool_num, 1), 0, 90)
 #Upper left of entry hole
             self.dxfarc(kh_tool_num, oXpos, oYpos, rt, 90, 180-angle)
 #Lower left of entry hole
@@ -3509,23 +3625,23 @@ Then it will be necessary to test for each possible case in a series of If Else 
 #lower slot
             self.dxfline(kh_tool_num, oXpos-ro, oYpos+r, oXpos-kh_distance, oYpos+r)
 #upper left of end of slot
-            self.dxfarc(kh_tool_num, oXpos-kh_distance,oYpos,r,90,180)
+            self.dxfarc(kh_tool_num, oXpos-kh_distance, oYpos, r, 90, 180)
 #lower left of end of slot
-            self.dxfarc(kh_tool_num, oXpos-kh_distance,oYpos,r,180,270)
+            self.dxfarc(kh_tool_num, oXpos-kh_distance, oYpos, r, 180, 270)
 #            toolpath = toolpath.union(self.cutline(oXpos-kh_distance, oYpos, -kh_max_depth))
         elif (kh_angle == 270):
 #Upper left of entry hole
-            self.dxfarc(kh_tool_num, oXpos,oYpos,self.tool_radius(kh_tool_num, 1),90,180)
+            self.dxfarc(kh_tool_num, oXpos, oYpos, self.tool_radius(kh_tool_num, 1), 90, 180)
 #Upper right of entry hole
-            self.dxfarc(kh_tool_num, oXpos,oYpos,self.tool_radius(kh_tool_num, 1),0,90)
+            self.dxfarc(kh_tool_num, oXpos, oYpos, self.tool_radius(kh_tool_num, 1), 0, 90)
 #left slot
             self.dxfline(kh_tool_num, oXpos-r, oYpos-ro, oXpos-r, oYpos-kh_distance)
 #right slot
             self.dxfline(kh_tool_num, oXpos+r, oYpos-ro, oXpos+r, oYpos-kh_distance)
 #lower left of end of slot
-            self.dxfarc(kh_tool_num, oXpos,oYpos-kh_distance,r,180,270)
+            self.dxfarc(kh_tool_num, oXpos, oYpos-kh_distance, r, 180, 270)
 #lower right of end of slot
-            self.dxfarc(kh_tool_num, oXpos,oYpos-kh_distance,r,270,360)
+            self.dxfarc(kh_tool_num, oXpos, oYpos-kh_distance, r, 270, 360)
 #lower right of entry hole
             self.dxfarc(kh_tool_num, oXpos, oYpos, rt, 180, 270-angle)
 #lower left of entry hole
@@ -3539,28 +3655,28 @@ Then it will be necessary to test for each possible case in a series of If Else 
             
 #  } else if (kh_angle == 90) {
 #    //Lower left of entry hole
-#    dxfarc(getxpos(),getypos(),9.525/2,180,270, KH_tool_num);
+#    dxfarc(getxpos(), getypos(), 9.525/2, 180, 270, KH_tool_num);
 #    //Lower right of entry hole
-#    dxfarc(getxpos(),getypos(),9.525/2,270,360, KH_tool_num);
+#    dxfarc(getxpos(), getypos(), 9.525/2, 270, 360, KH_tool_num);
 #    //Upper right of entry hole
-#    dxfarc(getxpos(),getypos(),9.525/2,0,acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), KH_tool_num);
+#    dxfarc(getxpos(), getypos(), 9.525/2, 0, acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), KH_tool_num);
 #    //Upper left of entry hole
-#    dxfarc(getxpos(),getypos(),9.525/2,180-acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), 180,KH_tool_num);
+#    dxfarc(getxpos(), getypos(), 9.525/2, 180-acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), 180, KH_tool_num);
 #    //Actual line of cut
-#    dxfline(getxpos(),getypos(),getxpos(),getypos()+kh_distance);
+#    dxfline(getxpos(), getypos(), getxpos(), getypos()+kh_distance);
 #    //upper right of slot
-#    dxfarc(getxpos(),getypos()+kh_distance,tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2,0,90, KH_tool_num);
+#    dxfarc(getxpos(), getypos()+kh_distance, tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2, 0, 90, KH_tool_num);
 #    //upper left of slot
-#    dxfarc(getxpos(),getypos()+kh_distance,tool_diameter(KH_tool_num, (kh_max_depth+6.35))/2,90,180, KH_tool_num);
+#    dxfarc(getxpos(), getypos()+kh_distance, tool_diameter(KH_tool_num, (kh_max_depth+6.35))/2, 90, 180, KH_tool_num);
 #    //right of slot
 #    dxfline(
 #        getxpos()+tool_diameter(KH_tool_num, (kh_max_depth))/2, 
-#        getypos()+(sqrt((tool_diameter(KH_tool_num,1)^2)-(tool_diameter(KH_tool_num,5)^2))/2),//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_num, (kh_max_depth-6.34))/2)^2,
-#        getxpos()+tool_diameter(KH_tool_num, (kh_max_depth))/2,
+#        getypos()+(sqrt((tool_diameter(KH_tool_num, 1)^2)-(tool_diameter(KH_tool_num, 5)^2))/2), //( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_num, (kh_max_depth-6.34))/2)^2, 
+#        getxpos()+tool_diameter(KH_tool_num, (kh_max_depth))/2, 
 #    //end position at top of slot
 #        getypos()+kh_distance, 
 #        KH_tool_num);
-#    dxfline(getxpos()-tool_diameter(KH_tool_num, (kh_max_depth))/2, getypos()+(sqrt((tool_diameter(KH_tool_num,1)^2)-(tool_diameter(KH_tool_num,5)^2))/2), getxpos()-tool_diameter(KH_tool_num, (kh_max_depth+6.35))/2,getypos()+kh_distance, KH_tool_num);
+#    dxfline(getxpos()-tool_diameter(KH_tool_num, (kh_max_depth))/2, getypos()+(sqrt((tool_diameter(KH_tool_num, 1)^2)-(tool_diameter(KH_tool_num, 5)^2))/2), getxpos()-tool_diameter(KH_tool_num, (kh_max_depth+6.35))/2, getypos()+kh_distance, KH_tool_num);
 #    hull(){
 #      translate([xpos(), ypos(), zpos()]){
 #        keyhole_shaft(6.35, 9.525);
@@ -3577,37 +3693,37 @@ Then it will be necessary to test for each possible case in a series of If Else 
 #        keyhole_shaft(6.35, 9.525);
 #      }
 #    }
-#    cutwithfeed(getxpos(),getypos(),-kh_max_depth,feed);
-#    cutwithfeed(getxpos(),getypos()+kh_distance,-kh_max_depth,feed);
+#    cutwithfeed(getxpos(), getypos(), -kh_max_depth, feed);
+#    cutwithfeed(getxpos(), getypos()+kh_distance, -kh_max_depth, feed);
 #    setypos(getypos()-kh_distance);
 #  } else if (kh_angle == 180) {
 #    //Lower right of entry hole
-#    dxfarc(getxpos(),getypos(),9.525/2,270,360, KH_tool_num);
+#    dxfarc(getxpos(), getypos(), 9.525/2, 270, 360, KH_tool_num);
 #    //Upper right of entry hole
-#    dxfarc(getxpos(),getypos(),9.525/2,0,90, KH_tool_num);
+#    dxfarc(getxpos(), getypos(), 9.525/2, 0, 90, KH_tool_num);
 #    //Upper left of entry hole
-#    dxfarc(getxpos(),getypos(),9.525/2,90, 90+acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), KH_tool_num);
+#    dxfarc(getxpos(), getypos(), 9.525/2, 90, 90+acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), KH_tool_num);
 #    //Lower left of entry hole
-#    dxfarc(getxpos(),getypos(),9.525/2, 270-acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), 270, KH_tool_num);
+#    dxfarc(getxpos(), getypos(), 9.525/2, 270-acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), 270, KH_tool_num);
 #    //upper left of slot
-#    dxfarc(getxpos()-kh_distance,getypos(),tool_diameter(KH_tool_num, (kh_max_depth+6.35))/2,90,180, KH_tool_num);
+#    dxfarc(getxpos()-kh_distance, getypos(), tool_diameter(KH_tool_num, (kh_max_depth+6.35))/2, 90, 180, KH_tool_num);
 #    //lower left of slot
-#    dxfarc(getxpos()-kh_distance,getypos(),tool_diameter(KH_tool_num, (kh_max_depth+6.35))/2,180,270, KH_tool_num);
+#    dxfarc(getxpos()-kh_distance, getypos(), tool_diameter(KH_tool_num, (kh_max_depth+6.35))/2, 180, 270, KH_tool_num);
 #    //Actual line of cut
-#    dxfline(getxpos(),getypos(),getxpos()-kh_distance,getypos());
+#    dxfline(getxpos(), getypos(), getxpos()-kh_distance, getypos());
 #    //upper left slot
 #    dxfline(
-#        getxpos()-(sqrt((tool_diameter(KH_tool_num,1)^2)-(tool_diameter(KH_tool_num,5)^2))/2), 
-#        getypos()+tool_diameter(KH_tool_num, (kh_max_depth))/2,//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_num, (kh_max_depth-6.34))/2)^2,
-#        getxpos()-kh_distance,
+#        getxpos()-(sqrt((tool_diameter(KH_tool_num, 1)^2)-(tool_diameter(KH_tool_num, 5)^2))/2), 
+#        getypos()+tool_diameter(KH_tool_num, (kh_max_depth))/2, //( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_num, (kh_max_depth-6.34))/2)^2, 
+#        getxpos()-kh_distance, 
 #    //end position at top of slot
 #        getypos()+tool_diameter(KH_tool_num, (kh_max_depth))/2, 
 #        KH_tool_num);
 #    //lower right slot
 #    dxfline(
-#        getxpos()-(sqrt((tool_diameter(KH_tool_num,1)^2)-(tool_diameter(KH_tool_num,5)^2))/2), 
-#        getypos()-tool_diameter(KH_tool_num, (kh_max_depth))/2,//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_num, (kh_max_depth-6.34))/2)^2,
-#        getxpos()-kh_distance,
+#        getxpos()-(sqrt((tool_diameter(KH_tool_num, 1)^2)-(tool_diameter(KH_tool_num, 5)^2))/2), 
+#        getypos()-tool_diameter(KH_tool_num, (kh_max_depth))/2, //( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_num, (kh_max_depth-6.34))/2)^2, 
+#        getxpos()-kh_distance, 
 #    //end position at top of slot
 #        getypos()-tool_diameter(KH_tool_num, (kh_max_depth))/2, 
 #        KH_tool_num);
@@ -3627,40 +3743,40 @@ Then it will be necessary to test for each possible case in a series of If Else 
 #        keyhole_shaft(6.35, 9.525);
 #      }
 #    }
-#    cutwithfeed(getxpos(),getypos(),-kh_max_depth,feed);
-#    cutwithfeed(getxpos()-kh_distance,getypos(),-kh_max_depth,feed);
+#    cutwithfeed(getxpos(), getypos(), -kh_max_depth, feed);
+#    cutwithfeed(getxpos()-kh_distance, getypos(), -kh_max_depth, feed);
 #    setxpos(getxpos()+kh_distance);
 #  } else if (kh_angle == 270) {
 #    //Upper right of entry hole
-#    dxfarc(getxpos(),getypos(),9.525/2,0,90, KH_tool_num);
+#    dxfarc(getxpos(), getypos(), 9.525/2, 0, 90, KH_tool_num);
 #    //Upper left of entry hole
-#    dxfarc(getxpos(),getypos(),9.525/2,90,180, KH_tool_num);
+#    dxfarc(getxpos(), getypos(), 9.525/2, 90, 180, KH_tool_num);
 #    //lower right of slot
-#    dxfarc(getxpos(),getypos()-kh_distance,tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2,270,360, KH_tool_num);
+#    dxfarc(getxpos(), getypos()-kh_distance, tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2, 270, 360, KH_tool_num);
 #    //lower left of slot
-#    dxfarc(getxpos(),getypos()-kh_distance,tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2,180,270, KH_tool_num);
+#    dxfarc(getxpos(), getypos()-kh_distance, tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2, 180, 270, KH_tool_num);
 #    //Actual line of cut
-#    dxfline(getxpos(),getypos(),getxpos(),getypos()-kh_distance);
+#    dxfline(getxpos(), getypos(), getxpos(), getypos()-kh_distance);
 #    //right of slot
 #    dxfline(
 #        getxpos()+tool_diameter(KH_tool_num, (kh_max_depth))/2, 
-#        getypos()-(sqrt((tool_diameter(KH_tool_num,1)^2)-(tool_diameter(KH_tool_num,5)^2))/2),//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_num, (kh_max_depth-6.34))/2)^2,
-#        getxpos()+tool_diameter(KH_tool_num, (kh_max_depth))/2,
+#        getypos()-(sqrt((tool_diameter(KH_tool_num, 1)^2)-(tool_diameter(KH_tool_num, 5)^2))/2), //( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_num, (kh_max_depth-6.34))/2)^2, 
+#        getxpos()+tool_diameter(KH_tool_num, (kh_max_depth))/2, 
 #    //end position at top of slot
 #        getypos()-kh_distance, 
 #        KH_tool_num);
 #    //left of slot
 #    dxfline(
 #        getxpos()-tool_diameter(KH_tool_num, (kh_max_depth))/2, 
-#        getypos()-(sqrt((tool_diameter(KH_tool_num,1)^2)-(tool_diameter(KH_tool_num,5)^2))/2),//( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_num, (kh_max_depth-6.34))/2)^2,
-#        getxpos()-tool_diameter(KH_tool_num, (kh_max_depth))/2,
+#        getypos()-(sqrt((tool_diameter(KH_tool_num, 1)^2)-(tool_diameter(KH_tool_num, 5)^2))/2), //( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_num, (kh_max_depth-6.34))/2)^2, 
+#        getxpos()-tool_diameter(KH_tool_num, (kh_max_depth))/2, 
 #    //end position at top of slot
 #        getypos()-kh_distance, 
 #        KH_tool_num);
 #    //Lower right of entry hole
-#    dxfarc(getxpos(),getypos(),9.525/2,360-acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), 360, KH_tool_num);
+#    dxfarc(getxpos(), getypos(), 9.525/2, 360-acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), 360, KH_tool_num);
 #    //Lower left of entry hole
-#    dxfarc(getxpos(),getypos(),9.525/2,180, 180+acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), KH_tool_num);
+#    dxfarc(getxpos(), getypos(), 9.525/2, 180, 180+acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), KH_tool_num);
 #    hull(){
 #      translate([xpos(), ypos(), zpos()]){
 #        keyhole_shaft(6.35, 9.525);
@@ -3677,8 +3793,8 @@ Then it will be necessary to test for each possible case in a series of If Else 
 #        keyhole_shaft(6.35, 9.525);
 #      }
 #    }
-#    cutwithfeed(getxpos(),getypos(),-kh_max_depth,feed);
-#    cutwithfeed(getxpos(),getypos()-kh_distance,-kh_max_depth,feed);
+#    cutwithfeed(getxpos(), getypos(), -kh_max_depth, feed);
+#    cutwithfeed(getxpos(), getypos()-kh_distance, -kh_max_depth, feed);
 #    setypos(getypos()+kh_distance);
 #  }
 #}
@@ -3762,7 +3878,7 @@ The G-code commands and their matching modules may include (but are not limited 
                                    & \texttt{G21} \\ \midrule
  \texttt{movetosafez()}            & \texttt{(Move to safe Z to avoid workholding)}\\
                                    & \texttt{G53G0Z-5.000}\\ \midrule
- \texttt{toolchange(...);}         & \texttt{(TOOL/MILL,3.17, 0.00, 0.00, 0.00)} \\
+ \texttt{toolchange(...);}         & \texttt{(TOOL/MILL, 3.17, 0.00, 0.00, 0.00)} \\
                                    & \texttt{M6T102} \\
                                    & \texttt{M03S16000} \\ \midrule
  \verb|cutoneaxis_setfeed(...);|   & \texttt{(PREPOSITION FOR RAPID PLUNGE)}\\
@@ -3789,14 +3905,14 @@ The G-code commands and their matching modules may include (but are not limited 
                            \texttt{setupstock(...)}\\
  \verb|(stockMin:0.00mm, -152.40mm, -34.92mm)| \\
  \verb|(stockMax:109.50mm, -77.40mm, 0.00mm)| \\
- \verb|(STOCK/BLOCK,109.50, 75.00, 34.92,0.00, 152.40, 34.92)| \\
+ \verb|(STOCK/BLOCK, 109.50, 75.00, 34.92, 0.00, 152.40, 34.92)| \\
  \verb|G90| \\
  \verb|G21| \\ \midrule
  \verb|(Move to safe Z to avoid workholding)| &  \texttt{movetosafez()} \\
  \verb|G53G0Z-5.000| \\ \midrule
  \verb|(Toolpath: Contour Toolpath 1)| &  \texttt{toolchange(...);}\\
  \verb|M05| \\
- \verb|(TOOL/MILL,3.17, 0.00, 0.00, 0.00)| \\
+ \verb|(TOOL/MILL, 3.17, 0.00, 0.00, 0.00)| \\
  \verb|M6T102| \\
  \verb|M03S10000|  \\ \midrule
  \verb|(PREPOSITION FOR RAPID PLUNGE)| & \texttt{writecomment(...)}\\ \midrule
@@ -3974,11 +4090,11 @@ module opengcodefile(basefilename, currenttoolnum, toolradius, plunge, feed, spe
 
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
-    def opengcodefile(self, basefilename = "export",
-                      currenttoolnum = 102,
-                      toolradius = 3.175,
-                      plunge = 400,
-                      feed = 1600,
+    def opengcodefile(self, basefilename = "export", 
+                      currenttoolnum = 102, 
+                      toolradius = 3.175, 
+                      plunge = 400, 
+                      feed = 1600, 
                       speed = 10000
                       ):
         self.basefilename = basefilename
@@ -4005,13 +4121,13 @@ module opengcodefile(basefilename, currenttoolnum, toolradius, plunge, feed, spe
     def opendxffiles(self, basefilename = "export", 
                      large_square_tool_num = 0, 
                      small_square_tool_num = 0, 
-                     large_ball_tool_num = 0,
-                     small_ball_tool_num = 0,
-                     large_V_tool_num = 0,
-                     small_V_tool_num = 0,
-                     DT_tool_num = 0,
-                     KH_tool_num = 0,
-                     Roundover_tool_num = 0,
+                     large_ball_tool_num = 0, 
+                     small_ball_tool_num = 0, 
+                     large_V_tool_num = 0, 
+                     small_V_tool_num = 0, 
+                     DT_tool_num = 0, 
+                     KH_tool_num = 0, 
+                     Roundover_tool_num = 0, 
                      MISC_tool_num = 0):
 #        global generatedxfs
         self.basefilename = basefilename
@@ -4124,11 +4240,11 @@ This module requires that the tool number be passed in, and after writing out \D
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
     def dxfpreamble(self, tn):
-#        self.writedxf(tn,str(tn))
-        self.writedxf(tn,"0")
-        self.writedxf(tn,"SECTION")
-        self.writedxf(tn,"2")
-        self.writedxf(tn,"ENTITIES")
+#        self.writedxf(tn, str(tn))
+        self.writedxf(tn, "0")
+        self.writedxf(tn, "SECTION")
+        self.writedxf(tn, "2")
+        self.writedxf(tn, "ENTITIES")
 
 \end{writecode}
 \addtocounter{gcpy}{7}
@@ -4139,7 +4255,7 @@ There are two notable elements which may be written to a \textsc{dxf}:
 
 \begin{itemize}
  \item a line \DescribeRoutine{dxfline}%: LWPOLYLINE is one possible implementation: \DescribeRoutine{dxfbpl} 
-       %\DescribeRoutine{beginpolyline},
+       %\DescribeRoutine{beginpolyline}, 
  \item ARC --- a notable option would be for the arc to close on itself, creating a circle:
        \DescribeRoutine{dxfarc}
 \end{itemize}
@@ -4173,23 +4289,23 @@ When writing out to a \textsc{dxf} file there is a pair of commands, a public fa
 
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
-    def dxfline(self, tn, xbegin,ybegin,xend,yend):
-        self.writedxf(tn,"0")
-        self.writedxf(tn,"LWPOLYLINE")
-        self.writedxf(tn,"90")
-        self.writedxf(tn,"2")
-        self.writedxf(tn,"70")
-        self.writedxf(tn,"0")
-        self.writedxf(tn,"43")
-        self.writedxf(tn,"0")
-        self.writedxf(tn,"10")
-        self.writedxf(tn,str(xbegin))
-        self.writedxf(tn,"20")
-        self.writedxf(tn,str(ybegin))
-        self.writedxf(tn,"10")
-        self.writedxf(tn,str(xend))
-        self.writedxf(tn,"20")
-        self.writedxf(tn,str(yend))
+    def dxfline(self, tn, xbegin, ybegin, xend, yend):
+        self.writedxf(tn, "0")
+        self.writedxf(tn, "LWPOLYLINE")
+        self.writedxf(tn, "90")
+        self.writedxf(tn, "2")
+        self.writedxf(tn, "70")
+        self.writedxf(tn, "0")
+        self.writedxf(tn, "43")
+        self.writedxf(tn, "0")
+        self.writedxf(tn, "10")
+        self.writedxf(tn, str(xbegin))
+        self.writedxf(tn, "20")
+        self.writedxf(tn, str(ybegin))
+        self.writedxf(tn, "10")
+        self.writedxf(tn, str(xend))
+        self.writedxf(tn, "20")
+        self.writedxf(tn, str(yend))
 
 \end{writecode}
 \addtocounter{gcpy}{18}
@@ -4229,8 +4345,8 @@ The various textual versions are quite obvious, and due to the requirements of G
     def cutarcNECCdxf(self, ex, ey, ez, xcenter, ycenter, radius):
 #        global toolpath
 #        toolpath = self.currenttool()
-#        toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
-        self.dxfarc(self.currenttoolnumber(), xcenter,ycenter,radius,0,90)
+#        toolpath = toolpath.translate([self.xpos(), self.ypos(), self.zpos()])
+        self.dxfarc(self.currenttoolnumber(), xcenter, ycenter, radius, 0, 90)
         if (self.zpos == ez):
             self.settzpos(0)
         else:         
@@ -4240,18 +4356,18 @@ The various textual versions are quite obvious, and due to the requirements of G
 #        self.setzpos(ez)
         if self.generatepaths == True:
             print("Unioning cutarcNECCdxf toolpath")
-            self.arcloop(1,90, xcenter, ycenter, radius)
+            self.arcloop(1, 90, xcenter, ycenter, radius)
 #            self.toolpaths = self.toolpaths.union(toolpath)
         else:
-            toolpath = self.arcloop(1,90, xcenter, ycenter, radius)
+            toolpath = self.arcloop(1, 90, xcenter, ycenter, radius)
 #            print("Returning cutarcNECCdxf toolpath")
             return toolpath
 
     def cutarcNWCCdxf(self, ex, ey, ez, xcenter, ycenter, radius):
 #        global toolpath
 #        toolpath = self.currenttool()
-#        toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
-        self.dxfarc(self.currenttoolnumber(), xcenter,ycenter,radius,90,180)
+#        toolpath = toolpath.translate([self.xpos(), self.ypos(), self.zpos()])
+        self.dxfarc(self.currenttoolnumber(), xcenter, ycenter, radius, 90, 180)
         if (self.zpos == ez):
             self.settzpos(0)
         else:         
@@ -4260,17 +4376,17 @@ The various textual versions are quite obvious, and due to the requirements of G
 #        self.setypos(ey)
 #        self.setzpos(ez)
         if self.generatepaths == True:
-            self.arcloop(91,180, xcenter, ycenter, radius)
+            self.arcloop(91, 180, xcenter, ycenter, radius)
 #            self.toolpaths = self.toolpaths.union(toolpath)
         else:
-            toolpath = self.arcloop(91,180, xcenter, ycenter, radius)
+            toolpath = self.arcloop(91, 180, xcenter, ycenter, radius)
             return toolpath
 
     def cutarcSWCCdxf(self, ex, ey, ez, xcenter, ycenter, radius):
 #        global toolpath
 #        toolpath = self.currenttool()
-#        toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
-        self.dxfarc(self.currenttoolnumber(), xcenter,ycenter,radius,180,270)
+#        toolpath = toolpath.translate([self.xpos(), self.ypos(), self.zpos()])
+        self.dxfarc(self.currenttoolnumber(), xcenter, ycenter, radius, 180, 270)
         if (self.zpos == ez):
             self.settzpos(0)
         else:         
@@ -4279,17 +4395,17 @@ The various textual versions are quite obvious, and due to the requirements of G
 #        self.setypos(ey)
 #        self.setzpos(ez)
         if self.generatepaths == True:
-            self.arcloop(181,270, xcenter, ycenter, radius)
+            self.arcloop(181, 270, xcenter, ycenter, radius)
 #            self.toolpaths = self.toolpaths.union(toolpath)
         else:
-            toolpath = self.arcloop(181,270, xcenter, ycenter, radius)
+            toolpath = self.arcloop(181, 270, xcenter, ycenter, radius)
             return toolpath
 
     def cutarcSECCdxf(self, ex, ey, ez, xcenter, ycenter, radius):
 #        global toolpath
 #        toolpath = self.currenttool()
-#        toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
-        self.dxfarc(self.currenttoolnumber(), xcenter,ycenter,radius,270,360)
+#        toolpath = toolpath.translate([self.xpos(), self.ypos(), self.zpos()])
+        self.dxfarc(self.currenttoolnumber(), xcenter, ycenter, radius, 270, 360)
         if (self.zpos == ez):
             self.settzpos(0)
         else:         
@@ -4298,17 +4414,17 @@ The various textual versions are quite obvious, and due to the requirements of G
 #        self.setypos(ey)
 #        self.setzpos(ez)
         if self.generatepaths == True:
-            self.arcloop(271,360, xcenter, ycenter, radius)
+            self.arcloop(271, 360, xcenter, ycenter, radius)
 #            self.toolpaths = self.toolpaths.union(toolpath)
         else:
-            toolpath = self.arcloop(271,360, xcenter, ycenter, radius)
+            toolpath = self.arcloop(271, 360, xcenter, ycenter, radius)
             return toolpath
 
     def cutarcNECWdxf(self, ex, ey, ez, xcenter, ycenter, radius):
 #        global toolpath
 #        toolpath = self.currenttool()
-#        toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
-        self.dxfarc(self.currenttoolnumber(), xcenter,ycenter,radius,0,90)
+#        toolpath = toolpath.translate([self.xpos(), self.ypos(), self.zpos()])
+        self.dxfarc(self.currenttoolnumber(), xcenter, ycenter, radius, 0, 90)
         if (self.zpos == ez):
             self.settzpos(0)
         else:         
@@ -4317,17 +4433,17 @@ The various textual versions are quite obvious, and due to the requirements of G
 #        self.setypos(ey)
 #        self.setzpos(ez)
         if self.generatepaths == True:
-            self.narcloop(89,0, xcenter, ycenter, radius)
+            self.narcloop(89, 0, xcenter, ycenter, radius)
 #            self.toolpaths = self.toolpaths.union(toolpath)
         else:
-            toolpath = self.narcloop(89,0, xcenter, ycenter, radius)
+            toolpath = self.narcloop(89, 0, xcenter, ycenter, radius)
             return toolpath
 
     def cutarcSECWdxf(self, ex, ey, ez, xcenter, ycenter, radius):
 #        global toolpath
 #        toolpath = self.currenttool()
-#        toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
-        self.dxfarc(self.currenttoolnumber(), xcenter,ycenter,radius,270,360)
+#        toolpath = toolpath.translate([self.xpos(), self.ypos(), self.zpos()])
+        self.dxfarc(self.currenttoolnumber(), xcenter, ycenter, radius, 270, 360)
         if (self.zpos == ez):
             self.settzpos(0)
         else:         
@@ -4336,17 +4452,17 @@ The various textual versions are quite obvious, and due to the requirements of G
 #        self.setypos(ey)
 #        self.setzpos(ez)
         if self.generatepaths == True:
-            self.narcloop(359,270, xcenter, ycenter, radius)
+            self.narcloop(359, 270, xcenter, ycenter, radius)
 #            self.toolpaths = self.toolpaths.union(toolpath)
         else:
-            toolpath = self.narcloop(359,270, xcenter, ycenter, radius)
+            toolpath = self.narcloop(359, 270, xcenter, ycenter, radius)
             return toolpath
 
     def cutarcSWCWdxf(self, ex, ey, ez, xcenter, ycenter, radius):
 #        global toolpath
 #        toolpath = self.currenttool()
-#        toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
-        self.dxfarc(self.currenttoolnumber(), xcenter,ycenter,radius,180,270)
+#        toolpath = toolpath.translate([self.xpos(), self.ypos(), self.zpos()])
+        self.dxfarc(self.currenttoolnumber(), xcenter, ycenter, radius, 180, 270)
         if (self.zpos == ez):
             self.settzpos(0)
         else:         
@@ -4355,17 +4471,17 @@ The various textual versions are quite obvious, and due to the requirements of G
 #        self.setypos(ey)
 #        self.setzpos(ez)
         if self.generatepaths == True:
-            self.narcloop(269,180, xcenter, ycenter, radius)
+            self.narcloop(269, 180, xcenter, ycenter, radius)
 #            self.toolpaths = self.toolpaths.union(toolpath)
         else:
-            toolpath = self.narcloop(269,180, xcenter, ycenter, radius)
+            toolpath = self.narcloop(269, 180, xcenter, ycenter, radius)
             return toolpath
 
     def cutarcNWCWdxf(self, ex, ey, ez, xcenter, ycenter, radius):
 #        global toolpath
 #        toolpath = self.currenttool()
-#        toolpath = toolpath.translate([self.xpos(),self.ypos(),self.zpos()])
-        self.dxfarc(self.currenttoolnumber(), xcenter,ycenter,radius,90,180)
+#        toolpath = toolpath.translate([self.xpos(), self.ypos(), self.zpos()])
+        self.dxfarc(self.currenttoolnumber(), xcenter, ycenter, radius, 90, 180)
         if (self.zpos == ez):
             self.settzpos(0)
         else:         
@@ -4374,10 +4490,10 @@ The various textual versions are quite obvious, and due to the requirements of G
 #        self.setypos(ey)
 #        self.setzpos(ez)
         if self.generatepaths == True:
-            self.narcloop(179,90, xcenter, ycenter, radius)
+            self.narcloop(179, 90, xcenter, ycenter, radius)
 #            self.toolpaths = self.toolpaths.union(toolpath)
         else:
-            toolpath = self.narcloop(179,90, xcenter, ycenter, radius)
+            toolpath = self.narcloop(179, 90, xcenter, ycenter, radius)
             return toolpath
 
 \end{writecode}
@@ -4539,12 +4655,12 @@ In some instances it may be necessary to write additional information, depending
  
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
-    def dxfpostamble(self,tn):
-#        self.writedxf(tn,str(tn))
-        self.writedxf(tn,"0")
-        self.writedxf(tn,"ENDSEC")
-        self.writedxf(tn,"0")
-        self.writedxf(tn,"EOF")
+    def dxfpostamble(self, tn):
+#        self.writedxf(tn, str(tn))
+        self.writedxf(tn, "0")
+        self.writedxf(tn, "ENDSEC")
+        self.writedxf(tn, "0")
+        self.writedxf(tn, "EOF")
         
 \end{writecode}
 \addtocounter{gcpy}{7}
@@ -4698,7 +4814,7 @@ Red Flags to avoid include:
 %in order to use commonly used features'' (Section 5.7 Example: defaults in HTTP responses)
 %%If the API for a commonly used feature forces users to learn about other features that are rarely used, this increases the cognitive load on users who don’t need the rarely used features.
 %
-%\paragraph*{General-Purpose Modules are Deeper} ``...code that is more general-purpose is simpler,
+%\paragraph*{General-Purpose Modules are Deeper} ``...code that is more general-purpose is simpler, 
 %cleaner, and easier to understand...'' (Chapter 6) 
 %
 %\paragraph*{Different Layer, Different Abstraction} (Chapter 7)
@@ -4841,15 +4957,15 @@ c.f., \url{https://linuxcnc.org/docs/html/gcode/g-code.html#gcode:g5}
 %my simple 6 lines function for bezier curve is following:
 %
 %\begin{verbatim}
-%def bezier(p,s=10):
+%def bezier(p, s=10):
 %  r  '''
 %    bezier curve defined by points 'p' and number of segments 's'
 %    '''
 %    p=a_(p)
 %    n=len(p)
 %    k=n-1
-%    f=[[p[i]*comb(k,i)*u**i*(1-u)**(k-i) for i in range(n)]
-%       for u in linspace(0,1,s)]    
+%    f=[[p[i]*comb(k, i)*u**i*(1-u)**(k-i) for i in range(n)]
+%       for u in linspace(0, 1, s)]    
 %    p1=l_(a_([p.sum(0) for p in a_(f)]))
 %    return p1
 %\end{verbatim}    
@@ -4900,6 +5016,10 @@ Or, it may be that fewer (only two?) curves are needed:
 
 c.f., \url{https://github.com/BelfrySCAD/BOSL2/wiki/nurbs.scad} and \url{https://old.reddit.com/r/OpenPythonSCAD/comments/1gjcz4z/pythonscad_will_get_a_new_spline_function/}
 
+\subsubsection*{Mathematics}
+
+\url{https://elementsofprogramming.com/}
+
 \bibliographystyle{alpha}
 
 \begin{thebibliography}{Ousterhout2018APO}
@@ -4943,7 +5063,7 @@ Ousterhout, John K.
 \clearpage
 
 %Print the glossary
-\printglossary[type=main,title={Command Glossary}]
+\printglossary[type=main, title={Command Glossary}]
 \thispagestyle{plain}
 
 \createindexes
