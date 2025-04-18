@@ -50,7 +50,7 @@ large_V_tool_num = 301  # [0:0, 301:301, 690:690]
 # [CAM] */
 small_V_tool_num = 390  # [0:0, 390:390, 301:301]
 # [CAM] */
-DT_tool_num = 814  # [0:0, 814:814]
+DT_tool_num = 814  # [0:0, 814:814, 808079:808079]
 # [CAM] */
 KH_tool_num = 374  # [0:0, 374:374, 375:375, 376:376, 378:378]
 # [CAM] */
@@ -108,7 +108,7 @@ gcp.opendxffiles(Base_filename,
                  KH_tool_num,
                  Roundover_tool_num,
                  MISC_tool_num)
-gcp.setupstock(stockXwidth, stockYheight, stockZthickness, "Top", "Center", retractheight)
+gcp.setupstock(stockXwidth, stockYheight, stockZthickness, zeroheight, stockzero, retractheight)
 
 #print(pygcpversion())
 
@@ -266,13 +266,13 @@ toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), 0))
 gcp.rapidZ(retractheight)
 gcp.toolchange(56142, 10000)
 gcp.rapidXY(-stockXwidth/2, -(stockYheight/2+0.508/2))
-#gcp.cutZgcfeed(-1.531, plunge)
+#gcp.cutlineZgcfeed(-1.531, plunge)
 toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), -1.531))
 toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/2+0.508/2, -(stockYheight/2+0.508/2), -1.531))
 
 gcp.rapidZ(retractheight)
 #gcp.toolchange(56125, 10000)
-#gcp.cutZgcfeed(-1.531, plunge)
+#gcp.cutlineZgcfeed(-1.531, plunge)
 toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), -1.531))
 toolpaths = toolpaths.union(gcp.cutlinedxfgc(stockXwidth/2+0.508/2, (stockYheight/2+0.508/2), -1.531))
 
@@ -325,3 +325,4 @@ output (part)
 gcp.closegcodefile()
 gcp.closedxffiles()
 gcp.closedxffile()
+

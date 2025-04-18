@@ -37,6 +37,14 @@ module setupstock(stockXwidth, stockYheight, stockZthickness, zeroheight, stockz
     gcp.setupstock(stockXwidth, stockYheight, stockZthickness, zeroheight, stockzero, retractheight);
 }
 
+module shiftstock(shiftX, shiftY, shiftZ) {
+    gcp.shiftstock(shiftX, shiftY, shiftZ);
+}
+
+module addtostock(stockXwidth, stockYheight, stockZthickness, shiftX, shiftY, shiftZ) {
+    gcp.addtostock(stockXwidth, stockYheight, stockZthickness, shiftX, shiftY, shiftZ);
+}
+
 module cutroundover(bx, by, bz, ex, ey, ez, radiustn) {
     if (radiustn == 56125) {
         cutroundovertool(bx, by, bz, ex, ey, ez, 0.508/2, 1.531);
@@ -67,6 +75,10 @@ module rapidXY(ex, ey) {
     gcp.rapid(ex, ey, gcp.zpos());
 }
 
+module rapidXZ(ex, ez) {
+    gcp.rapid(ex, gcp.zpos(), ez);
+}
+
 module rapidZ(ez) {
     gcp.rapid(gcp.xpos(), gcp.ypos(), ez);
 }
@@ -79,8 +91,8 @@ module cutlinedxfgc(ex, ey, ez){
     gcp.cutlinedxfgc(ex, ey, ez);
 }
 
-module cutZgcfeed(ez, feed){
-    gcp.cutZgcfeed(ez, feed);
+module cutlineZgcfeed(ez, feed){
+    gcp.cutlineZgcfeed(ez, feed);
 }
 
 module cutarcCC(barc, earc, xcenter, ycenter, radius, tpzreldim){

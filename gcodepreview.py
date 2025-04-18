@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-#icon "C:\Program Files\PythonSCAD\bin\openscad.exe"  --trust-python
-#Currently tested with PythonSCAD_nolibfive-2025.01.02-x86-64-Installer.exe and Python 3.11
+#icon "C:\Program Files\PythonSCAD\bin\openscad.exe" --trust-python
+#Currently tested with https://www.pythonscad.org/downloads/PythonSCAD-2024.12.29-x86-64-Installer.exe and Python 3.11
 #gcodepreview 0.8, for use with PythonSCAD,
 #if using from PythonSCAD using OpenSCAD code, see gcodepreview.scad
 
@@ -111,7 +111,7 @@ class gcodepreview:
 #
 #    def instantiatecube(self):
 #        return self.c
-#
+
     def xpos(self):
 #        global mpx
         return self.mpx
@@ -144,6 +144,22 @@ class gcodepreview:
 #        global tpzinc
 #        self.tpzinc = newtpzinc
 
+    def initializemachinestate(self):
+#        global mpx
+        self.mpx = float(0)
+#        global mpy
+        self.mpy = float(0)
+#        global mpz
+        self.mpz = float(0)
+#        global tpz
+#        self.tpzinc = float(0)
+#        global currenttoolnum
+        self.currenttoolnum = 102
+#        global currenttoolshape
+        self.currenttoolshape = cylinder(12.7, 1.5875)
+        self.rapids = self.currenttoolshape
+        self.retractheight = 53.0
+
     def setupstock(self, stockXwidth,
                  stockYheight,
                  stockZthickness,
@@ -172,25 +188,13 @@ class gcodepreview:
         -------
         none
         """
+        self.initializemachinestate()
         self.stockXwidth = stockXwidth
         self.stockYheight = stockYheight
         self.stockZthickness = stockZthickness
         self.zeroheight = zeroheight
         self.stockzero = stockzero
         self.retractheight = retractheight
-#        global mpx
-        self.mpx = float(0)
-#        global mpy
-        self.mpy = float(0)
-#        global mpz
-        self.mpz = float(0)
-#        global tpz
-#        self.tpzinc = float(0)
-#        global currenttoolnum
-        self.currenttoolnum = 102
-#        global currenttoolshape
-        self.currenttoolshape = cylinder(12.7, 1.5875)
-        self.rapids = self.currenttoolshape
 #        global stock
         self.stock = cube([stockXwidth, stockYheight, stockZthickness])
 #%WRITEGC        if self.generategcode == True:
@@ -198,7 +202,7 @@ class gcodepreview:
         self.toolpaths = cylinder(0.1, 0.1)
         if self.zeroheight == "Top":
             if self.stockzero == "Lower-Left":
-                self.stock = stock.translate([0, 0, -self.stockZthickness])
+                self.stock = self.stock.translate([0, 0, -self.stockZthickness])
                 if self.generategcode == True:
                     self.writegc("(stockMin:0.00mm, 0.00mm, -", str(self.stockZthickness), "mm)")
                     self.writegc("(stockMax:", str(self.stockXwidth), "mm, ", str(stockYheight), "mm, 0.00mm)")
@@ -249,6 +253,25 @@ class gcodepreview:
         if self.generategcode == True:
             self.writegc("G90");
             self.writegc("G21");
+
+    def setupcuttingarea(self, sizeX, sizeY, sizeZ, extentleft, extentfb, extentd):
+        self.initializemachinestate()
+        c=cube([sizeX,sizeY,sizeZ])
+        c = c.translate([extentleft,extentfb,extentd])
+        self.stock = c
+        self.toolpaths = cylinder(0.1, 0.1)
+        return c
+
+    def shiftstock(self, shiftX, shiftY, shiftZ):
+         self.stock = self.stock.translate([shiftX, shiftY, shiftZ])
+
+    def addtostock(self, stockXwidth, stockYheight, stockZthickness,
+                         shiftX = 0,
+                         shiftY = 0,
+                         shiftZ = 0):
+         addedpart = cube([stockXwidth, stockYheight, stockZthickness])
+         addedpart = addedpart.translate([shiftX, shiftY, shiftZ])
+         self.stock = self.stock.union(addedpart)
 
     def settool(self, tn):
 #        global currenttoolnum
@@ -380,6 +403,11 @@ class gcodepreview:
             #dt_bottomdiameter, dt_topdiameter, dt_height, dt_angle)
             #https://www.leevalley.com/en-us/shop/tools/power-tool-accessories/router-bits/30172-dovetail-bits?item=18J1607
             self.currenttoolshape = self.dovetail(12.7, 6.367, 12.7, 14)
+        #45828
+        elif (tool_number == 808079):
+            self.writegc("(TOOL/MILL, 12.7, 6.816, 20.95, 0.00)")
+            #http://www.amanatool.com/45828-carbide-tipped-dovetail-8-deg-x-1-2-dia-x-825-x-1-4-inch-shank.html
+            self.currenttoolshape = self.dovetail(12.7, 6.816, 20.95, 8)
         elif (tool_number == 56125):#0.508/2, 1.531
             self.writegc("(TOOL/CRMILL, 0.508, 6.35, 3.175, 7.9375, 3.175)")
         elif (tool_number == 56142):#0.508/2, 2.921
@@ -474,21 +502,28 @@ class gcodepreview:
             if ptd_depth > 12.7:
                 return 6.35
             else:
-                return 12.7
+                return ptd_tool
+        if ptd_tool == 808079:
+            if ptd_depth > 20.95:
+                return 6.816
+            else:
+                return ptd_tool
 # Bowl Bit
 #https://www.amanatool.com/45982-carbide-tipped-bowl-tray-1-4-radius-x-3-4-dia-x-5-8-x-1-4-inch-shank.html
         if ptd_tool == 45982:
             if ptd_depth > 6.35:
                 return 15.875
+            else:
+                return ptd_tool
 # Tapered Ball Nose
         if ptd_tool == 204:
             if ptd_depth > 6.35:
-                return 0
+                return ptd_tool
         if ptd_tool == 304:
             if ptd_depth > 6.35:
-                return 0
+                return ptd_tool
             else:
-                return 0
+                return ptd_tool
 
     def tool_radius(self, ptd_tool, ptd_depth):
         tr = self.tool_diameter(ptd_tool, ptd_depth)/2
@@ -537,11 +572,36 @@ class gcodepreview:
         else:
             return cube([0.001, 0.001, 0.001])
 
+    def rapidXYZ(self, ex, ey, ez):
+        rapid = self.rapid(ex, ey, ez)
+        if self.generatepaths == False:
+            return rapid
+
     def rapidXY(self, ex, ey):
         rapid = self.rapid(ex, ey, self.zpos())
 #        if self.generatepaths == True:
 #            self.rapids = self.rapids.union(rapid)
 #        else:
+        if self.generatepaths == False:
+            return rapid
+
+    def rapidXZ(self, ex, ez):
+        rapid = self.rapid(ex, self.ypos(), ez)
+        if self.generatepaths == False:
+            return rapid
+
+    def rapidYZ(self, ey, ez):
+        rapid = self.rapid(self.xpos(), ey, ez)
+        if self.generatepaths == False:
+            return rapid
+
+    def rapidX(self, ex):
+        rapid = self.rapid(ex, self.ypos(), self.zpos())
+        if self.generatepaths == False:
+            return rapid
+
+    def rapidY(self, ey):
+        rapid = self.rapid(self.xpos(), ey, self.zpos())
         if self.generatepaths == False:
             return rapid
 
@@ -616,9 +676,48 @@ class gcodepreview:
         else:
             return toolpath
 
-    def cutZgcfeed(self, ez, feed):
+    def cutlineXYZwithfeed(self, ex, ey, ez, feed):
+        return self.cutline(ex, ey, ez)
+
+    def cutlineXYZ(self, ex, ey, ez):
+        return self.cutline(ex, ey, ez)
+
+    def cutlineXYwithfeed(self, ex, ey, feed):
+        return self.cutline(ex, ey, self.zpos())
+
+    def cutlineXY(self, ex, ey):
+        return self.cutline(ex, ey, self.zpos())
+
+    def cutlineXZwithfeed(self, ex, ez, feed):
+        return self.cutline(ex, self.ypos(), ez)
+
+    def cutlineXZ(self, ex, ez):
+        return self.cutline(ex, self.ypos(), ez)
+
+    def cutlineXwithfeed(self, ex, feed):
+        return self.cutline(ex, self.ypos(), self.zpos())
+
+    def cutlineX(self, ex):
+        return self.cutline(ex, self.ypos(), self.zpos())
+
+    def cutlineYZ(self, ey, ez):
+        return self.cutline(self.xpos(), ey, ez)
+
+    def cutlineYwithfeed(self, ey, feed):
+        return self.cutline(self.xpos(), ey, self.zpos())
+
+    def cutlineY(self, ey):
+        return self.cutline(self.xpos(), ey, self.zpos())
+
+    def cutlineZgcfeed(self, ez, feed):
         self.writegc("G01 Z", str(ez), "F", str(feed))
 #        if self.generatepaths == False:
+        return self.cutline(self.xpos(), self.ypos(), ez)
+
+    def cutlineZwithfeed(self, ez, feed):
+        return self.cutline(self.xpos(), self.ypos(), ez)
+
+    def cutlineZ(self, ez):
         return self.cutline(self.xpos(), self.ypos(), ez)
 
     def cutarcCC(self, barc, earc, xcenter, ycenter, radius, tpzreldim, stepsizearc=1):
@@ -631,6 +730,8 @@ class gcodepreview:
         while i < earc:
             toolpath = toolpath.union(self.cutline(xcenter + radius * math.cos(math.radians(i)), ycenter + radius * math.sin(math.radians(i)), self.zpos()+tpzinc))
             i += stepsizearc
+        self.setxpos(xcenter + radius * math.cos(math.radians(earc)))
+        self.setypos(ycenter + radius * math.sin(math.radians(earc)))
         if self.generatepaths == False:
             return toolpath
         else:
@@ -661,10 +762,21 @@ class gcodepreview:
 #            print("Unioning n toolpath")
 #            self.toolpaths = self.toolpaths.union(toolpath)
 #        else:
+        self.setxpos(xcenter + radius * math.cos(math.radians(earc)))
+        self.setypos(ycenter + radius * math.sin(math.radians(earc)))
         if self.generatepaths == False:
             return toolpath
         else:
             return cube([0.01, 0.01, 0.01])
+
+    def cutarcCWdxf(self, barc, earc, xcenter, ycenter, radius, tpzreldim, stepsizearc=1):
+        toolpath = self.cutarcCW(barc, earc, xcenter, ycenter, radius, tpzreldim, stepsizearc=1)
+        self.dxfarc(self.currenttoolnumber(), xcenter, ycenter, radius, earc, barc)
+        if self.generatepaths == False:
+            return toolpath
+        else:
+            return cube([0.01, 0.01, 0.01])
+
 
     def dxfcircle(self, tool_num, xcenter, ycenter, radius):
         self.dxfarc(tool_num, xcenter, ycenter, radius,  0, 90)
@@ -753,7 +865,6 @@ class gcodepreview:
         self.dxfarc(kh_tool_num, oXpos, oYpos, self.tool_radius(kh_tool_num, 7), 90, 180)
         self.dxfarc(kh_tool_num, oXpos, oYpos, self.tool_radius(kh_tool_num, 7), 180, 270)
         self.dxfarc(kh_tool_num, oXpos, oYpos, self.tool_radius(kh_tool_num, 7), 270, 360)
-
 #pre-calculate needed values
         r = self.tool_radius(kh_tool_num, 7)
 #        print(r)
@@ -1031,6 +1142,92 @@ class gcodepreview:
 #    setypos(getypos()+kh_distance);
 #  }
 #}
+
+    def cut_pins(self, Joint_Width, stockZthickness, Number_of_Dovetails, Spacing, Proportion, DTT_diameter, DTT_angle):
+        DTO = math.tan(math.radians(DTT_angle)) * (stockZthickness * Proportion)
+        DTR = DTT_diameter/2 - DTO
+        cpr = self.rapidXY(0, stockZthickness + Spacing/2)
+        ctp = self.cutlinedxfgc(self.xpos(), self.ypos(), -stockZthickness * Proportion)
+#        ctp = ctp.union(self.cutlinedxfgc(Joint_Width / (Number_of_Dovetails * 2), self.ypos(), -stockZthickness * Proportion))
+        i = 1
+        while i < Number_of_Dovetails * 2:
+#            print(i)
+            ctp = ctp.union(self.cutlinedxfgc(i * (Joint_Width / (Number_of_Dovetails * 2)), self.ypos(), -stockZthickness * Proportion))
+            ctp = ctp.union(self.cutlinedxfgc(i * (Joint_Width / (Number_of_Dovetails * 2)), (stockZthickness + Spacing) + (stockZthickness * Proportion) - (DTT_diameter/2), -(stockZthickness * Proportion)))
+            ctp = ctp.union(self.cutlinedxfgc(i * (Joint_Width / (Number_of_Dovetails * 2)), stockZthickness + Spacing/2, -(stockZthickness * Proportion)))
+            ctp = ctp.union(self.cutlinedxfgc((i + 1) * (Joint_Width / (Number_of_Dovetails * 2)), stockZthickness + Spacing/2,-(stockZthickness * Proportion)))
+            self.dxfrectangleround(self.currenttoolnumber(),
+                i * (Joint_Width / (Number_of_Dovetails * 2))-DTR,
+                stockZthickness + (Spacing/2) - DTR,
+                DTR * 2,
+                (stockZthickness * Proportion) + Spacing/2 + DTR * 2 - (DTT_diameter/2),
+                DTR)
+            i += 2
+        self.rapidZ(0)
+        return ctp
+
+    def cut_tails(self, Joint_Width, stockZthickness, Number_of_Dovetails, Spacing, Proportion, DTT_diameter, DTT_angle):
+        DTO = math.tan(math.radians(DTT_angle)) * (stockZthickness * Proportion)
+        DTR = DTT_diameter/2 - DTO
+        cpr = self.rapidXY(0, 0)
+        ctp = self.cutlinedxfgc(self.xpos(), self.ypos(), -stockZthickness * Proportion)
+        ctp = ctp.union(self.cutlinedxfgc(
+            Joint_Width / (Number_of_Dovetails * 2) - (DTT_diameter - DTO),
+            self.ypos(),
+            -stockZthickness * Proportion))
+        i = 1
+        while i < Number_of_Dovetails * 2:
+            ctp = ctp.union(self.cutlinedxfgc(
+                i * (Joint_Width / (Number_of_Dovetails * 2)) - (DTT_diameter - DTO),
+                stockZthickness * Proportion - DTT_diameter / 2,
+                -(stockZthickness * Proportion)))
+            ctp = ctp.union(self.cutarcCWdxf(180, 90,
+                i * (Joint_Width / (Number_of_Dovetails * 2)),
+                stockZthickness * Proportion - DTT_diameter / 2,
+#                self.ypos(),
+                DTT_diameter - DTO,  0, 1))
+            ctp = ctp.union(self.cutarcCWdxf(90, 0,
+                i * (Joint_Width / (Number_of_Dovetails * 2)),
+                stockZthickness * Proportion - DTT_diameter / 2,
+                DTT_diameter - DTO,  0, 1))
+            ctp = ctp.union(self.cutlinedxfgc(
+                i * (Joint_Width / (Number_of_Dovetails * 2)) + (DTT_diameter - DTO),
+                0,
+                -(stockZthickness * Proportion)))
+            ctp = ctp.union(self.cutlinedxfgc(
+                (i + 2) * (Joint_Width / (Number_of_Dovetails * 2)) - (DTT_diameter - DTO),
+                0,
+                -(stockZthickness * Proportion)))
+            i += 2
+        self.rapidZ(0)
+        self.rapidXY(0, 0)
+        ctp = ctp.union(self.cutlinedxfgc(self.xpos(), self.ypos(), -stockZthickness * Proportion))
+        self.dxfarc(self.currenttoolnumber(), 0, 0, DTR, 180, 270)
+        self.dxfline(self.currenttoolnumber(), -DTR, 0, -DTR, stockZthickness + DTR)
+        self.dxfarc(self.currenttoolnumber(), 0, stockZthickness + DTR, DTR, 90, 180)
+        self.dxfline(self.currenttoolnumber(), 0, stockZthickness + DTR * 2, Joint_Width, stockZthickness + DTR * 2)
+        i = 0
+        while i < Number_of_Dovetails * 2:
+            ctp = ctp.union(self.cutline(i * (Joint_Width / (Number_of_Dovetails * 2)), stockZthickness + DTO, -(stockZthickness * Proportion)))
+            ctp = ctp.union(self.cutline((i+2) * (Joint_Width / (Number_of_Dovetails * 2)), stockZthickness + DTO, -(stockZthickness * Proportion)))
+            ctp = ctp.union(self.cutline((i+2) * (Joint_Width / (Number_of_Dovetails * 2)), 0, -(stockZthickness * Proportion)))
+            self.dxfarc(self.currenttoolnumber(), i * (Joint_Width / (Number_of_Dovetails * 2)), 0, DTR, 270, 360)
+            self.dxfline(self.currenttoolnumber(),
+                i * (Joint_Width / (Number_of_Dovetails * 2)) + DTR,
+                0,
+                i * (Joint_Width / (Number_of_Dovetails * 2)) + DTR, stockZthickness * Proportion - DTT_diameter / 2)
+            self.dxfarc(self.currenttoolnumber(), (i + 1) * (Joint_Width / (Number_of_Dovetails * 2)), stockZthickness * Proportion - DTT_diameter / 2, (Joint_Width / (Number_of_Dovetails * 2)) - DTR, 90, 180)
+            self.dxfarc(self.currenttoolnumber(), (i + 1) * (Joint_Width / (Number_of_Dovetails * 2)), stockZthickness * Proportion - DTT_diameter / 2, (Joint_Width / (Number_of_Dovetails * 2)) - DTR, 0, 90)
+            self.dxfline(self.currenttoolnumber(),
+                (i + 2) * (Joint_Width / (Number_of_Dovetails * 2)) - DTR,
+                0,
+                (i + 2) * (Joint_Width / (Number_of_Dovetails * 2)) - DTR, stockZthickness * Proportion - DTT_diameter / 2)
+            self.dxfarc(self.currenttoolnumber(), (i + 2) * (Joint_Width / (Number_of_Dovetails * 2)), 0, DTR, 180, 270)
+            i += 2
+        self.dxfarc(self.currenttoolnumber(), Joint_Width, stockZthickness + DTR, DTR, 0, 90)
+        self.dxfline(self.currenttoolnumber(), Joint_Width + DTR, stockZthickness + DTR, Joint_Width + DTR, 0)
+        self.dxfarc(self.currenttoolnumber(), Joint_Width, 0, DTR, 270, 360)
+        return ctp
 
     def stockandtoolpaths(self, option = "stockandtoolpaths"):
         if option == "stock":
@@ -1488,8 +1685,9 @@ class gcodepreview:
         self.writegc("M02")
 
     def closegcodefile(self):
-        self.gcodepostamble()
-        self.gc.close()
+        if self.generategcode == True:
+            self.gcodepostamble()
+            self.gc.close()
 
     def closedxffile(self):
         if self.generatedxf == True:
@@ -1541,4 +1739,141 @@ class gcodepreview:
                 self.dxfRt.close()
             if (self.MISC_tool_num > 0):
                 self.dxfMt.close()
+
+    def previewgcodefile(self, gc_file):
+        gc_file = open(gc_file, 'r')
+        gcfilecontents = []
+        with gc_file as file:
+            for line in file:
+                command = line
+                gcfilecontents.append(line)
+
+        numlinesfound = 0
+        for line in gcfilecontents:
+#            print(line)
+            if line[:10] == "(stockMin:":
+                subdivisions = line.split()
+                extentleft = float(subdivisions[0][10:-3])
+                extentfb = float(subdivisions[1][:-3])
+                extentd = float(subdivisions[2][:-3])
+                numlinesfound = numlinesfound + 1
+            if line[:13] == "(STOCK/BLOCK,":
+                subdivisions = line.split()
+                sizeX = float(subdivisions[0][13:-1])
+                sizeY = float(subdivisions[1][:-1])
+                sizeZ = float(subdivisions[4][:-1])
+                numlinesfound = numlinesfound + 1
+            if line[:3] == "G21":
+                units = "mm"
+                numlinesfound = numlinesfound + 1
+            if numlinesfound >=3:
+                break
+#            print(numlinesfound)
+
+        self.setupcuttingarea(sizeX, sizeY, sizeZ, extentleft, extentfb, extentd)
+
+        commands = []
+        for line in gcfilecontents:
+            Xc = 0
+            Yc = 0
+            Zc = 0
+            Fc = 0
+            Xp = 0.0
+            Yp = 0.0
+            Zp = 0.0
+            if line == "G53G0Z-5.000\n":
+                 self.movetosafeZ()
+            if line[:3] == "M6T":
+                tool = int(line[3:])
+                self.toolchange(tool)
+            if line[:2] == "G0":
+                machinestate = "rapid"
+            if line[:2] == "G1":
+                machinestate = "cutline"
+            if line[:2] == "G0" or line[:2] == "G1" or line[:1] == "X" or line[:1] == "Y" or line[:1] == "Z":
+                if "F" in line:
+                    Fplus = line.split("F")
+                    Fc = 1
+                    fr = float(Fplus[1])
+                    line = Fplus[0]
+                if "Z" in line:
+                    Zplus = line.split("Z")
+                    Zc = 1
+                    Zp = float(Zplus[1])
+                    line = Zplus[0]
+                if "Y" in line:
+                    Yplus = line.split("Y")
+                    Yc = 1
+                    Yp = float(Yplus[1])
+                    line = Yplus[0]
+                if "X" in line:
+                    Xplus = line.split("X")
+                    Xc = 1
+                    Xp = float(Xplus[1])
+                if Zc == 1:
+                    if Yc == 1:
+                        if Xc == 1:
+                            if machinestate == "rapid":
+                                command = "rapidXYZ(" + str(Xp) + ", " + str(Yp) + ", " + str(Zp) + ")"
+                                self.rapidXYZ(Xp, Yp, Zp)
+                            else:
+                                command = "cutlineXYZ(" + str(Xp) + ", " + str(Yp) + ", " + str(Zp) + ")"
+                                self.cutlineXYZ(Xp, Yp, Zp)
+                        else:
+                            if machinestate == "rapid":
+                                command = "rapidYZ(" + str(Yp) + ", " + str(Zp) + ")"
+                                self.rapidYZ(Yp, Zp)
+                            else:
+                                command = "cutlineYZ(" + str(Yp) + ", " + str(Zp) + ")"
+                                self.cutlineYZ(Yp, Zp)
+                    else:
+                        if Xc == 1:
+                            if machinestate == "rapid":
+                                command = "rapidXZ(" + str(Xp) + ", " + str(Zp) + ")"
+                                self.rapidXZ(Xp, Zp)
+                            else:
+                                command = "cutlineXZ(" + str(Xp) + ", " + str(Zp) + ")"
+                                self.cutlineXZ(Xp, Zp)
+                        else:
+                            if machinestate == "rapid":
+                                command = "rapidZ(" + str(Zp) + ")"
+                                self.rapidZ(Zp)
+                            else:
+                                command = "cutlineZ(" + str(Zp) + ")"
+                                self.cutlineZ(Zp)
+                else:
+                    if Yc == 1:
+                        if Xc == 1:
+                            if machinestate == "rapid":
+                                command = "rapidXY(" + str(Xp) + ", " + str(Yp) + ")"
+                                self.rapidXY(Xp, Yp)
+                            else:
+                                command = "cutlineXY(" + str(Xp) + ", " + str(Yp) + ")"
+                                self.cutlineXY(Xp, Yp)
+                        else:
+                            if machinestate == "rapid":
+                                command = "rapidY(" + str(Yp) + ")"
+                                self.rapidY(Yp)
+                            else:
+                                command = "cutlineY(" + str(Yp) + ")"
+                                self.cutlineY(Yp)
+                    else:
+                        if Xc == 1:
+                            if machinestate == "rapid":
+                                command = "rapidX(" + str(Xp) + ")"
+                                self.rapidX(Xp)
+                            else:
+                                command = "cutlineX(" + str(Xp) + ")"
+                                self.cutlineX(Xp)
+                commands.append(command)
+#                print(line)
+#                print(command)
+#                print(machinestate, Xc, Yc, Zc)
+#                print(Xp, Yp, Zp)
+#                print("/n")
+
+#        for command in commands:
+#            print(command)
+
+        output(self.stockandtoolpaths())
 
