@@ -4811,6 +4811,15 @@ Obviously, a command to manage adding the colour commands would be:
 \end{writecode}
 \addtocounter{gcpy}{48}
 
+\lstset{firstnumber=\thegcpscad}
+\begin{writecode}{a}{gcodepreview.scad}{scad}
+module setdxfcolor(color){
+    gcp.setdxfcolor(color);
+}
+
+\end{writecode}
+\addtocounter{gcpscad}{4}
+
 A further refinement would be to connect multiple line segments/arcs into a larger polyline, but since most \textsc{cam} tools implicitly join elements on import, that is not necessary.
  
 There are three possible interactions for \textsc{dxf} elements and toolpaths:

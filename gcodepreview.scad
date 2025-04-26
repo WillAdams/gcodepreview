@@ -135,6 +135,10 @@ module opengcodefile(basefilename, currenttoolnum, toolradius, plunge, feed, spe
     gcp.opengcodefile(basefilename, currenttoolnum, toolradius, plunge, feed, speed);
 }
 
+module setdxfcolor(color){
+    gcp.setdxfcolor(color);
+}
+
 module cutarcNECCdxfgc(ex, ey, ez, xcenter, ycenter, radius){
     gcp.cutarcNECCdxfgc(ex, ey, ez, xcenter, ycenter, radius);
 }
