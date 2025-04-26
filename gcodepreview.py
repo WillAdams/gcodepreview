@@ -107,7 +107,7 @@ class gcodepreview:
 #        self.c=cube([xdim, ydim, zdim])
 #
 #    def placecube(self):
-#        output(self.c)
+#        show(self.c)
 #
 #    def instantiatecube(self):
 #        return self.c
@@ -1229,27 +1229,196 @@ class gcodepreview:
         self.dxfarc(self.currenttoolnumber(), Joint_Width, 0, DTR, 270, 360)
         return ctp
 
+#module Full_Blind_Finger_Joint(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter) {
+#  if (orientation == "Vertical") {
+#    union(){
+#      union(){
+#        cut_V(bx, by, -thickness, bx, by + width, -thickness, Small_V_Diameter);
+#        cut_V(bx, by, -thickness, bx, by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, -thickness, Large_V_Diameter);
+#        cut_V(bx, by + width, -thickness, bx, (by + width) - (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, -thickness, Large_V_Diameter);
+#      }
+#      if (side == "Both") {
+#        union(){
+#          hull(){
+#            cut_square(bx - (stockZthickness - smallDiameter), by, -((smallDiameter / 2) / tan(45)), bx - (stockZthickness - smallDiameter), by + width, -((smallDiameter / 2) / tan(45)), smallDiameter);
+#            cut_square(bx + (stockZthickness - smallDiameter), by, -((smallDiameter / 2) / tan(45)), bx + (stockZthickness - smallDiameter), by + width, -((smallDiameter / 2) / tan(45)), smallDiameter);
+#          }
+#          for (i = [0 : abs(1) : Number_of_Pins - 1]) {
+#            union(){
+#              cut_vertical_odd(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i);
+#              if (i < Number_of_Pins - 1) {
+#                cut_vertical_even(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i + 0.5);
+#              }
+#
+#            }
+#          }
+#
+#        }
+#      } else if (side == "Even") {
+#        union(){
+#          hull(){
+#            cut_square(bx, by, -((smallDiameter / 2) / tan(45)), bx, by + width, -((smallDiameter / 2) / tan(45)), smallDiameter);
+#            cut_square(bx + (stockZthickness - smallDiameter), by, -((smallDiameter / 2) / tan(45)), bx + (stockZthickness - smallDiameter), by + width, -((smallDiameter / 2) / tan(45)), smallDiameter);
+#          }
+#          for (i = [0 : abs(1) : Number_of_Pins - 1]) {
+#            if (i < Number_of_Pins - 1) {
+#              cut_vertical_even(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i + 0.5);
+#            }
+#
+#          }
+#
+#        }
+#      } else if (side == "Odd") {
+#        union(){
+#          hull(){
+#            cut_square(bx - (stockZthickness - smallDiameter), by, -((smallDiameter / 2) / tan(45)), bx - (stockZthickness - smallDiameter), by + width, -((smallDiameter / 2) / tan(45)), smallDiameter);
+#            cut_square(bx, by, -((smallDiameter / 2) / tan(45)), bx, by + width, -((smallDiameter / 2) / tan(45)), smallDiameter);
+#          }
+#          for (i = [0 : abs(1) : Number_of_Pins - 1]) {
+#            cut_vertical_odd(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i);
+#          }
+#
+#        }
+#      }
+#
+#    }
+#  } else if (orientation == "Horizontal") {
+#    union(){
+#      union(){
+#        cut_V(bx, by, -thickness, bx + width, by, -thickness, Small_V_Diameter);
+#        cut_V(bx, by, -thickness, bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, by, -thickness, Large_V_Diameter);
+#        cut_V(bx + width, by, -thickness, (bx + width) - (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, by, -thickness, Large_V_Diameter);
+#      }
+#      if (side == "Both") {
+#        union(){
+#          hull(){
+#            cut_square(bx, by - (stockZthickness - smallDiameter), -((smallDiameter / 2) / tan(45)), bx + width, by - (stockZthickness - smallDiameter), -((smallDiameter / 2) / tan(45)), smallDiameter);
+#            cut_square(bx, by + (stockZthickness - smallDiameter), -((smallDiameter / 2) / tan(45)), bx + width, by + (stockZthickness - smallDiameter), -((smallDiameter / 2) / tan(45)), smallDiameter);
+#          }
+#          for (i = [0 : abs(1) : Number_of_Pins - 1]) {
+#            union(){
+#              cut_horizontal_odd(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i);
+#              if (i < Number_of_Pins - 1) {
+#                cut_horizontal_even(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i + 0.5);
+#              }
+#
+#            }
+#          }
+#
+#        }
+#      } else if (side == "Even") {
+#        union(){
+#          hull(){
+#            cut_square(bx, by, -((smallDiameter / 2) / tan(45)), bx + width, by, -((smallDiameter / 2) / tan(45)), smallDiameter);
+#            cut_square(bx, by + (stockZthickness - smallDiameter), -((smallDiameter / 2) / tan(45)), bx + width, by + (stockZthickness - smallDiameter), -((smallDiameter / 2) / tan(45)), smallDiameter);
+#          }
+#          for (i = [0 : abs(1) : Number_of_Pins - 1]) {
+#            if (i < Number_of_Pins - 1) {
+#              cut_horizontal_even(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i + 0.5);
+#            }
+#
+#          }
+#
+#        }
+#      } else if (side == "Odd") {
+#        union(){
+#          hull(){
+#            cut_square(bx, by - (stockZthickness - smallDiameter), -((smallDiameter / 2) / tan(45)), bx + width, by - (stockZthickness - smallDiameter), -((smallDiameter / 2) / tan(45)), smallDiameter);
+#            cut_square(bx, by, -((smallDiameter / 2) / tan(45)), bx + width, by, -((smallDiameter / 2) / tan(45)), smallDiameter);
+#          }
+#          for (i = [0 : abs(1) : Number_of_Pins - 1]) {
+#            cut_horizontal_odd(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i);
+#          }
+#
+#        }
+#      }
+#
+#    }
+#  }
+#
+#}
+#
+#module cut_horizontal_odd(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i) {
+#  union(){
+#    cut_square(i * (smallDiameter * 2) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by, -(thickness - (smallDiameter / 2) / tan(45)), (smallDiameter / 2 + i * (smallDiameter * 2)) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by, -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
+#    cut_square((smallDiameter / 2 + i * (smallDiameter * 2)) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by, -(thickness - (smallDiameter / 2) / tan(45)), (smallDiameter / 2 + i * (smallDiameter * 2)) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by - (thickness - smallDiameter / 2), -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
+#    cut_square((smallDiameter / 2 + i * (smallDiameter * 2)) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by, -(thickness - (smallDiameter / 2) / tan(45)), (smallDiameter * 0.1 + (smallDiameter / 2 + i * (smallDiameter * 2))) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by - (thickness - smallDiameter / 2), -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
+#    cut_V(bx, by - thickness / 2, -(thickness / 2), bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, by - thickness / 2, -(thickness / 2), Large_V_Diameter);
+#    cut_V(bx + width, by - thickness / 2, -(thickness / 2), (bx + width) - (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, by - thickness / 2, -(thickness / 2), Large_V_Diameter);
+#    cut_V(bx, by - (thickness - Small_V_Diameter / 2), -((Small_V_Diameter / 2) / tan(45)), bx + width, by - (thickness - Small_V_Diameter / 2), -((Small_V_Diameter / 2) / tan(45)), Small_V_Diameter);
+#  }
+#}
+#
+#module cut_horizontal_even(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i) {
+#  union(){
+#    cut_square(i * (smallDiameter * 2) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by, -(thickness - (smallDiameter / 2) / tan(45)), (smallDiameter / 2 + i * (smallDiameter * 2)) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by, -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
+#    cut_square((smallDiameter / 2 + i * (smallDiameter * 2)) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by, -(thickness - (smallDiameter / 2) / tan(45)), (smallDiameter / 2 + i * (smallDiameter * 2)) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by + (thickness - smallDiameter / 2), -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
+#    cut_square((smallDiameter / 2 + i * (smallDiameter * 2)) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by, -(thickness - (smallDiameter / 2) / tan(45)), (smallDiameter * 0.1 + (smallDiameter / 2 + i * (smallDiameter * 2))) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by + (thickness - smallDiameter / 2), -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
+#    cut_V(bx, by + thickness / 2, -(thickness / 2), bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, by + thickness / 2, -(thickness / 2), Large_V_Diameter);
+#    cut_V(bx + width, by + thickness / 2, -(thickness / 2), (bx + width) - (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, by + thickness / 2, -(thickness / 2), Large_V_Diameter);
+#    cut_V(bx, by + (thickness - Small_V_Diameter / 2), -((Small_V_Diameter / 2) / tan(45)), bx + width, by + (thickness - Small_V_Diameter / 2), -((Small_V_Diameter / 2) / tan(45)), Small_V_Diameter);
+#  }
+#}
+#
+#module cut_vertical_even(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i) {
+#  union(){
+#    cut_square(bx, i * (smallDiameter * 2) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), -(thickness - (smallDiameter / 2) / tan(45)), bx, (smallDiameter / 2 + i * (smallDiameter * 2)) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
+#    cut_square(bx, (smallDiameter / 2 + i * (smallDiameter * 2)) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), -(thickness - (smallDiameter / 2) / tan(45)), bx + (thickness - smallDiameter / 2), (smallDiameter / 2 + i * (smallDiameter * 2)) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
+#    cut_square(bx, (smallDiameter / 2 + i * (smallDiameter * 2)) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), -(thickness - (smallDiameter / 2) / tan(45)), bx + (thickness - smallDiameter / 2), (smallDiameter * 0.1 + (smallDiameter / 2 + i * (smallDiameter * 2))) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
+#    cut_V(bx + thickness / 2, by, -(thickness / 2), bx + thickness / 2, by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, -(thickness / 2), Large_V_Diameter);
+#    cut_V(bx + thickness / 2, by + width, -(thickness / 2), bx + thickness / 2, (by + width) - (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, -(thickness / 2), Large_V_Diameter);
+#    cut_V(bx + (thickness - Small_V_Diameter / 2), by, -((Small_V_Diameter / 2) / tan(45)), bx + (thickness - Small_V_Diameter / 2), by + width, -((Small_V_Diameter / 2) / tan(45)), Small_V_Diameter);
+#  }
+#}
+
+    def cut_vertical_odd(self, bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i):
+        vertcut = self.cutlinedxfgc(
+#            bx,
+#            i * (smallDiameter * 2) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2),
+#            -(thickness - (smallDiameter / 2) / math.tan(math.radians(45))),
+            bx,
+            (smallDiameter / 2 + i * (smallDiameter * 2)) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2),
+            -(thickness - (smallDiameter / 2) / math.tan(math.radians(45))))
+        vertcut = vertcut.union(self.cutlinedxfgc(
+#            bx,
+#            (smallDiameter / 2 + i * (smallDiameter * 2)) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2),
+#            -(thickness - (smallDiameter / 2) / math.tan(math.radians(45))),
+            bx - (thickness - smallDiameter / 2),
+            (smallDiameter / 2 + i * (smallDiameter * 2)) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2),
+            -(thickness - (smallDiameter / 2) / math.tan(math.radians(45)))))
+        vertcut = vertcut.union(self.cutlinedxfgc(
+#            bx,
+#            (smallDiameter / 2 + i * (smallDiameter * 2)) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2),
+#            -(thickness - (smallDiameter / 2) / math.tan(math.radians(45))),
+            bx - (thickness - smallDiameter / 2),
+            (smallDiameter * 0.1 + (smallDiameter / 2 + i * (smallDiameter * 2))) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2),
+            -(thickness - (smallDiameter / 2) / math.tan(math.radians(45)))))
+#    cut_V(bx - thickness / 2, by, -(thickness / 2), bx - thickness / 2, by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, -(thickness / 2), Large_V_Diameter);
+#    cut_V(bx - thickness / 2, by + width, -(thickness / 2), bx - thickness / 2, (by + width) - (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, -(thickness / 2), Large_V_Diameter);
+#    cut_V(bx - (thickness - Small_V_Diameter / 2), by, -((Small_V_Diameter / 2) / tan(45)), bx - (thickness - Small_V_Diameter / 2), by + width, -((Small_V_Diameter / 2) / tan(45)), Small_V_Diameter);
+        return vertcut
+
     def stockandtoolpaths(self, option = "stockandtoolpaths"):
         if option == "stock":
             if self.generatepaths == False:
-                output(self.stock)
+                show(self.stock)
 #                print("Outputting stock")
             else:
                 return self.stock
         elif option == "toolpaths":
             if self.generatepaths == False:
-                output(self.toolpaths)
+                show(self.toolpaths)
             else:
                 return self.toolpaths
         elif option == "rapids":
             if self.generatepaths == False:
-                output(self.rapids)
+                show(self.rapids)
             else:
                 return self.rapids
         else:
             part = self.stock.difference(self.toolpaths)
             if self.generatepaths == False:
-                output(part)
+                show(part)
             else:
                 return part
 
@@ -1334,6 +1503,7 @@ class gcodepreview:
 #        global generatedxfs
 #        global dxfclosed
         self.dxfclosed = False
+        self.dxfcolor = "Black"
         if self.generatedxf == True:
             self.generatedxfs = False
             self.dxffilename = basefilename + ".dxf"
@@ -1433,7 +1603,55 @@ class gcodepreview:
         self.writedxf(tn, "2")
         self.writedxf(tn, "ENTITIES")
 
-    def dxfline(self, tn, xbegin, ybegin, xend, yend):
+    def setdxfcolor(self, color):
+        self.dxfcolor = color
+
+    def writedxfcolor(self, tn):
+            self.writedxf(tn, "8")
+            if (self.dxfcolor == "Black"):
+                self.writedxf(tn, "Layer_Black")
+            if (self.dxfcolor == "Red"):
+                self.writedxf(tn, "Layer_Red")
+            if (self.dxfcolor == "Yellow"):
+                self.writedxf(tn, "Layer_Yellow")
+            if (self.dxfcolor == "Green"):
+                self.writedxf(tn, "Layer_Green")
+            if (self.dxfcolor == "Cyan"):
+                self.writedxf(tn, "Layer_Cyan")
+            if (self.dxfcolor == "Blue"):
+                self.writedxf(tn, "Layer_Blue")
+            if (self.dxfcolor == "Magenta"):
+                self.writedxf(tn, "Layer_Magenta")
+            if (self.dxfcolor == "White"):
+                self.writedxf(tn, "Layer_White")
+            if (self.dxfcolor == "Dark Gray"):
+                self.writedxf(tn, "Layer_Dark_Gray")
+            if (self.dxfcolor == "Light Gray"):
+                self.writedxf(tn, "Layer_Light_Gray")
+
+            self.writedxf(tn, "62")
+            if (self.dxfcolor == "Black"):
+                self.writedxf(tn, "0")
+            if (self.dxfcolor == "Red"):
+                self.writedxf(tn, "1")
+            if (self.dxfcolor == "Yellow"):
+                self.writedxf(tn, "2")
+            if (self.dxfcolor == "Green"):
+                self.writedxf(tn, "3")
+            if (self.dxfcolor == "Cyan"):
+                self.writedxf(tn, "4")
+            if (self.dxfcolor == "Blue"):
+                self.writedxf(tn, "5")
+            if (self.dxfcolor == "Magenta"):
+                self.writedxf(tn, "6")
+            if (self.dxfcolor == "White"):
+                self.writedxf(tn, "7")
+            if (self.dxfcolor == "Dark Gray"):
+                self.writedxf(tn, "8")
+            if (self.dxfcolor == "Light Gray"):
+                self.writedxf(tn, "9")
+
+    def dxfpolyline(self, tn, xbegin, ybegin, xend, yend):
         self.writedxf(tn, "0")
         self.writedxf(tn, "LWPOLYLINE")
         self.writedxf(tn, "90")
@@ -1451,10 +1669,32 @@ class gcodepreview:
         self.writedxf(tn, "20")
         self.writedxf(tn, str(yend))
 
+    def dxfline(self, tn, xbegin, ybegin, xend, yend):
+        self.writedxf(tn, "0")
+        self.writedxf(tn, "LINE")
+#
+        self.writedxfcolor(tn)
+#
+        self.writedxf(tn, "10")
+        self.writedxf(tn, str(xbegin))
+        self.writedxf(tn, "20")
+        self.writedxf(tn, str(ybegin))
+        self.writedxf(tn, "30")
+        self.writedxf(tn, "0.0")
+        self.writedxf(tn, "11")
+        self.writedxf(tn, str(xend))
+        self.writedxf(tn, "21")
+        self.writedxf(tn, str(yend))
+        self.writedxf(tn, "31")
+        self.writedxf(tn, "0.0")
+
     def dxfarc(self, tn, xcenter, ycenter, radius, anglebegin, endangle):
         if (self.generatedxf == True):
             self.writedxf(tn, "0")
             self.writedxf(tn, "ARC")
+#
+            self.writedxfcolor(tn)
+#
             self.writedxf(tn, "10")
             self.writedxf(tn, str(xcenter))
             self.writedxf(tn, "20")
@@ -1875,5 +2115,5 @@ class gcodepreview:
 #        for command in commands:
 #            print(command)
 
-        output(self.stockandtoolpaths())
+        show(self.stockandtoolpaths())
 

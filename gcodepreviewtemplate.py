@@ -304,10 +304,10 @@ gcp.rapidZ(retractheight)
 
 part = gcp.stock.difference(toolpaths)
 
-output (part)
-#output(test)
-#output (key)
-#output(dt)
+show(part)
+#show(test)
+#show(key)
+#show(dt)
 #gcp.stockandtoolpaths()
 #gcp.stockandtoolpaths("stock")
 #output (gcp.stock)
@@ -320,7 +320,7 @@ output (part)
 #
 #c = gcp.instantiatecube()
 #
-#output(c)
+#show(c)
 
 gcp.closegcodefile()
 gcp.closedxffiles()

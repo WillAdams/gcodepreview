@@ -313,7 +313,7 @@ stockXwidth = 100
 stockYheight = 50
 
 # [Export] */
-Base_filename = "dxfexport"
+Base_filename = "gcpdxf"
 
 
 # [CAM] */
@@ -359,6 +359,8 @@ gcp.opendxffile(Base_filename)
 
 gcp.dxfrectangle(large_square_tool_num, 0, 0, stockXwidth, stockYheight)
 
+gcp.setdxfcolor("Red")
+
 gcp.dxfarc(large_square_tool_num, inset, inset, radius,  0, 90)
 gcp.dxfarc(large_square_tool_num, stockXwidth - inset, inset, radius, 90, 180)
 gcp.dxfarc(large_square_tool_num, stockXwidth - inset, stockYheight - inset, radius, 180, 270)
@@ -369,13 +371,19 @@ gcp.dxfline(large_square_tool_num, inset + radius, inset, stockXwidth - (inset +
 gcp.dxfline(large_square_tool_num, stockXwidth - inset, inset + radius, stockXwidth - inset, stockYheight - (inset + radius))
 gcp.dxfline(large_square_tool_num, inset + radius, stockYheight-inset, stockXwidth - (inset + radius), stockYheight - inset)
     
+gcp.setdxfcolor("Blue")
+
 gcp.dxfrectangle(large_square_tool_num, radius +inset, radius, stockXwidth/2 - (radius * 4), stockYheight - (radius * 2), cornerstyle, radius) 
 gcp.dxfrectangle(large_square_tool_num, stockXwidth/2 + (radius * 2) + inset, radius, stockXwidth/2 - (radius * 4), stockYheight - (radius * 2), cornerstyle, radius) 
 #gcp.dxfrectangleround(large_square_tool_num, 64, 7, 24, 36, radius)
 #gcp.dxfrectanglechamfer(large_square_tool_num, 64, 7, 24, 36, radius)
 #gcp.dxfrectangleflippedfillet(large_square_tool_num, 64, 7, 24, 36, radius)
 
+gcp.setdxfcolor("Dark Gray")
+
 gcp.dxfcircle(large_square_tool_num, stockXwidth/2, stockYheight/2, radius * 2)
+
+gcp.setdxfcolor("Light Gray")
 
 gcp.dxfKH(374, stockXwidth/2, stockYheight/5*3, 0, -7, 270, 11.5875)
 
@@ -722,10 +730,10 @@ gcp.rapidZ(retractheight)
 
 part = gcp.stock.difference(toolpaths)
 
-output (part)
-#output(test)
-#output (key)
-#output(dt)
+show(part)
+#show(test)
+#show(key)
+#show(dt)
 #gcp.stockandtoolpaths()
 #gcp.stockandtoolpaths("stock")
 #output (gcp.stock)
@@ -738,7 +746,7 @@ output (part)
 #
 #c = gcp.instantiatecube()
 #
-#output(c)
+#show(c)
 
 gcp.closegcodefile()
 gcp.closedxffiles()
@@ -1431,7 +1439,7 @@ class gcodepreview:
 #        self.c=cube([xdim, ydim, zdim])
 #        
 #    def placecube(self):
-#        output(self.c)
+#        show(self.c)
 #
 #    def instantiatecube(self):
 #        return self.c
@@ -1724,7 +1732,7 @@ setupstock(stockXwidth, stockYheight, stockZthickness, zeroheight, stockzero)
 cy = cube([1, 2, stockZthickness*2])
 
 diff = stock.difference(cy)
-#output(diff)
+#show(diff)
 diff.show()
 \end{verbatim}
 
@@ -3911,6 +3919,8 @@ Then it will be necessary to test for each possible case in a series of If Else 
 
 One focus of this project from the beginning has been cutting joinery. The first such toolpath to be developed is half-blind dovetails, since they are intrinsically simple to calculate since their geometry is dictated by the geometry of the tool.
 
+BlocksCAD project page at: \url{https://www.blockscad3d.com/community/projects/1941456} and discussion at: \url{https://community.carbide3d.com/t/tool-paths-for-different-sized-dovetail-bits/89098}
+
 Making such cuts will require dovetail tooling such as:
 
 \begin{itemize}
@@ -3946,7 +3956,7 @@ Two commands are required:
         return ctp
     
 \end{writecode}
-\addtocounter{gcpy}{14}
+\addtocounter{gcpy}{23}
 
 \noindent and
 
@@ -4016,7 +4026,7 @@ Two commands are required:
         return ctp
 
 \end{writecode}
-\addtocounter{gcpy}{26}
+\addtocounter{gcpy}{63}
 
 \noindent which are used as:
 
@@ -4028,6 +4038,203 @@ toolpaths = toolpaths.union(gcp.cut_tails(stockXwidth, stockZthickness, Number_o
 
 Future versions may adjust the parameters passed in, having them calculate from the specifications for the currently active dovetail tool.
 
+\subparagraph*{Full-blind box joints}
+ 
+\label{subsec:fullblindboxjoints}
+
+BlocksCAD project page at: \url{https://www.blockscad3d.com/community/projects/1943966} and discussion at: \url{https://community.carbide3d.com/t/full-blind-box-joints-in-carbide-create/53329}
+
+Full-blind box joints will require 3 separate tools:
+
+\begin{itemize}
+\item small V tool --- this will be needed to make a cut along the edge of the joint
+\item small square tool --- this should be the same diameter as the small V tool
+\item large V tool --- this will facilitate the stock being of a greater thickness and avoid the need to make multiple cuts to cut the blind miters at the ends of the joint
+\end{itemize}
+
+Two different versions of the commands will be necessary, one for each orientation:
+
+\begin{itemize}
+\item horizontal
+\item vertical
+\end{itemize}
+
+\noindent and then the internal commands for each side will in turn need separate versions:
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+#module Full_Blind_Finger_Joint(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter) {
+#  if (orientation == "Vertical") {
+#    union(){
+#      union(){
+#        cut_V(bx, by, -thickness, bx, by + width, -thickness, Small_V_Diameter);
+#        cut_V(bx, by, -thickness, bx, by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, -thickness, Large_V_Diameter);
+#        cut_V(bx, by + width, -thickness, bx, (by + width) - (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, -thickness, Large_V_Diameter);
+#      }
+#      if (side == "Both") {
+#        union(){
+#          hull(){
+#            cut_square(bx - (stockZthickness - smallDiameter), by, -((smallDiameter / 2) / tan(45)), bx - (stockZthickness - smallDiameter), by + width, -((smallDiameter / 2) / tan(45)), smallDiameter);
+#            cut_square(bx + (stockZthickness - smallDiameter), by, -((smallDiameter / 2) / tan(45)), bx + (stockZthickness - smallDiameter), by + width, -((smallDiameter / 2) / tan(45)), smallDiameter);
+#          }
+#          for (i = [0 : abs(1) : Number_of_Pins - 1]) {
+#            union(){
+#              cut_vertical_odd(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i);
+#              if (i < Number_of_Pins - 1) {
+#                cut_vertical_even(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i + 0.5);
+#              }
+#
+#            }
+#          }
+#
+#        }
+#      } else if (side == "Even") {
+#        union(){
+#          hull(){
+#            cut_square(bx, by, -((smallDiameter / 2) / tan(45)), bx, by + width, -((smallDiameter / 2) / tan(45)), smallDiameter);
+#            cut_square(bx + (stockZthickness - smallDiameter), by, -((smallDiameter / 2) / tan(45)), bx + (stockZthickness - smallDiameter), by + width, -((smallDiameter / 2) / tan(45)), smallDiameter);
+#          }
+#          for (i = [0 : abs(1) : Number_of_Pins - 1]) {
+#            if (i < Number_of_Pins - 1) {
+#              cut_vertical_even(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i + 0.5);
+#            }
+#
+#          }
+#
+#        }
+#      } else if (side == "Odd") {
+#        union(){
+#          hull(){
+#            cut_square(bx - (stockZthickness - smallDiameter), by, -((smallDiameter / 2) / tan(45)), bx - (stockZthickness - smallDiameter), by + width, -((smallDiameter / 2) / tan(45)), smallDiameter);
+#            cut_square(bx, by, -((smallDiameter / 2) / tan(45)), bx, by + width, -((smallDiameter / 2) / tan(45)), smallDiameter);
+#          }
+#          for (i = [0 : abs(1) : Number_of_Pins - 1]) {
+#            cut_vertical_odd(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i);
+#          }
+#
+#        }
+#      }
+#
+#    }
+#  } else if (orientation == "Horizontal") {
+#    union(){
+#      union(){
+#        cut_V(bx, by, -thickness, bx + width, by, -thickness, Small_V_Diameter);
+#        cut_V(bx, by, -thickness, bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, by, -thickness, Large_V_Diameter);
+#        cut_V(bx + width, by, -thickness, (bx + width) - (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, by, -thickness, Large_V_Diameter);
+#      }
+#      if (side == "Both") {
+#        union(){
+#          hull(){
+#            cut_square(bx, by - (stockZthickness - smallDiameter), -((smallDiameter / 2) / tan(45)), bx + width, by - (stockZthickness - smallDiameter), -((smallDiameter / 2) / tan(45)), smallDiameter);
+#            cut_square(bx, by + (stockZthickness - smallDiameter), -((smallDiameter / 2) / tan(45)), bx + width, by + (stockZthickness - smallDiameter), -((smallDiameter / 2) / tan(45)), smallDiameter);
+#          }
+#          for (i = [0 : abs(1) : Number_of_Pins - 1]) {
+#            union(){
+#              cut_horizontal_odd(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i);
+#              if (i < Number_of_Pins - 1) {
+#                cut_horizontal_even(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i + 0.5);
+#              }
+#
+#            }
+#          }
+#
+#        }
+#      } else if (side == "Even") {
+#        union(){
+#          hull(){
+#            cut_square(bx, by, -((smallDiameter / 2) / tan(45)), bx + width, by, -((smallDiameter / 2) / tan(45)), smallDiameter);
+#            cut_square(bx, by + (stockZthickness - smallDiameter), -((smallDiameter / 2) / tan(45)), bx + width, by + (stockZthickness - smallDiameter), -((smallDiameter / 2) / tan(45)), smallDiameter);
+#          }
+#          for (i = [0 : abs(1) : Number_of_Pins - 1]) {
+#            if (i < Number_of_Pins - 1) {
+#              cut_horizontal_even(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i + 0.5);
+#            }
+#
+#          }
+#
+#        }
+#      } else if (side == "Odd") {
+#        union(){
+#          hull(){
+#            cut_square(bx, by - (stockZthickness - smallDiameter), -((smallDiameter / 2) / tan(45)), bx + width, by - (stockZthickness - smallDiameter), -((smallDiameter / 2) / tan(45)), smallDiameter);
+#            cut_square(bx, by, -((smallDiameter / 2) / tan(45)), bx + width, by, -((smallDiameter / 2) / tan(45)), smallDiameter);
+#          }
+#          for (i = [0 : abs(1) : Number_of_Pins - 1]) {
+#            cut_horizontal_odd(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i);
+#          }
+#
+#        }
+#      }
+#
+#    }
+#  }
+#
+#}
+#
+#module cut_horizontal_odd(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i) {
+#  union(){
+#    cut_square(i * (smallDiameter * 2) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by, -(thickness - (smallDiameter / 2) / tan(45)), (smallDiameter / 2 + i * (smallDiameter * 2)) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by, -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
+#    cut_square((smallDiameter / 2 + i * (smallDiameter * 2)) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by, -(thickness - (smallDiameter / 2) / tan(45)), (smallDiameter / 2 + i * (smallDiameter * 2)) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by - (thickness - smallDiameter / 2), -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
+#    cut_square((smallDiameter / 2 + i * (smallDiameter * 2)) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by, -(thickness - (smallDiameter / 2) / tan(45)), (smallDiameter * 0.1 + (smallDiameter / 2 + i * (smallDiameter * 2))) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by - (thickness - smallDiameter / 2), -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
+#    cut_V(bx, by - thickness / 2, -(thickness / 2), bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, by - thickness / 2, -(thickness / 2), Large_V_Diameter);
+#    cut_V(bx + width, by - thickness / 2, -(thickness / 2), (bx + width) - (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, by - thickness / 2, -(thickness / 2), Large_V_Diameter);
+#    cut_V(bx, by - (thickness - Small_V_Diameter / 2), -((Small_V_Diameter / 2) / tan(45)), bx + width, by - (thickness - Small_V_Diameter / 2), -((Small_V_Diameter / 2) / tan(45)), Small_V_Diameter);
+#  }
+#}
+#
+#module cut_horizontal_even(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i) {
+#  union(){
+#    cut_square(i * (smallDiameter * 2) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by, -(thickness - (smallDiameter / 2) / tan(45)), (smallDiameter / 2 + i * (smallDiameter * 2)) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by, -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
+#    cut_square((smallDiameter / 2 + i * (smallDiameter * 2)) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by, -(thickness - (smallDiameter / 2) / tan(45)), (smallDiameter / 2 + i * (smallDiameter * 2)) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by + (thickness - smallDiameter / 2), -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
+#    cut_square((smallDiameter / 2 + i * (smallDiameter * 2)) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by, -(thickness - (smallDiameter / 2) / tan(45)), (smallDiameter * 0.1 + (smallDiameter / 2 + i * (smallDiameter * 2))) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by + (thickness - smallDiameter / 2), -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
+#    cut_V(bx, by + thickness / 2, -(thickness / 2), bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, by + thickness / 2, -(thickness / 2), Large_V_Diameter);
+#    cut_V(bx + width, by + thickness / 2, -(thickness / 2), (bx + width) - (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, by + thickness / 2, -(thickness / 2), Large_V_Diameter);
+#    cut_V(bx, by + (thickness - Small_V_Diameter / 2), -((Small_V_Diameter / 2) / tan(45)), bx + width, by + (thickness - Small_V_Diameter / 2), -((Small_V_Diameter / 2) / tan(45)), Small_V_Diameter);
+#  }
+#}
+#
+#module cut_vertical_even(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i) {
+#  union(){
+#    cut_square(bx, i * (smallDiameter * 2) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), -(thickness - (smallDiameter / 2) / tan(45)), bx, (smallDiameter / 2 + i * (smallDiameter * 2)) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
+#    cut_square(bx, (smallDiameter / 2 + i * (smallDiameter * 2)) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), -(thickness - (smallDiameter / 2) / tan(45)), bx + (thickness - smallDiameter / 2), (smallDiameter / 2 + i * (smallDiameter * 2)) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
+#    cut_square(bx, (smallDiameter / 2 + i * (smallDiameter * 2)) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), -(thickness - (smallDiameter / 2) / tan(45)), bx + (thickness - smallDiameter / 2), (smallDiameter * 0.1 + (smallDiameter / 2 + i * (smallDiameter * 2))) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
+#    cut_V(bx + thickness / 2, by, -(thickness / 2), bx + thickness / 2, by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, -(thickness / 2), Large_V_Diameter);
+#    cut_V(bx + thickness / 2, by + width, -(thickness / 2), bx + thickness / 2, (by + width) - (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, -(thickness / 2), Large_V_Diameter);
+#    cut_V(bx + (thickness - Small_V_Diameter / 2), by, -((Small_V_Diameter / 2) / tan(45)), bx + (thickness - Small_V_Diameter / 2), by + width, -((Small_V_Diameter / 2) / tan(45)), Small_V_Diameter);
+#  }
+#}
+
+    def cut_vertical_odd(self, bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i):
+        vertcut = self.cutlinedxfgc(
+#            bx, 
+#            i * (smallDiameter * 2) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), 
+#            -(thickness - (smallDiameter / 2) / math.tan(math.radians(45))), 
+            bx, 
+            (smallDiameter / 2 + i * (smallDiameter * 2)) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), 
+            -(thickness - (smallDiameter / 2) / math.tan(math.radians(45))))
+        vertcut = vertcut.union(self.cutlinedxfgc(
+#            bx, 
+#            (smallDiameter / 2 + i * (smallDiameter * 2)) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), 
+#            -(thickness - (smallDiameter / 2) / math.tan(math.radians(45))), 
+            bx - (thickness - smallDiameter / 2), 
+            (smallDiameter / 2 + i * (smallDiameter * 2)) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), 
+            -(thickness - (smallDiameter / 2) / math.tan(math.radians(45)))))
+        vertcut = vertcut.union(self.cutlinedxfgc(
+#            bx, 
+#            (smallDiameter / 2 + i * (smallDiameter * 2)) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), 
+#            -(thickness - (smallDiameter / 2) / math.tan(math.radians(45))), 
+            bx - (thickness - smallDiameter / 2), 
+            (smallDiameter * 0.1 + (smallDiameter / 2 + i * (smallDiameter * 2))) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), 
+            -(thickness - (smallDiameter / 2) / math.tan(math.radians(45)))))
+#    cut_V(bx - thickness / 2, by, -(thickness / 2), bx - thickness / 2, by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, -(thickness / 2), Large_V_Diameter);
+#    cut_V(bx - thickness / 2, by + width, -(thickness / 2), bx - thickness / 2, (by + width) - (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, -(thickness / 2), Large_V_Diameter);
+#    cut_V(bx - (thickness - Small_V_Diameter / 2), by, -((Small_V_Diameter / 2) / tan(45)), bx - (thickness - Small_V_Diameter / 2), by + width, -((Small_V_Diameter / 2) / tan(45)), Small_V_Diameter);
+        return vertcut
+
+\end{writecode}
+\addtocounter{gcpy}{153}
+
 \subsubsection{Difference of Stock, Rapids, and Toolpaths}
 
 At the end of cutting it will be necessary to subtract the accumulated toolpaths and rapids from the stock. If in OpenSCAD, the \textsc{3d} model is returned by each operation, causing it to be instantiated on the \textsc{3d} stage unless the Boolean \verb|generatepaths| is True.
@@ -4037,24 +4244,24 @@ At the end of cutting it will be necessary to subtract the accumulated toolpaths
     def stockandtoolpaths(self, option = "stockandtoolpaths"):
         if option == "stock":
             if self.generatepaths == False:
-                output(self.stock)
+                show(self.stock)
 #                print("Outputting stock")
             else:
                 return self.stock
         elif option == "toolpaths":
             if self.generatepaths == False:
-                output(self.toolpaths)
+                show(self.toolpaths)
             else:
                 return self.toolpaths
         elif option == "rapids":
             if self.generatepaths == False:
-                output(self.rapids)
+                show(self.rapids)
             else:
                 return self.rapids
         else:
             part = self.stock.difference(self.toolpaths)
             if self.generatepaths == False:
-                output(part)
+                show(part)
             else:
                 return part
                     
@@ -4349,6 +4556,7 @@ module opengcodefile(basefilename, currenttoolnum, toolradius, plunge, feed, spe
 #        global generatedxfs
 #        global dxfclosed
         self.dxfclosed = False
+        self.dxfcolor = "Black"
         if self.generatedxf == True:
             self.generatedxfs = False
             self.dxffilename = basefilename + ".dxf"
@@ -4510,6 +4718,99 @@ Note that arcs of greater than 90 degrees are not rendered accurately, so, for t
            dxfarc(10, 10, 5, 270, 360, small_square_tool_num);
 \end{verbatim}
  
+%Note that a circle may be defined in a DXF as:
+%
+%0
+%CIRCLE
+%8
+%Layer1
+%62
+%1
+%10
+%50.0
+%20
+%50.0
+%40
+%25.0
+%
+%which will create a red circle centered on 50,50 with a radius of 25
+
+The \textsc{dxf} file format supports colors defined by AutoCAD's indexed color system:
+
+\begin{center}
+\noindent\begin{tabular}{cl}
+Color Code & Color Name \\
+\toprule
+ 0 & Black (or Background)  \\
+ 1 & Red \\
+ 2 & Yellow \\
+ 3 & Green  \\
+ 4 & Cyan  \\
+ 5 & Blue \\
+ 6 & Magenta \\ 
+ 7 & White (or Foreground)\\
+ 8 & Dark Gray \\ 
+ 9 & Light Gray \\\bottomrule
+\end{tabular}
+\end{center}
+
+Color codes 10--255 represent additional colors, with hues varying based on RGB values.
+
+Obviously, a command to manage adding the colour commands would be:
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def setdxfcolor(self, color):
+        self.dxfcolor = color
+
+    def writedxfcolor(self, tn):
+            self.writedxf(tn, "8")
+            if (self.dxfcolor == "Black"):
+                self.writedxf(tn, "Layer_Black")
+            if (self.dxfcolor == "Red"):
+                self.writedxf(tn, "Layer_Red")
+            if (self.dxfcolor == "Yellow"):
+                self.writedxf(tn, "Layer_Yellow")
+            if (self.dxfcolor == "Green"):
+                self.writedxf(tn, "Layer_Green")
+            if (self.dxfcolor == "Cyan"):
+                self.writedxf(tn, "Layer_Cyan")
+            if (self.dxfcolor == "Blue"):
+                self.writedxf(tn, "Layer_Blue")
+            if (self.dxfcolor == "Magenta"):
+                self.writedxf(tn, "Layer_Magenta")
+            if (self.dxfcolor == "White"):
+                self.writedxf(tn, "Layer_White")
+            if (self.dxfcolor == "Dark Gray"):
+                self.writedxf(tn, "Layer_Dark_Gray")
+            if (self.dxfcolor == "Light Gray"):
+                self.writedxf(tn, "Layer_Light_Gray")
+
+            self.writedxf(tn, "62")
+            if (self.dxfcolor == "Black"):
+                self.writedxf(tn, "0")
+            if (self.dxfcolor == "Red"):
+                self.writedxf(tn, "1")
+            if (self.dxfcolor == "Yellow"):
+                self.writedxf(tn, "2")
+            if (self.dxfcolor == "Green"):
+                self.writedxf(tn, "3")
+            if (self.dxfcolor == "Cyan"):
+                self.writedxf(tn, "4")
+            if (self.dxfcolor == "Blue"):
+                self.writedxf(tn, "5")
+            if (self.dxfcolor == "Magenta"):
+                self.writedxf(tn, "6")
+            if (self.dxfcolor == "White"):
+                self.writedxf(tn, "7")
+            if (self.dxfcolor == "Dark Gray"):
+                self.writedxf(tn, "8")
+            if (self.dxfcolor == "Light Gray"):
+                self.writedxf(tn, "9")
+
+\end{writecode}
+\addtocounter{gcpy}{48}
+
 A further refinement would be to connect multiple line segments/arcs into a larger polyline, but since most \textsc{cam} tools implicitly join elements on import, that is not necessary.
  
 There are three possible interactions for \textsc{dxf} elements and toolpaths:
@@ -4517,16 +4818,18 @@ There are three possible interactions for \textsc{dxf} elements and toolpaths:
 \begin{itemize}
  \item describe the motion of the tool
  \item define a perimeter of an area which will be cut by a tool
- \item define a centerpoint for a specialty toolpath such as Drill or Keyhhole
+ \item define a centerpoint for a specialty toolpath such as Drill or Keyhole
 \end{itemize}
  
 \noindent and it is possible that multiple such elements could be instantiated for a given toolpath.
  
 When writing out to a \textsc{dxf} file there is a pair of commands, a public facing command which takes in a tool number in addition to the coordinates which then writes out to the main \textsc{dxf} file and then calls an internal command to which repeats the call with the tool number so as to write it out to the matching file.
 
+The original \verb|dxfline| definition has been changed to \verb|dxfpolyline| so as to match the term used in it:
+
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
-    def dxfline(self, tn, xbegin, ybegin, xend, yend):
+    def dxfpolyline(self, tn, xbegin, ybegin, xend, yend):
         self.writedxf(tn, "0")
         self.writedxf(tn, "LWPOLYLINE")
         self.writedxf(tn, "90")
@@ -4547,8 +4850,83 @@ When writing out to a \textsc{dxf} file there is a pair of commands, a public fa
 \end{writecode}
 \addtocounter{gcpy}{18}
 
+\noindent while a new definition, with an optional color argument (defaulting to black) replaces it.
+
+%Beginning with black, grey, blue, and red:
+%
+%\begin{center}
+%\noindent\begin{tabular}{lllll}
+%           & black & grey & blue & red \\
+%\toprule
+%           & 0            & 0           & \\
+%           & LINE         & LINE        & \\
+%           & 8            & 8           & \\
+%           & Layer\_Black & Layer\_Grey & \\
+%           & 62           & 62          & \\
+%color code & 0            & 8           & \\
+%           & 10           & 10          & \\
+%xbegin     & 10.0         & 10.0        & \\
+%           & 20           & 20          & \\
+%ybegin     & 40.0         & 30.0        & \\
+%           & 30           & 30          & \\
+%           & 0.0          & 0.0         & \\
+%           & 11           & 11          & \\
+%xend       & 50.0         & 50.0        & \\
+%           & 21           & 21          & \\
+%yend       & 40.0         & 30.0        & \\
+%           & 31           & 31          & \\
+%           & 0.0          & 0.0         & \\\bottomrule
+%\end{tabular}
+%\end{center}
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def dxfline(self, tn, xbegin, ybegin, xend, yend):
+        self.writedxf(tn, "0")
+        self.writedxf(tn, "LINE")
+#
+        self.writedxfcolor(tn)
+#
+        self.writedxf(tn, "10")
+        self.writedxf(tn, str(xbegin))
+        self.writedxf(tn, "20")
+        self.writedxf(tn, str(ybegin))
+        self.writedxf(tn, "30")
+        self.writedxf(tn, "0.0")
+        self.writedxf(tn, "11")
+        self.writedxf(tn, str(xend))
+        self.writedxf(tn, "21")
+        self.writedxf(tn, str(yend))
+        self.writedxf(tn, "31")
+        self.writedxf(tn, "0.0")
+
+\end{writecode}
+\addtocounter{gcpy}{18}
 
 There are specific commands for writing out the \textsc{dxf} and G-code files. Note that for the G-code version it will be necessary to calculate the end-position, and to determine if the arc is clockwise or no (G2 vs. G3).
+
+\begin{center}
+\noindent\begin{tabular}{lllll}
+           & black & grey & blue & red \\
+\toprule
+& 0            & 0 \\
+& ARC          & ARC \\ 
+& 8            & 8 \\
+& Layer\_Black & Layer\_Grey\\
+& 62           & 62 \\
+color code & 0            & 8 \\
+& 10           & 10 \\
+& 50.0         & 50.0 \\
+& 20           & 20 \\
+& 50.0         & 50.0 \\
+& 30           & 30 \\
+& 0.0          & 0.0 \\
+& 40           & 40 \\
+& 270.0        & 180.0 \\
+& 50           & 50 \\
+& 360.0        & 270.0\\\bottomrule
+\end{tabular}
+\end{center}
 
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
@@ -4556,6 +4934,9 @@ There are specific commands for writing out the \textsc{dxf} and G-code files. N
         if (self.generatedxf == True):
             self.writedxf(tn, "0")
             self.writedxf(tn, "ARC")
+#
+            self.writedxfcolor(tn)
+#
             self.writedxf(tn, "10")
             self.writedxf(tn, str(xcenter))
             self.writedxf(tn, "20")
@@ -5158,7 +5539,7 @@ gcp.previewgcodefile(gc_file)
 #        for command in commands:
 #            print(command)
 
-        output(self.stockandtoolpaths())
+        show(self.stockandtoolpaths())
 
 \end{writecode}
 \addtocounter{gcpy}{137}
@@ -5171,7 +5552,7 @@ Fast Preview: Write all movements with both begin and end positions into a list 
 
 Motion Preview: Work up a \textsc{3d} model of the machine and actually show the stock in relation to it, 
 
-%#        output(self.stockandtoolpaths("stock"))
+%#        show(self.stockandtoolpaths("stock"))
 %    def previewgcodefileWITHDIVOT(self, gc_filecontents):
 %        commands = []        
 %        for line in gcfilecontents:
