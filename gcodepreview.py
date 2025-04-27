@@ -777,7 +777,6 @@ class gcodepreview:
         else:
             return cube([0.01, 0.01, 0.01])
 
-
     def dxfcircle(self, tool_num, xcenter, ycenter, radius):
         self.dxfarc(tool_num, xcenter, ycenter, radius,  0, 90)
         self.dxfarc(tool_num, xcenter, ycenter, radius, 90, 180)
@@ -829,6 +828,21 @@ class gcodepreview:
         self.dxfline(tool_num, xorigin + xwidth, yorigin + radius, xorigin + xwidth, yorigin + yheight - radius)
         self.dxfline(tool_num, xorigin + xwidth - radius, yorigin + yheight, xorigin + radius, yorigin + yheight)
         self.dxfline(tool_num, xorigin, yorigin + yheight - radius, xorigin, yorigin + radius)
+
+    def cutrectangleround(self, tool_num, bx, by, bz, xwidth, yheight, zdepth, radius):
+        tool = self.currenttool()
+        toolpath = hull(
+            tool.translate([bx+radius,by+radius,bz-zdepth]),
+            tool.translate([bx+xwidth+radius,by+radius,bz-zdepth]),
+            tool.translate([bx+radius,by+yheight+radius,bz-zdepth]),
+            tool.translate([bx+xwidth+radius,by+yheight+radius,bz-zdepth])
+            )
+        return toolpath
+
+    def cutrectanglerounddxf(self, tool_num, bx, by, bz, xwidth, yheight, zdepth, radius):
+        toolpath = self.cutrectangleround(tool_num, bx, by, bz, xwidth, yheight, zdepth, radius)
+        self.dxfrectangleround(tool_num, bx, by, xwidth, yheight, radius)
+        return toolpath
 
     def cutkeyholegcdxf(self, kh_tool_num, kh_start_depth, kh_max_depth, kht_direction, kh_distance):
         if (kht_direction == "N"):

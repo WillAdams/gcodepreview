@@ -1278,9 +1278,9 @@ except ModuleNotFoundError as e:
 def pygcpversion():
     thegcpversion = 0.8
     return thegcpversion
-
+ 
 \end{writecode}
-\addtocounter{gcpy}{22}
+\addtocounter{gcpy}{23}
 
 The OpenSCAD file must \verb|use| the Python file (note that some test/example code is commented out):
 
@@ -2362,7 +2362,7 @@ The Python definition for toolchange requires the tool number (used to write out
             self.writegc("()")
             self.currenttoolshape = self.flat_V(6.35, 31.75, 12.7, 45)
 \end{writecode}
-\addtocounter{gcpy}{84}
+\addtocounter{gcpy}{89}
 
 \noindent With the tools delineated, the module is closed out and the toolchange information written into the G-code as well as the command to start the spindle at the specified speed.
  
@@ -2505,7 +2505,7 @@ appropriate values based on the specified tool number and depth:
                 return ptd_tool
 
 \end{writecode}
-\addtocounter{gcpy}{82}
+\addtocounter{gcpy}{87}
 
 Since it is often necessary to utilise the radius of the tool, an additional command, \DescribeRoutine{tool radius} to return this value is worthwhile:
  
@@ -3172,7 +3172,7 @@ Note that it is necessary to move to the beginning cutting position before calli
             return cube([0.01, 0.01, 0.01])
 
 \end{writecode}
-\addtocounter{gcpy}{45}
+\addtocounter{gcpy}{49}
 
 Note that it will be necessary to add versions which write out a matching DXF element:
 
@@ -3187,9 +3187,8 @@ Note that it will be necessary to add versions which write out a matching DXF el
         else:
             return cube([0.01, 0.01, 0.01])
 
-
 \end{writecode}
-\addtocounter{gcpy}{45}
+\addtocounter{gcpy}{8}
 
 Matching OpenSCAD modules are easily made:
 
@@ -3350,7 +3349,7 @@ A Drill toolpath is a simple plunge operation will will have a matching circle t
 
 \subparagraph{rectangles}
 
-There are two forms for rectangles, square cornered and rounded:
+There are two obvious forms for rectangles, square cornered and rounded:
 
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
@@ -3426,15 +3425,32 @@ Flipped Fillet:
 \end{writecode}
 \addtocounter{gcpy}{11}
 
+Cutting rectangles while writing out their perimeter in the DXF files (so that they may be assigned a matching toolpath in a traditional CAM program upon import) will require the origin coordinates, height and width and depth of the pocket, and the tool \# so that the corners may have a radius equal to the tool which is used. Whether a given module is an interior pocket or an outline (interior or exterior) will be determined by the specifics of the module and its usage/positioning, with \texttt{outline} being added to those modules which cut perimeter.
 
-%\begin{verbatim}
-%\paragraph{Rectangles}
-%
-%Cutting rectangles while writing out their perimeter in the DXF files (so that they may be assigned a matching toolpath in a traditional CAM program upon import) will require the origin coordinates, height and width and depth of the pocket, and the tool \# so that the corners may have a radius equal to the tool which is used. Whether a given module is an interior pocket or an outline (interior or exterior) will be determined by the specifics of the module and its usage/positioning, with \texttt{outline} being added to those modules which cut perimeter.
-%
-%A further consideration is that cut orientation as an option should be accounted for if writing out G-code, as well as stepover, and the nature of initial entry (whether ramping in would be implemented, and if so, at what angle). Advanced toolpath strategies such as trochoidal milling could also be implemented.
-%
-%Th routine \DescribeRoutine{cutrectangledxf} cuts the outline of a rectangle creating sharp corners. Note that the initial version would work as a beginning point for vertical cutting if the \texttt{hull()} operation was removed and the loop was uncommented:
+A further consideration is that cut orientation as an option should be accounted for if writing out G-code, as well as stepover, and the nature of initial entry (whether ramping in would be implemented, and if so, at what angle). Advanced toolpath strategies such as trochoidal milling could also be implemented.
+
+The routine \DescribeRoutine{cutrectangleround} cuts the outline of a rectangle creating rounded corners.
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def cutrectangleround(self, tool_num, bx, by, bz, xwidth, yheight, zdepth, radius):
+        tool = self.currenttool()
+        toolpath = hull(
+            tool.translate([bx+radius,by+radius,bz-zdepth]),
+            tool.translate([bx+xwidth+radius,by+radius,bz-zdepth]),
+            tool.translate([bx+radius,by+yheight+radius,bz-zdepth]),
+            tool.translate([bx+xwidth+radius,by+yheight+radius,bz-zdepth])
+            )
+        return toolpath
+
+    def cutrectanglerounddxf(self, tool_num, bx, by, bz, xwidth, yheight, zdepth, radius):
+        toolpath = self.cutrectangleround(tool_num, bx, by, bz, xwidth, yheight, zdepth, radius)
+        self.dxfrectangleround(tool_num, bx, by, xwidth, yheight, radius)
+        return toolpath
+
+\end{writecode}
+\addtocounter{gcpy}{15}
+
 % 
 %\lstset{firstnumber=\thegcpscad}
 %\begin{writecode}{a}{gcodepreview.scad}{scad}
@@ -4233,7 +4249,7 @@ Two different versions of the commands will be necessary, one for each orientati
         return vertcut
 
 \end{writecode}
-\addtocounter{gcpy}{153}
+\addtocounter{gcpy}{169}
 
 \subsubsection{Difference of Stock, Rapids, and Toolpaths}
 
@@ -4629,7 +4645,7 @@ module opengcodefile(basefilename, currenttoolnum, toolradius, plunge, feed, spe
                 self.dxfMtfilename = basefilename + str(MISC_tool_num) + ".dxf"
                 self.dxfMt = open(self.dxfMtfilename, "w")
 \end{writecode}
-\addtocounter{gcpy}{93}
+\addtocounter{gcpy}{94}
 
 For each \textsc{dxf} file, there will need to be a Preamble in addition to opening the file in the file system:
 
@@ -4741,16 +4757,16 @@ The \textsc{dxf} file format supports colors defined by AutoCAD's indexed color 
 \noindent\begin{tabular}{cl}
 Color Code & Color Name \\
 \toprule
- 0 & Black (or Background)  \\
- 1 & Red \\
- 2 & Yellow \\
- 3 & Green  \\
- 4 & Cyan  \\
- 5 & Blue \\
- 6 & Magenta \\ 
- 7 & White (or Foreground)\\
- 8 & Dark Gray \\ 
- 9 & Light Gray \\\bottomrule
+	 0 & Black (or Background)  \\
+	 1 & Red \\
+	 2 & Yellow \\
+	 3 & Green  \\
+	 4 & Cyan  \\
+	 5 & Blue \\
+	 6 & Magenta \\ 
+	 7 & White (or Foreground)\\
+	 8 & Dark Gray \\ 
+	 9 & Light Gray \\\bottomrule
 \end{tabular}
 \end{center}
 
@@ -4910,7 +4926,7 @@ The original \verb|dxfline| definition has been changed to \verb|dxfpolyline| so
         self.writedxf(tn, "0.0")
 
 \end{writecode}
-\addtocounter{gcpy}{18}
+\addtocounter{gcpy}{19}
 
 There are specific commands for writing out the \textsc{dxf} and G-code files. Note that for the G-code version it will be necessary to calculate the end-position, and to determine if the arc is clockwise or no (G2 vs. G3).
 
@@ -4962,7 +4978,7 @@ color code & 0            & 8 \\
             self.writegc(tn, "(0)")
 
 \end{writecode}
-\addtocounter{gcpy}{19}
+\addtocounter{gcpy}{22}
 
 The various textual versions are quite obvious, and due to the requirements of G-code, it is straight-forward to include the G-code in them if it is wanted.
 
@@ -5363,7 +5379,7 @@ It will be necessary to call the \DescribeRoutine{dxfpostamble} (with appropriat
                 self.dxfMt.close()
 
 \end{writecode}
-\addtocounter{gcpy}{55}
+\addtocounter{gcpy}{56}
 %def pclosesvgfile():
 %    svg.close()
 %
@@ -5555,11 +5571,11 @@ gcp.previewgcodefile(gc_file)
 
 Future considerations:
 
-Multiple Preview Modes:
-
-Fast Preview: Write all movements with both begin and end positions into a list for a specific tool --- as this is done, check for a previous movement between those positions and compare depths and tool number --- keep only the deepest movement for a given tool.
-
-Motion Preview: Work up a \textsc{3d} model of the machine and actually show the stock in relation to it, 
+\begin{itemize}
+\item Multiple Preview Modes:
+\item Fast Preview: Write all movements with both begin and end positions into a list for a specific tool --- as this is done, check for a previous movement between those positions and compare depths and tool number --- keep only the deepest movement for a given tool.
+\item Motion Preview: Work up a \textsc{3d} model of the machine and actually show the stock in relation to it, 
+\end{itemize}
 
 %#        show(self.stockandtoolpaths("stock"))
 %    def previewgcodefileWITHDIVOT(self, gc_filecontents):
