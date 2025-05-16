@@ -79,6 +79,28 @@ gcp.dxfrectangle(large_square_tool_num, stockXwidth/2 + (radius * 2) + inset, ra
 #gcp.dxfrectanglechamfer(large_square_tool_num, 64, 7, 24, 36, radius)
 #gcp.dxfrectangleflippedfillet(large_square_tool_num, 64, 7, 24, 36, radius)
 
+gcp.setdxfcolor("Black")
+
+gcp.beginpolyline(large_square_tool_num)
+gcp.addvertex(large_square_tool_num, stockXwidth*0.75+radius,stockYheight/4)
+gcp.addvertex(large_square_tool_num, stockXwidth*0.75+radius,stockYheight*0.75)
+gcp.addvertex(large_square_tool_num, stockXwidth*0.75+radius*2,stockYheight*0.75-radius)
+gcp.closepolyline(large_square_tool_num)
+
+##gcp.setdxfcolor("White")
+
+gcp.setdxfcolor("Yellow")
+gcp.dxfcircle(large_square_tool_num, stockXwidth/4, stockYheight/4, radius/2)
+
+gcp.setdxfcolor("Green")
+gcp.dxfcircle(large_square_tool_num, stockXwidth*0.75, stockYheight*0.75, radius/2)
+
+gcp.setdxfcolor("Cyan")
+gcp.dxfcircle(large_square_tool_num, stockXwidth/4, stockYheight*0.75, radius/2)
+
+gcp.setdxfcolor("Magenta")
+gcp.dxfcircle(large_square_tool_num, stockXwidth*0.75, stockYheight/4, radius/2)
+
 gcp.setdxfcolor("Dark Gray")
 
 gcp.dxfcircle(large_square_tool_num, stockXwidth/2, stockYheight/2, radius * 2)

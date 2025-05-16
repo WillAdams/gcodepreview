@@ -400,13 +400,13 @@ class gcodepreview:
             self.writegc("(TOOL/MILL, 12.7, 0.00, 4.77, 0.00)")
         elif (tool_number == 814):
             self.writegc("(TOOL/MILL, 12.7, 6.367, 12.7, 0.00)")
-            #dt_bottomdiameter, dt_topdiameter, dt_height, dt_angle)
-            #https://www.leevalley.com/en-us/shop/tools/power-tool-accessories/router-bits/30172-dovetail-bits?item=18J1607
+        #    dt_bottomdiameter, dt_topdiameter, dt_height, dt_angle)
+        #    https://www.leevalley.com/en-us/shop/tools/power-tool-accessories/router-bits/30172-dovetail-bits?item=18J1607
             self.currenttoolshape = self.dovetail(12.7, 6.367, 12.7, 14)
-        #45828
+    #    45828
         elif (tool_number == 808079):
             self.writegc("(TOOL/MILL, 12.7, 6.816, 20.95, 0.00)")
-            #http://www.amanatool.com/45828-carbide-tipped-dovetail-8-deg-x-1-2-dia-x-825-x-1-4-inch-shank.html
+        #    http://www.amanatool.com/45828-carbide-tipped-dovetail-8-deg-x-1-2-dia-x-825-x-1-4-inch-shank.html
             self.currenttoolshape = self.dovetail(12.7, 6.816, 20.95, 8)
         elif (tool_number == 56125):#0.508/2, 1.531
             self.writegc("(TOOL/CRMILL, 0.508, 6.35, 3.175, 7.9375, 3.175)")
@@ -654,6 +654,12 @@ class gcodepreview:
 #        if self.generatepaths == False:
         return self.cutline(ex, ey, ez)
 
+    def cutvertexdxf(self, ex, ey, ez):
+        self.addvertex(self.currenttoolnumber(), ex, ey)
+#        self.writegc("G01 X", str(ex), " Y", str(ey), " Z", str(ez))
+#        if self.generatepaths == False:
+        return self.cutline(ex, ey, ez)
+
     def cutroundovertool(self, bx, by, bz, ex, ey, ez, tool_radius_tip, tool_radius_width, stepsizeroundover = 1):
 #        n = 90 + fn*3
 #        print("Tool dimensions", tool_radius_tip, tool_radius_width, "begin ", bx, by, bz, "end ", ex, ey, ez)
@@ -797,15 +803,14 @@ class gcodepreview:
             self.dxfrectangleflippedfillet(tool_num, xorigin, yorigin, xwidth, yheight, radius)
 
     def dxfrectangleround(self, tool_num, xorigin, yorigin, xwidth, yheight, radius):
+        self.dxfline(tool_num,  xorigin + xwidth, yorigin + radius, xorigin + xwidth, yorigin + yheight - radius)
         self.dxfarc(tool_num, xorigin + xwidth - radius, yorigin + yheight - radius, radius,  0, 90)
+        self.dxfline(tool_num,  xorigin + xwidth - radius, yorigin + yheight, xorigin + radius, yorigin + yheight)
         self.dxfarc(tool_num, xorigin + radius, yorigin + yheight - radius, radius, 90, 180)
+        self.dxfline(tool_num,  xorigin, yorigin + yheight - radius, xorigin, yorigin + radius)
         self.dxfarc(tool_num, xorigin + radius, yorigin + radius, radius, 180, 270)
+        self.dxfline(tool_num,  xorigin + radius, yorigin, xorigin + xwidth - radius, yorigin)
         self.dxfarc(tool_num, xorigin + xwidth - radius, yorigin + radius, radius, 270, 360)
-
-        self.dxfline(tool_num, xorigin + radius, yorigin, xorigin + xwidth - radius, yorigin)
-        self.dxfline(tool_num, xorigin + xwidth, yorigin + radius, xorigin + xwidth, yorigin + yheight - radius)
-        self.dxfline(tool_num, xorigin + xwidth - radius, yorigin + yheight, xorigin + radius, yorigin + yheight)
-        self.dxfline(tool_num, xorigin, yorigin + yheight - radius, xorigin, yorigin + radius)
 
     def dxfrectanglechamfer(self, tool_num, xorigin, yorigin, xwidth, yheight, radius):
         self.dxfline(tool_num, xorigin + radius, yorigin, xorigin, yorigin + radius)
@@ -833,9 +838,9 @@ class gcodepreview:
         tool = self.currenttool()
         toolpath = hull(
             tool.translate([bx+radius,by+radius,bz-zdepth]),
-            tool.translate([bx+xwidth+radius,by+radius,bz-zdepth]),
-            tool.translate([bx+radius,by+yheight+radius,bz-zdepth]),
-            tool.translate([bx+xwidth+radius,by+yheight+radius,bz-zdepth])
+            tool.translate([bx+xwidth-radius,by+radius,bz-zdepth]),
+            tool.translate([bx+radius,by+yheight-radius,bz-zdepth]),
+            tool.translate([bx+xwidth-radius,by+yheight-radius,bz-zdepth])
             )
         return toolpath
 
@@ -1243,174 +1248,261 @@ class gcodepreview:
         self.dxfarc(self.currenttoolnumber(), Joint_Width, 0, DTR, 270, 360)
         return ctp
 
-#module Full_Blind_Finger_Joint(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter) {
-#  if (orientation == "Vertical") {
-#    union(){
-#      union(){
-#        cut_V(bx, by, -thickness, bx, by + width, -thickness, Small_V_Diameter);
-#        cut_V(bx, by, -thickness, bx, by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, -thickness, Large_V_Diameter);
-#        cut_V(bx, by + width, -thickness, bx, (by + width) - (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, -thickness, Large_V_Diameter);
-#      }
-#      if (side == "Both") {
-#        union(){
-#          hull(){
-#            cut_square(bx - (stockZthickness - smallDiameter), by, -((smallDiameter / 2) / tan(45)), bx - (stockZthickness - smallDiameter), by + width, -((smallDiameter / 2) / tan(45)), smallDiameter);
-#            cut_square(bx + (stockZthickness - smallDiameter), by, -((smallDiameter / 2) / tan(45)), bx + (stockZthickness - smallDiameter), by + width, -((smallDiameter / 2) / tan(45)), smallDiameter);
-#          }
-#          for (i = [0 : abs(1) : Number_of_Pins - 1]) {
-#            union(){
-#              cut_vertical_odd(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i);
-#              if (i < Number_of_Pins - 1) {
-#                cut_vertical_even(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i + 0.5);
-#              }
-#
-#            }
-#          }
-#
-#        }
-#      } else if (side == "Even") {
-#        union(){
-#          hull(){
-#            cut_square(bx, by, -((smallDiameter / 2) / tan(45)), bx, by + width, -((smallDiameter / 2) / tan(45)), smallDiameter);
-#            cut_square(bx + (stockZthickness - smallDiameter), by, -((smallDiameter / 2) / tan(45)), bx + (stockZthickness - smallDiameter), by + width, -((smallDiameter / 2) / tan(45)), smallDiameter);
-#          }
-#          for (i = [0 : abs(1) : Number_of_Pins - 1]) {
-#            if (i < Number_of_Pins - 1) {
-#              cut_vertical_even(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i + 0.5);
-#            }
-#
-#          }
-#
-#        }
-#      } else if (side == "Odd") {
-#        union(){
-#          hull(){
-#            cut_square(bx - (stockZthickness - smallDiameter), by, -((smallDiameter / 2) / tan(45)), bx - (stockZthickness - smallDiameter), by + width, -((smallDiameter / 2) / tan(45)), smallDiameter);
-#            cut_square(bx, by, -((smallDiameter / 2) / tan(45)), bx, by + width, -((smallDiameter / 2) / tan(45)), smallDiameter);
-#          }
-#          for (i = [0 : abs(1) : Number_of_Pins - 1]) {
-#            cut_vertical_odd(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i);
-#          }
-#
-#        }
-#      }
-#
-#    }
-#  } else if (orientation == "Horizontal") {
-#    union(){
-#      union(){
-#        cut_V(bx, by, -thickness, bx + width, by, -thickness, Small_V_Diameter);
-#        cut_V(bx, by, -thickness, bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, by, -thickness, Large_V_Diameter);
-#        cut_V(bx + width, by, -thickness, (bx + width) - (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, by, -thickness, Large_V_Diameter);
-#      }
-#      if (side == "Both") {
-#        union(){
-#          hull(){
-#            cut_square(bx, by - (stockZthickness - smallDiameter), -((smallDiameter / 2) / tan(45)), bx + width, by - (stockZthickness - smallDiameter), -((smallDiameter / 2) / tan(45)), smallDiameter);
-#            cut_square(bx, by + (stockZthickness - smallDiameter), -((smallDiameter / 2) / tan(45)), bx + width, by + (stockZthickness - smallDiameter), -((smallDiameter / 2) / tan(45)), smallDiameter);
-#          }
-#          for (i = [0 : abs(1) : Number_of_Pins - 1]) {
-#            union(){
-#              cut_horizontal_odd(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i);
-#              if (i < Number_of_Pins - 1) {
-#                cut_horizontal_even(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i + 0.5);
-#              }
-#
-#            }
-#          }
-#
-#        }
-#      } else if (side == "Even") {
-#        union(){
-#          hull(){
-#            cut_square(bx, by, -((smallDiameter / 2) / tan(45)), bx + width, by, -((smallDiameter / 2) / tan(45)), smallDiameter);
-#            cut_square(bx, by + (stockZthickness - smallDiameter), -((smallDiameter / 2) / tan(45)), bx + width, by + (stockZthickness - smallDiameter), -((smallDiameter / 2) / tan(45)), smallDiameter);
-#          }
-#          for (i = [0 : abs(1) : Number_of_Pins - 1]) {
-#            if (i < Number_of_Pins - 1) {
-#              cut_horizontal_even(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i + 0.5);
-#            }
-#
-#          }
-#
-#        }
-#      } else if (side == "Odd") {
-#        union(){
-#          hull(){
-#            cut_square(bx, by - (stockZthickness - smallDiameter), -((smallDiameter / 2) / tan(45)), bx + width, by - (stockZthickness - smallDiameter), -((smallDiameter / 2) / tan(45)), smallDiameter);
-#            cut_square(bx, by, -((smallDiameter / 2) / tan(45)), bx + width, by, -((smallDiameter / 2) / tan(45)), smallDiameter);
-#          }
-#          for (i = [0 : abs(1) : Number_of_Pins - 1]) {
-#            cut_horizontal_odd(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i);
-#          }
-#
-#        }
-#      }
-#
-#    }
-#  }
-#
-#}
-#
-#module cut_horizontal_odd(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i) {
-#  union(){
-#    cut_square(i * (smallDiameter * 2) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by, -(thickness - (smallDiameter / 2) / tan(45)), (smallDiameter / 2 + i * (smallDiameter * 2)) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by, -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
-#    cut_square((smallDiameter / 2 + i * (smallDiameter * 2)) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by, -(thickness - (smallDiameter / 2) / tan(45)), (smallDiameter / 2 + i * (smallDiameter * 2)) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by - (thickness - smallDiameter / 2), -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
-#    cut_square((smallDiameter / 2 + i * (smallDiameter * 2)) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by, -(thickness - (smallDiameter / 2) / tan(45)), (smallDiameter * 0.1 + (smallDiameter / 2 + i * (smallDiameter * 2))) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by - (thickness - smallDiameter / 2), -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
-#    cut_V(bx, by - thickness / 2, -(thickness / 2), bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, by - thickness / 2, -(thickness / 2), Large_V_Diameter);
-#    cut_V(bx + width, by - thickness / 2, -(thickness / 2), (bx + width) - (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, by - thickness / 2, -(thickness / 2), Large_V_Diameter);
-#    cut_V(bx, by - (thickness - Small_V_Diameter / 2), -((Small_V_Diameter / 2) / tan(45)), bx + width, by - (thickness - Small_V_Diameter / 2), -((Small_V_Diameter / 2) / tan(45)), Small_V_Diameter);
-#  }
-#}
-#
-#module cut_horizontal_even(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i) {
-#  union(){
-#    cut_square(i * (smallDiameter * 2) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by, -(thickness - (smallDiameter / 2) / tan(45)), (smallDiameter / 2 + i * (smallDiameter * 2)) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by, -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
-#    cut_square((smallDiameter / 2 + i * (smallDiameter * 2)) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by, -(thickness - (smallDiameter / 2) / tan(45)), (smallDiameter / 2 + i * (smallDiameter * 2)) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by + (thickness - smallDiameter / 2), -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
-#    cut_square((smallDiameter / 2 + i * (smallDiameter * 2)) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by, -(thickness - (smallDiameter / 2) / tan(45)), (smallDiameter * 0.1 + (smallDiameter / 2 + i * (smallDiameter * 2))) + (bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), by + (thickness - smallDiameter / 2), -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
-#    cut_V(bx, by + thickness / 2, -(thickness / 2), bx + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, by + thickness / 2, -(thickness / 2), Large_V_Diameter);
-#    cut_V(bx + width, by + thickness / 2, -(thickness / 2), (bx + width) - (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, by + thickness / 2, -(thickness / 2), Large_V_Diameter);
-#    cut_V(bx, by + (thickness - Small_V_Diameter / 2), -((Small_V_Diameter / 2) / tan(45)), bx + width, by + (thickness - Small_V_Diameter / 2), -((Small_V_Diameter / 2) / tan(45)), Small_V_Diameter);
-#  }
-#}
-#
-#module cut_vertical_even(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i) {
-#  union(){
-#    cut_square(bx, i * (smallDiameter * 2) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), -(thickness - (smallDiameter / 2) / tan(45)), bx, (smallDiameter / 2 + i * (smallDiameter * 2)) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
-#    cut_square(bx, (smallDiameter / 2 + i * (smallDiameter * 2)) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), -(thickness - (smallDiameter / 2) / tan(45)), bx + (thickness - smallDiameter / 2), (smallDiameter / 2 + i * (smallDiameter * 2)) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
-#    cut_square(bx, (smallDiameter / 2 + i * (smallDiameter * 2)) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), -(thickness - (smallDiameter / 2) / tan(45)), bx + (thickness - smallDiameter / 2), (smallDiameter * 0.1 + (smallDiameter / 2 + i * (smallDiameter * 2))) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2), -(thickness - (smallDiameter / 2) / tan(45)), Small_V_Diameter);
-#    cut_V(bx + thickness / 2, by, -(thickness / 2), bx + thickness / 2, by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, -(thickness / 2), Large_V_Diameter);
-#    cut_V(bx + thickness / 2, by + width, -(thickness / 2), bx + thickness / 2, (by + width) - (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, -(thickness / 2), Large_V_Diameter);
-#    cut_V(bx + (thickness - Small_V_Diameter / 2), by, -((Small_V_Diameter / 2) / tan(45)), bx + (thickness - Small_V_Diameter / 2), by + width, -((Small_V_Diameter / 2) / tan(45)), Small_V_Diameter);
-#  }
-#}
+    def Full_Blind_Finger_Joint(self, bx, by, orientation, side, width, thickness, largeVdiameter, smallDiameter, normalormirror = "Default", squaretool = 102, smallV = 390, largeV = 301):
+        Number_of_Pins = int(((width - thickness * 2) / (smallDiameter * 2.2) / 2) + 0.0) * 2 + 1
+#        print("Number of Pins: ",Number_of_Pins)
+        self.movetosafeZ()
+        self.toolchange(squaretool, 17000)
+        toolpath = self.Full_Blind_Finger_Joint_square(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter)
+        self.movetosafeZ()
+        self.toolchange(smallV, 17000)
+        toolpath = toolpath.union(self.Full_Blind_Finger_Joint_smallV(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter))
+        self.toolchange(largeV, 17000)
+        toolpath = toolpath.union(self.Full_Blind_Finger_Joint_largeV(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter))
+        return toolpath
 
-    def cut_vertical_odd(self, bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, i):
-        vertcut = self.cutlinedxfgc(
-#            bx,
-#            i * (smallDiameter * 2) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2),
-#            -(thickness - (smallDiameter / 2) / math.tan(math.radians(45))),
-            bx,
-            (smallDiameter / 2 + i * (smallDiameter * 2)) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2),
-            -(thickness - (smallDiameter / 2) / math.tan(math.radians(45))))
-        vertcut = vertcut.union(self.cutlinedxfgc(
-#            bx,
-#            (smallDiameter / 2 + i * (smallDiameter * 2)) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2),
-#            -(thickness - (smallDiameter / 2) / math.tan(math.radians(45))),
-            bx - (thickness - smallDiameter / 2),
-            (smallDiameter / 2 + i * (smallDiameter * 2)) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2),
-            -(thickness - (smallDiameter / 2) / math.tan(math.radians(45)))))
-        vertcut = vertcut.union(self.cutlinedxfgc(
-#            bx,
-#            (smallDiameter / 2 + i * (smallDiameter * 2)) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2),
-#            -(thickness - (smallDiameter / 2) / math.tan(math.radians(45))),
-            bx - (thickness - smallDiameter / 2),
-            (smallDiameter * 0.1 + (smallDiameter / 2 + i * (smallDiameter * 2))) + (by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2),
-            -(thickness - (smallDiameter / 2) / math.tan(math.radians(45)))))
-#    cut_V(bx - thickness / 2, by, -(thickness / 2), bx - thickness / 2, by + (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, -(thickness / 2), Large_V_Diameter);
-#    cut_V(bx - thickness / 2, by + width, -(thickness / 2), bx - thickness / 2, (by + width) - (width - (Number_of_Pins * 2 - 1) * smallDiameter) / 2, -(thickness / 2), Large_V_Diameter);
-#    cut_V(bx - (thickness - Small_V_Diameter / 2), by, -((Small_V_Diameter / 2) / tan(45)), bx - (thickness - Small_V_Diameter / 2), by + width, -((Small_V_Diameter / 2) / tan(45)), Small_V_Diameter);
-        return vertcut
+    def Full_Blind_Finger_Joint_square(self, bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, normalormirror = "Default"):
+#     Joint_Orientation = "Horizontal" "Even" == "Lower", "Odd" == "Upper"
+#     Joint_Orientation = "Vertical" "Even" == "Left", "Odd" == "Right"
+        if (orientation == "Vertical"):
+            if (normalormirror == "Default" and side != "Both"):
+                if (side == "Left"):
+                    normalormirror = "Even"
+                if (side == "Right"):
+                    normalormirror = "Odd"
+        if (orientation == "Horizontal"):
+            if (normalormirror == "Default" and side != "Both"):
+                if (side == "Lower"):
+                    normalormirror = "Even"
+                if (side == "Upper"):
+                    normalormirror = "Odd"
+        Finger_Width = ((Number_of_Pins * 2) - 1) * smallDiameter * 1.1
+        Finger_Origin = width/2 - Finger_Width/2
+        rapid = self.rapidZ(0)
+        self.setdxfcolor("Cyan")
+        rapid = rapid.union(self.rapidXY(bx, by))
+        toolpath = (self.Finger_Joint_square(bx, by, orientation, side, width, thickness, Number_of_Pins, Finger_Origin, smallDiameter))
+        if (orientation == "Vertical"):
+            if (side == "Both"):
+                toolpath = self.cutrectanglerounddxf(self.currenttoolnum, bx - (thickness - smallDiameter/2), by-smallDiameter/2, 0, (thickness * 2) - smallDiameter, width+smallDiameter, (smallDiameter / 2) / math.tan(math.radians(45)), smallDiameter/2)
+            if (side == "Left"):
+                toolpath = self.cutrectanglerounddxf(self.currenttoolnum, bx - (smallDiameter/2), by-smallDiameter/2, 0, thickness, width+smallDiameter, ((smallDiameter / 2) / math.tan(math.radians(45))), smallDiameter/2)
+            if (side == "Right"):
+                toolpath = self.cutrectanglerounddxf(self.currenttoolnum, bx - (thickness - smallDiameter/2), by-smallDiameter/2, 0, thickness, width+smallDiameter, ((smallDiameter / 2) / math.tan(math.radians(45))), smallDiameter/2)
+        toolpath = toolpath.union(self.Finger_Joint_square(bx, by, orientation, side, width, thickness, Number_of_Pins, Finger_Origin, smallDiameter))
+        if (orientation == "Horizontal"):
+            if (side == "Both"):
+                toolpath = self.cutrectanglerounddxf(
+                    self.currenttoolnum,
+                    bx-smallDiameter/2,
+                    by - (thickness - smallDiameter/2),
+                    0,
+                    width+smallDiameter,
+                    (thickness * 2) - smallDiameter,
+                    (smallDiameter / 2) / math.tan(math.radians(45)),
+                    smallDiameter/2)
+            if (side == "Lower"):
+                toolpath = self.cutrectanglerounddxf(
+                    self.currenttoolnum,
+                    bx - (smallDiameter/2),
+                    by - smallDiameter/2,
+                    0,
+                    width+smallDiameter,
+                    thickness,
+                    ((smallDiameter / 2) / math.tan(math.radians(45))),
+                    smallDiameter/2)
+            if (side == "Upper"):
+                toolpath = self.cutrectanglerounddxf(
+                    self.currenttoolnum,
+                    bx - smallDiameter/2,
+                    by - (thickness - smallDiameter/2),
+                    0,
+                    width+smallDiameter,
+                    thickness,
+                    ((smallDiameter / 2) / math.tan(math.radians(45))),
+                    smallDiameter/2)
+        toolpath = toolpath.union(self.Finger_Joint_square(bx, by, orientation, side, width, thickness, Number_of_Pins, Finger_Origin, smallDiameter))
+        return toolpath
+
+    def Finger_Joint_square(self, bx, by, orientation, side, width, thickness, Number_of_Pins, Finger_Origin, smallDiameter, normalormirror = "Default"):
+        jointdepth = -(thickness - (smallDiameter / 2) / math.tan(math.radians(45)))
+    # Joint_Orientation = "Horizontal" "Even" == "Lower", "Odd" == "Upper"
+    # Joint_Orientation = "Vertical" "Even" == "Left", "Odd" == "Right"
+        if (orientation == "Vertical"):
+            if (normalormirror == "Default" and side != "Both"):
+                if (side == "Left"):
+                     normalormirror = "Even"
+                if (side == "Right"):
+                     normalormirror = "Odd"
+        if (orientation == "Horizontal"):
+            if (normalormirror == "Default" and side != "Both"):
+                if (side == "Lower"):
+                     normalormirror = "Even"
+                if (side == "Upper"):
+                     normalormirror = "Odd"
+        radius = smallDiameter/2
+        jointwidth = thickness - smallDiameter
+        toolpath = self.currenttool()
+        rapid = self.rapidZ(0)
+        self.setdxfcolor("Blue")
+        toolpath = toolpath.union(self.cutlineZgcfeed(jointdepth,1000))
+        self.beginpolyline(self.currenttool())
+        if (orientation == "Vertical"):
+            rapid = rapid.union(self.rapidXY(bx, by + Finger_Origin))
+            self.addvertex(self.currenttoolnumber(), self.xpos(), self.ypos())
+            toolpath = toolpath.union(self.cutlineZgcfeed(jointdepth,1000))
+            i = 0
+            while i <= Number_of_Pins - 1:
+                if (side == "Right"):
+                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos(), self.ypos() + smallDiameter + radius/5, jointdepth))
+                if (side == "Left" or side == "Both"):
+                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos(), self.ypos() + radius, jointdepth))
+                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos() + jointwidth, self.ypos(), jointdepth))
+                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos(), self.ypos() + radius/5, jointdepth))
+                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos() - jointwidth, self.ypos(), jointdepth))
+                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos(), self.ypos() + radius, jointdepth))
+                if (side == "Left"):
+                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos(), self.ypos() + smallDiameter + radius/5, jointdepth))
+                if (side == "Right" or side == "Both"):
+                    if (i < (Number_of_Pins - 1)):
+    #                    print(i)
+                        toolpath = toolpath.union(self.cutvertexdxf(self.xpos(), self.ypos() + radius, jointdepth))
+                        toolpath = toolpath.union(self.cutvertexdxf(self.xpos() - jointwidth, self.ypos(), jointdepth))
+                        toolpath = toolpath.union(self.cutvertexdxf(self.xpos(), self.ypos() + radius/5, jointdepth))
+                        toolpath = toolpath.union(self.cutvertexdxf(self.xpos() + jointwidth, self.ypos(), jointdepth))
+                        toolpath = toolpath.union(self.cutvertexdxf(self.xpos(), self.ypos() + radius, jointdepth))
+                i += 1
+    # Joint_Orientation = "Horizontal" "Even" == "Lower", "Odd" == "Upper"
+        if (orientation == "Horizontal"):
+            rapid = rapid.union(self.rapidXY(bx + Finger_Origin, by))
+            self.addvertex(self.currenttoolnumber(), self.xpos(), self.ypos())
+            toolpath = toolpath.union(self.cutlineZgcfeed(jointdepth,1000))
+            i = 0
+            while i <= Number_of_Pins - 1:
+                if (side == "Upper"):
+                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos() + smallDiameter + radius/5, self.ypos(), jointdepth))
+                if (side == "Lower" or side == "Both"):
+                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos() + radius, self.ypos(), jointdepth))
+                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos(), self.ypos() + jointwidth, jointdepth))
+                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos() + radius/5, self.ypos(), jointdepth))
+                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos(), self.ypos() - jointwidth, jointdepth))
+                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos() + radius, self.ypos(), jointdepth))
+                if (side == "Lower"):
+                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos() + smallDiameter + radius/5, self.ypos(), jointdepth))
+                if (side == "Upper" or side == "Both"):
+                    if (i < (Number_of_Pins - 1)):
+    #                    print(i)
+                        toolpath = toolpath.union(self.cutvertexdxf(self.xpos() + radius, self.ypos(), jointdepth))
+                        toolpath = toolpath.union(self.cutvertexdxf(self.xpos(), self.ypos() - jointwidth, jointdepth))
+                        toolpath = toolpath.union(self.cutvertexdxf(self.xpos() + radius/5, self.ypos(), jointdepth))
+                        toolpath = toolpath.union(self.cutvertexdxf(self.xpos(), self.ypos() + jointwidth, jointdepth))
+                        toolpath = toolpath.union(self.cutvertexdxf(self.xpos() + radius, self.ypos(), jointdepth))
+                i += 1
+        self.closepolyline(self.currenttoolnumber())
+        return toolpath
+
+    def Full_Blind_Finger_Joint_smallV(self, bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter):
+        rapid = self.rapidZ(0)
+#        rapid = rapid.union(self.rapidXY(bx, by))
+        self.setdxfcolor("Red")
+        if (orientation == "Vertical"):
+            rapid = rapid.union(self.rapidXY(bx, by - smallDiameter/6))
+            toolpath = self.cutlineZgcfeed(-thickness,1000)
+            toolpath = self.cutlinedxfgc(bx, by + width + smallDiameter/6, - thickness)
+        if (orientation == "Horizontal"):
+            rapid = rapid.union(self.rapidXY(bx - smallDiameter/6, by))
+            toolpath = self.cutlineZgcfeed(-thickness,1000)
+            toolpath = self.cutlinedxfgc(bx + width - smallDiameter/6, by, -thickness)
+#            rapid = self.rapidZ(0)
+        return toolpath
+
+    def Full_Blind_Finger_Joint_largeV(self, bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter):
+        radius = smallDiameter/2
+        rapid = self.rapidZ(0)
+#        rapid = rapid.union(self.rapidXY(bx, by))
+#     Joint_Orientation = "Horizontal" "Even" == "Lower", "Odd" == "Upper"
+#     Joint_Orientation = "Vertical" "Even" == "Left", "Odd" == "Right"
+        if (orientation == "Vertical"):
+            rapid = rapid.union(self.rapidXY(bx, by))
+            toolpath = self.cutlineZgcfeed(-thickness,1000)
+            toolpath = toolpath.union(self.cutlinedxfgc(bx, by + thickness, -thickness))
+            rapid = self.rapidZ(0)
+            rapid = rapid.union(self.rapidXY(bx, by + width - thickness))
+            self.setdxfcolor("Blue")
+            toolpath = toolpath.union(self.cutlineZgcfeed(-thickness,1000))
+            toolpath = toolpath.union(self.cutlinedxfgc(bx, by + width, -thickness))
+            if (side == "Left" or side == "Both"):
+                rapid = self.rapidZ(0)
+                self.setdxfcolor("Dark Gray")
+                rapid = rapid.union(self.rapidXY(bx+thickness-(smallDiameter / 2) / math.tan(math.radians(45)), by - radius/2))
+                toolpath = toolpath.union(self.cutlineZgcfeed(-(smallDiameter / 2) / math.tan(math.radians(45)),10000))
+                toolpath = toolpath.union(self.cutlinedxfgc(bx+thickness-(smallDiameter / 2) / math.tan(math.radians(45)), by + width + radius/2, -(smallDiameter / 2) / math.tan(math.radians(45))))
+                rapid = self.rapidZ(0)
+                self.setdxfcolor("Green")
+                rapid = rapid.union(self.rapidXY(bx+thickness/2, by+width))
+                toolpath = toolpath.union(self.cutlineZgcfeed(-thickness/2,1000))
+                toolpath = toolpath.union(self.cutlinedxfgc(bx+thickness/2, by + width -thickness, -thickness/2))
+                rapid = self.rapidZ(0)
+                rapid = rapid.union(self.rapidXY(bx+thickness/2, by))
+                toolpath = toolpath.union(self.cutlineZgcfeed(-thickness/2,1000))
+                toolpath = toolpath.union(self.cutlinedxfgc(bx+thickness/2, by +thickness, -thickness/2))
+            if (side == "Right" or side == "Both"):
+                rapid = self.rapidZ(0)
+                self.setdxfcolor("Dark Gray")
+                rapid = rapid.union(self.rapidXY(bx-(thickness-(smallDiameter / 2) / math.tan(math.radians(45))), by - radius/2))
+                toolpath = toolpath.union(self.cutlineZgcfeed(-(smallDiameter / 2) / math.tan(math.radians(45)),10000))
+                toolpath = toolpath.union(self.cutlinedxfgc(bx-(thickness-(smallDiameter / 2) / math.tan(math.radians(45))), by + width + radius/2, -(smallDiameter / 2) / math.tan(math.radians(45))))
+                rapid = self.rapidZ(0)
+                self.setdxfcolor("Green")
+                rapid = rapid.union(self.rapidXY(bx-thickness/2, by+width))
+                toolpath = toolpath.union(self.cutlineZgcfeed(-thickness/2,1000))
+                toolpath = toolpath.union(self.cutlinedxfgc(bx-thickness/2, by + width -thickness, -thickness/2))
+                rapid = self.rapidZ(0)
+                rapid = rapid.union(self.rapidXY(bx-thickness/2, by))
+                toolpath = toolpath.union(self.cutlineZgcfeed(-thickness/2,1000))
+                toolpath = toolpath.union(self.cutlinedxfgc(bx-thickness/2, by +thickness, -thickness/2))
+#     Joint_Orientation = "Horizontal" "Even" == "Lower", "Odd" == "Upper"
+        if (orientation == "Horizontal"):
+            rapid = rapid.union(self.rapidXY(bx, by))
+            self.setdxfcolor("Blue")
+            toolpath = self.cutlineZgcfeed(-thickness,1000)
+            toolpath = toolpath.union(self.cutlinedxfgc(bx + thickness, by, -thickness))
+            rapid = rapid.union(self.rapidZ(0))
+            rapid = rapid.union(self.rapidXY(bx + width - thickness, by))
+            toolpath = toolpath.union(self.cutlineZgcfeed(-thickness,1000))
+            toolpath = toolpath.union(self.cutlinedxfgc(bx + width, by, -thickness))
+            if (side == "Lower" or side == "Both"):
+                rapid = self.rapidZ(0)
+                self.setdxfcolor("Dark Gray")
+                rapid = rapid.union(self.rapidXY(bx - radius, by+thickness-(smallDiameter / 2) / math.tan(math.radians(45))))
+                toolpath = toolpath.union(self.cutlineZgcfeed(-(smallDiameter / 2) / math.tan(math.radians(45)),10000))
+                toolpath = toolpath.union(self.cutlinedxfgc(bx + width + radius, by+thickness-(smallDiameter / 2) / math.tan(math.radians(45)), -(smallDiameter / 2) / math.tan(math.radians(45))))
+                rapid = self.rapidZ(0)
+                self.setdxfcolor("Green")
+                rapid = rapid.union(self.rapidXY(bx+width, by+thickness/2))
+                toolpath = toolpath.union(self.cutlineZgcfeed(-thickness/2,1000))
+                toolpath = toolpath.union(self.cutlinedxfgc(bx + width -thickness, by+thickness/2, -thickness/2))
+                rapid = self.rapidZ(0)
+                rapid = rapid.union(self.rapidXY(bx, by+thickness/2))
+                toolpath = toolpath.union(self.cutlineZgcfeed(-thickness/2,1000))
+                toolpath = toolpath.union(self.cutlinedxfgc(bx +thickness, by+thickness/2, -thickness/2))
+            if (side == "Upper" or side == "Both"):
+                rapid = self.rapidZ(0)
+                self.setdxfcolor("Dark Gray")
+                rapid = rapid.union(self.rapidXY(bx - radius, by-(thickness-(smallDiameter / 2) / math.tan(math.radians(45)))))
+                toolpath = toolpath.union(self.cutlineZgcfeed(-(smallDiameter / 2) / math.tan(math.radians(45)),10000))
+                toolpath = toolpath.union(self.cutlinedxfgc(bx + width + radius, by-(thickness-(smallDiameter / 2) / math.tan(math.radians(45))), -(smallDiameter / 2) / math.tan(math.radians(45))))
+                rapid = self.rapidZ(0)
+                self.setdxfcolor("Green")
+                rapid = rapid.union(self.rapidXY(bx+width, by-thickness/2))
+                toolpath = toolpath.union(self.cutlineZgcfeed(-thickness/2,1000))
+                toolpath = toolpath.union(self.cutlinedxfgc(bx + width -thickness, by-thickness/2, -thickness/2))
+                rapid = self.rapidZ(0)
+                rapid = rapid.union(self.rapidXY(bx, by-thickness/2))
+                toolpath = toolpath.union(self.cutlineZgcfeed(-thickness/2,1000))
+                toolpath = toolpath.union(self.cutlinedxfgc(bx +thickness, by-thickness/2, -thickness/2))
+        rapid = self.rapidZ(0)
+        return toolpath
 
     def stockandtoolpaths(self, option = "stockandtoolpaths"):
         if option == "stock":
@@ -1665,24 +1757,6 @@ class gcodepreview:
             if (self.dxfcolor == "Light Gray"):
                 self.writedxf(tn, "9")
 
-    def dxfpolyline(self, tn, xbegin, ybegin, xend, yend):
-        self.writedxf(tn, "0")
-        self.writedxf(tn, "LWPOLYLINE")
-        self.writedxf(tn, "90")
-        self.writedxf(tn, "2")
-        self.writedxf(tn, "70")
-        self.writedxf(tn, "0")
-        self.writedxf(tn, "43")
-        self.writedxf(tn, "0")
-        self.writedxf(tn, "10")
-        self.writedxf(tn, str(xbegin))
-        self.writedxf(tn, "20")
-        self.writedxf(tn, str(ybegin))
-        self.writedxf(tn, "10")
-        self.writedxf(tn, str(xend))
-        self.writedxf(tn, "20")
-        self.writedxf(tn, str(yend))
-
     def dxfline(self, tn, xbegin, ybegin, xend, yend):
         self.writedxf(tn, "0")
         self.writedxf(tn, "LINE")
@@ -1701,6 +1775,43 @@ class gcodepreview:
         self.writedxf(tn, str(yend))
         self.writedxf(tn, "31")
         self.writedxf(tn, "0.0")
+
+    def beginpolyline(self, tn):#, xbegin, ybegin
+        self.writedxf(tn, "0")
+        self.writedxf(tn, "POLYLINE")
+        self.writedxf(tn, "8")
+        self.writedxf(tn, "default")
+        self.writedxf(tn, "66")
+        self.writedxf(tn, "1")
+#
+        self.writedxfcolor(tn)
+#
+#        self.writedxf(tn, "10")
+#        self.writedxf(tn, str(xbegin))
+#        self.writedxf(tn, "20")
+#        self.writedxf(tn, str(ybegin))
+#        self.writedxf(tn, "30")
+#        self.writedxf(tn, "0.0")
+        self.writedxf(tn, "70")
+        self.writedxf(tn, "0")
+
+    def addvertex(self, tn, xend, yend):
+        self.writedxf(tn, "0")
+        self.writedxf(tn, "VERTEX")
+        self.writedxf(tn, "8")
+        self.writedxf(tn, "default")
+        self.writedxf(tn, "70")
+        self.writedxf(tn, "32")
+        self.writedxf(tn, "10")
+        self.writedxf(tn, str(xend))
+        self.writedxf(tn, "20")
+        self.writedxf(tn, str(yend))
+        self.writedxf(tn, "30")
+        self.writedxf(tn, "0.0")
+
+    def closepolyline(self, tn):
+        self.writedxf(tn, "0")
+        self.writedxf(tn, "SEQEND")
 
     def dxfarc(self, tn, xcenter, ycenter, radius, anglebegin, endangle):
         if (self.generatedxf == True):
