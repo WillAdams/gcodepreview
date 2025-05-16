@@ -93,6 +93,8 @@ Supporting OpenSCAD usage makes possible such examples as: openscad_gcodepreview
 | 0.7           | Re-write completely in Python                                                                                                                                                   |
 | 0.8           | Re-re-write completely in Python and OpenSCAD, iteratively testing                                                                                                              |
 | 0.801         | Add support for bowl bits with flat bottom                                                                                                                                      |
+| 0.802         | Add support for tapered ball-nose and  V tools with flat bottom                                                                                                                 |
+| 0.803         | Implement initial colour support and joinery modules (dovetail and full blind box joint modules)                                                                                |
 
 Possible future improvements:
 
