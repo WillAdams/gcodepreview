@@ -26,9 +26,13 @@ class threeDmodelturtle:
 
     def left(self, angle):
         self.XYdir = self.XYdir + angle
+        if self.XYdir > 360 :
+            self.XYdir = self.XYdir - 360
         
     def right(self, angle):
         self.XYdir = self.XYdir + (360 - angle)
+        if self.XYdir < 360 :
+            self.XYdir = self.XYdir + 360
 
     def incline(self, angle):
         self.Zdir = self.Zdir - angle
@@ -46,14 +50,24 @@ class threeDmodelturtle:
         dot = sphere(self.size/4)
         if self.XYdir == 0 :
             self.xpos = self.xpos + steps
-#        if (XYdir > 0 and XYdir <90
-#            xpos = xpos + steps
+        if (self.XYdir > 0 and self.XYdir <90) :
+            self.xpos = self.xpos + math.cos(math.radians(self.XYdir)) * steps
+            self.ypos = self.ypos + math.sin(math.radians(self.XYdir)) * steps
         if self.XYdir == 90 : 
             self.ypos = self.ypos + steps
+        if (self.XYdir > 90 and self.XYdir <180) :
+            self.xpos = self.xpos + math.sin(math.radians(90 - self.XYdir)) * steps
+            self.ypos = self.ypos + math.cos(math.radians(90 - self.XYdir)) * steps
         if self.XYdir == 180 :
             self.xpos = self.xpos - steps
+        if (self.XYdir > 180 and self.XYdir <270) :
+            self.xpos = self.xpos - math.cos(math.radians(180 - self.XYdir)) * steps
+            self.ypos = self.ypos + math.sin(math.radians(180 - self.XYdir)) * steps
         if self.XYdir == 270 : 
             self.ypos = self.ypos - steps
+        if (self.XYdir > 270 and self.XYdir <360) :
+            self.xpos = self.xpos - math.sin(math.radians(270 - self.XYdir)) * steps
+            self.ypos = self.ypos - math.cos(math.radians(270 - self.XYdir)) * steps
         futureturtle = tortoise.translate([self.xpos, self.ypos, self.zpos])  
         path = hull(dot.translate([xpast, ypast, zpast]), dot.translate([self.xpos, self.ypos, self.zpos]))
         self.model = self.model.union(pastturtle, path, futureturtle)
