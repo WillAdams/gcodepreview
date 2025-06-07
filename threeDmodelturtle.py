@@ -7,19 +7,22 @@ from openscad import *
 class threeDmodelturtle:
 
     def __init__(self,
+                 size = 5,
+                 turtle = sphere,
                  xpos = 0,
                  ypos = 0,
                  zpos = 0,
                  XYdir = 0,
-                 Zdir = 0,
-                 size = 5,
-                 turtle = sphere
+                 Zdir = 0
                  ):
         self.xpos = xpos
         self.ypos = ypos
         self.zpos = zpos
         self.XYdir = XYdir
         self.Zdir = Zdir
+        self.xpast = 0
+        self.ypast = 0
+        self.zpast = 0
         self.size = size
         self.turtle = turtle
         self.model = sphere(0.000000001)
@@ -35,11 +38,21 @@ class threeDmodelturtle:
             self.XYdir = self.XYdir + 360
 
     def incline(self, angle):
-        self.Zdir = self.Zdir - angle
+        self.Zdir = self.Zdir + angle
+        if self.Zdir > 180 :
+            self.Zdir = self.Zdir - 180
+            self.Zdir = self.Zdir * -1
         
     def decline(self, angle):
-        self.Zdir = self.Zdir + angle
-
+        print(self.Zdir)
+        self.Zdir = self.Zdir - angle
+        if self.Zdir < -180 :
+            self.Zdir = self.Zdir + 180
+            self.Zdir = self.Zdir * -1
+        if self.Zdir == 180 :
+            self.Zdir = 0
+        print(self.Zdir)
+        
     def forward(self, steps):
         if self.turtle == sphere :
             tortoise = sphere(self.size/2)
@@ -68,6 +81,22 @@ class threeDmodelturtle:
         if (self.XYdir > 270 and self.XYdir <360) :
             self.xpos = self.xpos - math.sin(math.radians(270 - self.XYdir)) * steps
             self.ypos = self.ypos - math.cos(math.radians(270 - self.XYdir)) * steps
+        if (self.Zdir == 0) :
+            self.zpos = self.zpos
+        if (self.Zdir > 0 and self.Zdir <90) :
+            self.zpos = self.zpos + steps * Sin(self.Zdir)
+        if (self.Zdir == 90) :
+            self.zpos = self.zpos + steps
+        if (self.Zdir > 90 and self.Zdir <180) :
+            self.zpos = self.zpos + steps * Sin(self.Zdir)
+        if (self.Zdir == 180) :
+            self.zpos = self.zpos
+        if (self.Zdir < 0 and self.Zdir >-90) :
+            self.zpos = self.zpos + steps * Sin(self.Zdir)
+        if (self.Zdir == -90) :
+            self.zpos = self.zpos - steps
+        if (self.Zdir <-90 and self.Zdir >-180) :
+            self.zpos = self.zpos + steps * Sin(self.Zdir)
         futureturtle = tortoise.translate([self.xpos, self.ypos, self.zpos])  
         path = hull(dot.translate([xpast, ypast, zpast]), dot.translate([self.xpos, self.ypos, self.zpos]))
         self.model = self.model.union(pastturtle, path, futureturtle)
