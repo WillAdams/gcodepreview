@@ -19,26 +19,31 @@ The project is discussed at:
 
 https://willadams.gitbook.io/design-into-3d/programming
 
-Since it is now programmed using Literate Programming (initially a .dtx, now a .tex file) there is a PDF: https://github.com/WillAdams/gcodepreview/blob/main/gcodepreview.pdf which includes all of the source code with formatted commentary.
+Since it is now programmed using Literate Programming (initially a .dtx, now a .tex file) there is a PDF: https://github.com/WillAdams/gcodepreview/blob/main/gcodepreview.pdf which includes all of the source code with formatted comments.
 
 The files for this library are:
 
- - gcodepreview.py (gcpy) --- the Python functions and variables
+ - gcodepreview.py (gcpy) --- the Python class/functions and variables
  - gcodepreview.scad (gcpscad) --- OpenSCAD modules and variables
- - gcodepreviewtemplate.scad (gcptmpl) --- .scad example file
- - gcodepreviewtemplate.py (gcptmplpy) --- .py example file (which requires PythonSCAD)
- - gcpdxf.py (gcpdxfpy) --- .py example file which only makes dxf file(s) and which will run in "normal" Python
 
-If using from PythonSCAD, place the files in C:\Users\\\~\Documents\OpenSCAD\libraries [^libraries]
+And there several sample/template files which may be used as the starting point for a given project:
+
+ - gcodepreviewtemplate.scad (gcptmpl) --- .scad example file
+ - gcodepreviewtemplate.py (gcptmplpy) --- .py example file 
+ - gcpdxf.py (gcpdxfpy) --- .py example file which only makes dxf file(s) and which will run in "normal" Python in addition to PythonSCAD
+
+If using from PythonSCAD, place the files in C:\Users\\\~\Documents\OpenSCAD\libraries [^libraries] or, load them from Github using the command:
+
+    nimport("https://raw.githubusercontent.com/WillAdams/gcodepreview/refs/heads/main/gcodepreview.py")
 
 [^libraries]: C:\Users\\\~\Documents\RapCAD\libraries is deprecated since RapCAD is no longer needed since Python is now used for writing out files.
 
-and call as:
+If using gcodepreview.scad call as:
 
     use <gcodepreview.py>
     include <gcodepreview.scad>
 
-Note that it is necessary to use the first file (this allows loading the Python commands (it used to be necessary to use an intermediary .scad file so as to wrap them in OpenSCAD commands) and then include the last file (which allows using OpenSCAD variables to selectively implement the Python commands via their being wrapped in OpenSCAD modules) and define variables which match the project and then use commands such as:
+Note that it is necessary to use the first file (this allows loading the Python commands and then include the last file (which allows using OpenSCAD variables to selectively implement the Python commands via their being wrapped in OpenSCAD modules) and define variables which match the project and then use commands such as:
 
     opengcodefile(Gcode_filename);
     opendxffile(DXF_filename);
@@ -49,9 +54,9 @@ Note that it is necessary to use the first file (this allows loading the Python 
     
     movetosafeZ();
     
-    toolchange(102,17000);
+    toolchange(102, 17000);
     
-    cutline(219/2,150/2,-8.35);
+    cutline(219/2, 150/2, -8.35);
 
     stockandtoolpaths();
     
@@ -62,17 +67,17 @@ which makes a G-code file:
 
 ![OpenSCAD template G-code file](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/gcodepreview_template.png?raw=true)
 
-but one which could only be sent to a machine so as to cut only the softest and most yielding of materials since it makes a single full-depth pass, and of which has a matching DXF which may be imported into a CAM tool --- but which it is not directly possible to assign a toolpath in readily available CAM tools (since it varies in depth from beginning-to-end). 
+but one which could only be sent to a machine so as to cut only the softest and most yielding of materials since it makes a single full-depth pass, and which has a matching DXF which may be imported into a CAM tool --- but which it is not directly possible to assign a toolpath in readily available CAM tools (since it varies in depth from beginning-to-end which is not included in the DXF since few tools make use of that information). 
 
 Importing this DXF and actually cutting it is discussed at:
 
 https://forum.makerforums.info/t/rewriting-gcodepreview-with-python/88617/14
 
-Alternately, gcodepreview.py may be placed in a Python library location and used directly from Python --- note that it is possible to use it from a "normal" Python when generating only DXFs.
+Alternately, gcodepreview.py may be placed in a Python library location and used directly from Python --- note that it is possible to use it from a "normal" Python when generating only DXFs as shown in gcpdxf.py.
 
-Tool numbers match those of tooling sold by Carbide 3D (ob. discl., I work for them). 
+In the current version, tool numbers match those of tooling sold by Carbide 3D (ob. discl., I work for them), but a vendor-neutral system is in the process of being developed (the original numbers will still be present as 9##### where the #s indicate the original tool number). 
 
-Comments are included in the G-code to match those expected by CutViewer, allowing a direct preview without the need to maintain a tool library.
+Comments are included in the G-code to match those expected by CutViewer, allowing a direct preview without the need to maintain a tool library (for such tooling as that program supports).
 
 Supporting OpenSCAD usage makes possible such examples as: openscad_gcodepreview_cutjoinery.tres.scad which is made from an OpenSCAD Graph Editor file:
 
@@ -93,10 +98,12 @@ Supporting OpenSCAD usage makes possible such examples as: openscad_gcodepreview
 | 0.7           | Re-write completely in Python                                                                                                                                                   |
 | 0.8           | Re-re-write completely in Python and OpenSCAD, iteratively testing                                                                                                              |
 | 0.801         | Add support for bowl bits with flat bottom                                                                                                                                      |
+| 0.802         | Add support for tapered ball-nose and  V tools with flat bottom                                                                                                                 |
 
 Possible future improvements:
 
- - support for additional tooling shapes (tapered ball nose, lollipop cutters)
+ - implement tool-numbering scheme
+ - support for additional tooling shapes (lollipop cutters)
  - create a single line font for use where text is wanted
  - Support Bézier curves (required for fonts if not to be limited to lines and arcs) and surfaces
 
@@ -108,7 +115,8 @@ Deprecated feature:
 
 To-do:
 
+ -  add conditional option to toggle between creation of manual and Literate Source
  -  fix OpenSCAD wrapper and add any missing commands for Python
  -  reposition cutroundover command into cutshape
+ -  re-work architecture so that a tool shape is defined as a list, with shaft always defined/included and annotated as such (in a different colour so as to identify instances of rubbing)
  -  work on rotary axis option
-

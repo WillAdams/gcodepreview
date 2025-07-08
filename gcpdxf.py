@@ -2,8 +2,7 @@ from openscad import *
 # nimport("https://raw.githubusercontent.com/WillAdams/gcodepreview/refs/heads/main/gcodepreview.py")
 from gcodepreview import *
 
-gcp = gcodepreview(False, # generatepaths
-                   False, # generategcode
+gcp = gcodepreview(False, # generategcode
                    True   # generatedxf
                    )
 
@@ -45,17 +44,6 @@ radius = 6
 cornerstyle = "Fillet"  # "Chamfer", "Flipped Fillet"
 
 gcp.opendxffile(Base_filename)
-#gcp.opendxffiles(Base_filename,
-#                 large_square_tool_num,
-#                 small_square_tool_num,
-#                 large_ball_tool_num,
-#                 small_ball_tool_num,
-#                 large_V_tool_num,
-#                 small_V_tool_num,
-#                 DT_tool_num,
-#                 KH_tool_num,
-#                 Roundover_tool_num,
-#                 MISC_tool_num)
 
 gcp.dxfrectangle(large_square_tool_num, 0, 0, stockXwidth, stockYheight)
 
@@ -75,31 +63,54 @@ gcp.setdxfcolor("Blue")
 
 gcp.dxfrectangle(large_square_tool_num, radius +inset, radius, stockXwidth/2 - (radius * 4), stockYheight - (radius * 2), cornerstyle, radius)
 gcp.dxfrectangle(large_square_tool_num, stockXwidth/2 + (radius * 2) + inset, radius, stockXwidth/2 - (radius * 4), stockYheight - (radius * 2), cornerstyle, radius)
-#gcp.dxfrectangleround(large_square_tool_num, 64, 7, 24, 36, radius)
-#gcp.dxfrectanglechamfer(large_square_tool_num, 64, 7, 24, 36, radius)
-#gcp.dxfrectangleflippedfillet(large_square_tool_num, 64, 7, 24, 36, radius)
 
 gcp.setdxfcolor("Black")
 
 gcp.beginpolyline(large_square_tool_num)
-gcp.addvertex(large_square_tool_num, stockXwidth*0.75+radius,stockYheight/4)
-gcp.addvertex(large_square_tool_num, stockXwidth*0.75+radius,stockYheight*0.75)
-gcp.addvertex(large_square_tool_num, stockXwidth*0.75+radius*2,stockYheight*0.75-radius)
+gcp.addvertex(large_square_tool_num, stockXwidth*0.75+radius*1.5,stockYheight/4-radius/2)
+gcp.addvertex(large_square_tool_num, stockXwidth*0.75+radius,stockYheight/4-radius/2)
+gcp.addvertex(large_square_tool_num, stockXwidth*0.75+radius,stockYheight*0.75+radius/2)
+gcp.addvertex(large_square_tool_num, stockXwidth*0.75+radius*1.5,stockYheight*0.75+radius/2)
 gcp.closepolyline(large_square_tool_num)
 
-##gcp.setdxfcolor("White")
+gcp.dxfarc(large_square_tool_num, stockXwidth*0.75+radius*1.5, stockYheight*0.75, radius/2,  0, 90)
+
+gcp.beginpolyline(large_square_tool_num)
+gcp.addvertex(large_square_tool_num, stockXwidth*0.75+radius*2,stockYheight*0.75)
+gcp.addvertex(large_square_tool_num, stockXwidth*0.75+radius*2,stockYheight/4)
+gcp.closepolyline(large_square_tool_num)
+
+gcp.dxfarc(large_square_tool_num, stockXwidth*0.75+radius*1.5, stockYheight/4, radius/2,  270, 360)
+
+gcp.setdxfcolor("White")
+
+gcp.beginpolyline(large_square_tool_num)
+gcp.addvertex(large_square_tool_num, stockXwidth*0.25-radius*1.5,stockYheight/4-radius/2)
+gcp.addvertex(large_square_tool_num, stockXwidth*0.25-radius,stockYheight/4-radius/2)
+gcp.addvertex(large_square_tool_num, stockXwidth*0.25-radius,stockYheight*0.75+radius/2)
+gcp.addvertex(large_square_tool_num, stockXwidth*0.25-radius*1.5,stockYheight*0.75+radius/2)
+gcp.closepolyline(large_square_tool_num)
+
+gcp.dxfarc(large_square_tool_num, stockXwidth*0.25-radius*1.5, stockYheight*0.75, radius/2,  90, 180)
+
+gcp.beginpolyline(large_square_tool_num)
+gcp.addvertex(large_square_tool_num, stockXwidth*0.25-radius*2,stockYheight*0.75)
+gcp.addvertex(large_square_tool_num, stockXwidth*0.25-radius*2,stockYheight/4)
+gcp.closepolyline(large_square_tool_num)
+
+gcp.dxfarc(large_square_tool_num, stockXwidth*0.25-radius*1.5, stockYheight/4, radius/2,  180, 270)
 
 gcp.setdxfcolor("Yellow")
-gcp.dxfcircle(large_square_tool_num, stockXwidth/4, stockYheight/4, radius/2)
+gcp.dxfcircle(large_square_tool_num, stockXwidth/4+1+radius/2, stockYheight/4, radius/2)
 
 gcp.setdxfcolor("Green")
-gcp.dxfcircle(large_square_tool_num, stockXwidth*0.75, stockYheight*0.75, radius/2)
+gcp.dxfcircle(large_square_tool_num, stockXwidth*0.75-(1+radius/2), stockYheight*0.75, radius/2)
 
 gcp.setdxfcolor("Cyan")
-gcp.dxfcircle(large_square_tool_num, stockXwidth/4, stockYheight*0.75, radius/2)
+gcp.dxfcircle(large_square_tool_num, stockXwidth/4+1+radius/2, stockYheight*0.75, radius/2)
 
 gcp.setdxfcolor("Magenta")
-gcp.dxfcircle(large_square_tool_num, stockXwidth*0.75, stockYheight/4, radius/2)
+gcp.dxfcircle(large_square_tool_num, stockXwidth*0.75-(1+radius/2), stockYheight/4, radius/2)
 
 gcp.setdxfcolor("Dark Gray")
 
@@ -109,6 +120,5 @@ gcp.setdxfcolor("Light Gray")
 
 gcp.dxfKH(374, stockXwidth/2, stockYheight/5*3, 0, -7, 270, 11.5875)
 
-#gcp.closedxffiles()
 gcp.closedxffile()
 

@@ -67,6 +67,7 @@
 \newcounter{gcptmpl}
 \newcounter{gcptmplpy}
 \newcounter{gcpdxfpy}
+\newcounter{gcpcutdxfpy}
 \newcounter{cuttwod}
 \newcounter{rdme}
 \setcounter{rdme}{0}
@@ -137,6 +138,10 @@ Last line was \the\lst@lineno\ for #1\ gcpy\ \thegcpy\ pyscad\ \thepyscad\ gcpsc
         {gcpdxf.py}
         {
             \renewcommand{\lstprompt}{\ gcpdxfpy}
+        }
+        {gcpcutdxf.py}
+        {
+            \renewcommand{\lstprompt}{\ gcpcutdxfpy}
         }
         {gcpgc.py}
         {

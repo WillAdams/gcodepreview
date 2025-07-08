@@ -45,23 +45,9 @@ module addtostock(stockXwidth, stockYheight, stockZthickness, shiftX, shiftY, sh
     gcp.addtostock(stockXwidth, stockYheight, stockZthickness, shiftX, shiftY, shiftZ);
 }
 
-module cutroundover(bx, by, bz, ex, ey, ez, radiustn) {
-    if (radiustn == 56125) {
-        cutroundovertool(bx, by, bz, ex, ey, ez, 0.508/2, 1.531);
-    } else if (radiustn == 56142) {
-        cutroundovertool(bx, by, bz, ex, ey, ez, 0.508/2, 2.921);
-//    } else if (radiustn == 312) {
-//        cutroundovertool(bx, by, bz, ex, ey, ez, 1.524/2, 3.175);
-    } else if (radiustn == 1570) {
-        cutroundovertool(bx, by, bz, ex, ey, ez, 0.507/2, 4.509);
-    }
-}
-
 module toolchange(tool_number, speed){
     gcp.toolchange(tool_number, speed);
 }
-
-function tool_diameter(td_tool, td_depth) = otool_diameter(td_tool, td_depth);
 
 module movetosafeZ(){
     gcp.rapid(gcp.xpos(), gcp.ypos(), retractheight);
@@ -103,9 +89,7 @@ module cutarcCW(barc, earc, xcenter, ycenter, radius, tpzreldim){
     gcp.cutarcCW(barc, earc, xcenter, ycenter, radius, tpzreldim);
 }
 
-module cutkeyholegcdxf(kh_tool_num, kh_start_depth, kh_max_depth, kht_direction, kh_distance){
-    gcp.cutkeyholegcdxf(kh_tool_num, kh_start_depth, kh_max_depth, kht_direction, kh_distance);
-}
+function tool_diameter(td_tool, td_depth) = otool_diameter(td_tool, td_depth);
 
 module stockandtoolpaths(){
     gcp.stockandtoolpaths();
@@ -164,5 +148,9 @@ module closedxffiles(){
 
 module closedxffile(){
     gcp.closedxffile();
+}
+
+module cutkeyholegcdxf(kh_tool_num, kh_start_depth, kh_max_depth, kht_direction, kh_distance){
+    gcp.cutkeyholegcdxf(kh_tool_num, kh_start_depth, kh_max_depth, kht_direction, kh_distance);
 }
 

@@ -24,8 +24,6 @@ retractheight = 9;
 /* [Export] */
 Base_filename = "export";
 /* [Export] */
-generatepaths = true;
-/* [Export] */
 generatedxf = true;
 /* [Export] */
 generategcode = true;
@@ -80,12 +78,10 @@ RO_ratio = 0.5; // [0.25:2]
 /* [Feeds and Speeds] */
 MISC_ratio = 0.5; // [0.25:2]
 
-thegeneratepaths = generatepaths == true ? 1 : 0;
 thegeneratedxf = generatedxf == true ? 1 : 0;
 thegenerategcode = generategcode == true ? 1 : 0;
 
-gcp = gcodepreview(thegeneratepaths,
-                   thegenerategcode,
+gcp = gcodepreview(thegenerategcode,
                    thegeneratedxf,
                    );
 
@@ -255,7 +251,7 @@ cutlinedxfgc(stockXwidth/2+0.508/2, -(stockYheight/2+0.508/2), -1.531);
 rapidZ(retractheight);
 //#gcp.toolchange(56125, 10000)
 cutlineZgcfeed(-1.531, plunge);
-//toolpaths = toolpaths.union(gcp.cutline(gcp.xpos(), gcp.ypos(), -1.531))
+//toolpaths.append(gcp.cutline(gcp.xpos(), gcp.ypos(), -1.531))
 cutlinedxfgc(stockXwidth/2+0.508/2, (stockYheight/2+0.508/2), -1.531);
 
 stockandtoolpaths();
