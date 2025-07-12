@@ -2622,5 +2622,6 @@ class gcodepreview:
 #        for command in commands:
 #            print(command)
 
-        show(self.stockandtoolpaths())
+#        show(self.stockandtoolpaths())
+        self.stockandtoolpaths()
 
