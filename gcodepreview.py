@@ -122,6 +122,7 @@ class gcodepreview:
 
     def setzpos(self, newzpos):
         self.mpz = newzpos
+
     def setupstock(self, stockXwidth,
                  stockYheight,
                  stockZthickness,
@@ -622,8 +623,8 @@ class gcodepreview:
             self.angle = 8
             self.toolnumber = "808071"
 #
-#        self.writegc("M6T", str(tool_number))
-#        self.writegc("M03S", str(speed))
+        self.writegc("M6T", str(tool_number))
+        self.writegc("M03S", str(speed))
 
     def setcolor(self,
                   cutcolor = "green",
@@ -959,7 +960,7 @@ class gcodepreview:
         else:
             tpzinc = (ez - self.zpos()) / 90
 #            tpzinc = (self.zpos() + ez) / 90
-        print("tpzinc ", tpzinc)
+#        print("tpzinc ", tpzinc)
         i = 271
         while i < 361:
             self.cutline(ex - radius + radius * Cos(i), ey + radius * Sin(i), self.zpos()+tpzinc)
@@ -1083,6 +1084,10 @@ class gcodepreview:
             part = self.stock.difference(self.rapids)
             part = self.stock.difference(self.toolpaths)
             show(part)
+
+    def returnstockandtoolpaths(self):
+        part = self.stock.difference(self.toolpaths)
+        return part
 
     def writegc(self, *arguments):
         if self.generategcode == True:
@@ -2362,7 +2367,6 @@ class gcodepreview:
                 i += 1
         self.closepolyline(self.currenttoolnumber())
         return toolpath
-
 
     def Full_Blind_Finger_Joint_smallV(self, bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter):
         rapid = self.rapidZ(0)

@@ -9,7 +9,7 @@ fa = 2;
 fs = 0.125;
 
 /* [Stock] */
-stockXwidth = 219;
+stockXwidth = 220;
 /* [Stock] */
 stockYheight = 150;
 /* [Stock] */
@@ -155,32 +155,42 @@ rapidZ(0);
 
 //cutarcCW(360, 270, gcp.xpos()-stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness);
 //gcp.cutarcCW(270, 180, gcp.xpos(), gcp.ypos()+stockYheight/16, stockYheight/16))
-cutarcCC(0, 90, gcp.xpos()-stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4);
-cutarcCC(90, 180, gcp.xpos(), gcp.ypos()-stockYheight/16, stockYheight/16, -stockZthickness/4);
-cutarcCC(180, 270, gcp.xpos()+stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4);
-cutarcCC(270, 360, gcp.xpos(), gcp.ypos()+stockYheight/16, stockYheight/16, -stockZthickness/4);
+//cutarcCC(0, 90, gcp.xpos()-stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4);
+//cutarcCC(90, 180, gcp.xpos(), gcp.ypos()-stockYheight/16, stockYheight/16, -stockZthickness/4);
+//cutarcCC(180, 270, gcp.xpos()+stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4);
+//cutarcCC(270, 360, gcp.xpos(), gcp.ypos()+stockYheight/16, stockYheight/16, -stockZthickness/4);
 
 movetosafeZ();
 //rapidXY(stockXwidth/4+stockYheight/8-stockYheight/16, -stockYheight/8);
 rapidXY(stockXwidth/4-stockYheight/16, -(stockYheight/4));
 rapidZ(0);
 
-cutarcCW(180, 90, gcp.xpos()+stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4);
-cutarcCW(90, 0, gcp.xpos(), gcp.ypos()-stockYheight/16, stockYheight/16, -stockZthickness/4);
-cutarcCW(360, 270, gcp.xpos()-stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4);
-cutarcCW(270, 180, gcp.xpos(), gcp.ypos()+stockYheight/16, stockYheight/16, -stockZthickness/4);
+//cutarcCW(180, 90, gcp.xpos()+stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4);
+//cutarcCW(90, 0, gcp.xpos(), gcp.ypos()-stockYheight/16, stockYheight/16, -stockZthickness/4);
+//cutarcCW(360, 270, gcp.xpos()-stockYheight/16, gcp.ypos(), stockYheight/16, -stockZthickness/4);
+//cutarcCW(270, 180, gcp.xpos(), gcp.ypos()+stockYheight/16, stockYheight/16, -stockZthickness/4);
+
+movetosafeZ();
+
+rapidXY(-stockXwidth/4 + stockYheight/8, (stockYheight/4));
+rapidZ(0);
+
+cutquarterCCNEdxf(xpos() - stockYheight/8, ypos() + stockYheight/8, -stockZthickness/4, stockYheight/8);
+cutquarterCCNWdxf(xpos() - stockYheight/8, ypos() - stockYheight/8, -stockZthickness/2, stockYheight/8);
+cutquarterCCSWdxf(xpos() + stockYheight/8, ypos() - stockYheight/8, -stockZthickness * 0.75, stockYheight/8);
+//cutquarterCCSEdxf(xpos() + stockYheight/8, ypos() + stockYheight/8, -stockZthickness, stockYheight/8);
 
 movetosafeZ();
 toolchange(201, 10000);
 rapidXY(stockXwidth /2 -6.34, - stockYheight /2);
 rapidZ(0);
-cutarcCW(180, 90, stockXwidth /2, -stockYheight/2, 6.34, - stockZthickness);
+//cutarcCW(180, 90, stockXwidth /2, -stockYheight/2, 6.34, - stockZthickness);
 
 movetosafeZ();
 rapidXY(stockXwidth/2, -stockYheight/2);
 rapidZ(0);
 
-gcp.cutlinedxfgc(gcp.xpos(), gcp.ypos(), -stockZthickness);
+//gcp.cutlinedxfgc(gcp.xpos(), gcp.ypos(), -stockZthickness);
 
 movetosafeZ();
 toolchange(814, 10000);
@@ -239,7 +249,29 @@ cutlinedxfgc(gcp.xpos(), gcp.ypos()-stockYheight/9, gcp.zpos());
 cutline(gcp.xpos(), gcp.ypos()+stockYheight/9, gcp.zpos());
 cutline(gcp.xpos(), gcp.ypos(), 0);
 
+rapidZ(retractheight);
+toolchange(45982, 10000);
+rapidXY(stockXwidth/8, 0);
+cutline(gcp.xpos(), gcp.ypos(), -(stockZthickness*7/8));
+cutlinedxfgc(gcp.xpos(), -stockYheight/2, -(stockZthickness*7/8));
 
+rapidZ(retractheight);
+toolchange(204, 10000);
+rapidXY(stockXwidth*0.3125, 0);
+cutline(gcp.xpos(), gcp.ypos(), -(stockZthickness*7/8));
+cutlinedxfgc(gcp.xpos(), -stockYheight/2, -(stockZthickness*7/8));
+
+rapidZ(retractheight);
+toolchange(502, 10000);
+rapidXY(stockXwidth*0.375, 0);
+cutline(gcp.xpos(), gcp.ypos(), -4.24);
+cutlinedxfgc(gcp.xpos(), -stockYheight/2, -4.24);
+
+rapidZ(retractheight);
+toolchange(13921, 10000);
+rapidXY(-stockXwidth*0.375, 0);
+cutline(gcp.xpos(), gcp.ypos(), -stockZthickness/2);
+cutlinedxfgc(gcp.xpos(), -stockYheight/2, -stockZthickness/2);
 
 rapidZ(retractheight);
 gcp.toolchange(56142, 10000);

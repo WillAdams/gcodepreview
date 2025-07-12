@@ -89,22 +89,42 @@ module cutarcCW(barc, earc, xcenter, ycenter, radius, tpzreldim){
     gcp.cutarcCW(barc, earc, xcenter, ycenter, radius, tpzreldim);
 }
 
+module cutquarterCCNE(ex, ey, ez, radius){
+     gcp.cutquarterCCNE(ex, ey, ez, radius);
+}
+
+module cutquarterCCNW(ex, ey, ez, radius){
+     gcp.cutquarterCCNW(ex, ey, ez, radius);
+}
+
+module cutquarterCCSW(ex, ey, ez, radius){
+    gcp.cutquarterCCSW(ex, ey, ez, radius);
+}
+
+module cutquarterCCSE(self, ex, ey, ez, radius){
+    gcp.cutquarterCCSE(ex, ey, ez, radius);
+}
+
+module cutquarterCCNEdxf(ex, ey, ez, radius){
+     gcp.cutquarterCCNEdxf(ex, ey, ez, radius);
+}
+
+module cutquarterCCNWdxf(ex, ey, ez, radius){
+     gcp.cutquarterCCNWdxf(ex, ey, ez, radius);
+}
+
+module cutquarterCCSWdxf(ex, ey, ez, radius){
+    gcp.cutquarterCCSWdxf(ex, ey, ez, radius);
+}
+
+module cutquarterCCSEdxf(self, ex, ey, ez, radius){
+    gcp.cutquarterCCSEdxf(ex, ey, ez, radius);
+}
+
 function tool_diameter(td_tool, td_depth) = otool_diameter(td_tool, td_depth);
 
 module stockandtoolpaths(){
-    gcp.stockandtoolpaths();
-}
-
-module stockwotoolpaths(){
-    gcp.stockandtoolpaths("stock");
-}
-
-module outputtoolpaths(){
-    gcp.stockandtoolpaths("toolpaths");
-}
-
-module outputrapids(){
-    gcp.stockandtoolpaths("rapids");
+    gcp.returnstockandtoolpaths();
 }
 
 module opendxffile(basefilename){
@@ -138,6 +158,7 @@ module cutarcSWCCdxfgc(ex, ey, ez, xcenter, ycenter, radius){
 module cutarcSECCdxfgc(ex, ey, ez, xcenter, ycenter, radius){
     gcp.cutarcSECCdxfgc(ex, ey, ez, xcenter, ycenter, radius);
 }
+
 module closegcodefile(){
     gcp.closegcodefile();
 }

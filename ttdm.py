@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import math
+#import math
 
 from openscad import *
 
@@ -8,21 +8,17 @@ from threeDmodelturtle import *
 
 ttdm = threeDmodelturtle()
 
-ttdm.forward(40)
-
-ttdm.climb(5)
-
-ttdm.left(90)
+ttdm.left(359)
 
 ttdm.forward(40)
 
-ttdm.climb(5)
+ttdm.incline(45)
 
-ttdm.left(90)
+ttdm.left(91)
 
 ttdm.forward(40)
 
-ttdm.climb(5)
+ttdm.decline(90)
 
 ttdm.left(90)
 
