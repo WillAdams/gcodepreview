@@ -242,6 +242,7 @@ Note for G-code generation that it is up to the user to implement Depth per Pass
 
 To-do:
 
+ - determine why one quadrant of arc command doesn't work in OpenSCAD
  - clock-wise arcs
  - add toolpath for cutting countersinks using ball-nose tool from inside working out
  - verify OpenSCAD wrapper and add any missing commands for Python
@@ -7833,7 +7834,8 @@ gcp.previewgcodefile(gc_file)
 #        for command in commands:
 #            print(command)
 
-        show(self.stockandtoolpaths())
+#        show(self.stockandtoolpaths())
+        self.stockandtoolpaths()
 
 \end{writecode}
 \addtocounter{gcpy}{137}
