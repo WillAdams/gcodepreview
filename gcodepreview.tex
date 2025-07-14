@@ -1277,6 +1277,65 @@ In earlier versions there were several possible ways to work with the \textsc{3d
 
 \noindent\textsc{Python coding considerations:} Python style may be checked using a tool such as: \url{https://www.codewof.co.nz/style/python3/}. Not all conventions will necessarily be adhered to --- limiting line length in particular conflicts with the flexibility of Literate Programming. Note that \verb|numpydoc|-style docstrings will be added to help define the functionality of each defined module in Python. \url{https://numpydoc.readthedocs.io/en/latest/}.
 
+\subsection{Cutviewer}
+
+This problem space, showing the result of cutting stock using tooling in \textsc{3d} has a number of tools addressing it, Camotics (formerly OpenSCAM) is an opensource option. Many tools simply create a wireframe preview such as \url{https://ncviewer.com/}. Cutviewer is a notable commercial program which has a unique approach centered on G-code where specially formatted comments fill in the dimensions needed for showing the \textsc{3d} preview.
+
+\subsubsection{Stock size and placement}
+
+Setting the dimensions of the stock, and placing it in \textsc{3d} space relative to the origin must be done very early in the G-code file.
+
+The CutViewer comments are in the form:
+
+\begin{verbatim}
+(STOCK/BLOCK, Length, Width, Height, Origin X, Origin Y, Origin Z)
+\end{verbatim}
+
+\includeimage{cutviewer_stocksize.png}
+
+\subsubsection{Tool Shapes}
+
+Cutviewer is unable to show tools which undercut, but other tool shapes are represented in a straight-forward and flexible fashion.
+
+\paragraph{Tool/Mill (Square, radiused, ball-nose, and tapered-ball)}
+
+The CutViewer values include:
+
+\begin{verbatim}
+TOOL/MILL, Diameter, Corner radius, Height, Taper Angle
+\end{verbatim}
+
+\includeimage{cutviewer_tool_mill.png}
+
+\noindent Note that it is possible to use these definitions for a wide variety of tooling, e.g., a Carbide 3D \#301 V tool being represented as:
+
+\begin{verbatim}
+(TOOL/MILL,0.10, 0.05, 6.35, 45.00)
+\end{verbatim}
+
+\paragraph{Corner Rounding, (roundover)} 
+
+One notable tool option which cannot be supported using the Tool/Mill description is corner rounding/roundover tooling:
+
+\begin{verbatim}
+TOOL/CRMILL, Diameter1, Diameter2, Radius, Height, Length
+\end{verbatim}
+
+\includeimage{cutviewer_corner_round.png}
+
+\paragraph{V shaped tooling (and variations)}
+
+Cutviewer has multiple V shaped tooling definitions:
+
+\begin{itemize}
+\item ;TOOL/CHAMFER, Diameter, Point Angle, Height
+\item ;TOOL/CHAMFER, Diameter, Point Angle, Height, Chamfer Length (note that this is the definition of a flat-bottomed V tool)
+\item ;TOOL/DRILL, Diameter, Point Angle, Height
+\item ;TOOL/CDRILL, D1, A1, L, D2, A2, H
+\end{itemize}
+
+\noindent Since such tooling may be represented (albeit with a slight compromise which arguably is a nod to the real world) using the Tool/Mill definition from above, it seems unlikely that such tooling definitions will be supported.
+
 \subsection{Module Naming Convention}
 
 The original implementation required three files and used a convention for prefacing commands with \verb|o| or \verb|p|, but this requirement was obviated in the full Python re-write. The current implentation depends upon the class being instantiated as \verb|gcp| as a sufficent differentation between the Python and the OpenSCAD versions of commands which will otherwise share the same name.
@@ -1797,14 +1856,6 @@ Since part of a class, it will be called as \DescribeRoutine{gcp.setupstock}. It
 
 A series of \verb|if| statements parse the \DescribeVariable{zeroheight} (Z-axis) and \DescribeVariable{stockzero} (X- and Y-axes) parameters so as to place the stock in place and suitable G-code comments are added for CutViewer.
 
-The CutViewer comments are in the form:
-
-\begin{verbatim}
-(STOCK/BLOCK, Length, Width, Height, Origin X, Origin Y, Origin Z)
-\end{verbatim}
-
-\includeimage{cutviewer_stocksize.png}
-
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
         if self.zeroheight == "Top":
@@ -1953,11 +2004,11 @@ module addtostock(stockXwidth, stockYheight, stockZthickness, shiftX, shiftY, sh
 \end{writecode}
 \addtocounter{gcpscad}{4}
 
-\subsection{Tools and Changes}
+\subsection{Tools and Shapes and Changes}
 
 Originally, it was necessary to return a shape so that modules which use a \verb|<variable>.union| command would function as expected even when the \textsc{3d} model created is stored in a variable.
 
-Due to stack limits in OpenSCAD for the CSG tree, instead, the shapes will be stored in two variables as lists processed/created using a command \DescribeRoutine{toolmovement} which will subsume all tool related functionality. As other routines need access to information about the current tool, appropriate routines will allow its variables will be queried. 
+Due to stack limits in OpenSCAD for the CSG tree, instead, the shapes will be stored in two variables (\DescribeVariable{rapids}, \DescribeVariable{toolpaths}) as lists processed/created using a command \DescribeRoutine{toolmovement} which will subsume all tool related functionality. As other routines need access to information about the current tool, appropriate routines will allow its variables and the specifics of the current tool to be queried. 
 
 The base/entry functionality has the instance being defined in terms of a basic set of variables (one of which is overloaded to serve multiple purposes, depending on the type of endmill).
 
@@ -2778,6 +2829,78 @@ Note that there are many varieties of tooling and not all will be directly suppo
  
 The original implementation created the model for the tool at the current position, and a duplicate at the end position, wrapping the twain for each end of a given movement in a \verb|hull()| command and then applying a \verb|union|. This approach will not work within Python, so it will be necessary to instead assign and select the tool as part of the \verb|toolmovement| command.
 
+There are two separate commands for handling a tool being changed, the first sets the parameters which describe the tool and may be used to effect the change of a tool either in a G-code file or when making a 3D file, \DescribeVariable{settoolparameters} and a second version which processes a toolchange when presented with a tool number, \DescribeVariable{toolchange} (it may be that the latter will be set up to call the former).
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
+    def settoolparameters(self, tooltype, first, second, third, fourth, length = 0):
+        if tooltype = "mill":
+            diameter = first
+            cornerradius = second
+            height = third
+            taperangle = fourth
+            if cornerradius = 0:
+#M6T122 (TOOL/MILL,0.80, 0.00, 1.59, 0.00)
+#M6T112 (TOOL/MILL,1.59, 0.00, 6.35, 0.00)
+#M6T102 (TOOL/MILL,3.17, 0.00, 12.70, 0.00)
+#M6T201 (TOOL/MILL,6.35, 0.00, 19.05, 0.00)
+#M6T205 (TOOL/MILL,6.35, 0.00, 25.40, 0.00)
+#M6T251 (TOOL/MILL,6.35, 0.00, 19.05, 0.00)
+#M6T322 (TOOL/MILL,6.35, 0.00, 19.05, 0.00)
+#M6T324 (TOOL/MILL,6.35, 0.00, 22.22, 0.00)
+#M6T326 (TOOL/MILL,3.17, 0.00, 12.70, 0.00)
+#M6T602 (TOOL/MILL,25.40, 0.00, 9.91, 0.00)
+#M6T603 (TOOL/MILL,25.40, 0.00, 9.91, 0.00)
+#M6T274 (TOOL/MILL,3.17, 0.00, 12.70, 0.00)
+#M6T278 (TOOL/MILL,6.35, 0.00, 19.05, 0.00)
+#M6T282 (TOOL/MILL,2.00, 0.00, 6.35, 0.00)
+            self.endmilltype = "square"
+            self.diameter = diameter
+            self.flute = height
+            self.shaftdiameter = diameter
+            self.shaftheight = height
+            self.shaftlength = height
+#
+            elif cornerradius > 0 and taperangle = 0:
+#M6T121 (TOOL/MILL,0.80, 0.40, 1.59, 0.00)
+#M6T111 (TOOL/MILL,1.59, 0.79, 6.35, 0.00)
+#M6T101 (TOOL/MILL,3.17, 1.59, 12.70, 0.00)
+#M6T202 (TOOL/MILL,6.35, 3.17, 19.05, 0.00)
+#M6T325 (TOOL/MILL,6.35, 3.17, 25.40, 0.00)
+            self.endmilltype = "ball"
+            self.diameter = diameter
+            self.flute = height
+            self.shaftdiameter = diameter
+            self.shaftheight = height
+            self.shaftlength = height
+#
+            elif taperangle > 0:
+#M6T301 (TOOL/MILL,0.10, 0.05, 6.35, 45.00)
+#M6T302 (TOOL/MILL,0.10, 0.05, 6.35, 30.00)
+#M6T327 (TOOL/MILL,0.10, 0.05, 23.39, 30.00)
+            self.endmilltype = "V"
+            self.diameter = Tan(taperangle / 2) * height
+            self.flute = height
+            self.angle = taperangle
+            self.shaftdiameter = Tan(taperangle / 2) * height 
+            self.shaftheight = height
+            self.shaftlength = height
+#
+        elif tooltype = "chamfer":
+            tipdiameter = first
+            radius = second
+            height = third
+            taperangle = fourth
+
+\end{writecode}
+\addtocounter{gcpy}{7}
+
+\begin{verbatim}
+
+\end{verbatim}
+
+\DescribeVariable{toolchange}
+
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
     def toolchange(self, tool_number, speed = 10000):
@@ -2794,13 +2917,7 @@ The Python definition for \DescribeRoutine{toolchange} requires the tool number 
 
 \paragraph{Square (including O-flute)}
 
-The CutViewer values include:
-
-\begin{verbatim}
-TOOL/MILL, Diameter, Corner radius, Height, Taper Angle
-\end{verbatim}
-
-\includeimage{cutviewer_tool_mill.png}
+The simplest sort of tool, they are defined as a cylinder.
 
 %TODO REVIEW variables for shaft length and so forth and correct as necessary
 
@@ -2899,9 +3016,9 @@ Making a distinction betwixt Square and O-flute tooling may be removed from a fu
 \end{writecode}
 \addtocounter{gcpy}{28}
 
-\paragraph{Ball nose (including tapered ball nose)}
+\paragraph{Ball-nose (including tapered-ball)}
 
-Additional shapes continue the \verb|elif|s...
+The \verb|elif|s continue with ball-nose and tapered-ball tooling which are defined as one would expect by spheres and cylinders. Note that the Cutviewer definition of a the measurement point of a tool being at the center is not yet set up --- potentially it opens up greatly simplified toolpath calculations and may be implemented in a future version.
 
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
@@ -3165,13 +3282,7 @@ One vendor which provides such tooling is Precise Bits: \url{https://www.precise
 
 \paragraph{Roundover (corner rounding)} 
 
-Note that the parameters will need to incorporate the tip diameter into the overall diameter. CutViewer uses:
-
-\begin{verbatim}
-TOOL/CRMILL, Diameter1, Diameter2, Radius, Height, Length
-\end{verbatim}
-
-\includeimage{cutviewer_corner_round.png}
+Note that the parameters will need to incorporate the tip diameter into the overall diameter. 
 
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
@@ -3242,7 +3353,7 @@ TOOL/CRMILL, Diameter1, Diameter2, Radius, Height, Length
 
 \paragraph{Dovetails}
 
-Unfortunately, tools which support undercuts such as dovetails are not supported by CutViewer (CAMotics will work for such tooling, at least dovetails which may be defined as "stub" endmills with a bottom diameter greater than upper diameter).
+Unfortunately, tools which support undercuts such as dovetails are not supported by many CAM tools including Carbide Create and CutViewer (CAMotics will work for such tooling, at least dovetails which may be defined as "stub" endmills with a bottom diameter greater than upper diameter).
 
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
@@ -3519,7 +3630,7 @@ The code for diagramming this is quite straight-forward. A BlockSCAD implementat
 %\paragraph{Normal toolshapes}
 
 \label{para:normaltooling} Most tooling has quite standard shapes 
-and are defined by their profile as defined in a class which simply defines/declares their shape and \verb|hull()|s them together:
+and are defined by their profile as defined in the \verb|toolmovement| command which simply defines/declares their shape and \verb|hull()|s them together:
 
   \noindent\includegraphics[width=\linewidth/3]{images/tool_square_201.png}%
            \includegraphics[width=\linewidth/3]{images/tool_ball_202.png}%
@@ -3599,7 +3710,7 @@ The bowl tool is modeled as a series of cylinders stacked on top of each other a
 
 \paragraph{V}
 
-The \DescribeRoutine{endmill v} is modeled as a cylinder with a zero width base and a second cylinder for the shaft (note that Python's \verb|math| defaults to radians, hence the need to convert from degrees):
+The \DescribeRoutine{endmill v} is modeled as a cylinder with a zero width base and a second cylinder for the shaft (note that Python's \verb|math| defaults to radians, hence the need to convert from degrees if using it, but fortunately, trigonometric commands have been added to OpenPythonSCAD (\verb|Sin|, \verb|Cos|, \verb|Tan|, \verb|Atan|)):
 
 % Below lines were updated since 2025-06-04 has trigonometric functions
 %        es_v_angle = math.radians(es_v_angle)
@@ -7681,15 +7792,23 @@ First, a template file will be necessary:
 
 \lstset{firstnumber=1}%\thegcpgc}
 \begin{writecode}{w}{gcpgc.py}{python}
+#Requires OpenPythonSCAD, so load support for 3D modeling in that tool:
 from openscad import *
-#nimport("https://raw.githubusercontent.com/WillAdams/gcodepreview/refs/heads/main/gcodepreview.py")
 
+#The gcodepreview library must be loaded, either from github (first line below) or from a local library (second line below), uncomment one and comment out the other, depending on where one wishes to load from
+#nimport("https://raw.githubusercontent.com/WillAdams/gcodepreview/refs/heads/main/gcodepreview.py")
 from gcodepreview import *
 
-gc_file = "filename_of_G-code_file_to_process.nc"
+#The file to be loaded must be specified:
+#gc_file = "filename_of_G-code_file_to_process.nc"
+#
+#if using windows the full filepath should be provided with backslashes replaced with double slashes and wrapped in quotes since it is provided as a string:
+gc_file = "C:\\Users\\willa\\OneDrive\\Desktop\\19mm_1_32_depth.nc"
 
+#Create the gcodepreview object:
 gcp = gcodepreview(False, False)
 
+#Process the file (this could be combined with the variable definition above, directly inputting the string)
 gcp.previewgcodefile(gc_file)
 
 \end{writecode}
@@ -7729,6 +7848,13 @@ gcp.previewgcodefile(gc_file)
                 break
 #            print(numlinesfound)
 
+\end{writecode}
+\addtocounter{gcpy}{29}
+
+Once the initial parameters are parsed, the stock may be set up:
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
         self.setupcuttingarea(sizeX, sizeY, sizeZ, extentleft, extentfb, extentd)
 
         commands = []        
@@ -7745,6 +7871,43 @@ gcp.previewgcodefile(gc_file)
             if line[:3] == "M6T":
                 tool = int(line[3:])
                 self.toolchange(tool)
+\end{writecode}
+\addtocounter{gcpy}{18}
+
+Processing tool changes will require examining lines such as:
+
+\begin{verbatim}
+;TOOL/MILL, Diameter, Corner radius, Height, Taper Angle
+
+;TOOL/CRMILL, Diameter1, Diameter2, Radius, Height, Length
+
+;TOOL/CHAMFER, Diameter, Point Angle, Height
+\end{verbatim}
+
+\noindent which once parsed will be passed to a command which uses them to set the variables necessary to effect the toolchange:
+
+\begin{verbatim}
+            if line[:11] == "(TOOL/MILL,"
+                subdivisions = line.split()
+                diameter = float(subdivisions[1][:-3])
+                cornerradius = float(subdivisions[2][:-3])
+                height = float(subdivisions[3][:-3])
+                taperangle = float(subdivisions[4][:-3])
+                self.settoolparameters("mill", diameter, cornerradius, height, taperangle)
+
+            if line[:14] == "(TOOL/CHAMFER,"
+                subdivisions = line.split()
+                tipdiameter = float(subdivisions[1][:-3])
+                diameter = float(subdivisions[2][:-3])
+                radius = float(subdivisions[3][:-3])
+                height = float(subdivisions[4][:-3])
+                length = float(subdivisions[4][:-3])
+                self.settoolparameters("chamfer", tipdiameter, diameter, radius, height, length)
+
+\end{verbatim}
+
+\lstset{firstnumber=\thegcpy}
+\begin{writecode}{a}{gcodepreview.py}{python}
             if line[:2] == "G0":
                 machinestate = "rapid"
             if line[:2] == "G1":
@@ -7838,7 +8001,7 @@ gcp.previewgcodefile(gc_file)
         self.stockandtoolpaths()
 
 \end{writecode}
-\addtocounter{gcpy}{137}
+\addtocounter{gcpy}{108}
 
 \section{Notes}
 
