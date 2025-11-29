@@ -1,0 +1,566 @@
+% gcodepreview.tex
+% Author: William F. Adams (willadams at aol dot com)
+% Copyright 2021--24 William F. Adams
+%
+% This work may be distributed and/or modified under the
+% conditions of the GNU LESSER GENERAL PUBLIC LICENSE
+% Version 2.1, February 1999
+%
+% This work consists of the files listed in the README file.
+%
+% 
+% 
+\documentclass{ltxdoc}
+%https://tex.stackexchange.com/questions/722886/how-to-write-out-multiple-text-files-from-multiple-instances-of-latex-environmen
+\usepackage{literati}
+\usepackage[paper=legalpaper,left=1.75in,right=0.75in,top=1in,bottom=1in]{geometry}
+
+\begin{document}
+
+%\DoNotIndex{\bullet}
+
+%\changes{v0.8}{2024/11/11}{Re-write in Python and OpenSCAD}
+\def\fileversion{v0.8} \def\filedate{2025/01/01}
+
+%\changes{v0.71}{2024/11/11}{Restore G2/G3 arcs, roundover tooling}
+%\def\fileversion{v0.71} \def\filedate{2024/11/29}
+
+%\changes{v0.7}{2024/11/11}{Python re-write}
+%\def\fileversion{v0.7} \def\filedate{2024/11/11}
+
+%\changes{v0.61}{2024/09/08}{modules and tests}
+%\def\fileversion{v0.61} \def\filedate{2024/09/08}
+
+%\changes{v0.6}{2024/08/30}{modules and setupstock}
+%\def\fileversion{v0.6} \def\filedate{2024/08/30}
+
+%\changes{v0.5}{2024/08/10}{DXFs and images}
+%\def\fileversion{v0.5} \def\filedate{2024/08/10}
+
+%\changes{v0.4}{2024/07/28}{Literary re-write}
+%\def\fileversion{v0.4} \def\filedate{2024/07/28}
+
+%\changes{v0.3}{2024/07/01}{Curves and roundover tooling}
+%\def\fileversion{v0.3} \def\filedate{2024/07/01}
+
+%\changes{v0.2}{2024/04/12}{Initial conversion to DTX}
+%\def\dtxfile{gcodepreview.dtx}
+
+\title{The gcodepreview OpenPythonSCAD library\thanks{This
+        file (\texttt{\jobname}) has version number \fileversion, last revised
+        \filedate.}}
+
+\author{%
+Author: William F. Adams\\
+\texttt{willadams at aol dot com}
+}
+\date{\filedate}
+\maketitle
+\begin{abstract}
+\noindent The gcodepreview library allows using OpenPythonSCAD to move a tool in lines and arcs and output \texttt{dxf} and G-code files so as to work as a \textsc{cad}/\allowbreak \textsc{cam} program for \textsc{cnc}.
+\end{abstract}
+%\enlargethispage{\baselineskip}
+\tableofcontents
+
+\clearpage
+\section{readme.md}
+
+\begin{readme}
+# gcodepreview
+
+OpenPythonSCAD library for moving a tool in lines and arcs so as to model how a part would be cut using G-Code, so as to allow OpenPythonSCAD to function as a compleat CAD/CAM solution for subtractive 3-axis CNC (mills and routers) by writing out G-code in addition to 3D modeling (in some cases toolpaths which would not normally be feasible), and to write out DXF files which may be imported into a traditional CAM program to create toolpaths.
+
+![OpenSCAD gcodepreview Unit Tests](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/gcodepreview_unittests.png?raw=true)
+
+Updated to make use of Python in OpenSCAD:[^rapcad]
+
+[^rapcad]: Previous versions had used RapCAD, so as to take advantage of the writeln command, which has since been re-written in Python.
+
+https://pythonscad.org/ (previously this was http://www.guenther-sohler.net/openscad/ )
+
+A BlockSCAD file for the initial version of the 
+main modules is available at:
+
+https://www.blockscad3d.com/community/projects/1244473
+
+The project is discussed at:
+
+https://forum.makerforums.info/t/g-code-preview-using-openscad-rapcad/85729 
+
+and
+
+https://forum.makerforums.info/t/openscad-and-python-looking-to-finally-be-resolved/88171
+
+and
+
+https://willadams.gitbook.io/design-into-3d/programming
+
+Since it is now programmed using Literate Programming (initially a .dtx, now a .tex file) there is a PDF: https://github.com/WillAdams/gcodepreview/blob/main/gcodepreview.pdf which includes all of the source code with formatted commentary.
+
+The files for this library are:
+
+ - gcodepreview.py (gcpy) --- the Python functions and variables
+ - pygcodepreview.scad (pyscad) --- the Python functions wrapped in OpenSCAD (deprecated)
+ - gcodepreview.scad (gcpscad) --- OpenSCAD modules and variables
+ - gcodepreview_template.scad (gcptmpl) --- .scad example file
+ - gcodepreviewtemplate.py (gcptmplpy) --- .py example file (which requires OpenPythonSCAD)
+ - gcpdxf.py (gcpdxfpy) --- .py example file which only makes dxf(s) and which will run in "normal" Python
+
+If using from OpenPythonSCAD, place the files in C:\Users\\\~\Documents\OpenSCAD\libraries and call as:[^libraries]
+
+[^libraries]: C:\Users\\\~\Documents\RapCAD\libraries is deprecated since RapCAD is no longer needed since Python is now used for writing out files)
+
+    use <gcodepreview.py>
+
+or
+
+    include <gcodepreview.scad>
+
+Note that it is necessary to use the first file (this allows loading the Python commands (it used to be necessary to use an intermediary .scad file so as to wrap them in OpenSCAD commands) and then include the last file (which allows using OpenSCAD variables to selectively implement the Python commands via their being wrapped in OpenSCAD modules) and define variables which match the project and then use commands such as:
+
+    opengcodefile(Gcode_filename);
+    opendxffile(DXF_filename);
+    
+    difference() {
+        setupstock(stockXwidth, stockYheight, stockZthickness, zeroheight, stockzero);
+    
+    movetosafez();
+    
+    toolchange(squaretoolnum,speed * square_ratio);
+    
+    begintoolpath(0,0,0.25);
+    beginpolyline(0,0,0.25);
+
+    cutoneaxis_setfeed("Z",-1,plunge*square_ratio);
+    addpolyline(stockXwidth/2,stockYheight/2,-stockZthickness);
+    
+    cutwithfeed(stockXwidth/2,stockYheight/2,-stockZthickness,feed);
+    
+    endtoolpath();
+    endpolyline();
+    
+    }
+    
+    closegcodefile();
+    closedxffile();
+
+which makes a G-code file:
+
+![OpenSCAD template G-code file](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/gcodepreview_template.png?raw=true)
+
+but one which could only be sent to a machine so as to cut only the softest and most yielding of materials since it makes a single full-depth pass, and of which has a matching DXF which may be imported into a CAM tool --- but which it is not directly possible to assign a toolpath in readily available CAM tools (since it varies in depth from beginning-to-end). 
+
+Importing this DXF and actually cutting it is discussed at:
+
+https://forum.makerforums.info/t/rewriting-gcodepreview-with-python/88617/14
+
+Alternately, gcodepreview.py may be placed in a Python library location and used directly from Python --- note that it is possible to use it from a "normal" Python when generating only DXFs.
+
+Tool numbers match those of tooling sold by Carbide 3D (ob. discl., I work for them). 
+
+Comments are included in the G-code to match those expected by CutViewer.
+
+Supporting OpenSCAD usage makes possible such examples as: openscad_gcodepreview_cutjoinery.tres.scad which is made from an OpenSCAD Graph Editor file:
+
+![OpenSCAD Graph Editor Cut Joinery File](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/OSGE_cutjoinery.png?raw=true)
+
+Version 0.1 supports setting up stock, origin, rapid positioning, making cuts, and writing out matching G-code, and creating a DXF with polylines.
+
+Added features since initial upload:
+
+ - endpolyline(); --- this command allows ending one polyline so as to allow multiple lines in a DXF
+ - separate dxf files are written out for each tool where tool is ball/square/V and small/large (10/31/23)
+ - re-writing as a Literate Program using the LaTeX package docmfp (begun 4/12/24) 
+ - support for additional tooling shapes such as dovetail and keyhole tools
+
+Version 0.2 adds support for arcs 
+
+ - DXF: support for arcs (which may be used to make circles) (6/1/24)
+ - Specialty toolpaths such as Keyhole which may be used for dovetail as well as keyhole cutters
+
+Version 0.3 
+
+ - Support for curves along the 3rd dimension
+ - support for roundover tooling
+ 
+Version 0.4
+
+ - Rewrite using literati documentclass, suppression of SVG code
+ - dxfrectangle (without G-code support)
+
+Version 0.5
+
+ - more shapes
+ - consolidate rectangles, arcs, and circles in gcodepreview.scad
+ 
+Version 0.6
+
+ - notes on modules
+ - change file for setupstock
+
+Version 0.61
+
+ - validate all code so that it runs without errors from sample
+ - NEW: Note that this version is archived as gcodepreview-openscad_0_6.tex and the matching PDF is available as well
+ 
+Version 0.7
+ 
+ - re-write completely in Python
+
+Version 0.8
+ 
+ - re-re-write completely in Python and OpenSCAD, iteratively testing
+
+Possible future improvements:
+
+ - support for additional tooling shapes (bowl bits with flat bottom, tapered ball nose, lollipop cutters)
+ - create a single line font for use where text is wanted
+
+Note for G-code generation that it is up to the user to implement Depth per Pass so as to not take a single full-depth pass. Working from a DXF of course allows one to off-load such considerations to a specialized CAM tool.
+
+Deprecated feature:
+
+ - exporting SVGs --- coordinate system differences between OpenSCAD/DXFs and SVGs would require managing the inversion of the coordinate system (using METAPOST, which shares the same orientation and which can write out SVGs may be used for future versions)
+
+\end{readme}
+
+% - cut2Dshapes.scad (cut2D) --- code for cutting 2D shapes 
+
+\clearpage
+
+\section{Usage and Templates}
+
+The gcodepreview library allows the modeling of \textsc{2d} geometry and \textsc{3d} shapes so that using Python or by calling Python from within OpenPythonSCAD. Using in ``plain'' Python will make \textsc{2d} \textsc{dxf}s, Python in OpenPythonSCAD will also make G-code, or create \textsc{3d} models in OpenSCAD (mostly as a preview of how the file will cut, or OpenSCAD in OpenPythonSCAD (which will also make all three file types by way of \verb|use|ing the Python file).
+
+The various commands are shown all together in templates so as to provide examples of usage, and to ensure that the various files are used/included as necessary, all variables are set up with the correct names, and that files are opened before being written to, and that each is closed at the end. 
+
+Note that while the template files seem overly verbose, they specifically incorporate variables for each tool shape, possibly in two different sizes, and a feed rate parameter or ratio for each, which may be used (by setting a tool \#) or ignored (by leaving the variable at zero (0). 
+
+It should be that this section is all the documentation which some users will need (and arguably is still too much). The balance of the document after this section shows all the code and implementation details, and will where appropriate show examples of usage excerpted from the template files.
+
+Some comments on the templates:
+
+\begin{itemize}
+\item minimal --- each is intended as a framework for a minimal working example (\textsc{mwe}) --- it should be possible to comment out unused portions and so arrive at code which tests any aspect of this project
+\item compleat --- a quite wide variety of tools are listed (and probably more will be
+                   added in the future), but pre-defining them and having these ``hooks''
+                   seems the easiest (non-object-oriented) mechanism to handle everything. 
+                   Arguably, the architecture needs to be re-worked so that tool \#s are
+                   optional.
+\item shortcuts --- as the various examples show, while in real life it is necessary to 
+                    make many passes with a tool, an expedient shortcut is to forgo the 
+                    \verb|loop| operation and just use a \verb|hull()| operation (but 
+                    note that this will lose the previewing of scalloped tool marks in
+                    places where they might appear otherwise)
+\end{itemize}
+
+Further features will be added to the templates as they are created, and the main image updated to reflect the capabilities of the system.
+
+%Creating a template from memory, the file should be something like:
+%
+%List of all tools
+%chipload for each tool
+%Depth per Pass for each tool
+%scaling factor for chipload to arrive at feeds and speeds
+%Booleans for generateDXF/Gcode, 3D Preview, assembly or parts or drop-down list of parts, &c.
+%
+%setupstock --- should this open gcode/dxf files as well?
+%
+%toolchange to first tool
+%
+%Rapid to location of first cut
+%cutline/cutarc --- iterate as needed
+%Rapid to safe height
+%
+%Program END --- should close gcode/DXF files and include rapid to safe height and rapid to back
+
+\subsection{gcpdxf.py}
+
+The most basic usage, with the fewest dependencies is to use ``plain'' Python to create \verb|dxf| files.
+
+\lstset{firstnumber=1}%\thegcptmplpy}
+\begin{writecode}{w}{gcpdxf.py}{python}
+from gcodepreview import *
+
+gcp = gcodepreview(False, #generatepaths
+                   False, #generategcode
+                   True #generatedxf
+                   )
+
+Base_filename = "dxfexport"
+large_square_tool_num = 102
+small_square_tool_num = 0
+large_ball_tool_num = 0
+small_ball_tool_num = 0
+large_V_tool_num = 0
+small_V_tool_num = 0
+DT_tool_num = 0
+KH_tool_num = 0
+Roundover_tool_num = 0
+MISC_tool_num = 0
+
+gcp.opendxffile(Base_filename)
+#gcp.opendxffiles(Base_filename,
+#                 large_square_tool_num,
+#                 small_square_tool_num,
+#                 large_ball_tool_num,
+#                 small_ball_tool_num,
+#                 large_V_tool_num,
+#                 small_V_tool_num,
+#                 DT_tool_num,
+#                 KH_tool_num,
+#                 Roundover_tool_num,
+#                 MISC_tool_num)
+
+gcp.dxfrectangle(large_square_tool_num, 0, 0, 100, 50)
+gcp.dxfrectangleround(large_square_tool_num, 1, 1, 98, 48, 11)
+
+gcp.dxfcircle(large_square_tool_num, 50, 25, 12)
+
+#gcp.closedxffiles()
+gcp.closedxffile()
+
+\end{writecode}
+\addtocounter{gcpdxfpy}{40}
+
+\noindent Note that the lines referencing multiple files (\verb|opendxffiles|) may be uncommented if the project wants separate \verb|dxf| files for different tools.
+
+As shown/implied by the above code, the following commands/shapes are implemented:
+
+\begin{itemize}
+\item dxfrectangle/dxfrectangleround 
+\item dxfcircle (specifying their center and radius)
+\item dxfline
+\item dxfarc
+ \end{itemize}
+ 
+\subsection{gcodepreviewtemplate.py}
+
+Using Python to generate 3D previews of how \textsc{dxf}s or G-code will cut requires the use of OpenPythonSCAD.
+
+\lstset{firstnumber=1}%\thegcptmplpy}
+\begin{writecode}{w}{gcodepreviewtemplate.py}{python}
+#!/usr/bin/env python
+
+from gcodepreview import *
+
+gcp = gcodepreview(True)
+
+print(gcp.myfunc(4))
+
+print(gcp.getvv())
+
+gcp.makecube(3, 2, 1)
+
+gcp.placecube()
+
+#c = gcp.instantiatecube()
+#
+#output(c)
+
+\end{writecode}
+\addtocounter{gcptmplpy}{293}
+
+\subsection{gcodepreviewtemplate.scad}
+
+Since the project began in OpenSCAD, having an implementation in that language has always been a goal. Which is quite straight-forward since the imported Python code when imported into OpenSCAD may be accessed by quite simple modules which are for the most part, simply a series of decorators/descriptors which wrap up the Python definitions as OpenSCAD modules. Moreover, it will facilitate usage by tools intended for OpenSCAD such as OpenSCAD Graph Editor: \url{https://github.com/derkork/openscad-graph-editor}.  
+
+\lstset{firstnumber=1}%\thegcptmpl}
+\begin{writecode}{w}{gcodepreviewtemplate.scad}{scad}
+use <gcodepreview.py>
+include <gcodepreview.scad>
+
+generatepaths = true;
+
+thegeneratepaths = generatepaths == true ? 1 : 0;
+
+gcp=myclass(thegeneratepaths);
+echo(gcp);
+
+c = myfunc(4);
+echo(c);
+
+echo(getvv());
+
+makecube(3, 2, 1);
+
+instantiatecube();
+
+\end{writecode}
+\addtocounter{gcptmpl}{157}
+
+\section{gcodepreview}
+
+This library for OpenPythonSCAD works by using Python code as a back-end so as to persistently store and access variables, and to write out files while both modeling the motion of a 3-axis CNC machine and if desired, writing out DXF and/or G-code files (as opposed to the normal technique of rendering to a 3D model and writing out an STL or STEP or other model format). There are multiple modes for this, doing so requires up to three files:
+
+
+\begin{itemize}
+\item A Python file: gcodepreview.py (which imports the class as \texttt{gcpy}) --- this has
+      variables in the traditional sense which may be used for tracking machine position and so
+      forth. 
+      Note that where it is placed/loaded from will depend on whether it is imported into
+      a Python file:\\
+      \verb|import gcodepreview_standalone as gcp|\\ 
+      or used in an OpenSCAD file:\\
+      \verb|use <gcodepreview.py>|\\
+      with additional OpenSCAD modules which allow accessing it
+%\item A second Python file: \verb|gcp.py| which will import the class and then wrap it in procedural 
+%      Python commands which may be used from OpenSCAD.
+\item An OpenSCAD file: pygcodepreview.scad (\texttt{pyscad}) --- which wraps the Python code 
+      in OpenSCAD (note that it too is included by \verb|use <pygcodepreview.scad>|)
+\item An OpenSCAD file: gcodepreview.scad (\texttt{gcpscad}) --- which uses the other two files 
+      and which is \texttt{include}d allowing it to access OpenSCAD variables for branching   
+\end{itemize}
+
+\noindent Note that this architecture requires that many OpenSCAD modules are essentially 
+``Dispatchers'' which pass information from one aspect of the environment to another.
+
+\subsection{Implementation files and gcodepreview class}
+ 
+Each file will begin with a comment indicating the file type and further notes/comments on usage where appropriate:
+
+\begin{writecode}{w}{gcodepreview.py}{python}
+#!/usr/bin/env python
+#icon "C:\Program Files\PythonSCAD\bin\openscad.exe"  --trust-python
+#Currently tested with PythonSCAD-2024.12.29-x86-64-Installer.exe and Python 3.11
+#gcodepreview 0.8, for use with OpenPythonSCAD, 
+#if using from OpenPythonSCAD see gcodepreview.scad
+
+import sys
+
+# getting openscad functions into namespace
+#https://github.com/gsohler/openscad/issues/39
+try:
+    from openscad import *
+except ModuleNotFoundError as e:
+    print("OpenSCAD module not loaded.")
+    
+# add math functions (using radians by default, convert to degrees where necessary)
+import math
+
+def gcpversion():
+    thegcpversion = 0.711
+    return thegcpversion
+
+class gcodepreview:
+
+    def __init__(self, generatepaths):
+        if generatepaths == 1:
+            self.generatepaths = True
+        elif generatepaths == 0:
+            self.generatepaths = False
+        else:
+            self.generatepaths == generatepaths
+    
+    def myfunc(self, var):
+        self.vv = var * var
+        return self.vv
+
+    def getvv(self):
+        return self.vv
+        
+    def checkint(self):
+        return self.mc
+
+    def makecube(self, xdim, ydim, zdim):
+        self.c=cube([xdim, ydim, zdim])
+        
+    def placecube(self):
+        output(self.c)
+
+    def instantiatecube(self):
+        return self.c
+
+\end{writecode}
+\addtocounter{gcpy}{17}
+
+\begin{writecode}{w}{gcodepreview.scad}{scad}
+//!OpenSCAD
+ 
+//gcodepreview 0.7
+//
+//used via include <gcodepreview.scad>;
+//
+
+use <gcodepreview.py>
+
+module gcpversion(){
+echo(gcp.gcpversion());
+}
+
+function myfunc(var) = gcp.myfunc(var);
+
+function getvv() = gcp.getvv();
+
+module makecube(xdim, ydim, zdim){
+gcp.makecube(xdim, ydim, zdim);
+}
+
+module placecube(){
+gcp.placecube();
+}
+
+module instantiatecube(){
+gcp.instantiatecube();
+}
+
+\end{writecode}
+\addtocounter{gcpscad}{9}
+
+\bibliographystyle{alpha}
+
+\begin{thebibliography}{Ousterhout2018APO}
+
+\bibitem[ConstGeom]{WALMSLEY81}
+Walmsley, Brian. \emph{Construction Geometry}. 2d ed., Centennial College Press, 1981.
+ 
+\bibitem[MkCalc]{HORVATH22}
+Horvath, Joan, and Rich Cameron. 
+\emph{Make: Calculus: Build models to learn, visualize, and explore}. First edition., 
+Make: Community LLC, 2022.
+ 
+\bibitem[MkGeom]{HORVATH21}
+Horvath, Joan, and Rich Cameron. 
+\emph{Make: Geometry: Learn by 3D Printing, Coding and Exploring}. First edition., 
+Make: Community LLC, 2021.
+
+\bibitem[MkTrig]{HORVATH23}
+Horvath, Joan, and Rich Cameron. 
+\emph{Make: Trigonometry: Build your way from triangles to analytic geometry}. First edition., 
+Make: Community LLC, 2023.
+ 
+\bibitem[PractShopMath]{BEGNAL18}
+Begnal, Tom. \emph{Practical Shop Math: Simple Solutions to Workshop Fractions, Formulas + Geometric Shapes}. Updated edition, Spring House Press, 2018.
+ 
+\bibitem[RS274]{KRAMER00}
+Thomas R. Kramer, Frederick M. Proctor, Elena R. Messina.\\
+\mbox{\url{https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=823374}}\\
+\url{https://www.nist.gov/publications/nist-rs274ngc-interpreter-version-3}
+
+\bibitem[SoftwareDesign]{Ousterhout2018APO}
+Ousterhout, John K.
+\emph{A Philosophy of Software Design}. First Edition., Yaknyam Press, Palo Alto, Ca., 2018
+
+%  title={A Philosophy of Software Design},
+%  author={ Ousterhout},
+%  year={2018},
+%  url={https://api.semanticscholar.org/CorpusID:69749255}
+
+
+\end{thebibliography}
+
+\createindexes
+
+ 
+%\MergeAllFiles{readme.md}
+%\MergeAllFiles{interfaces.txt}
+\MergeAllFiles{gcodepreview.py}
+%\MergeAllFiles{pygcodepreview.scad}
+\MergeAllFiles{gcodepreview.scad}
+\MergeAllFiles{gcodepreviewtemplate.scad}
+\MergeAllFiles{gcodepreviewtemplate.py}
+\MergeAllFiles{gcpdxf.py}
+%\MergeAllFiles{cut2Dshapes.scad}
+
+\end{document}
+

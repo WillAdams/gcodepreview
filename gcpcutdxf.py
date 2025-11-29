@@ -5,7 +5,8 @@ from gcodepreview import *
 fa = 2
 fs = 0.125
 
-gcp = gcodepreview(False, # generategcode
+gcp = gcodepreview("cut", # "print" or "no_preview"
+                   False, # generategcode
                    True   # generatedxf
                    )
 

@@ -1,0 +1,6 @@
+self.debugenable = True
+
+testvariable = 1
+
+self.outputdebugnote("Current value of testvariable is: ", testvariable)
+

@@ -3,10 +3,8 @@
 use <gcodepreview.py>
 include <gcodepreview.scad>
 
-$fa = 2;
-$fs = 0.125;
-fa = 2;
-fs = 0.125;
+$fn = $preview ? 32 : 256;
+fn = $preview ? 32 : 256;
 
 /* [Stock] */
 stockXwidth = 220;
@@ -81,23 +79,13 @@ MISC_ratio = 0.5; // [0.25:2]
 thegeneratedxf = generatedxf == true ? 1 : 0;
 thegenerategcode = generategcode == true ? 1 : 0;
 
-gcp = gcodepreview(thegenerategcode,
+gcp = gcodepreview("cut", // or "print" (no preview not suited to OpenSCAD)
+                   thegenerategcode,
                    thegeneratedxf,
                    );
 
 opengcodefile(Base_filename);
 opendxffile(Base_filename);
-opendxffiles(Base_filename,
-                 large_square_tool_num,
-                 small_square_tool_num,
-                 large_ball_tool_num,
-                 small_ball_tool_num,
-                 large_V_tool_num,
-                 small_V_tool_num,
-                 DT_tool_num,
-                 KH_tool_num,
-                 Roundover_tool_num,
-                 MISC_tool_num);
 
 setupstock(stockXwidth, stockYheight, stockZthickness, zeroheight, stockzero);
 
@@ -295,6 +283,5 @@ stockandtoolpaths();
 //instantiatecube();
 
 closegcodefile();
-closedxffiles();
 closedxffile();
 

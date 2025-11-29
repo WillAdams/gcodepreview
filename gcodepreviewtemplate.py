@@ -88,28 +88,25 @@ RO_ratio = 0.5  # [0.25:2]
 # [Feeds and Speeds] */
 MISC_ratio = 0.5  # [0.25:2]
 
-gcp = gcodepreview(generategcode,
+# Note that the various ratios are simply declared as a possible hook
+# which might be useful and how are handled is left as an exercise
+# for the reader and that they are not applied below.
+# One naive option might be to multiply by the feed rate
+# and divide by speeds.
+
+gcp = gcodepreview("cut", # "print" or "no_preview"
+                   generategcode,
                    generatedxf,
                    )
 
 gcp.opengcodefile(Base_filename)
 gcp.opendxffile(Base_filename)
-gcp.opendxffiles(Base_filename,
-                 large_square_tool_num,
-                 small_square_tool_num,
-                 large_ball_tool_num,
-                 small_ball_tool_num,
-                 large_V_tool_num,
-                 small_V_tool_num,
-                 DT_tool_num,
-                 KH_tool_num,
-                 Roundover_tool_num,
-                 MISC_tool_num)
+
 gcp.setupstock(stockXwidth, stockYheight, stockZthickness, zeroheight, stockzero, retractheight)
 
 gcp.movetosafeZ()
 
-gcp.toolchange(102, 10000)
+gcp.toolchange(102, 10000 * small_square_ratio)
 
 gcp.rapidZ(0)
 
@@ -280,6 +277,5 @@ gcp.rapidZ(retractheight)
 gcp.stockandtoolpaths()
 
 gcp.closegcodefile()
-gcp.closedxffiles()
 gcp.closedxffile()
 

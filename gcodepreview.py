@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #icon "C:\Program Files\PythonSCAD\bin\openscad.exe" --trust-python
 #Currently tested with https://www.pythonscad.org/downloads/PythonSCAD_nolibfive-2025.06.04-x86-64-Installer.exe and Python 3.11
-#gcodepreview 0.9, for use with PythonSCAD,
+#gcodepreview (gcpversion)0.93, for use with PythonSCAD,
 #if using from PythonSCAD using OpenSCAD code, see gcodepreview.scad
 
 import sys
@@ -17,12 +17,13 @@ except ModuleNotFoundError as e:
     print("OpenSCAD module not loaded.")
 
 def pygcpversion():
-    thegcpversion = 0.9
+    thegcpversion = 0.93
     return thegcpversion
 
 class gcodepreview:
 
     def __init__(self,
+                 cutorprint = "cut", #"cut", "print", "no_preview"
                  generategcode = False,
                  generatedxf = False,
                  gcpfa = 2,
@@ -34,6 +35,8 @@ class gcodepreview:
 
         Parameters
         ----------
+        cutorprint    : string
+                        Enables creation of 3D model for cutting or printing.
         generategcode : boolean
                         Enables writing out G-code.
         generatedxf   : boolean
@@ -44,13 +47,26 @@ class gcodepreview:
         object
             The initialized gcodepreview object.
         """
-        if generategcode == 1:
+        if cutorprint == "print":
+            self.generatecut = False
+            self.generateprint = True
+        elif cutorprint == "cut":
+            self.generatecut = True
+            self.generateprint = False
+        else: # no_preview
+            self.generatecut = False
+            self.generateprint = False
+        if generategcode == True:
+            self.generategcode = True
+        elif generategcode == 1:
             self.generategcode = True
         elif generategcode == 0:
             self.generategcode = False
         else:
             self.generategcode = generategcode
-        if generatedxf == 1:
+        if generatedxf == True:
+            self.generatedxf = True
+        elif generatedxf == 1:
             self.generatedxf = True
         elif generatedxf == 0:
             self.generatedxf = False
@@ -82,9 +98,20 @@ class gcodepreview:
         self.cutcolor = "green"
         self.rapidcolor = "orange"
         self.shaftcolor = "red"
+# the command definesquaretool(3.175, 12.7, 20) is used in the toolchange command
+        self.tooloutline = polygon( points=[[0,0],[3.175,0],[3.175,12.7],[0,12.7]] )
+        self.toolprofile = polygon( points=[[0,0],[1.5875,0],[1.5875,12.7],[0,12.7]] )
+        self.shaftoutline = polygon( points=[[0,12.7],[3.175,12.7],[3.175,25.4],[0,25.4]] )
+        self.shaftprofile = polygon( points=[[0,12.7],[1.5875,12.7],[1.5875,25.4],[0,25.4]] )
+        self.currenttoolshape = cylinder(h = self.flute, r = self.shaftdiameter/2)
+        sh = cylinder(h = self.flute, r = self.shaftdiameter/2)
+        self.currenttoolshaft = sh.translate([0,0,self.flute])
+# debug mode requires a variable to track if it is on or off
+        self.debugenable = False
 # the variables for holding 3D models must be initialized as empty lists so as to ensure that only append or extend commands are used with them
         self.rapids = []
         self.toolpaths = []
+        print("gcodepreview class initialized")
 
 #    def myfunc(self, var):
 #        self.vv = var * var
@@ -124,11 +151,11 @@ class gcodepreview:
         self.mpz = newzpos
 
     def setupstock(self, stockXwidth,
-                 stockYheight,
-                 stockZthickness,
-                 zeroheight,
-                 stockzero,
-                 retractheight):
+                   stockYheight,
+                   stockZthickness,
+                   zeroheight,
+                   stockzero,
+                   retractheight):
         """
         Set up blank/stock for material and position/zero.
 
@@ -221,6 +248,20 @@ class gcodepreview:
         self.toolpaths = []
         return c
 
+    def debug(self, *args: any, sep: str = " ", end: str = "\n", **print_kwargs) -> None:
+        """
+        Print debug output if enabled.
+
+        Accepts the same arguments as built-in print (except file is supported via print_kwargs).
+        """
+        if not self.debugenable:
+            return
+        # Build the message and print under a lock to avoid interleaving in multithreaded apps
+        self.prefix = "DEBUG: "
+        msg = self.prefix + sep.join(map(str, args))
+        with self._lock:
+            print(msg, end=end, **print_kwargs)
+
     def shiftstock(self, shiftX, shiftY, shiftZ):
          self.stock = self.stock.translate([shiftX, shiftY, shiftZ])
 
@@ -235,6 +276,65 @@ class gcodepreview:
     def currenttoolnumber(self):
         return(self.currenttoolnum)
 
+    def settoolparameters(self, tooltype, first, second, third, fourth, length = 0):
+        if tooltype == "mill":
+            diameter = first
+            cornerradius = second
+            height = third
+            taperangle = fourth
+            if cornerradius == 0:
+#M6T122 (TOOL/MILL,0.80, 0.00, 1.59, 0.00)
+#M6T112 (TOOL/MILL,1.59, 0.00, 6.35, 0.00)
+#M6T102 (TOOL/MILL,3.17, 0.00, 12.70, 0.00)
+#M6T201 (TOOL/MILL,6.35, 0.00, 19.05, 0.00)
+#M6T205 (TOOL/MILL,6.35, 0.00, 25.40, 0.00)
+#M6T251 (TOOL/MILL,6.35, 0.00, 19.05, 0.00)
+#M6T322 (TOOL/MILL,6.35, 0.00, 19.05, 0.00)
+#M6T324 (TOOL/MILL,6.35, 0.00, 22.22, 0.00)
+#M6T326 (TOOL/MILL,3.17, 0.00, 12.70, 0.00)
+#M6T602 (TOOL/MILL,25.40, 0.00, 9.91, 0.00)
+#M6T603 (TOOL/MILL,25.40, 0.00, 9.91, 0.00)
+#M6T274 (TOOL/MILL,3.17, 0.00, 12.70, 0.00)
+#M6T278 (TOOL/MILL,6.35, 0.00, 19.05, 0.00)
+#M6T282 (TOOL/MILL,2.00, 0.00, 6.35, 0.00)
+                self.endmilltype = "square"
+                self.diameter = diameter
+                self.flute = height
+                self.shaftdiameter = diameter
+                self.shaftheight = height
+                self.shaftlength = height
+#
+            elif cornerradius > 0 and taperangle == 0:
+#M6T121 (TOOL/MILL,0.80, 0.40, 1.59, 0.00)
+#M6T111 (TOOL/MILL,1.59, 0.79, 6.35, 0.00)
+#M6T101 (TOOL/MILL,3.17, 1.59, 12.70, 0.00)
+#M6T202 (TOOL/MILL,6.35, 3.17, 19.05, 0.00)
+#M6T325 (TOOL/MILL,6.35, 3.17, 25.40, 0.00)
+                self.endmilltype = "ball"
+                self.diameter = diameter
+                self.flute = height
+                self.shaftdiameter = diameter
+                self.shaftheight = height
+                self.shaftlength = height
+#
+            elif taperangle > 0:
+#M6T301 (TOOL/MILL,0.10, 0.05, 6.35, 45.00)
+#M6T302 (TOOL/MILL,0.10, 0.05, 6.35, 30.00)
+#M6T327 (TOOL/MILL,0.10, 0.05, 23.39, 30.00)
+                self.endmilltype = "V"
+                self.diameter = Tan(taperangle / 2) * height
+                self.flute = height
+                self.angle = taperangle
+                self.shaftdiameter = Tan(taperangle / 2) * height
+                self.shaftheight = height
+                self.shaftlength = height
+#
+        elif tooltype == "chamfer":
+            tipdiameter = first
+            radius = second
+            height = third
+            taperangle = fourth
+
     def toolchange(self, tool_number, speed = 10000):
         self.currenttoolnum = tool_number
 
@@ -242,7 +342,18 @@ class gcodepreview:
             self.writegc("(Toolpath)")
             self.writegc("M05")
 
-        if (tool_number == 201): #201/251/322 (Amana 46202-K) == 100047
+        if (tool_number == 102) or (tool_number == 100036): #102/326 == 100036
+            self.writegc("(TOOL/MILL, 3.175, 0.00, 0.00, 0.00)")
+            self.endmilltype = "square"
+            self.diameter = 3.175
+            self.flute = 12.7
+            self.shaftdiameter = 3.175
+            self.shaftheight = 12.7
+            self.shaftlength = 19.5
+            self.definesquaretool(self.diameter, self.shaftheight, self.shaftlength)
+            self.defineshaft(self.diameter, self.shaftdiameter, self.flute, 0, self.shaftlength)
+            self.toolnumber = 10003
+        elif (tool_number == 201) or (tool_number == 100047): #201/251/322 (Amana 46202-K) == 100047
             self.writegc("(TOOL/MILL, 6.35, 0.00, 0.00, 0.00)")
             self.endmilltype = "square"
             self.diameter = 6.35
@@ -250,17 +361,10 @@ class gcodepreview:
             self.shaftdiameter = 6.35
             self.shaftheight = 19.05
             self.shaftlength = 20.0
+            self.definesquaretool(self.diameter, self.shaftheight, self.shaftlength)
+            self.defineshaft(self.diameter, self.shaftdiameter, self.flute, 0, self.shaftlength)
             self.toolnumber = "100047"
-        elif (tool_number == 102): #102/326 == 100036
-            self.writegc("(TOOL/MILL, 3.175, 0.00, 0.00, 0.00)")
-            self.endmilltype = "square"
-            self.diameter = 3.175
-            self.flute = 12.7
-            self.shaftdiameter = 3.175
-            self.shaftheight = 12.7
-            self.shaftlength = 20.0
-            self.toolnumber = 100036
-        elif (tool_number == 112): #112 == 100024
+        elif (tool_number == 112) or (tool_number == 100024): #112 == 100024
             self.writegc("(TOOL/MILL, 1.5875, 0.00, 0.00, 0.00)")
             self.endmilltype = "square"
             self.diameter = 1.5875
@@ -268,8 +372,10 @@ class gcodepreview:
             self.shaftdiameter = 3.175
             self.shaftheight = 6.35
             self.shaftlength = 12.0
+            self.definesquaretool(self.diameter, self.shaftheight, self.shaftlength, (self.shaftdiameter - self.diameter)/2)
+            self.defineshaft(self.diameter, self.shaftdiameter, self.flute, 0, self.shaftlength)
             self.toolnumber = "100024"
-        elif (tool_number == 122): #122 == 100012
+        elif (tool_number == 122) or (tool_number == 100012): #122 == 100012
             self.writegc("(TOOL/MILL, 0.79375, 0.00, 0.00, 0.00)")
             self.endmilltype = "square"
             self.diameter = 0.79375
@@ -277,6 +383,8 @@ class gcodepreview:
             self.shaftdiameter = 3.175
             self.shaftheight = 1.5875
             self.shaftlength = 12.0
+            self.definesquaretool(self.diameter, self.shaftheight, self.shaftlength, (self.shaftdiameter - self.diameter)/2)
+            self.defineshaft(self.diameter, self.shaftdiameter, self.flute, 0, self.shaftlength)
             self.toolnumber = "100012"
         elif (tool_number == 324): #324 (Amana 46170-K) == 100048
             self.writegc("(TOOL/MILL, 6.35, 0.00, 0.00, 0.00)")
@@ -286,8 +394,10 @@ class gcodepreview:
             self.shaftdiameter = 6.35
             self.shaftheight = 22.225
             self.shaftlength = 20.0
+            self.definesquaretool(self.diameter, self.shaftheight, self.shaftlength)
+            self.defineshaft(self.diameter, self.shaftdiameter, self.flute, 0, self.shaftlength)
             self.toolnumber = "100048"
-        elif (tool_number == 205): #205 == 100048
+        elif (tool_number == 205) or (tool_number == 100048): #205 == 100048
             self.writegc("(TOOL/MILL, 6.35, 0.00, 0.00, 0.00)")
             self.endmilltype = "square"
             self.diameter = 6.35
@@ -295,9 +405,12 @@ class gcodepreview:
             self.shaftdiameter = 6.35
             self.shaftheight = 25.4
             self.shaftlength = 20.0
+            self.definesquaretool(self.diameter, self.shaftheight, self.shaftlength)
+            self.defineshaft(self.diameter, self.shaftdiameter, self.flute, 0, self.shaftlength)
+            defineKeyholetool(self.diameter, self.flute, self.shaftdiameter, self.shaftheight, self.shaftdiameter, self.shaftlength)
             self.toolnumber = "100048"
 #
-        elif (tool_number == 282): #282 == 000204
+        elif (tool_number == 282) or (tool_number == 100204): #282 == 000204
             self.writegc("(TOOL/MILL, 2.0, 0.00, 0.00, 0.00)")
             self.endmilltype = "O-flute"
             self.diameter = 2.0
@@ -305,8 +418,10 @@ class gcodepreview:
             self.shaftdiameter = 6.35
             self.shaftheight = 6.35
             self.shaftlength = 12.0
-            self.toolnumber = "000204"
-        elif (tool_number == 274): #274 == 000036
+            self.definesquaretool(self.diameter, self.shaftheight, self.shaftlength, (self.shaftdiameter - self.diameter)/2)
+            self.defineshaft(self.diameter, self.shaftdiameter, self.flute, 0, self.shaftlength)
+            self.toolnumber = "100204"
+        elif (tool_number == 274) or (tool_number == 100036): #274 == 000036
             self.writegc("(TOOL/MILL, 3.175, 0.00, 0.00, 0.00)")
             self.endmilltype = "O-flute"
             self.diameter = 3.175
@@ -314,8 +429,10 @@ class gcodepreview:
             self.shaftdiameter = 3.175
             self.shaftheight = 12.7
             self.shaftlength = 20.0
-            self.toolnumber = "000036"
-        elif (tool_number == 278): #278 == 000047
+            self.definesquaretool(self.diameter, self.shaftheight, self.shaftlength)
+            self.defineshaft(self.diameter, self.shaftdiameter, self.flute, 0, self.shaftlength)
+            self.toolnumber = "100036"
+        elif (tool_number == 278) or (tool_number == 100047): #278 == 000047
             self.writegc("(TOOL/MILL, 6.35, 0.00, 0.00, 0.00)")
             self.endmilltype = "O-flute"
             self.diameter = 6.35
@@ -323,9 +440,11 @@ class gcodepreview:
             self.shaftdiameter = 3.175
             self.shaftheight = 19.05
             self.shaftlength = 20.0
-            self.toolnumber = "000047"
+            self.definesquaretool(self.diameter, self.shaftheight, self.shaftlength)
+            self.defineshaft(self.diameter, self.shaftdiameter, self.flute, 0, self.shaftlength)
+            self.toolnumber = "100047"
 #
-        elif (tool_number == 202): #202 == 204047
+        elif (tool_number == 202) or (tool_number == 204047): #202 == 204047
             self.writegc("(TOOL/MILL, 6.35, 3.175, 0.00, 0.00)")
             self.endmilltype = "ball"
             self.diameter = 6.35
@@ -333,8 +452,10 @@ class gcodepreview:
             self.shaftdiameter = 6.35
             self.shaftheight = 19.05
             self.shaftlength = 20.0
+            self.defineballnosetool(self.diameter, self.flute, self.shaftlength)
+            self.defineshaft(self.diameter, self.shaftdiameter, self.flute, 0, self.shaftlength)
             self.toolnumber = "204047"
-        elif (tool_number == 101): #101 == 203036
+        elif (tool_number == 101) or (tool_number == 203036): #101 == 203036
             self.writegc("(TOOL/MILL, 3.175, 1.5875, 0.00, 0.00)")
             self.endmilltype = "ball"
             self.diameter = 3.175
@@ -342,8 +463,10 @@ class gcodepreview:
             self.shaftdiameter = 3.175
             self.shaftheight = 12.7
             self.shaftlength = 20.0
+            self.defineballnosetool(self.diameter, self.flute, self.shaftlength)
+            self.defineshaft(self.diameter, self.shaftdiameter, self.flute, 0, self.shaftlength)
             self.toolnumber = "203036"
-        elif (tool_number == 111): #111 == 202024
+        elif (tool_number == 111) or (tool_number == 202024): #111 == 202024
             self.writegc("(TOOL/MILL, 1.5875, 0.79375, 0.00, 0.00)")
             self.endmilltype = "ball"
             self.diameter = 1.5875
@@ -351,8 +474,10 @@ class gcodepreview:
             self.shaftdiameter = 3.175
             self.shaftheight = 6.35
             self.shaftlength = 20.0
+            self.defineballnosetool(self.diameter, self.flute, self.shaftlength, (self.shaftdiameter - self.diameter)/2)
+            self.defineshaft(self.diameter, self.shaftdiameter, self.flute, 0, self.shaftlength)
             self.toolnumber = "202024"
-        elif (tool_number == 121): #121 == 201012
+        elif (tool_number == 121) or (tool_number == 201012): #121 == 201012
             self.writegc("(TOOL/MILL, 3.175, 0.79375, 0.00, 0.00)")
             self.endmilltype = "ball"
             self.diameter = 0.79375
@@ -360,8 +485,10 @@ class gcodepreview:
             self.shaftdiameter = 3.175
             self.shaftheight = 1.5875
             self.shaftlength = 20.0
+            self.defineballnosetool(self.diameter, self.flute, self.shaftlength, (self.shaftdiameter - self.diameter)/2)
+            self.defineshaft(self.diameter, self.shaftdiameter, self.flute, 0, self.shaftlength)
             self.toolnumber = "201012"
-        elif (tool_number == 325): #325 (Amana 46376-K) == 204048
+        elif (tool_number == 325) or (tool_number == 204048): #325 (Amana 46376-K) == 204048
             self.writegc("(TOOL/MILL, 6.35, 3.175, 0.00, 0.00)")
             self.endmilltype = "ball"
             self.diameter = 6.35
@@ -369,9 +496,11 @@ class gcodepreview:
             self.shaftdiameter = 6.35
             self.shaftheight = 25.4
             self.shaftlength = 20.0
+            self.defineballnosetool(self.diameter, self.flute, self.shaftlength, (self.shaftdiameter - self.diameter)/2)
+            self.defineshaft(self.diameter, self.shaftdiameter, self.flute, 0, self.shaftlength)
             self.toolnumber = "204048"
 #
-        elif (tool_number == 301): #301 == 390074
+        elif (tool_number == 301) or (tool_number == 390074): #301 == 390074
             self.writegc("(TOOL/MILL, 0.10, 0.05, 6.35, 45.00)")
             self.endmilltype = "V"
             self.diameter = 12.7
@@ -380,8 +509,9 @@ class gcodepreview:
             self.shaftdiameter = 6.35
             self.shaftheight = 6.35
             self.shaftlength = 20.0
+            self.defineVtool(self.diameter, self.flute, self.shaftlength, self.shaftdiameter)
             self.toolnumber = "390074"
-        elif (tool_number == 302): #302 == 360071
+        elif (tool_number == 302) or (tool_number == 360071): #302 == 360071
             self.writegc("(TOOL/MILL, 0.10, 0.05, 6.35, 30.00)")
             self.endmilltype = "V"
             self.diameter = 12.7
@@ -390,8 +520,9 @@ class gcodepreview:
             self.shaftdiameter = 6.35
             self.shaftheight = 11.067
             self.shaftlength = 20.0
+            self.defineVtool(self.diameter, self.flute, self.shaftlength, self.shaftdiameter)
             self.toolnumber = "360071"
-        elif (tool_number == 390): #390 == 390032
+        elif (tool_number == 390) or (tool_number == 390032): #390 == 390032
             self.writegc("(TOOL/MILL, 0.03, 0.00, 1.5875, 45.00)")
             self.endmilltype = "V"
             self.diameter = 3.175
@@ -400,8 +531,9 @@ class gcodepreview:
             self.shaftdiameter = 3.175
             self.shaftheight = 1.5875
             self.shaftlength = 20.0
+            self.defineVtool(self.diameter, self.flute, self.shaftlength, self.shaftdiameter)
             self.toolnumber = "390032"
-        elif (tool_number == 327): #327 (Amana RC-1148) == 360098
+        elif (tool_number == 327) or (tool_number == 360098): #327 (Amana RC-1148) == 360098
             self.writegc("(TOOL/MILL, 0.03, 0.00, 13.4874, 30.00)")
             self.endmilltype = "V"
             self.diameter = 25.4
@@ -410,8 +542,9 @@ class gcodepreview:
             self.shaftdiameter = 6.35
             self.shaftheight = 22.134
             self.shaftlength = 20.0
+            self.defineVtool(self.diameter, self.flute, self.shaftlength, self.shaftdiameter)
             self.toolnumber = "360098"
-        elif (tool_number == 323): #323 == 330041 30 degree V Amana, 45771-K
+        elif (tool_number == 323) or (tool_number == 330041): #323 == 330041 30 degree V Amana, 45771-K
             self.writegc("(TOOL/MILL, 0.10, 0.05, 11.18, 15.00)")
             self.endmilltype = "V"
             self.diameter = 6.35
@@ -420,9 +553,10 @@ class gcodepreview:
             self.shaftdiameter = 6.35
             self.shaftheight = 11.849
             self.shaftlength = 20.0
+            self.defineVtool(self.diameter, self.flute, self.shaftlength, self.shaftdiameter)
             self.toolnumber = "330041"
 #
-        elif (tool_number == 374): #374 == 906043
+        elif (tool_number == 374) or (tool_number == 906043): #374 == 906043
             self.writegc("(TOOL/MILL, 9.53, 0.00, 3.17, 0.00)")
             self.endmilltype = "keyhole"
             self.diameter = 9.525
@@ -431,8 +565,9 @@ class gcodepreview:
             self.shaftdiameter = 6.35
             self.shaftheight = 3.175
             self.shaftlength = 20.0
+            self.defineKeyholetool(self.diameter, self.flute, self.shaftdiameter, self.shaftheight, self.shaftdiameter, self.shaftlength)
             self.toolnumber = "906043"
-        elif (tool_number == 375): #375 == 906053
+        elif (tool_number == 375) or (tool_number == 906053): #375 == 906053
             self.writegc("(TOOL/MILL, 9.53, 0.00, 3.17, 0.00)")
             self.endmilltype = "keyhole"
             self.diameter = 9.525
@@ -441,8 +576,9 @@ class gcodepreview:
             self.shaftdiameter = 6.35
             self.shaftheight = 3.175
             self.shaftlength = 20.0
+            self.defineKeyholetool(self.diameter, self.flute, self.shaftdiameter, self.shaftheight, self.shaftdiameter, self.shaftlength)
             self.toolnumber = "906053"
-        elif (tool_number == 376): #376 == 907040
+        elif (tool_number == 376) or (tool_number == 907040): #376 == 907040
             self.writegc("(TOOL/MILL, 12.7, 0.00, 4.77, 0.00)")
             self.endmilltype = "keyhole"
             self.diameter = 12.7
@@ -451,8 +587,9 @@ class gcodepreview:
             self.shaftdiameter = 6.35
             self.shaftheight = 4.7625
             self.shaftlength = 20.0
+            self.defineKeyholetool(self.diameter, self.flute, self.shaftdiameter, self.shaftheight, self.shaftdiameter, self.shaftlength)
             self.toolnumber = "907040"
-        elif (tool_number == 378): #378 == 907050
+        elif (tool_number == 378) or (tool_number == 907050): #378 == 907050
             self.writegc("(TOOL/MILL, 12.7, 0.00, 4.77, 0.00)")
             self.endmilltype = "keyhole"
             self.diameter = 12.7
@@ -461,6 +598,7 @@ class gcodepreview:
             self.shaftdiameter = 6.35
             self.shaftheight = 4.7625
             self.shaftlength = 20.0
+            self.defineKeyholetool(self.diameter, self.flute, self.shaftdiameter, self.shaftheight, self.shaftdiameter, self.shaftlength)
             self.toolnumber = "907050"
 #
         elif (tool_number == 45981): #45981 == 445981
@@ -474,6 +612,7 @@ class gcodepreview:
             self.shaftdiameter = 6.35
             self.shaftheight = 12.7
             self.shaftlength = 20.0
+            self.definebowltool(self.diameter, self.flute, self.radius, self.shaftdiameter, self.shaftlength)
             self.toolnumber = "445981"
         elif (tool_number == 45982):#0.507/2, 4.509
             self.writegc("(TOOL/MILL, 15.875, 6.35, 19.05, 0.00)")
@@ -484,8 +623,9 @@ class gcodepreview:
             self.shaftdiameter = 6.35
             self.shaftheight = 15.875
             self.shaftlength = 20.0
+            self.definebowltool(self.diameter, self.flute, self.radius, self.shaftdiameter, self.shaftlength)
             self.toolnumber = "445982"
-#        elif (tool_number == 1370): #1370 == 401370
+        elif (tool_number == 1370): #1370 == 401370
 #Whiteside Bowl & Tray Bit 1/4"SH, 1/8"R, 7/16"CD (5/16" cutting flute length)
             self.writegc("(TOOL/MILL, 11.1125, 8, 3.175, 0.00)")
             self.endmilltype = "bowl"
@@ -495,8 +635,9 @@ class gcodepreview:
             self.shaftdiameter = 6.35
             self.shaftheight = 8
             self.shaftlength = 20.0
+            self.definebowltool(self.diameter, self.flute, self.radius, self.shaftdiameter, self.shaftlength)
             self.toolnumber = "401370"
-#        elif (tool_number == 1372): #1372/45982 == 401372
+        elif (tool_number == 1372): #1372/45982 == 401372
 #Whiteside Bowl & Tray Bit 1/4"SH, 1/4"R, 3/4"CD (5/8" cutting flute length)
 #Amana Carbide Tipped Bowl & Tray 1/4 Radius x 3/4 Dia x 5/8 x 1/4 Inch Shank
             self.writegc("(TOOL/MILL, 19.5, 15.875, 6.35, 0.00)")
@@ -507,11 +648,14 @@ class gcodepreview:
             self.shaftdiameter = 6.35
             self.shaftheight = 15.875
             self.shaftlength = 20.0
+            self.definebowltool(self.diameter, self.flute, self.radius, self.shaftdiameter, self.shaftlength)
             self.toolnumber = "401372"
 #
-        elif (tool_number == 501): #501 == 530131
+        elif (tool_number == 501) or (tool_number == 530131): #501 == 530131
             self.writegc("(TOOL/MILL,0.03, 0.00, 10.00, 30.00)")
 #            self.currenttoolshape = self.toolshapes("tapered ball", 3.175, 5.561, 30, 0.254)
+            self.tooloutline = osimport("501_outline.svg")
+            self.toolprofile = osimport("501_profile.svg")
             self.endmilltype = "tapered ball"
             self.diameter = 3.175
             self.flute = 5.561
@@ -521,7 +665,7 @@ class gcodepreview:
             self.shaftheight = 5.561
             self.shaftlength = 10.0
             self.toolnumber = "530131"
-        elif (tool_number == 502): #502 == 540131
+        elif (tool_number == 502) or (tool_number == 540131): #502 == 540131
             self.writegc("(TOOL/MILL,0.03, 0.00, 10.00, 20.00)")
 #            self.currenttoolshape = self.toolshapes("tapered ball", 3.175, 4.117, 40, 0.254)
             self.endmilltype = "tapered ball"
@@ -540,24 +684,25 @@ class gcodepreview:
 #            self.writegc("()")
 #            self.currenttoolshape = self.tapered_ball(3.175, 6.35, 38.1, 2.4)
 #
-        elif (tool_number == 56125):#0.508/2, 1.531 56125 == 603042
+        elif (tool_number == 56125) or (tool_number == 603042):#0.508/2, 1.531 56125 == 603042
             self.writegc("(TOOL/CRMILL, 0.508, 6.35, 3.175, 7.9375, 3.175)")
             self.endmilltype = "roundover"
-            self.tip = 0.508
-            self.diameter = 6.35 - self.tip
-            self.flute = 8 - self.tip
-            self.radius = 3.175 - self.tip
+            self.tipdiameter = 0.508
+            self.diameter = 6.35 - self.tipdiameter
+            self.flute = 8 - self.tipdiameter
+            self.radius = 3.175 - self.tipdiameter/2
             self.shaftdiameter = 6.35
             self.shaftheight = 8
             self.shaftlength = 10.0
+            self.defineRoundovertool(self.diameter, self.tipdiameter, self.flute, self.radius, self.shaftdiameter, self.shaftlength)
             self.toolnumber = "603042"
-        elif (tool_number == 56142):#0.508/2, 2.921 56142 == 602032
+        elif (tool_number == 56142) or (tool_number == 602032):#0.508/2, 2.921 56142 == 602032
             self.writegc("(TOOL/CRMILL, 0.508, 3.571875, 1.5875, 5.55625, 1.5875)")
             self.endmilltype = "roundover"
             self.tip = 0.508
             self.diameter = 3.175 - self.tip
             self.flute = 4.7625 - self.tip
-            self.radius = 1.5875 - self.tip
+            self.radius = 1.5875 - self.tip/2
             self.shaftdiameter = 3.175
             self.shaftheight = 4.7625
             self.shaftlength = 10.0
@@ -602,7 +747,7 @@ class gcodepreview:
 #            self.tip = 0.396875
 #            self.toolnumber = "600062"
 #
-        elif (tool_number == 814): #814 == 814071
+        elif (tool_number == 814) or (tool_number == 814071): #814 == 814071
 #Item 18J1607, 1/2" 14° Dovetail Bit, 8mm shank
             self.writegc("(TOOL/MILL, 12.7, 6.367, 12.7, 0.00)")
         #    dt_bottomdiameter, dt_topdiameter, dt_height, dt_angle)
@@ -613,7 +758,7 @@ class gcodepreview:
             self.flute = 12.7
             self.angle = 14
             self.toolnumber = "814071"
-        elif (tool_number == 808079): #45828 == 808071
+        elif (tool_number == 808079) or (tool_number == 808071): #45828 == 808071
             self.writegc("(TOOL/MILL, 12.7, 6.816, 20.95, 0.00)")
         #    http://www.amanatool.com/45828-carbide-tipped-dovetail-8-deg-x-1-2-dia-x-825-x-1-4-inch-shank.html
 #            self.currenttoolshape = self.toolshapes("dovetail", 12.7, 20.955, 8)
@@ -624,8 +769,9 @@ class gcodepreview:
             self.toolnumber = "808071"
 #
         self.writegc("M6T", str(tool_number))
+#        if (self.endmilltype == "square"):
+#            speed = speed *
         self.writegc("M03S", str(speed))
-
     def setcolor(self,
                   cutcolor = "green",
                   rapidcolor = "orange",
@@ -640,17 +786,17 @@ class gcodepreview:
             steps = step
         else:
             steps = self.steps
-
+#
         if self.endmilltype == "square":
             ts = cylinder(r1=(self.diameter / 2), r2=(self.diameter / 2), h=self.flute, center = False)
             tslist.append(hull(ts.translate([bx, by, bz]), ts.translate([ex, ey, ez])))
             return tslist
-
-        if self.endmilltype == "O-flute":
-            ts = cylinder(r1=(self.diameter / 2), r2=(self.diameter / 2), h=self.flute, center = False)
-            tslist.append(hull(ts.translate([bx, by, bz]), ts.translate([ex, ey, ez])))
-            return tslist
-
+#
+#        if self.endmilltype == "O-flute":
+#            ts = cylinder(r1=(self.diameter / 2), r2=(self.diameter / 2), h=self.flute, center = False)
+#            tslist.append(hull(ts.translate([bx, by, bz]), ts.translate([ex, ey, ez])))
+#            return tslist
+#
         if self.endmilltype == "ball":
             b = sphere(r=(self.diameter / 2))
             s = cylinder(r1=(self.diameter / 2), r2=(self.diameter / 2), h=self.flute, center=False)
@@ -719,13 +865,133 @@ class gcodepreview:
                 slices = slices.union(hull(slice.translate([bx, by, bz+dz]), slice.translate([ex, ey, ez+dz])))
                 tslist.append(slices)
             return tslist
-#
+
     def shaftmovement(self, bx, by, bz, ex, ey, ez):
         tslist = []
         ts = cylinder(r1=(self.shaftdiameter / 2), r2=(self.shaftdiameter / 2), h=self.shaftlength, center = False)
         ts = ts.translate([0, 0, self.shaftheight])
         tslist.append(hull(ts.translate([bx, by, bz]), ts.translate([ex, ey, ez])))
         return tslist
+
+    def defineshaft(self, toolingdiameter, shaftdiameter, flute, transition, shaft):
+        if shaftdiameter == 0:
+            self.shaftoutline = polygon(points=[[0, flute], [diameter, flute], [diameter, shaft],[0, shaft]])
+            self.shaftprofile = polygon(points=[[0, flute], [diameter/2 ,flute], [diameter/2, shaft], [0, shaft]])
+            sh = cylinder(h = shaft, r = diameter/2)
+            self.currenttoolshaft = sh.translate([0,0,flute])
+        if shaftdiameter > 0:
+            self.shaftoutline = polygon(points=[
+                [shaftdiameter / 2 - toolingdiameter / 2, flute],
+                [0, flute + transition],
+                [0, flute + transition + shaft],
+                [shaftdiameter, flute + transition + shaft],
+                [shaftdiameter, flute + transition],
+                [shaftdiameter / 2 + toolingdiameter / 2, flute],
+                ] )
+            self.shaftprofile = polygon( points= [
+                [0, flute],
+                [0, flute + transition + shaft],
+                [shaftdiameter/2, flute + transition + shaft],
+                [shaftdiameter/2, flute + transition],
+                [toolingdiameter/2, flute]
+                ] )
+            self.currenttoolshaft = rotate_extrude(self.shaftprofile)
+
+    def definesquaretool(self, diameter, flute, shaft, offset = 0):
+        self.tooloutline = polygon( points=[[0 + offset,0],[diameter + offset,0],[diameter + offset,flute],[0 + offset,flute]] )
+        self.toolprofile = polygon( points=[[0,0],[diameter/2,0],[diameter/2,flute],[0,flute]] )
+        self.currenttoolshape = cylinder(h = flute, r = diameter/2)
+        sh = cylinder(h = flute, r = diameter/2)
+
+    def defineballnosetool(self, diameter, flute, shaft, offset = 0):
+        s = square([diameter,flute - diameter/2])
+        sh = s.translate([0 + offset, diameter/2])
+        c = circle(d=diameter)
+        b = c.translate([diameter/2 + offset, diameter/2])
+        self.tooloutline = union(sh, b)
+#
+        s = square([diameter/2,flute - diameter/2])
+        sh = s.translate([0, diameter/2])
+        c = circle(d=diameter)
+        b = c.translate([0, diameter/2])
+        bn = union(sh, b)
+#        bns = bn.translate([0, diameter/2])
+        thein = square([diameter/2,flute])
+#        theins = thein.translate([diameter/2, 0])
+        self.toolprofile = intersection(thein, bn)
+#
+        self.shaftprofile = polygon( points=[[0,flute],[diameter/2,flute],[diameter/2,shaft],[0,shaft]] )
+#
+#        b = self.toolprofile
+#        bn = b.translate([-diameter/2, 0])
+        self.currenttoolshape = rotate_extrude(self.toolprofile)
+#
+        self.currenttoolshaft = sh.translate([0,0,flute])
+
+    def defineVtool(self, diameter, flute, shaft, shaftdiameter = 0):
+        self.tooloutline = polygon([[diameter/2, 0], [diameter, flute], [0, flute]])
+#
+
+        self.toolprofile = polygon([[0, 0], [diameter/2, flute], [0, flute]])
+
+#
+        if shaftdiameter == 0:
+            shaftdiameter = diameter
+        self.shaftprofile = polygon([[0, flute], [shaftdiameter/2, flute], [shaftdiameter/2, flute + shaft], [0, flute + shaft]])
+
+#
+        self.currenttoolshape = rotate_extrude(self.toolprofile)
+#
+        self.currenttoolshaft = rotate_extrude(self.shaftprofile)
+
+    def defineKeyholetool(self, diameter, flute, narrowdiameter, narrowflute, shaftdiameter, shaftlength):
+
+        self.tooloutline = polygon([[0, 0], [diameter, 0], [diameter, flute], [diameter/2 + narrowdiameter/2, flute], [diameter/2 + narrowdiameter/2, flute + narrowflute], [diameter/2 - narrowdiameter/2, flute + narrowflute], [diameter/2 - narrowdiameter/2, flute], [0, flute]])
+#
+
+        self.toolprofile = polygon([[0, 0], [diameter/2, 0], [diameter/2, flute], [narrowdiameter/2, flute], [narrowdiameter/2, flute + narrowflute], [0, flute + narrowflute]])
+#
+        self.shaftprofile = polygon([[0, flute + narrowflute], [narrowdiameter/2, flute + narrowflute], [shaftdiameter/2, flute + narrowflute + shaftlength], [0, flute + narrowflute + shaftlength]])
+
+#
+        self.currenttoolshape = rotate_extrude(self.toolprofile)
+#
+        self.currenttoolshaft = rotate_extrude(self.shaftprofile)
+
+    def definebowltool(self, diameter, flute, radius, shaftdiameter, shaftlength):
+#        self.tooloutline =
+#
+        self.toolprofile = polygon([[0,0], [diameter/2, 0, radius], [diameter/2, radius], [diameter/2, flute], [0, flute]])
+#
+        self.shaftprofile = polygon([[0,flute], [shaftdiameter/2,flute], [shaftdiameter/2, flute + shaftlength], [0, flute + shaftlength]])
+#
+        self.currenttoolshape = rotate_extrude(self.toolprofile)
+#
+        self.currenttoolshaft = rotate_extrude(self.shaftprofile)
+
+    def defineRoundovertool(self, diameter, tipdiameter, flute, radius, shaftdiameter, shaftlength):
+#            self.tip = 0.508
+#            self.diameter = 6.35 - self.tip
+#            self.flute = 8 - self.tip
+#            self.radius = 3.175 - self.tip/2
+#            self.shaftdiameter = 6.35
+#            self.shaftheight = 8
+#            self.shaftlength = 10.0
+#        print(diameter)
+#        print(tipdiameter)
+#        print(flute)
+#        print(radius)
+#        print(shaftdiameter)
+#        print(shaftlength)
+#        self.tooloutline =
+#
+        self.toolprofile = polygon([[0,0], [tipdiameter/2, 0], [diameter/2, flute], [0, flute]])
+#
+        self.shaftprofile = polygon([[0,flute], [shaftdiameter/2,flute], [shaftdiameter/2, flute + shaftlength], [0, flute + shaftlength]])
+#
+        self.currenttoolshape = rotate_extrude(self.toolprofile)
+#
+        self.currenttoolshaft = rotate_extrude(self.shaftprofile)
 
     def rapid(self, ex, ey, ez, laser = 0):
 #        print(self.rapidcolor)
@@ -868,10 +1134,10 @@ class gcodepreview:
         tpzinc = tpzreldim / (earc - barc)
         i = barc
         while i < earc:
-            self.cutline(xcenter + radius * Cos(math.radians(i)), ycenter + radius * Sin(math.radians(i)), self.zpos()+tpzinc)
+            self.cutline(xcenter + radius * Cos(i), ycenter + radius * Sin(i), self.zpos()+tpzinc)
             i += stepsizearc
-        self.setxpos(xcenter + radius * Cos(math.radians(earc)))
-        self.setypos(ycenter + radius * Sin(math.radians(earc)))
+#        self.setxpos(xcenter + radius * Cos(earc))
+#        self.setypos(ycenter + radius * Sin(earc))
 
     def cutarcCW(self, barc, earc, xcenter, ycenter, radius, tpzreldim, stepsizearc=1):
 #        print(str(self.zpos()))
@@ -888,9 +1154,9 @@ class gcodepreview:
 #        toolpath = []
         i = barc
         while i > earc:
-            self.cutline(xcenter + radius * Cos(math.radians(i)), ycenter + radius * Sin(math.radians(i)), self.zpos()+tpzinc)
-#            self.setxpos(xcenter + radius * Cos(math.radians(i)))
-#            self.setypos(ycenter + radius * Sin(math.radians(i)))
+            self.cutline(xcenter + radius * Cos(i), ycenter + radius * Sin(i), self.zpos()+tpzinc)
+#            self.setxpos(xcenter + radius * Cos(i))
+#            self.setypos(ycenter + radius * Sin(i))
 #            print(str(self.xpos()), str(self.ypos(), str(self.zpos())))
 #            self.setzpos(self.zpos()+tpzinc)
             i += abs(stepsizearc) * -1
@@ -899,13 +1165,27 @@ class gcodepreview:
 #            print("Unioning n toolpath")
 #            self.toolpaths = self.toolpaths.union(toolpath)
 #        else:
-        self.setxpos(xcenter + radius * Cos(math.radians(earc)))
-        self.setypos(ycenter + radius * Sin(math.radians(earc)))
+        self.setxpos(xcenter + radius * Cos(earc))
+        self.setypos(ycenter + radius * Sin(earc))
 #        self.toolpaths.extend(toolpath)
 #        if self.generatepaths == False:
 #        return toolpath
 #        else:
 #            return cube([0.01, 0.01, 0.01])
+
+    def extrudearcCC(self, barc, earc, xcenter, ycenter, radius, tpzreldim, stepsizearc=1):
+#        tm = self.toolmovement(self.xpos(), self.ypos(), self.zpos(), ex, ey, ez)
+        tm = union(self.toolshape.translate(self.xpos(), self.ypos(), self.zpos()))
+#                   self.toolshape.translate(),
+#                   tooloutline.translate([r-3.175,0,0]).rotate_extrude(angle=ang2-ang1).rotz(ang1) + G3_center
+
+        tm = color(tm, self.cutcolor)
+        ts = self.shaftmovement(self.xpos(), self.ypos(), self.zpos(), ex, ey, ez)
+        ts = color(ts, self.rapidcolor)
+        self.setxpos(ex)
+        self.setypos(ey)
+        self.setzpos(ez)
+        self.toolpaths.extend([tm, ts])
 
     def cutarcCWdxf(self, barc, earc, xcenter, ycenter, radius, tpzreldim, stepsizearc=1):
         self.cutarcCW(barc, earc, xcenter, ycenter, radius, tpzreldim, stepsizearc=1)
@@ -936,7 +1216,7 @@ class gcodepreview:
         else:
             tpzinc = (ez - self.zpos()) / 90
 #            tpzinc = (self.zpos() + ez) / 90
-        print("tpzinc ", tpzinc)
+        self.debug("tpzinc ", tpzinc)
         i = 91
         while i < 181:
             self.cutline(ex + radius + radius * Cos(i), ey + radius * Sin(i), self.zpos()+tpzinc)
@@ -948,7 +1228,7 @@ class gcodepreview:
         else:
             tpzinc = (ez - self.zpos()) / 90
 #            tpzinc = (self.zpos() + ez) / 90
-        print("tpzinc ", tpzinc)
+#        print("tpzinc ", tpzinc)
         i = 181
         while i < 271:
             self.cutline(ex + radius * Cos(i), ey + radius + radius * Sin(i), self.zpos()+tpzinc)
@@ -1073,6 +1353,105 @@ class gcodepreview:
         tr = self.tool_diameter(ptd_tool, ptd_depth)/2
         return tr
 
+    def setfansoff(self):
+        writegc("M106 S0")
+
+    def setfanspeed(self, fan, speed):
+        writegc("M106 P", fan, " S", speed)
+
+    def pauseforclearbuffer(self):
+        writegc("M400 ; wait for buffer to clear")
+
+    def setfeedratio(self, feedratio):
+        writegc("M220 S", feedratio)
+        self.feedratio = feedratio
+
+    def setspeedratio(self, speedratio):
+        writegc("M221 S", speedratio)
+        self.speedratio = speedratio
+
+#Set extruder temperature: M104 [T<index>] [S<temperature>]
+    def setextrudertemperature(self, temperature):
+        writegc("M104 S", temperature)
+        self.extrudertemperature = temperature
+
+#Set bed temperature: M140 [S<temperature>]
+    def setbedtemperature(self, temperature):
+        writegc("M140 S", temperature)
+        self.bedtemperature = temperature
+
+#Set bed temperature and wait: M190 S<temperature>
+#Note: M190 always waits for temperature to settle at requested value
+    def setandwaitforbedtemperature(self, temperature):
+        writegc("M190 S", temperature)
+        self.bedtemperature = temperature
+
+#Set extruder temperature and wait: M109 [T<index>] S<temperature>
+#Note: M109 always waits for temperature to settle at requested value
+    def setandwaitforbedtemperature(self, temperature):
+        writegc("M190 S", temperature)
+        self.bedtemperature = temperature
+
+    def initializeforprinting(self, nozzlediameter = 0.4, filamentdiameter = 1.75, extrusionwidth = 0.6, layerheight = 0.2):
+        self.writegc("G90")
+        self.writegc("G28 ;home")
+        self.writegc("M729 ;Clean Nozzle")
+        self.nozzlediameter = nozzlediameter
+        self.extrusionwidth = extrusionwidth
+        self.layerheight = layerheight
+        self.toolpaths = []
+        self.feedrate = 0
+        fr = filamentdiameter/2
+        self.extrusion_normal_length = 1 / 3.14159 * (fr * fr)
+
+#Set acceleration: M204 S<value> OR M204 P<value> T<value>
+#Note: If S is not specified and both P and T are specified, then the acceleration is set to the minimum of P and T. If only one of P or T is specified, the command has no effect.
+    def setacceleration(self, acceleration):
+        writegc("M204 S", acceleration)
+        self.acceleration = acceleration
+
+#Use absolute/relative distances for extrusion: M82, M83
+    def setextrusionabsolute(self, acceleration):
+        writegc("M83")
+        self.extrusionabsolute = true
+
+#Set build percentage: M73 P<percent>
+    def setbuildpercentage(self, percent):
+        writegc("M73 P", percent)
+        self.percent = percent
+
+#Move (G0 or G1): G1 [X<pos>] [Y<pos>] [Z<pos>] [E<pos>] [F<speed>]
+    def extrude(self, ex, ey, ez, extrusionwidth = 0, layerheight = 0, feedrate = 0):
+        if extrusionwidth > 0:
+            self.extrusionwidth = extrusionwidth
+        if layerheight > 0:
+            self.layerheight = layerheight
+        if feedrate > 0:
+            self.feedrate = feedrate
+        if self.extrusionwidth == self.layerheight:
+            c = sphere(self.layerheight/2)
+        else:
+            ew = self.extrusionwidth
+            lh = self.layerheight
+            i = circle(lh/2)
+            j = i.translate([0,lh/2,0])
+            k = intersection(j,square([lh,lh]))
+            l = k.translate([ew/2-lh/2,0,0])
+            m = union(l, square([ew/2-lh/2, lh]))
+            c = rotate_extrude(m)
+        c = c.translate([0,0,-self.layerheight])
+        tslist = hull(c.translate([self.xpos(), self.ypos(),self.zpos()]), c.translate([ex, ey, ez]))
+        self.toolpaths.append(tslist)
+        #volume = π · r^2 · length
+        #       + extrusionwidth-layerheight · layerheight ·  length
+        distance = math.dist([self.xpos(), self.ypos(), self.zpos()], [ex, ey, ez])
+        print("Distance = ", distance)
+        v = self.extrusionwidth-self.layerheight * self.layerheight * distance + 3.14159 * self.layerheight/2 * self.layerheight/2 * distance
+        print("Volume = ",v)
+        el = self.extrusion_normal_length * v
+        print("Extrusion length = ",el)
+        self.writegc("X"+str(ex)+" Y"+str(ey)+ "Z "+str(ez)+ " E"+str(el)+ " F"+str(self.feedrate))
+
     def stockandtoolpaths(self, option = "stockandtoolpaths"):
         if option == "stock":
             show(self.stock)
@@ -1084,6 +1463,18 @@ class gcodepreview:
             part = self.stock.difference(self.rapids)
             part = self.stock.difference(self.toolpaths)
             show(part)
+
+    def showtooloutline(self):
+        to = union(self.tooloutline, self.shaftoutline)
+        show(to)
+
+    def showtoolprofile(self):
+        to = union(self.toolprofile, self.shaftprofile)
+        show(to)
+
+    def showtoolshape(self):
+        to = union(self.currenttoolshape, self.currenttoolshaft)
+        show(to)
 
     def returnstockandtoolpaths(self):
         part = self.stock.difference(self.toolpaths)
@@ -1883,7 +2274,7 @@ class gcodepreview:
             self.dxfarc(kh_tool_num, self.xpos(), self.ypos(), rt, angle, 90)
 #Lower right of entry hole
             self.dxfarc(kh_tool_num, self.xpos(), self.ypos(), rt, 270, 360-angle)
-#            self.dxfarc(kh_tool_num, self.xpos(), self.ypos(), self.tool_radius(kh_tool_num, 1), 270, 270+math.acos(math.radians(self.tool_diameter(kh_tool_num, 5)/self.tool_diameter(kh_tool_num, 1))))
+#            self.dxfarc(kh_tool_num, self.xpos(), self.ypos(), self.tool_radius(kh_tool_num, 1), 270, 270+math.acos(self.tool_diameter(kh_tool_num, 5)/self.tool_diameter(kh_tool_num, 1)))
 #Actual line of cut
 #            self.dxfline(kh_tool_num, self.xpos(), self.ypos(), self.xpos()+kh_distance, self.ypos())
 #upper right of end of slot (kh_max_depth+4.36))/2
@@ -2143,7 +2534,7 @@ class gcodepreview:
 #}
 
     def cut_pins(self, Joint_Width, stockZthickness, Number_of_Dovetails, Spacing, Proportion, DTT_diameter, DTT_angle):
-        DTO = Tan(math.radians(DTT_angle)) * (stockZthickness * Proportion)
+        DTO = Tan(DTT_angle) * (stockZthickness * Proportion)
         DTR = DTT_diameter/2 - DTO
         cpr = self.rapidXY(0, stockZthickness + Spacing/2)
         ctp = self.cutlinedxfgc(self.xpos(), self.ypos(), -stockZthickness * Proportion)
@@ -2166,7 +2557,7 @@ class gcodepreview:
         return ctp
 
     def cut_tails(self, Joint_Width, stockZthickness, Number_of_Dovetails, Spacing, Proportion, DTT_diameter, DTT_angle):
-        DTO = Tan(math.radians(DTT_angle)) * (stockZthickness * Proportion)
+        DTO = Tan(DTT_angle) * (stockZthickness * Proportion)
         DTR = DTT_diameter/2 - DTO
         cpr = self.rapidXY(0, 0)
         ctp = self.cutlinedxfgc(self.xpos(), self.ypos(), -stockZthickness * Proportion)
@@ -2251,11 +2642,11 @@ class gcodepreview:
         toolpath = (self.Finger_Joint_square(bx, by, orientation, side, width, thickness, Number_of_Pins, Finger_Origin, smallDiameter))
         if (orientation == "Vertical"):
             if (side == "Both"):
-                toolpath = self.cutrectanglerounddxf(self.currenttoolnum, bx - (thickness - smallDiameter/2), by-smallDiameter/2, 0, (thickness * 2) - smallDiameter, width+smallDiameter, (smallDiameter / 2) / Tan(math.radians(45)), smallDiameter/2)
+                toolpath = self.cutrectanglerounddxf(self.currenttoolnum, bx - (thickness - smallDiameter/2), by-smallDiameter/2, 0, (thickness * 2) - smallDiameter, width+smallDiameter, (smallDiameter / 2) / Tan(45), smallDiameter/2)
             if (side == "Left"):
-                toolpath = self.cutrectanglerounddxf(self.currenttoolnum, bx - (smallDiameter/2), by-smallDiameter/2, 0, thickness, width+smallDiameter, ((smallDiameter / 2) / Tan(math.radians(45))), smallDiameter/2)
+                toolpath = self.cutrectanglerounddxf(self.currenttoolnum, bx - (smallDiameter/2), by-smallDiameter/2, 0, thickness, width+smallDiameter, ((smallDiameter / 2) / Tan(45)), smallDiameter/2)
             if (side == "Right"):
-                toolpath = self.cutrectanglerounddxf(self.currenttoolnum, bx - (thickness - smallDiameter/2), by-smallDiameter/2, 0, thickness, width+smallDiameter, ((smallDiameter / 2) / Tan(math.radians(45))), smallDiameter/2)
+                toolpath = self.cutrectanglerounddxf(self.currenttoolnum, bx - (thickness - smallDiameter/2), by-smallDiameter/2, 0, thickness, width+smallDiameter, ((smallDiameter / 2) / Tan(45)), smallDiameter/2)
         toolpath = toolpath.union(self.Finger_Joint_square(bx, by, orientation, side, width, thickness, Number_of_Pins, Finger_Origin, smallDiameter))
         if (orientation == "Horizontal"):
             if (side == "Both"):
@@ -2266,7 +2657,7 @@ class gcodepreview:
                     0,
                     width+smallDiameter,
                     (thickness * 2) - smallDiameter,
-                    (smallDiameter / 2) / Tan(math.radians(45)),
+                    (smallDiameter / 2) / Tan(45),
                     smallDiameter/2)
             if (side == "Lower"):
                 toolpath = self.cutrectanglerounddxf(
@@ -2276,7 +2667,7 @@ class gcodepreview:
                     0,
                     width+smallDiameter,
                     thickness,
-                    ((smallDiameter / 2) / Tan(math.radians(45))),
+                    ((smallDiameter / 2) / Tan(45)),
                     smallDiameter/2)
             if (side == "Upper"):
                 toolpath = self.cutrectanglerounddxf(
@@ -2286,13 +2677,13 @@ class gcodepreview:
                     0,
                     width+smallDiameter,
                     thickness,
-                    ((smallDiameter / 2) / Tan(math.radians(45))),
+                    ((smallDiameter / 2) / Tan(45)),
                     smallDiameter/2)
         toolpath = toolpath.union(self.Finger_Joint_square(bx, by, orientation, side, width, thickness, Number_of_Pins, Finger_Origin, smallDiameter))
         return toolpath
 
     def Finger_Joint_square(self, bx, by, orientation, side, width, thickness, Number_of_Pins, Finger_Origin, smallDiameter, normalormirror = "Default"):
-        jointdepth = -(thickness - (smallDiameter / 2) / Tan(math.radians(45)))
+        jointdepth = -(thickness - (smallDiameter / 2) / Tan(45))
     # Joint_Orientation = "Horizontal" "Even" == "Lower", "Odd" == "Upper"
     # Joint_Orientation = "Vertical" "Even" == "Left", "Odd" == "Right"
         if (orientation == "Vertical"):
@@ -2404,9 +2795,9 @@ class gcodepreview:
             if (side == "Left" or side == "Both"):
                 rapid = self.rapidZ(0)
                 self.setdxfcolor("Dark Gray")
-                rapid = rapid.union(self.rapidXY(bx+thickness-(smallDiameter / 2) / Tan(math.radians(45)), by - radius/2))
-                toolpath = toolpath.union(self.cutlineZgcfeed(-(smallDiameter / 2) / Tan(math.radians(45)),10000))
-                toolpath = toolpath.union(self.cutlinedxfgc(bx+thickness-(smallDiameter / 2) / Tan(math.radians(45)), by + width + radius/2, -(smallDiameter / 2) / Tan(math.radians(45))))
+                rapid = rapid.union(self.rapidXY(bx+thickness-(smallDiameter / 2) / Tan(45), by - radius/2))
+                toolpath = toolpath.union(self.cutlineZgcfeed(-(smallDiameter / 2) / Tan(45),10000))
+                toolpath = toolpath.union(self.cutlinedxfgc(bx+thickness-(smallDiameter / 2) / Tan(45), by + width + radius/2, -(smallDiameter / 2) / Tan(45)))
                 rapid = self.rapidZ(0)
                 self.setdxfcolor("Green")
                 rapid = rapid.union(self.rapidXY(bx+thickness/2, by+width))
@@ -2419,9 +2810,9 @@ class gcodepreview:
             if (side == "Right" or side == "Both"):
                 rapid = self.rapidZ(0)
                 self.setdxfcolor("Dark Gray")
-                rapid = rapid.union(self.rapidXY(bx-(thickness-(smallDiameter / 2) / Tan(math.radians(45))), by - radius/2))
-                toolpath = toolpath.union(self.cutlineZgcfeed(-(smallDiameter / 2) / Tan(math.radians(45)),10000))
-                toolpath = toolpath.union(self.cutlinedxfgc(bx-(thickness-(smallDiameter / 2) / Tan(math.radians(45))), by + width + radius/2, -(smallDiameter / 2) / Tan(math.radians(45))))
+                rapid = rapid.union(self.rapidXY(bx-(thickness-(smallDiameter / 2) / Tan(45)), by - radius/2))
+                toolpath = toolpath.union(self.cutlineZgcfeed(-(smallDiameter / 2) / Tan(45),10000))
+                toolpath = toolpath.union(self.cutlinedxfgc(bx-(thickness-(smallDiameter / 2) / Tan(45)), by + width + radius/2, -(smallDiameter / 2) / Tan(45)))
                 rapid = self.rapidZ(0)
                 self.setdxfcolor("Green")
                 rapid = rapid.union(self.rapidXY(bx-thickness/2, by+width))
@@ -2444,9 +2835,9 @@ class gcodepreview:
             if (side == "Lower" or side == "Both"):
                 rapid = self.rapidZ(0)
                 self.setdxfcolor("Dark Gray")
-                rapid = rapid.union(self.rapidXY(bx - radius, by+thickness-(smallDiameter / 2) / Tan(math.radians(45))))
-                toolpath = toolpath.union(self.cutlineZgcfeed(-(smallDiameter / 2) / Tan(math.radians(45)),10000))
-                toolpath = toolpath.union(self.cutlinedxfgc(bx + width + radius, by+thickness-(smallDiameter / 2) / Tan(math.radians(45)), -(smallDiameter / 2) / Tan(math.radians(45))))
+                rapid = rapid.union(self.rapidXY(bx - radius, by+thickness-(smallDiameter / 2) / Tan(45)))
+                toolpath = toolpath.union(self.cutlineZgcfeed(-(smallDiameter / 2) / Tan(45),10000))
+                toolpath = toolpath.union(self.cutlinedxfgc(bx + width + radius, by+thickness-(smallDiameter / 2) / Tan(45), -(smallDiameter / 2) / Tan(45)))
                 rapid = self.rapidZ(0)
                 self.setdxfcolor("Green")
                 rapid = rapid.union(self.rapidXY(bx+width, by+thickness/2))
@@ -2459,9 +2850,9 @@ class gcodepreview:
             if (side == "Upper" or side == "Both"):
                 rapid = self.rapidZ(0)
                 self.setdxfcolor("Dark Gray")
-                rapid = rapid.union(self.rapidXY(bx - radius, by-(thickness-(smallDiameter / 2) / Tan(math.radians(45)))))
-                toolpath = toolpath.union(self.cutlineZgcfeed(-(smallDiameter / 2) / Tan(math.radians(45)),10000))
-                toolpath = toolpath.union(self.cutlinedxfgc(bx + width + radius, by-(thickness-(smallDiameter / 2) / Tan(math.radians(45))), -(smallDiameter / 2) / Tan(math.radians(45))))
+                rapid = rapid.union(self.rapidXY(bx - radius, by-(thickness-(smallDiameter / 2) / Tan(45))))
+                toolpath = toolpath.union(self.cutlineZgcfeed(-(smallDiameter / 2) / Tan(45),10000))
+                toolpath = toolpath.union(self.cutlinedxfgc(bx + width + radius, by-(thickness-(smallDiameter / 2) / Tan(45)), -(smallDiameter / 2) / Tan(45)))
                 rapid = self.rapidZ(0)
                 self.setdxfcolor("Green")
                 rapid = rapid.union(self.rapidXY(bx+width, by-thickness/2))

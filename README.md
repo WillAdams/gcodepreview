@@ -1,14 +1,12 @@
 # gcodepreview
 
-PythonSCAD library for moving a tool in lines and arcs so as to model how a part would be cut using G-Code, so as to allow PythonSCAD to function as a compleat CAD/CAM solution for subtractive 3-axis CNC (mills or routers at this time, 4th-axis support may come in a future version) by writing out G-code in addition to 3D modeling (in certain cases toolpaths which would not normally be feasible), and to write out DXF files which may be imported into a traditional CAM program to create toolpaths. 
+OpenPythonSCAD library for moving a tool in lines and arcs so as to model how a part would be cut or extruded using G-Code, so as to allow use as a compleat CAD/CAM solution for subtractive or additive 3-axis CNC (4th-axis support may come in a future version) by writing out G-code in addition to 3D modeling (in certain cases toolpaths which would not normally be feasible in typical tools), and to write out DXF files which may be imported into a traditional CAM program to create toolpaths. 
 
 ![OpenSCAD gcodepreview Unit Tests](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/gcodepreviewtemplate.png?raw=true)
 
-Updated to make use of Python in OpenSCAD:[^rapcad]
+Uses Python in OpenSCAD: https://pythonscad.org/[^pythonscad]
 
-[^rapcad]: Previous versions had used RapCAD, so as to take advantage of the writeln command, which has since been re-written in Python.
-
-https://pythonscad.org/ (previously this was http://www.guenther-sohler.net/openscad/ )
+[^pythonscad]: Previously this was http://www.guenther-sohler.net/openscad/ 
 
 A BlockSCAD file for the initial version of the 
 main modules is available at:
@@ -19,7 +17,7 @@ The project is discussed at:
 
 https://willadams.gitbook.io/design-into-3d/programming
 
-Since it is now programmed using Literate Programming (initially a .dtx, now a .tex file) there is a PDF: https://github.com/WillAdams/gcodepreview/blob/main/gcodepreview.pdf which includes all of the source code with formatted comments.
+Since it is now programmed using Literate Programming (initially a .dtx, now a .tex file) there is a PDF: https://github.com/WillAdams/gcodepreview/blob/main/gcodepreview.pdf which includes all of the source code with commentary.
 
 The files for this library are:
 
@@ -28,16 +26,17 @@ The files for this library are:
 
 And there several sample/template files which may be used as the starting point for a given project:
 
- - gcodepreviewtemplate.scad (gcptmpl) --- .scad example file
+ - gcodepreviewtemplate.txt (gcptmpl) --- .txt file collecting all commands with brief comments which may be used as a quick reference or copy-pasting from
  - gcodepreviewtemplate.py (gcptmplpy) --- .py example file 
+ - gcodepreviewtemplate.scad (gcptmplscad) --- .scad example file
  - gcpdxf.py (gcpdxfpy) --- .py example file which only makes dxf file(s) and which will run in "normal" Python in addition to PythonSCAD
  - gcpgc.py (gcpgc) --- .py example which loads a G-code file and generates a 3D preview showing how the G-code will cut
 
-If using from PythonSCAD, place the files in C:\Users\\\~\Documents\OpenSCAD\libraries [^libraries] or, load them from Github using the command:
+Note that additional templates are in: https://github.com/WillAdams/gcodepreview/tree/main/templates
+
+If using from PythonSCAD, place the files in C:\Users\\\~\Documents\OpenSCAD\libraries or, load them from Github using the command:
 
     nimport("https://raw.githubusercontent.com/WillAdams/gcodepreview/refs/heads/main/gcodepreview.py")
-
-[^libraries]: C:\Users\\\~\Documents\RapCAD\libraries is deprecated since RapCAD is no longer needed since Python is now used for writing out files.
 
 If using gcodepreview.scad call as:
 
@@ -49,7 +48,7 @@ Note that it is necessary to use the first file (this allows loading the Python 
     opengcodefile(Gcode_filename);
     opendxffile(DXF_filename);
     
-    gcp = gcodepreview(true, true);
+    gcp = gcodepreview("cut", true, true);
 
     setupstock(219, 150, 8.35, "Top", "Center");
     
@@ -74,9 +73,9 @@ Importing this DXF and actually cutting it is discussed at:
 
 https://forum.makerforums.info/t/rewriting-gcodepreview-with-python/88617/14
 
-Alternately, gcodepreview.py may be placed in a Python library location and used directly from Python --- note that it is possible to use it from a "normal" Python when generating only DXFs as shown in gcpdxf.py.
+Alternately, gcodepreview.py may be placed in a Python library location and used directly from Python to generate DXFs as shown in gcpdxf.py (generating a 3D preview requires OpenPythonSCAD and generating G-code without a preview is not supported).
 
-In the current version, tool numbers may match those of tooling sold by Carbide 3D (ob. discl., I work for them) and other vendors, or, a vendor-neutral system may be used. 
+In the current version, tool numbers may match those of tooling sold by Carbide 3D (ob. discl., I work for them) and other vendors, or, a vendor-neutral system may be worked up and used as desired. 
 
 Comments are included in the G-code to match those expected by CutViewer, allowing a direct preview without the need to maintain a tool library (for such tooling as that program supports).
 
@@ -100,31 +99,38 @@ Supporting OpenSCAD usage makes possible such examples as: openscad_gcodepreview
 | 0.8           | Re-re-write completely in Python and OpenSCAD, iteratively testing                                                                                                              |
 | 0.801         | Add support for bowl bits with flat bottom                                                                                                                                      |
 | 0.802         | Add support for tapered ball-nose and  V tools with flat bottom                                                                                                                 |
-| 0.803         | Implement initial color support and joinery modules (dovetail and full blind box joint modules)                                                                                |
-| 0.9           | Re-write to use Python lists for 3D shapes for toolpaths and rapids.                                |
+| 0.803         | Implement initial color support and joinery modules (dovetail and full blind box joint modules)                                                                                 |
+| 0.9           | Re-write to use Python lists for 3D shapes for toolpaths and rapids.                                                                                                            |
+| 0.91          | Finish converting to native OpenPythonSCAD trigonometric functions.                                                                                                             |
+| 0.92          | Remove multiple DXFs and unimplemented features, add hooks for 3D printing.                                                                                                     |
+| 0.93          | Initial support for 3D printing.                                                                                                                                                |
 
 Possible future improvements:
 
- - support for post-processors
  - support for 4th-axis
+ - support for post-processors
  - support for two-sided machining (import an STL or other file to use for stock, or possibly preserve the state after one cut and then rotate the cut stock/part)
  - support for additional tooling shapes (lollipop cutters)
  - create a single line font for use where text is wanted
- - Support Bézier curves (required for fonts if not to be limited to lines and arcs) and surfaces
+ - Support for METAPOST and Bézier curves (latter required for fonts if not to be limited to lines and arcs) and surfaces
 
 Note for G-code generation that it is up to the user to implement Depth per Pass so as to not take a single full-depth pass as noted above. Working from a DXF of course allows one to off-load such considerations to a specialized CAM tool.
 
 To-do:
 
+ - implement skin()
  - determine why one quadrant of arc command doesn't work in OpenSCAD
  - clock-wise arcs
  - add toolpath for cutting countersinks using ball-nose tool from inside working out
  - verify OpenSCAD wrapper and add any missing commands for Python
  - verify support for shaft on tooling
- - create a folder of template and sample files
- - clean up/comment out all mentions of previous versions/features/implementations/deprecated features
+ - create additional template and sample files
  - fully implement/verify describing/saving/loading tools using CutViewer comments
 
-Deprecated feature:
+Deprecated features:
 
  - exporting SVGs --- coordinate system differences between OpenSCAD/DXFs and SVGs would require managing the inversion of the coordinate system (using METAPOST, which shares the same orientation and which can write out SVGs may be used for future versions)
+ - using linear/rotate_extrude --- 2D geometry is rotated to match the arc of the movement, which is appropriate to a 5-axis machine, but not workable for a 3-axis. Adding an option to support the use of such commands for horizontal movement is within the realm of possibility.
+ - multiple DXF files
+ - RapCAD support
+ 

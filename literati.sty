@@ -64,10 +64,12 @@
 \newcounter{gcpy}
 \newcounter{pyscad}
 \newcounter{gcpscad}
-\newcounter{gcptmpl}
-\newcounter{gcptmplpy}
-\newcounter{gcpdxfpy}
-\newcounter{gcpcutdxfpy}
+\newcounter{gcptmpl}     %Concatenated template of all possible commands as a .txt file for reference
+\newcounter{gcptmplpy}   %Python template for gcodepreview using PythonSCAD
+\newcounter{gcptmplscad} %OpenSCAD template for gcodepreview
+\newcounter{gcpdxfpy}    %Python template for gcodepreview using ``plain'' Python
+\newcounter{gcpcutdxfpy} %Python template for gcodepreview using PythonSCAD
+\newcounter{gcpthreedp}  %Python template for gcodepreview 3D printing
 \newcounter{cuttwod}
 \newcounter{rdme}
 \setcounter{rdme}{0}
@@ -123,13 +125,17 @@ Last line was \the\lst@lineno\ for #1\ gcpy\ \thegcpy\ pyscad\ \thepyscad\ gcpsc
             \renewcommand{\lstprompt}{\ gcpscad}
 %            \lstset{firstnumber=\thegcpscad}
         }
+        {gcodepreviewtemplate.txt}
+        {
+            \renewcommand{\lstprompt}{\ gcptmpl}
+        }
         {gcodepreviewtemplate.py}
         {
             \renewcommand{\lstprompt}{\ gcptmplpy}
         }
         {gcodepreviewtemplate.scad}
         {
-            \renewcommand{\lstprompt}{\ gcptmpl}
+            \renewcommand{\lstprompt}{\ gcptmplscad}
         }
         {cut2Dshapes.scad}
         {
@@ -138,6 +144,10 @@ Last line was \the\lst@lineno\ for #1\ gcpy\ \thegcpy\ pyscad\ \thepyscad\ gcpsc
         {gcpdxf.py}
         {
             \renewcommand{\lstprompt}{\ gcpdxfpy}
+        }
+        {gcpthreedp.py}
+        {
+            \renewcommand{\lstprompt}{\ gcpthreedp}
         }
         {gcpcutdxf.py}
         {
@@ -300,3 +310,18 @@ Last line was \the\lst@lineno\ for #1\ gcpy\ \thegcpy\ pyscad\ \thepyscad\ gcpsc
 \addcontentsline{toc}{subsection}{Variables}
 }
 
+\newcommand{\writeoutfiles}{
+%\MergeAllFiles{readme.md}
+%\MergeAllFiles{interfaces.txt}
+\MergeAllFiles{gcodepreview.py}
+%\MergeAllFiles{pygcodepreview.scad}
+\MergeAllFiles{gcodepreview.scad}
+\MergeAllFiles{gcodepreviewtemplate.txt}
+\MergeAllFiles{gcodepreviewtemplate.scad}
+\MergeAllFiles{gcodepreviewtemplate.py}
+\MergeAllFiles{gcpdxf.py}
+\MergeAllFiles{gcpthreedp.py}
+\MergeAllFiles{gcpcutdxf.py}
+\MergeAllFiles{gcpgc.py}
+%\MergeAllFiles{cut2Dshapes.scad}
+}
