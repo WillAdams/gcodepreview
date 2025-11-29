@@ -39,7 +39,7 @@ gcp.initializeforprinting(nozzlediameter,
                           extrusionwidth,
                           layerheight)
 
-gcp.rapid(0,0,layerheight)
+gcp.moveatfeedrate(0,0,layerheight,20000)
 gcp.extrude(1, 2, layerheight)
 
 gcp.stockandtoolpaths("toolpaths")

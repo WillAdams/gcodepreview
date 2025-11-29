@@ -6,7 +6,7 @@ from openscad import *
 from gcodepreview import *
 
 #The file to be loaded must be specified:
-#gc_file = "filename_of_G-code_file_to_process.nc"
+#gc_file = "filename_of_G-code_file_to_process.gcodefilext"
 #
 #if using windows the full filepath should be provided with backslashes replaced with double backslashes and wrapped in quotes since it is provided as a string:
 gc_file = "C:\\Users\\willa\\OneDrive\\Desktop\\19mm_1_32_depth.nc"

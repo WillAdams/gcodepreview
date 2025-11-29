@@ -1333,7 +1333,7 @@ gcp.initializeforprinting(nozzlediameter,
                           extrusionwidth, 
                           layerheight)
 
-gcp.rapid(0,0,layerheight)
+gcp.moveatfeedrate(0,0,layerheight,20000)
 gcp.extrude(1, 2, layerheight)
 
 gcp.stockandtoolpaths("toolpaths")
@@ -4891,7 +4891,7 @@ gcode & cutlinegc              & \hphantom{dxflinegc}   & linegc\hphantom{cut}  
 
 The gcode and dxf columns and the matter of having specific commands which encompass those file types is tied up in having the internal variables \DescribeVariable{generategcode}, \DescribeVariable{generatedxf} and implementations, and a strong argument could be made that this should simply be handled by \verb|if...then| structures using those variables. The addition of a \DescribeVariable{generatecut} variable adds the necessary symmetry. Note that an early option to output a separate file for each tool used has since been deprecated and will eventually be removed. In its place there is a mechanism where each colour is offset by the stock dimensions multiplied by the colour number, so that they are arrayed on a diagonal --- when opened each such set of objects may then be easily selected and moved to the appropriate layer, then aligned against the stock.
 
-A further consideration is that when processing G-code it is typical for a given command to be minimal and only include the axis of motion for the end-position, so for each of the above which is likely to appear in a \verb|.nc| file, it will be necessary to have a matching command for the combinatorial possibilities, hence:
+A further consideration is that when processing G-code it is typical for a given command to be minimal and only include the axis of motion for the end-position, so for each of the above which is likely to appear in a \verb|.nc/.gcode| file, it will be necessary to have a matching command for the combinatorial possibilities, hence:
 
 \begin{center}
 \noindent\begin{tabular}{ll}\toprule
@@ -5145,9 +5145,11 @@ class gcodepreview:
         if cutorprint == "print":
             self.generatecut = False
             self.generateprint = True
+            self.gcodefilext = ".gcode"
         elif cutorprint == "cut":
             self.generatecut = True
             self.generateprint = False
+            self.gcodefilext = ".nc"
         else: # no_preview
             self.generatecut = False
             self.generateprint = False
@@ -5228,7 +5230,7 @@ class gcodepreview:
 #        return self.c
 
 \end{writecode}
-\addtocounter{gcpy}{112}
+\addtocounter{gcpy}{114}
 
 %# in order to use linear/rotate extrude, it is necessary that the tool/shaft profile/outline be defined as a polygon
 
@@ -7897,10 +7899,11 @@ Note the addition of a Laser mode which simulates the tool having been turned of
         self.setxpos(ex)
         self.setypos(ey)
         self.setzpos(ez)
-        self.toolpaths.extend([tm, ts])
+        if self.generatecut == True:
+            self.toolpaths.extend([tm, ts])
 
 \end{writecode}
-\addtocounter{gcpy}{26}
+\addtocounter{gcpy}{27}
 
 It is then possible to add specific \verb|rapid...| commands to match typical usages of G-code. The first command needs to be a move to/from the safe Z height. In G-code this would be:
 
@@ -8005,6 +8008,10 @@ The Python commands \DescribeRoutine{cut...} add the \verb|currenttool| to the \
 
 \lstset{firstnumber=\thegcpy}
 \begin{writecode}{a}{gcodepreview.py}{python}
+    def moveatfeedrate(self, ex, ey, ez, f):
+        self.writegc("G01 X", str(ex), " Y", str(ey), " Z", str(ez), " F", str(f))
+        return self.cutline(ex, ey, ez)
+
     def cutlinedxf(self, ex, ey, ez):
         self.dxfline(self.currenttoolnumber(), self.xpos(), self.ypos(), ex, ey)
         self.cutline(ex, ey, ez)
@@ -8063,7 +8070,7 @@ The Python commands \DescribeRoutine{cut...} add the \verb|currenttool| to the \
         return self.cutline(self.xpos(), self.ypos(), ez)
 
 \end{writecode}
-\addtocounter{gcpy}{57}
+\addtocounter{gcpy}{61}
 
 %CODE TO RESTORE
 %
@@ -8694,7 +8701,7 @@ The tools which need to be calculated thus are those in addition to the \verb|la
 \item \verb|DT_ratio|
 \end{itemize}
 
-\subsection{3D Printing}
+\subsubsection{3D Printing}
 
 Support for \textsc{3d} printing requires that there be G-code commands for non-mill/router aspects such as:
 
@@ -8715,6 +8722,8 @@ Support for \textsc{3d} printing requires that there be G-code commands for non-
 \end{itemize}
 
 \noindent Moreover, it will be necessary for all values to be adjusted for specific firmware, printer and filament type combinations. Probably the best beginning will be to create a simple file using a tested set of settings in a compatible slicer as a template and to adjust based on the values from such a file.
+
+\paragraph{Sample 3D printing file}
 
 \begin{verbatim}
 M106 S0
@@ -8988,6 +8997,8 @@ The various commands for machine functionality are quite straight-forward, with 
 \end{writecode}
 \addtocounter{gcpy}{9}
 
+\paragraph{Feed and Speed ratio}
+
 Note that certain commands will require setting values which will need to be tracked and used for calculations.
 
 \lstset{firstnumber=\thegcpy}
@@ -9002,6 +9013,8 @@ Note that certain commands will require setting values which will need to be tra
 
 \end{writecode}
 \addtocounter{gcpy}{8}
+
+\paragraph{Time and Firmware for 3D printers}
 
 The various G-code commands are specific to firmware implementations such as \url{https://www.klipper3d.org/G-Codes.html}
 
@@ -9247,7 +9260,7 @@ Given all that, the idealized (normalized?) shape and dimensions of the extrusio
         print("Volume = ",v)
         el = self.extrusion_normal_length * v
         print("Extrusion length = ",el)
-        self.writegc("X"+str(ex)+" Y"+str(ey)+ "Z "+str(ez)+ " E"+str(el)+ " F"+str(self.feedrate))
+        self.writegc("G01 X"+str(ex)+" Y"+str(ey)+ "Z "+str(ez)+ " E"+str(el)+ " F"+str(self.feedrate))
 
 \end{writecode}
 \addtocounter{gcpy}{32}
@@ -9718,7 +9731,7 @@ module opengcodefile(basefilename, currenttoolnum, toolradius, plunge, feed, spe
         self.feed = feed
         self.speed = speed
         if self.generategcode == True:
-            self.gcodefilename = basefilename + ".nc"
+            self.gcodefilename = basefilename + self.gcodefilext
             self.gc = open(self.gcodefilename, "w")
             self.writegc("(Design File: " + self.basefilename + ")")
 
@@ -10854,7 +10867,7 @@ module cutarcSECCdxfgc(ex, ey, ez, xcenter, ycenter, radius){
 %\DescribeRoutine{dxfwritesmbl}, 
 %\DescribeRoutine{dxfwritesmsq}, and
 %\DescribeRoutine{dxfwritesmV} 
-%will be used for either writing out comments in G-code (.nc) files or adding to a DXF file --- for each different tool in a file there will be a matching module to write to it.
+%will be used for either writing out comments in G-code (.nc/.gcode) files or adding to a DXF file --- for each different tool in a file there will be a matching module to write to it.
 
 
 
@@ -12600,7 +12613,7 @@ from openscad import *
 from gcodepreview import *
 
 #The file to be loaded must be specified:
-#gc_file = "filename_of_G-code_file_to_process.nc"
+#gc_file = "filename_of_G-code_file_to_process.gcodefilext"
 #
 #if using windows the full filepath should be provided with backslashes replaced with double backslashes and wrapped in quotes since it is provided as a string:
 gc_file = "C:\\Users\\willa\\OneDrive\\Desktop\\19mm_1_32_depth.nc"

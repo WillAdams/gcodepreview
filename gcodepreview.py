@@ -50,9 +50,11 @@ class gcodepreview:
         if cutorprint == "print":
             self.generatecut = False
             self.generateprint = True
+            self.gcodefilext = ".gcode"
         elif cutorprint == "cut":
             self.generatecut = True
             self.generateprint = False
+            self.gcodefilext = ".nc"
         else: # no_preview
             self.generatecut = False
             self.generateprint = False
@@ -1017,7 +1019,8 @@ class gcodepreview:
         self.setxpos(ex)
         self.setypos(ey)
         self.setzpos(ez)
-        self.toolpaths.extend([tm, ts])
+        if self.generatecut == True:
+            self.toolpaths.extend([tm, ts])
 
     def movetosafeZ(self):
         rapid = self.rapid(self.xpos(), self.ypos(), self.retractheight)
@@ -1074,6 +1077,10 @@ class gcodepreview:
 #        else:
 #        if self.generatepaths == False:
         return rapid
+
+    def moveatfeedrate(self, ex, ey, ez, f):
+        self.writegc("G01 X", str(ex), " Y", str(ey), " Z", str(ez), " F", str(f))
+        return self.cutline(ex, ey, ez)
 
     def cutlinedxf(self, ex, ey, ez):
         self.dxfline(self.currenttoolnumber(), self.xpos(), self.ypos(), ex, ey)
@@ -1452,7 +1459,7 @@ class gcodepreview:
         print("Volume = ",v)
         el = self.extrusion_normal_length * v
         print("Extrusion length = ",el)
-        self.writegc("X"+str(ex)+" Y"+str(ey)+ "Z "+str(ez)+ " E"+str(el)+ " F"+str(self.feedrate))
+        self.writegc("G01 X"+str(ex)+" Y"+str(ey)+ "Z "+str(ez)+ " E"+str(el)+ " F"+str(self.feedrate))
 
     def stockandtoolpaths(self, option = "stockandtoolpaths"):
         if option == "stock":
@@ -1555,7 +1562,7 @@ class gcodepreview:
         self.feed = feed
         self.speed = speed
         if self.generategcode == True:
-            self.gcodefilename = basefilename + ".nc"
+            self.gcodefilename = basefilename + self.gcodefilext
             self.gc = open(self.gcodefilename, "w")
             self.writegc("(Design File: " + self.basefilename + ")")
 
