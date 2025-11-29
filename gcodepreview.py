@@ -995,6 +995,8 @@ class gcodepreview:
 
     def rapid(self, ex, ey, ez, laser = 0):
 #        print(self.rapidcolor)
+        if self.generateprint == True:
+            laser = 1
         if laser == 0:
             tm = self.toolmovement(self.xpos(), self.ypos(), self.zpos(), ex, ey, ez)
             tm = color(tm, self.shaftcolor)

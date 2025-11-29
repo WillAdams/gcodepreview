@@ -39,6 +39,9 @@ gcp.initializeforprinting(nozzlediameter,
                           extrusionwidth,
                           layerheight)
 
+gcp.rapid(0,0,layerheight)
+gcp.extrude(1, 2, layerheight)
+
 gcp.stockandtoolpaths("toolpaths")
 
 gcp.closegcodefile()
