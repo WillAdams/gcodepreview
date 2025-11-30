@@ -26,6 +26,7 @@ nozzlediameter = 0.4
 filamentdiameter = 1.75
 extrusionwidth = 0.6
 layerheight = 0.2
+temperature =200
 
 gcp = gcodepreview("print", # "cut" or "no_preview"
                    generategcode,
@@ -39,8 +40,11 @@ gcp.initializeforprinting(nozzlediameter,
                           extrusionwidth,
                           layerheight)
 
+gcp.setandwaitforextrudertemperature(temperature)
+gcp.liftandprimenozzle()
+
 gcp.moveatfeedrate(0,0,layerheight,20000)
-gcp.extrude(1, 2, layerheight)
+gcp.extrude(10, 20, layerheight)
 
 gcp.stockandtoolpaths("toolpaths")
 

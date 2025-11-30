@@ -1080,6 +1080,7 @@ class gcodepreview:
 
     def moveatfeedrate(self, ex, ey, ez, f):
         self.writegc("G01 X", str(ex), " Y", str(ey), " Z", str(ez), " F", str(f))
+        self.feedrate = f
         return self.cutline(ex, ey, ez)
 
     def cutlinedxf(self, ex, ey, ez):
@@ -1363,48 +1364,50 @@ class gcodepreview:
         return tr
 
     def setfansoff(self):
-        writegc("M106 S0")
+        self.writegc("M106 S0")
 
     def setfanspeed(self, fan, speed):
-        writegc("M106 P", fan, " S", speed)
+        self.writegc("M106 P", fan, " S", speed)
 
     def pauseforclearbuffer(self):
-        writegc("M400 ; wait for buffer to clear")
+        self.writegc("M400 ; wait for buffer to clear")
 
     def setfeedratio(self, feedratio):
-        writegc("M220 S", feedratio)
+        self.writegc("M220 S", feedratio)
         self.feedratio = feedratio
 
     def setspeedratio(self, speedratio):
-        writegc("M221 S", speedratio)
+        self.writegc("M221 S", speedratio)
         self.speedratio = speedratio
 
 #Set extruder temperature: M104 [T<index>] [S<temperature>]
     def setextrudertemperature(self, temperature):
-        writegc("M104 S", temperature)
+        self.writegc("M104 S" + str(temperature))
+        self.extrudertemperature = temperature
+
+#Set extruder temperature and wait: M109 [T<index>] S<temperature>
+#Note: M109 always waits for temperature to settle at requested value
+    def setandwaitforextrudertemperature(self, temperature):
+        self.writegc("M109 S" + str(temperature) + "; set temperature and wait for it to be reached")
         self.extrudertemperature = temperature
 
 #Set bed temperature: M140 [S<temperature>]
     def setbedtemperature(self, temperature):
-        writegc("M140 S", temperature)
+        self.writegc("M140 S" + str(temperature))
         self.bedtemperature = temperature
 
 #Set bed temperature and wait: M190 S<temperature>
 #Note: M190 always waits for temperature to settle at requested value
     def setandwaitforbedtemperature(self, temperature):
-        writegc("M190 S", temperature)
-        self.bedtemperature = temperature
-
-#Set extruder temperature and wait: M109 [T<index>] S<temperature>
-#Note: M109 always waits for temperature to settle at requested value
-    def setandwaitforbedtemperature(self, temperature):
-        writegc("M190 S", temperature)
+        self.writegc("M190 S" + str(temperature))
         self.bedtemperature = temperature
 
     def initializeforprinting(self, nozzlediameter = 0.4, filamentdiameter = 1.75, extrusionwidth = 0.6, layerheight = 0.2):
+        self.writegc("G21  ; set units to millimeters")
         self.writegc("G90")
-        self.writegc("G28 ;home")
-        self.writegc("M729 ;Clean Nozzle")
+        self.writegc("M82  ; use absolute distances for extrusion")
+        self.writegc("G28  ; home")
+        self.writegc("M729 ; Clean Nozzle")
         self.nozzlediameter = nozzlediameter
         self.extrusionwidth = extrusionwidth
         self.layerheight = layerheight
@@ -1413,20 +1416,26 @@ class gcodepreview:
         fr = filamentdiameter/2
         self.extrusion_normal_length = 1 / 3.14159 * (fr * fr)
 
+    def liftandprimenozzle(self, liftfeed = 5000, extrusionfeed = 2400):
+        self.writegc("G1 Z5 F" + str(liftfeed) + " ; lift nozzle")
+        self.writegc("G92 E0")
+        self.writegc("G1 E-2 F" + str(extrusionfeed))
+        self.writegc("G92 E0")
+
 #Set acceleration: M204 S<value> OR M204 P<value> T<value>
 #Note: If S is not specified and both P and T are specified, then the acceleration is set to the minimum of P and T. If only one of P or T is specified, the command has no effect.
     def setacceleration(self, acceleration):
-        writegc("M204 S", acceleration)
+        self.writegc("M204 S", acceleration)
         self.acceleration = acceleration
 
 #Use absolute/relative distances for extrusion: M82, M83
     def setextrusionabsolute(self, acceleration):
-        writegc("M83")
+        self.writegc("M83")
         self.extrusionabsolute = true
 
 #Set build percentage: M73 P<percent>
     def setbuildpercentage(self, percent):
-        writegc("M73 P", percent)
+        self.writegc("M73 P", percent)
         self.percent = percent
 
 #Move (G0 or G1): G1 [X<pos>] [Y<pos>] [Z<pos>] [E<pos>] [F<speed>]
@@ -1459,7 +1468,7 @@ class gcodepreview:
         print("Volume = ",v)
         el = self.extrusion_normal_length * v
         print("Extrusion length = ",el)
-        self.writegc("G01 X"+str(ex)+" Y"+str(ey)+ "Z "+str(ez)+ " E"+str(el)+ " F"+str(self.feedrate))
+        self.writegc("G01 X" + str(ex) + " Y" + str(ey) + " Z " + str(ez) + " E" + str(el) + " F" + str(self.feedrate))
 
     def stockandtoolpaths(self, option = "stockandtoolpaths"):
         if option == "stock":
@@ -2008,9 +2017,16 @@ class gcodepreview:
         self.writedxf(tn, "EOF")
 
     def gcodepostamble(self):
-        self.writegc("Z12.700")
-        self.writegc("M05")
-        self.writegc("M02")
+        if self.generatecut == True:
+            self.writegc("Z12.700")
+            self.writegc("M05")
+            self.writegc("M02")
+        if self.generateprint == True:
+            self.writegc("G92 E0")
+            self.writegc("M107    ; turn off cooling fans")
+            self.writegc("M104 S0 ; turn off temperature")
+            self.writegc("G28 X0  ; home X axis")
+            self.writegc("M84     ; disable motors")
 
     def closegcodefile(self):
         if self.generategcode == True:
