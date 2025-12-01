@@ -43,8 +43,9 @@ gcp.initializeforprinting(nozzlediameter,
 gcp.setandwaitforextrudertemperature(temperature)
 gcp.liftandprimenozzle()
 
-gcp.moveatfeedrate(0,0,layerheight,20000)
-gcp.extrude(10, 20, layerheight)
+gcp.moveatfeedrate(3.752, 3.756, layerheight, 20000)
+
+gcp.extrude(253.37, 253.389, layerheight) # E should be 12.49134
 
 gcp.stockandtoolpaths("toolpaths")
 
