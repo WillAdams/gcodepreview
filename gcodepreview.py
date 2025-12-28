@@ -774,6 +774,7 @@ class gcodepreview:
 #        if (self.endmilltype == "square"):
 #            speed = speed *
         self.writegc("M03S", str(speed))
+
     def setcolor(self,
                   cutcolor = "green",
                   rapidcolor = "orange",
@@ -1005,6 +1006,10 @@ class gcodepreview:
             ts = self.shaftmovement(self.xpos(), self.ypos(), self.zpos(), ex, ey, ez)
             ts = color(ts, self.rapidcolor)
             self.toolpaths.extend([tm, ts])
+        if self.generateprint == True:
+            self.steps.append(self.fgc.Extruder(on=False))
+            self.steps.append(self.fgc.Point(x=ex,y=ey,z=ez))
+            self.steps.append(self.fgc.Extruder(on=True))
         self.setxpos(ex)
         self.setypos(ey)
         self.setzpos(ez)
@@ -1363,112 +1368,89 @@ class gcodepreview:
         tr = self.tool_diameter(ptd_tool, ptd_depth)/2
         return tr
 
-    def setfansoff(self):
-        self.writegc("M106 S0")
-
-    def setfanspeed(self, fan, speed):
-        self.writegc("M106 P", fan, " S", speed)
-
-    def pauseforclearbuffer(self):
-        self.writegc("M400 ; wait for buffer to clear")
-
-    def setfeedratio(self, feedratio):
-        self.writegc("M220 S", feedratio)
-        self.feedratio = feedratio
-
-    def setspeedratio(self, speedratio):
-        self.writegc("M221 S", speedratio)
-        self.speedratio = speedratio
-
-#Set extruder temperature: M104 [T<index>] [S<temperature>]
-    def setextrudertemperature(self, temperature):
-        self.writegc("M104 S" + str(temperature))
-        self.extrudertemperature = temperature
-
-#Set extruder temperature and wait: M109 [T<index>] S<temperature>
-#Note: M109 always waits for temperature to settle at requested value
-    def setandwaitforextrudertemperature(self, temperature):
-        self.writegc("M109 S" + str(temperature) + "; set temperature and wait for it to be reached")
-        self.extrudertemperature = temperature
-
-#Set bed temperature: M140 [S<temperature>]
-    def setbedtemperature(self, temperature):
-        self.writegc("M140 S" + str(temperature))
-        self.bedtemperature = temperature
-
-#Set bed temperature and wait: M190 S<temperature>
-#Note: M190 always waits for temperature to settle at requested value
-    def setandwaitforbedtemperature(self, temperature):
-        self.writegc("M190 S" + str(temperature))
-        self.bedtemperature = temperature
-
-    def initializeforprinting(self, nozzlediameter = 0.4, filamentdiameter = 1.75, extrusionwidth = 0.6, layerheight = 0.2):
-        self.writegc("G21  ; set units to millimeters")
-        self.writegc("G90")
-        self.writegc("M82  ; use absolute distances for extrusion")
-        self.writegc("G28  ; home")
-        self.writegc("M729 ; Clean Nozzle")
+    def initializeforprinting(self, nozzlediameter = 0.4, filamentdiameter = 1.75, extrusionwidth = 0.6, layerheight = 0.2, extrusiontype = "relative", extruder_temperature = 260, bed_temperature = 60, printer_name = "generic", Base_filename = "export"):
         self.nozzlediameter = nozzlediameter
+        self.filamentdiameter = filamentdiameter
         self.extrusionwidth = extrusionwidth
         self.layerheight = layerheight
-        self.toolpaths = []
-        self.feedrate = 0
-        fr = filamentdiameter/2
-        self.extrusion_normal_length = 1 / 3.14159 * (fr * fr)
+        self.extrusiontype = extrusiontype
+        self.extruder_temperature = extruder_temperature
+        self.bed_temperature = bed_temperature
+        self.printer_name = printer_name
+        self.Base_filename= Base_filename
 
-    def liftandprimenozzle(self, liftfeed = 5000, extrusionfeed = 2400):
-        self.writegc("G1 Z5 F" + str(liftfeed) + " ; lift nozzle")
-        self.writegc("G92 E0")
-        self.writegc("G1 E-2 F" + str(extrusionfeed))
-        self.writegc("G92 E0")
+        self.generategcode == False
 
-#Set acceleration: M204 S<value> OR M204 P<value> T<value>
-#Note: If S is not specified and both P and T are specified, then the acceleration is set to the minimum of P and T. If only one of P or T is specified, the command has no effect.
-    def setacceleration(self, acceleration):
-        self.writegc("M204 S", acceleration)
-        self.acceleration = acceleration
+        import os
 
-#Use absolute/relative distances for extrusion: M82, M83
-    def setextrusionabsolute(self, acceleration):
-        self.writegc("M83")
-        self.extrusionabsolute = true
+#    def sys_path_site_pkg():
+        '''
+        Make pip installs from OS level python accessible to PythonScad. Requires matching version (3.12.9)
+        '''
+        SITE_PKG = rf"C:\Users\{os.getlogin()}\AppData\Local\Programs\Python\Python312\Lib\site-packages"
 
-#Set build percentage: M73 P<percent>
-    def setbuildpercentage(self, percent):
-        self.writegc("M73 P", percent)
-        self.percent = percent
+        if SITE_PKG not in sys.path:
+	        sys.path.append(SITE_PKG)
+	
+        # Unwind some default folder adds by PythonScad that seem to conflict!!
+        # Specifically: ctypes.
+        unwinds = set([
+            rf"C:\Users\{os.getlogin()}\AppData\Local\Programs\Python\Python312\Lib",
+            rf"C:\Users\{os.getlogin()}\AppData\Local\Programs\Python\Python312\DLLs"
+        ])
 
-#Move (G0 or G1): G1 [X<pos>] [Y<pos>] [Z<pos>] [E<pos>] [F<speed>]
-    def extrude(self, ex, ey, ez, extrusionwidth = 0, layerheight = 0, feedrate = 0):
-        if extrusionwidth > 0:
-            self.extrusionwidth = extrusionwidth
-        if layerheight > 0:
-            self.layerheight = layerheight
-        if feedrate > 0:
-            self.feedrate = feedrate
-        if self.extrusionwidth == self.layerheight:
-            c = sphere(self.layerheight/2)
-        else:
-            ew = self.extrusionwidth
-            lh = self.layerheight
-            i = circle(lh/2)
-            j = i.translate([0,lh/2,0])
-            k = intersection(j,square([lh,lh]))
-            l = k.translate([ew/2-lh/2,0,0])
-            m = union(l, square([ew/2-lh/2, lh]))
-            c = rotate_extrude(m)
+        sys.path = [path for path in sys.path if path not in unwinds]
+
+        import fullcontrol as fc
+
+        self.fgc = fc
+
+        self.steps = []
+
+# initialization/prime procedure
+        self.rapid(10,10,0.3)                             # G0 F8000 X10 Y10 Z0.3
+        self.rapid(self.xpos(),12,0.2)                    # G0 F8000 Y12 Z0.2
+        self.extrude(110, self.ypos(),self.zpos(), True)  # G1 F1000 X110 E3.326014
+        self.extrude(self.xpos(), 14, self.zpos(), True)  # G1 Y14 E0.06652
+        self.extrude(10,self.ypos(), self.zpos(), True)   # G1 X10 E3.326014
+        self.extrude(self.xpos(), 16, self.zpos(), True)  # G1 Y16 E0.06652
+        self.extrude(self.xpos(), 10, self.zpos(), True)  # G1 Y10 E0.199561
+#        self.extrude(20, self.ypos(), self.zpos(), True)  # G1 X20 E0.332601
+#        self.extrude(self.xpos(), 20,self.zpos(), True)   # G1 Y20 E0.133041
+        self.rapid(self.xpos(),12,0.2)                    # G0 F8000 Y12 Z0.2
+
+        # end position X20, Y20, Z0.2
+
+    def extrude(self, ex, ey, ez, extrudeonly = False):
+        if extrudeonly == False:
+            self.steps.append(self.fgc.Point(x=ex, y=ey, z=ez))
+        ew = self.extrusionwidth
+        lh = self.layerheight
+        i = circle(lh/2)
+        j = i.translate([0,lh/2,0])
+        k = intersection(j,square([lh,lh]))
+        l = k.translate([ew/2-lh/2,0,0])
+        m = union(l, square([ew/2-lh/2, lh]))
+        c = rotate_extrude(m)
         c = c.translate([0,0,-self.layerheight])
         tslist = hull(c.translate([self.xpos(), self.ypos(),self.zpos()]), c.translate([ex, ey, ez]))
         self.toolpaths.append(tslist)
-        #volume = π · r^2 · length
-        #       + extrusionwidth-layerheight · layerheight ·  length
-        distance = math.dist([self.xpos(), self.ypos(), self.zpos()], [ex, ey, ez])
-        print("Distance = ", distance)
-        v = self.extrusionwidth-self.layerheight * self.layerheight * distance + 3.14159 * self.layerheight/2 * self.layerheight/2 * distance
-        print("Volume = ",v)
-        el = self.extrusion_normal_length * v
-        print("Extrusion length = ",el)
-        self.writegc("G01 X" + str(ex) + " Y" + str(ey) + " Z " + str(ez) + " E" + str(el) + " F" + str(self.feedrate))
+        self.mpx = ex
+        self.mpy = ey
+        self.mpz = ez
+
+    def shutdownafterprinting(self, print_speed = 1000):
+        print(self.steps)
+# For G-code
+        gcode = self.fgc.transform(self.steps, 'gcode',
+                             self.fgc.GcodeControls(printer_name = self.printer_name,
+                             save_as = self.Base_filename,
+                             initialization_data={
+                                 'print_speed': str(print_speed),
+                                 'nozzle_temp': str(self.extruder_temperature),
+                                 'bed_temp': str(self.bed_temperature)
+                             }
+                             ))
 
     def stockandtoolpaths(self, option = "stockandtoolpaths"):
         if option == "stock":

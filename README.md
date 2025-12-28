@@ -31,6 +31,7 @@ And there several sample/template files which may be used as the starting point 
  - gcodepreviewtemplate.scad (gcptmplscad) --- .scad example file
  - gcpdxf.py (gcpdxfpy) --- .py example file which only makes dxf file(s) and which will run in "normal" Python in addition to PythonSCAD
  - gcpgc.py (gcpgc) --- .py example which loads a G-code file and generates a 3D preview showing how the G-code will cut
+ - gcpthreedp.py --- Template for 3D printing using Full Control G-code https://fullcontrolgcode.com/
 
 Note that additional templates are in: https://github.com/WillAdams/gcodepreview/tree/main/templates
 
@@ -105,27 +106,33 @@ Supporting OpenSCAD usage makes possible such examples as: openscad_gcodepreview
 | 0.92          | Remove multiple DXFs and unimplemented features, add hooks for 3D printing.                                                                                                     |
 | 0.93          | Initial support for 3D printing.                                                                                                                                                |
 
+To do:
+
+ - implement OpenSCAD commands for 3D printing
+ - implement 3D printing commands beyond straight-line extrude
+ - add toolpath for cutting countersinks using ball-nose tool from inside working out
+ - create additional template and sample files
+ - fully implement/verify describing/saving/loading tools using CutViewer comments
+ - support for additional tooling shapes (lollipop cutters)
+ - threadmilling
+
 Possible future improvements:
 
+ - implement skin()
  - support for 4th-axis
  - support for post-processors
  - support for two-sided machining (import an STL or other file to use for stock, or possibly preserve the state after one cut and then rotate the cut stock/part)
- - support for additional tooling shapes (lollipop cutters)
  - create a single line font for use where text is wanted
  - Support for METAPOST and Bézier curves (latter required for fonts if not to be limited to lines and arcs) and surfaces
 
 Note for G-code generation that it is up to the user to implement Depth per Pass so as to not take a single full-depth pass as noted above. Working from a DXF of course allows one to off-load such considerations to a specialized CAM tool.
 
-To-do:
+Issues/Research:
 
- - implement skin()
  - determine why one quadrant of arc command doesn't work in OpenSCAD
  - clock-wise arcs
- - add toolpath for cutting countersinks using ball-nose tool from inside working out
  - verify OpenSCAD wrapper and add any missing commands for Python
  - verify support for shaft on tooling
- - create additional template and sample files
- - fully implement/verify describing/saving/loading tools using CutViewer comments
 
 Deprecated features:
 
@@ -133,4 +140,4 @@ Deprecated features:
  - using linear/rotate_extrude --- 2D geometry is rotated to match the arc of the movement, which is appropriate to a 5-axis machine, but not workable for a 3-axis. Adding an option to support the use of such commands for horizontal movement is within the realm of possibility.
  - multiple DXF files
  - RapCAD support
- 
+
