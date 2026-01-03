@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:lc="https://librecad.org" xmlns:xlink="http://www.w3.org/1999/xlink" width="100mm" height="50mm" viewBox="0 0 100 50">
+    <g lc:layername="0" lc:is_locked="false" lc:is_construction="false" fill="none" stroke="black" stroke-width="1"/>
+    <g lc:layername="Layer_Black" lc:is_locked="false" lc:is_construction="false" fill="none" stroke="black" stroke-width="1">
+        <line x1="0" y1="50" x2="100" y2="50"/>
+        <line x1="100" y1="50" x2="100" y2="0"/>
+        <line x1="100" y1="0" x2="0" y2="0"/>
+        <line x1="0" y1="0" x2="0" y2="50"/>
+        <path d="M84,40.5 L81,40.5 L81,9.5 L84,9.5 "/>
+        <path d="M87,12.5 A3,3 0 0,0 84,9.5 "/>
+        <path d="M87,12.5 L87,37.5 "/>
+        <path d="M84,40.5 A3,3 0 0,0 87,37.5 "/>
+    </g>
+    <g lc:layername="Layer_Blue" lc:is_locked="false" lc:is_construction="false" fill="none" stroke="black" stroke-width="1">
+        <path d="M35,12 A6,6 0 0,0 29,6 L15,6 A6,6 0 0,0 9,12 L9,38 A6,6 0 0,0 15,44 L29,44 A6,6 0 0,0 35,38 L35,12 Z "/>
+        <path d="M91,12 A6,6 0 0,0 85,6 L71,6 A6,6 0 0,0 65,12 L65,38 A6,6 0 0,0 71,44 L85,44 A6,6 0 0,0 91,38 L91,12 Z "/>
+    </g>
+    <g lc:layername="Layer_Cyan" lc:is_locked="false" lc:is_construction="false" fill="none" stroke="black" stroke-width="1">
+        <path d="M32,12.5 A3,3 0 0,0 29,9.5 "/>
+        <path d="M29,9.5 A3,3 0 0,0 26,12.5 "/>
+        <path d="M26,12.5 A3,3 0 0,0 29,15.5 "/>
+        <path d="M29,15.5 A3,3 0 0,0 32,12.5 "/>
+    </g>
+    <g lc:layername="Layer_Dark_Gray" lc:is_locked="false" lc:is_construction="false" fill="none" stroke="black" stroke-width="1">
+        <path d="M62,25 A12,12 0 0,0 50,13 "/>
+        <path d="M50,13 A12,12 0 0,0 38,25 "/>
+        <path d="M38,25 A12,12 0 0,0 50,37 "/>
+        <path d="M50,37 A12,12 0 0,0 62,25 "/>
+    </g>
+    <g lc:layername="Layer_Green" lc:is_locked="false" lc:is_construction="false" fill="none" stroke="black" stroke-width="1">
+        <path d="M74,12.5 A3,3 0 0,0 71,9.5 "/>
+        <path d="M71,9.5 A3,3 0 0,0 68,12.5 "/>
+        <path d="M68,12.5 A3,3 0 0,0 71,15.5 "/>
+        <path d="M71,15.5 A3,3 0 0,0 74,12.5 "/>
+    </g>
+    <g lc:layername="Layer_Light_Gray" lc:is_locked="false" lc:is_construction="false" fill="none" stroke="black" stroke-width="1">
+        <path d="M53.175,20 A3.175,3.175 0 0,0 50,16.825 "/>
+        <path d="M50,16.825 A3.175,3.175 0 0,0 46.825,20 "/>
+        <path d="M46.825,20 A3.175,3.175 0 0,0 50,23.175 "/>
+        <path d="M50,23.175 A3.175,3.175 0 0,0 53.175,20 "/>
+        <path d="M50,15.2375 A4.7625,4.7625 0 0,0 45.2375,20 "/>
+        <path d="M54.7625,20 A4.7625,4.7625 0 0,0 50,15.2375 "/>
+        <line x1="46.825" y1="23.54975791" x2="46.825" y2="31.5875"/>
+        <line x1="53.175" y1="23.54975791" x2="53.175" y2="31.5875"/>
+        <path d="M46.825,31.5875 A3.175,3.175 0 0,0 50,34.7625 "/>
+        <path d="M50,34.7625 A3.175,3.175 0 0,0 53.175,31.5875 "/>
+        <path d="M45.2375,20 A4.7625,4.7625 0 0,0 46.825,23.54975791 "/>
+        <path d="M53.175,23.54975791 A4.7625,4.7625 0 0,0 54.7625,20 "/>
+    </g>
+    <g lc:layername="Layer_Magenta" lc:is_locked="false" lc:is_construction="false" fill="none" stroke="black" stroke-width="1">
+        <path d="M74,37.5 A3,3 0 0,0 71,34.5 "/>
+        <path d="M71,34.5 A3,3 0 0,0 68,37.5 "/>
+        <path d="M68,37.5 A3,3 0 0,0 71,40.5 "/>
+        <path d="M71,40.5 A3,3 0 0,0 74,37.5 "/>
+    </g>
+    <g lc:layername="Layer_Red" lc:is_locked="false" lc:is_construction="false" fill="none" stroke="black" stroke-width="1">
+        <path d="M9,47 A6,6 0 0,0 3,41 "/>
+        <path d="M97,41 A6,6 0 0,0 91,47 "/>
+        <path d="M91,3 A6,6 0 0,0 97,9 "/>
+        <path d="M3,9 A6,6 0 0,0 9,3 "/>
+        <line x1="3" y1="41" x2="3" y2="9"/>
+        <line x1="9" y1="47" x2="91" y2="47"/>
+        <line x1="97" y1="41" x2="97" y2="9"/>
+        <line x1="9" y1="3" x2="91" y2="3"/>
+    </g>
+    <g lc:layername="Layer_White" lc:is_locked="false" lc:is_construction="false" fill="none" stroke="black" stroke-width="1">
+        <path d="M16,40.5 L19,40.5 L19,9.5 L16,9.5 "/>
+        <path d="M16,9.5 A3,3 0 0,0 13,12.5 "/>
+        <path d="M13,12.5 L13,37.5 "/>
+        <path d="M13,37.5 A3,3 0 0,0 16,40.5 "/>
+    </g>
+    <g lc:layername="Layer_Yellow" lc:is_locked="false" lc:is_construction="false" fill="none" stroke="black" stroke-width="1">
+        <path d="M32,37.5 A3,3 0 0,0 29,34.5 "/>
+        <path d="M29,34.5 A3,3 0 0,0 26,37.5 "/>
+        <path d="M26,37.5 A3,3 0 0,0 29,40.5 "/>
+        <path d="M29,40.5 A3,3 0 0,0 32,37.5 "/>
+    </g>
+</svg>
