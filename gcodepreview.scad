@@ -49,6 +49,22 @@ module toolchange(tool_number, speed){
     gcp.toolchange(tool_number, speed);
 }
 
+module setcolor(cutcolor, rapidcolor, shaftcolor){
+    gcp.setcolor(cutcolor, rapidcolor, shaftcolor);
+}
+
+module toolmovement(bx, by, bz, ex, ey, ez, step){
+    gcp.toolmovement(bx, by, bz, ex, ey, ez, step);
+}
+
+module shaftmovement(bx, by, bz, ex, ey, ez){
+    gcp.shaftmovement(bx, by, bz, ex, ey, ez);
+}
+
+module defineshaft(toolingdiameter, shaftdiameter, flute, transition, shaft){
+    gcp.defineshaft(toolingdiameter, shaftdiameter, flute, transition, shaft);
+}
+
 module movetosafeZ(){
     gcp.rapid(gcp.xpos(), gcp.ypos(), retractheight);
 }
@@ -131,16 +147,16 @@ module opendxffile(basefilename){
     gcp.opendxffile(basefilename);
 }
 
-module opendxffiles(Base_filename, large_square_tool_num, small_square_tool_num, large_ball_tool_num, small_ball_tool_num, large_V_tool_num, small_V_tool_num, DT_tool_num, KH_tool_num, Roundover_tool_num, MISC_tool_num) {
-    gcp.opendxffiles(Base_filename, large_square_tool_num, small_square_tool_num, large_ball_tool_num, small_ball_tool_num, large_V_tool_num, small_V_tool_num, DT_tool_num, KH_tool_num, Roundover_tool_num, MISC_tool_num);
-}
-
 module opengcodefile(basefilename, currenttoolnum, toolradius, plunge, feed, speed) {
     gcp.opengcodefile(basefilename, currenttoolnum, toolradius, plunge, feed, speed);
 }
 
 module setdxfcolor(color){
     gcp.setdxfcolor(color);
+}
+
+module setdxflayer(layer){
+    gcp.setdxflayer(layer);
 }
 
 module cutarcNECCdxfgc(ex, ey, ez, xcenter, ycenter, radius){
@@ -161,10 +177,6 @@ module cutarcSECCdxfgc(ex, ey, ez, xcenter, ycenter, radius){
 
 module closegcodefile(){
     gcp.closegcodefile();
-}
-
-module closedxffiles(){
-    gcp.closedxffiles();
 }
 
 module closedxffile(){

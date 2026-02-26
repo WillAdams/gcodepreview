@@ -57,21 +57,25 @@ cornerstyle = "Fillet"  # "Chamfer", "Flipped Fillet"
 
 gcp.opendxffile(Base_filename)
 
+gcp.setdxfcolor("Black")
+gcp.setdxflayer("DEFAULT")
+
 gcp.setupstock(stockXwidth, stockYheight, stockZthickness, zeroheight, stockzero, retractheight)
 
 gcp.toolchange(large_square_tool_num)
 
-gcp.setdxfcolor("Red")
+gcp.cutrectangledxf(0, 0, 0, stockXwidth, stockYheight, stockZthickness)
 
-gcp.cutrectangledxf(large_square_tool_num, 0, 0, 0, stockXwidth, stockYheight, stockZthickness)
+gcp.setdxfcolor("Red")
+gcp.setdxflayer("Red")
 
 gcp.toolchange(large_ball_tool_num)
 
-gcp.setdxfcolor("Gray")
+gcp.rapidZ(retractheight)
+gcp.rapid(inset + radius, inset, 0)
 
-gcp.rapid(inset + radius, inset, 0, "laser")
+gcp.cutline(inset + radius, inset, -stockZthickness/2)
 
-gcp.cutlinedxf(inset + radius, inset, -stockZthickness/2)
 gcp.cutquarterCCNEdxf(inset, inset + radius, -stockZthickness/2, radius)
 
 gcp.cutlinedxf(inset, stockYheight - (inset + radius), -stockZthickness/2)
@@ -89,24 +93,30 @@ gcp.cutquarterCCNWdxf(stockXwidth - (inset + radius), inset, -stockZthickness/2,
 gcp.cutlinedxf((inset + radius), inset, -stockZthickness/2)
 
 gcp.setdxfcolor("Blue")
+gcp.setdxflayer("Blue")
 
-gcp.rapid(radius + inset + radius, radius, 0, "laser")
+gcp.rapidZ(retractheight)
+gcp.rapid(radius + inset + radius, radius, 0)
 
-gcp.cutrectanglerounddxf(large_square_tool_num, radius +inset, radius, 0, stockXwidth/2 - (radius * 4), stockYheight - (radius * 2), -stockZthickness/4, radius)
+gcp.cutrectanglerounddxf(radius +inset, radius, 0, stockXwidth/2 - (radius * 4), stockYheight - (radius * 2), -stockZthickness/4, radius)
 
-gcp.rapid(stockXwidth/2 + (radius * 2) + inset + radius, radius, 0, "laser")
+gcp.rapidZ(retractheight)
+gcp.rapid(stockXwidth/2 + (radius * 2) + inset + radius, radius, 0)
 
-gcp.cutrectanglerounddxf(large_square_tool_num, stockXwidth/2 + (radius * 2) + inset, radius, 0, stockXwidth/2 - (radius * 4), stockYheight - (radius * 2), -stockZthickness/4, radius)
+gcp.cutrectanglerounddxf(stockXwidth/2 + (radius * 2) + inset, radius, 0, stockXwidth/2 - (radius * 4), stockYheight - (radius * 2), -stockZthickness/4, radius)
 
-gcp.setdxfcolor("Red")
+gcp.setdxfcolor("Green")
+gcp.setdxflayer("Green")
 
-gcp.rapid(stockXwidth/2 + radius, stockYheight/2, 0, "laser")
+gcp.rapidZ(retractheight)
+gcp.rapid(stockXwidth/2, stockYheight/2 - radius, 0)
 
 gcp.toolchange(large_square_tool_num)
 
-gcp.cutcircleCC(stockXwidth/2, stockYheight/2, 0, -stockZthickness, radius)
-
-gcp.cutcircleCC(stockXwidth/2, stockYheight/2, -stockZthickness, -stockZthickness, radius*1.5)
+gcp.cutquarterCCSEdxf(stockXwidth/2 + radius, stockYheight/2, -stockZthickness/4, radius)
+gcp.cutquarterCCNEdxf(stockXwidth/2, stockYheight/2 + radius, -stockZthickness/2, radius)
+gcp.cutquarterCCNWdxf(stockXwidth/2 - radius, stockYheight/2, -stockZthickness*0.75, radius)
+gcp.cutquarterCCSWdxf(stockXwidth/2, stockYheight/2 - radius, -stockZthickness, radius)
 
 gcp.closedxffile()
 

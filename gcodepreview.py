@@ -17,7 +17,7 @@ except ModuleNotFoundError as e:
     print("OpenSCAD module not loaded.")
 
 def pygcpversion():
-    thegcpversion = 0.93
+    thegcpversion = 0.931
     return thegcpversion
 
 class gcodepreview:
@@ -40,7 +40,7 @@ class gcodepreview:
         generategcode : boolean
                         Enables writing out G-code.
         generatedxf   : boolean
-                        Enables writing out DXF file(s).
+                        Enables writing out a DXF file.
 
         Returns
         -------
@@ -74,8 +74,6 @@ class gcodepreview:
             self.generatedxf = False
         else:
             self.generatedxf = generatedxf
-# unless multiple dxfs are enabled, the check for them is of course False
-        self.generatedxfs = False
 # set up 3D previewing parameters
         fa = gcpfa
         fs = gcpfs
@@ -409,8 +407,18 @@ class gcodepreview:
             self.shaftlength = 20.0
             self.definesquaretool(self.diameter, self.shaftheight, self.shaftlength)
             self.defineshaft(self.diameter, self.shaftdiameter, self.flute, 0, self.shaftlength)
-            defineKeyholetool(self.diameter, self.flute, self.shaftdiameter, self.shaftheight, self.shaftdiameter, self.shaftlength)
             self.toolnumber = "100048"
+        elif (tool_number == 211) or (tool_number == 213) or (tool_number == 214): #211/213/214 == 100058
+            self.writegc("(TOOL/MILL, 8.00, 0.00, 0.00, 0.00)")
+            self.endmilltype = "square"
+            self.diameter = 8.00
+            self.flute = 26.0
+            self.shaftdiameter = 8.00
+            self.shaftheight = 26.0
+            self.shaftlength = 49.0
+            self.definesquaretool(self.diameter, self.shaftheight, self.shaftlength)
+            self.defineshaft(self.diameter, self.shaftdiameter, self.flute, 0, self.shaftlength)
+            self.toolnumber = "100058"
 #
         elif (tool_number == 282) or (tool_number == 100204): #282 == 000204
             self.writegc("(TOOL/MILL, 2.0, 0.00, 0.00, 0.00)")
@@ -501,6 +509,17 @@ class gcodepreview:
             self.defineballnosetool(self.diameter, self.flute, self.shaftlength, (self.shaftdiameter - self.diameter)/2)
             self.defineshaft(self.diameter, self.shaftdiameter, self.flute, 0, self.shaftlength)
             self.toolnumber = "204048"
+        elif (tool_number == 212) or (tool_number == 205058): #212 == 205058
+            self.writegc("(TOOL/MILL, 8.00, 4.00, 0.00, 0.00)")
+            self.endmilltype = "ball"
+            self.diameter = 8.00
+            self.flute = 26.0
+            self.shaftdiameter = 8.00
+            self.shaftheight = 26.0
+            self.shaftlength = 49.0
+            self.defineballnosetool(self.diameter, self.flute, self.shaftlength, (self.shaftdiameter - self.diameter)/2)
+            self.defineshaft(self.diameter, self.shaftdiameter, self.flute, 0, self.shaftlength)
+            self.toolnumber = "204048"
 #
         elif (tool_number == 301) or (tool_number == 390074): #301 == 390074
             self.writegc("(TOOL/MILL, 0.10, 0.05, 6.35, 45.00)")
@@ -524,17 +543,28 @@ class gcodepreview:
             self.shaftlength = 20.0
             self.defineVtool(self.diameter, self.flute, self.shaftlength, self.shaftdiameter)
             self.toolnumber = "360071"
-        elif (tool_number == 390) or (tool_number == 390032): #390 == 390032
-            self.writegc("(TOOL/MILL, 0.03, 0.00, 1.5875, 45.00)")
+        elif (tool_number == 311) or (tool_number == 390121): #311 == 390121
+            self.writegc("(TOOL/MILL, 0.10, 0.05, 6.00, 45.00)")
             self.endmilltype = "V"
-            self.diameter = 3.175
-            self.flute = 1.5875
+            self.diameter = 12.0
+            self.flute = 6.00
             self.angle = 90
-            self.shaftdiameter = 3.175
-            self.shaftheight = 1.5875
+            self.shaftdiameter = 8.00
+            self.shaftheight = 8.00
             self.shaftlength = 20.0
             self.defineVtool(self.diameter, self.flute, self.shaftlength, self.shaftdiameter)
-            self.toolnumber = "390032"
+            self.toolnumber = "390121"
+        elif (tool_number == 312) or (tool_number == 360121): #312 == 360121
+            self.writegc("(TOOL/MILL, 0.10, 0.05, 6.00, 30.00)")
+            self.endmilltype = "V"
+            self.diameter = 12.0
+            self.flute = 10.39
+            self.angle = 60
+            self.shaftdiameter = 8.00
+            self.shaftheight = 10.39
+            self.shaftlength = 20.0
+            self.defineVtool(self.diameter, self.flute, self.shaftlength, self.shaftdiameter)
+            self.toolnumber = "360121"
         elif (tool_number == 327) or (tool_number == 360098): #327 (Amana RC-1148) == 360098
             self.writegc("(TOOL/MILL, 0.03, 0.00, 13.4874, 30.00)")
             self.endmilltype = "V"
@@ -557,6 +587,17 @@ class gcodepreview:
             self.shaftlength = 20.0
             self.defineVtool(self.diameter, self.flute, self.shaftlength, self.shaftdiameter)
             self.toolnumber = "330041"
+        elif (tool_number == 390) or (tool_number == 390032): #390 == 390032
+            self.writegc("(TOOL/MILL, 0.03, 0.00, 1.5875, 45.00)")
+            self.endmilltype = "V"
+            self.diameter = 3.175
+            self.flute = 1.5875
+            self.angle = 90
+            self.shaftdiameter = 3.175
+            self.shaftheight = 1.5875
+            self.shaftlength = 20.0
+            self.defineVtool(self.diameter, self.flute, self.shaftlength, self.shaftdiameter)
+            self.toolnumber = "390032"
 #
         elif (tool_number == 374) or (tool_number == 906043): #374 == 906043
             self.writegc("(TOOL/MILL, 9.53, 0.00, 3.17, 0.00)")
@@ -1089,16 +1130,16 @@ class gcodepreview:
         return self.cutline(ex, ey, ez)
 
     def cutlinedxf(self, ex, ey, ez):
-        self.dxfline(self.currenttoolnumber(), self.xpos(), self.ypos(), ex, ey)
+        self.dxfline(self.xpos(), self.ypos(), ex, ey)
         self.cutline(ex, ey, ez)
 
     def cutlinedxfgc(self, ex, ey, ez):
-        self.dxfline(self.currenttoolnumber(), self.xpos(), self.ypos(), ex, ey)
+        self.dxfline(self.xpos(), self.ypos(), ex, ey)
         self.writegc("G01 X", str(ex), " Y", str(ey), " Z", str(ez))
         self.cutline(ex, ey, ez)
 
     def cutvertexdxf(self, ex, ey, ez):
-        self.addvertex(self.currenttoolnumber(), ex, ey)
+        self.addvertex(ex, ey)
         self.writegc("G01 X", str(ex), " Y", str(ey), " Z", str(ez))
         self.cutline(ex, ey, ez)
 
@@ -1263,19 +1304,19 @@ class gcodepreview:
 
     def cutquarterCCNEdxf(self, ex, ey, ez, radius):
         self.cutquarterCCNE(ex, ey, ez, radius)
-        self.dxfarc(self.currenttoolnumber(), ex, ey - radius, radius,  0, 90)
+        self.dxfarc(ex, ey - radius, radius,  0, 90)
 
     def cutquarterCCNWdxf(self, ex, ey, ez, radius):
         self.cutquarterCCNW(ex, ey, ez, radius)
-        self.dxfarc(self.currenttoolnumber(), ex + radius, ey, radius, 90, 180)
+        self.dxfarc(ex + radius, ey, radius, 90, 180)
 
     def cutquarterCCSWdxf(self, ex, ey, ez, radius):
         self.cutquarterCCSW(ex, ey, ez, radius)
-        self.dxfarc(self.currenttoolnumber(), ex, ey + radius, radius, 180, 270)
+        self.dxfarc(ex, ey + radius, radius, 180, 270)
 
     def cutquarterCCSEdxf(self, ex, ey, ez, radius):
         self.cutquarterCCSE(ex, ey, ez, radius)
-        self.dxfarc(self.currenttoolnumber(), ex - radius, ey, radius, 270, 360)
+        self.dxfarc(ex - radius, ey, radius, 270, 360)
 
     def tool_diameter(self, ptd_tool, ptd_depth):
 # Square 122, 112, 102, 201
@@ -1488,7 +1529,7 @@ class gcodepreview:
             self.gc.write(line_to_write)
             self.gc.write("\n")
 
-    def writedxf(self, toolnumber, *arguments):
+    def writedxf(self, *arguments):
 #        global dxfclosed
         line_to_write = ""
         for element in arguments:
@@ -1497,47 +1538,6 @@ class gcodepreview:
             if self.dxfclosed == False:
                 self.dxf.write(line_to_write)
                 self.dxf.write("\n")
-        if self.generatedxfs == True:
-            self.writedxfs(toolnumber, line_to_write)
-
-    def writedxfs(self, toolnumber, line_to_write):
-#        print("Processing writing toolnumber", toolnumber)
-#        line_to_write = ""
-#        for element in arguments:
-#            line_to_write += element
-        if (toolnumber == 0):
-            return
-        elif self.generatedxfs == True:
-            if (self.large_square_tool_num == toolnumber):
-                self.dxflgsq.write(line_to_write)
-                self.dxflgsq.write("\n")
-            if (self.small_square_tool_num == toolnumber):
-                self.dxfsmsq.write(line_to_write)
-                self.dxfsmsq.write("\n")
-            if (self.large_ball_tool_num == toolnumber):
-                self.dxflgbl.write(line_to_write)
-                self.dxflgbl.write("\n")
-            if (self.small_ball_tool_num == toolnumber):
-                self.dxfsmbl.write(line_to_write)
-                self.dxfsmbl.write("\n")
-            if (self.large_V_tool_num == toolnumber):
-                self.dxflgV.write(line_to_write)
-                self.dxflgV.write("\n")
-            if (self.small_V_tool_num == toolnumber):
-                self.dxfsmV.write(line_to_write)
-                self.dxfsmV.write("\n")
-            if (self.DT_tool_num == toolnumber):
-                self.dxfDT.write(line_to_write)
-                self.dxfDT.write("\n")
-            if (self.KH_tool_num == toolnumber):
-                self.dxfKH.write(line_to_write)
-                self.dxfKH.write("\n")
-            if (self.Roundover_tool_num == toolnumber):
-                self.dxfRt.write(line_to_write)
-                self.dxfRt.write("\n")
-            if (self.MISC_tool_num == toolnumber):
-                self.dxfMt.write(line_to_write)
-                self.dxfMt.write("\n")
 
     def opengcodefile(self, basefilename = "export",
                       currenttoolnum = 102,
@@ -1563,237 +1563,123 @@ class gcodepreview:
 #        global dxfclosed
         self.dxfclosed = False
         self.dxfcolor = "Black"
+        self.dxflayer = "DEFAULT"
         if self.generatedxf == True:
             self.generatedxfs = False
             self.dxffilename = basefilename + ".dxf"
             self.dxf = open(self.dxffilename, "w")
-            self.dxfpreamble(-1)
+            self.dxfpreamble()
 
-    def opendxffiles(self, basefilename = "export",
-                     large_square_tool_num = 0,
-                     small_square_tool_num = 0,
-                     large_ball_tool_num = 0,
-                     small_ball_tool_num = 0,
-                     large_V_tool_num = 0,
-                     small_V_tool_num = 0,
-                     DT_tool_num = 0,
-                     KH_tool_num = 0,
-                     Roundover_tool_num = 0,
-                     MISC_tool_num = 0):
-#        global generatedxfs
-        self.basefilename = basefilename
-        self.generatedxfs = True
-        self.large_square_tool_num = large_square_tool_num
-        self.small_square_tool_num = small_square_tool_num
-        self.large_ball_tool_num = large_ball_tool_num
-        self.small_ball_tool_num = small_ball_tool_num
-        self.large_V_tool_num = large_V_tool_num
-        self.small_V_tool_num = small_V_tool_num
-        self.DT_tool_num = DT_tool_num
-        self.KH_tool_num = KH_tool_num
-        self.Roundover_tool_num = Roundover_tool_num
-        self.MISC_tool_num = MISC_tool_num
-        if self.generatedxf == True:
-            if (large_square_tool_num > 0):
-                self.dxflgsqfilename = basefilename + str(large_square_tool_num) + ".dxf"
-#                print("Opening ", str(self.dxflgsqfilename))
-                self.dxflgsq = open(self.dxflgsqfilename, "w")
-            if (small_square_tool_num > 0):
-#                print("Opening small square")
-                self.dxfsmsqfilename = basefilename + str(small_square_tool_num) + ".dxf"
-                self.dxfsmsq = open(self.dxfsmsqfilename, "w")
-            if (large_ball_tool_num > 0):
-#                print("Opening large ball")
-                self.dxflgblfilename = basefilename + str(large_ball_tool_num) + ".dxf"
-                self.dxflgbl = open(self.dxflgblfilename, "w")
-            if (small_ball_tool_num > 0):
-#                print("Opening small ball")
-                self.dxfsmblfilename = basefilename + str(small_ball_tool_num) + ".dxf"
-                self.dxfsmbl = open(self.dxfsmblfilename, "w")
-            if (large_V_tool_num > 0):
-#                print("Opening large V")
-                self.dxflgVfilename = basefilename + str(large_V_tool_num) + ".dxf"
-                self.dxflgV = open(self.dxflgVfilename, "w")
-            if (small_V_tool_num > 0):
-#                print("Opening small V")
-                self.dxfsmVfilename = basefilename + str(small_V_tool_num) + ".dxf"
-                self.dxfsmV = open(self.dxfsmVfilename, "w")
-            if (DT_tool_num > 0):
-#                print("Opening DT")
-                self.dxfDTfilename = basefilename + str(DT_tool_num) + ".dxf"
-                self.dxfDT = open(self.dxfDTfilename, "w")
-            if (KH_tool_num > 0):
-#                print("Opening KH")
-                self.dxfKHfilename = basefilename + str(KH_tool_num) + ".dxf"
-                self.dxfKH = open(self.dxfKHfilename, "w")
-            if (Roundover_tool_num > 0):
-#                print("Opening Rt")
-                self.dxfRtfilename = basefilename + str(Roundover_tool_num) + ".dxf"
-                self.dxfRt = open(self.dxfRtfilename, "w")
-            if (MISC_tool_num > 0):
-#                print("Opening Mt")
-                self.dxfMtfilename = basefilename + str(MISC_tool_num) + ".dxf"
-                self.dxfMt = open(self.dxfMtfilename, "w")
-            if (large_square_tool_num > 0):
-                self.dxfpreamble(large_square_tool_num)
-            if (small_square_tool_num > 0):
-                self.dxfpreamble(small_square_tool_num)
-            if (large_ball_tool_num > 0):
-                self.dxfpreamble(large_ball_tool_num)
-            if (small_ball_tool_num > 0):
-                self.dxfpreamble(small_ball_tool_num)
-            if (large_V_tool_num > 0):
-                self.dxfpreamble(large_V_tool_num)
-            if (small_V_tool_num > 0):
-                self.dxfpreamble(small_V_tool_num)
-            if (DT_tool_num > 0):
-                self.dxfpreamble(DT_tool_num)
-            if (KH_tool_num > 0):
-                self.dxfpreamble(KH_tool_num)
-            if (Roundover_tool_num > 0):
-                self.dxfpreamble(Roundover_tool_num)
-            if (MISC_tool_num > 0):
-                self.dxfpreamble(MISC_tool_num)
-
-    def dxfpreamble(self, tn):
-#        self.writedxf(tn, str(tn))
-        self.writedxf(tn, "0")
-        self.writedxf(tn, "SECTION")
-        self.writedxf(tn, "2")
-        self.writedxf(tn, "ENTITIES")
+    def dxfpreamble(self):
+        self.writedxf("0")
+        self.writedxf("SECTION")
+        self.writedxf("2")
+        self.writedxf("HEADER")
+        self.writedxf("9")
+        self.writedxf("$INSUNITS")
+        self.writedxf("70")
+        self.writedxf("4")
+        self.writedxf("9")
+        self.writedxf("$ACADVER")
+        self.writedxf("1")
+        self.writedxf("AC1014")
+        self.writedxf("0")
+        self.writedxf("ENDSEC")
+        self.writedxf("0")
+        self.writedxf("SECTION")
+        self.writedxf("2")
+        self.writedxf("ENTITIES")
 
     def setdxfcolor(self, color):
         self.dxfcolor = color
         self.cutcolor = color
 
-    def writedxfcolor(self, tn):
-            self.writedxf(tn, "8")
+    def setdxflayer(self, layer):
+        self.dxflayer = layer
+
+    def writedxfcolor(self):
+            self.writedxf("8")
+            self.writedxf(self.dxflayer)
+
+            self.writedxf("62")
             if (self.dxfcolor == "Black"):
-                self.writedxf(tn, "Layer_Black")
+                self.writedxf("0")
             if (self.dxfcolor == "Red"):
-                self.writedxf(tn, "Layer_Red")
+                self.writedxf("1")
             if (self.dxfcolor == "Yellow"):
-                self.writedxf(tn, "Layer_Yellow")
+                self.writedxf("2")
             if (self.dxfcolor == "Green"):
-                self.writedxf(tn, "Layer_Green")
+                self.writedxf("3")
             if (self.dxfcolor == "Cyan"):
-                self.writedxf(tn, "Layer_Cyan")
+                self.writedxf("4")
             if (self.dxfcolor == "Blue"):
-                self.writedxf(tn, "Layer_Blue")
+                self.writedxf("5")
             if (self.dxfcolor == "Magenta"):
-                self.writedxf(tn, "Layer_Magenta")
+                self.writedxf("6")
             if (self.dxfcolor == "White"):
-                self.writedxf(tn, "Layer_White")
+                self.writedxf("7")
             if (self.dxfcolor == "Dark Gray"):
-                self.writedxf(tn, "Layer_Dark_Gray")
+                self.writedxf("8")
             if (self.dxfcolor == "Light Gray"):
-                self.writedxf(tn, "Layer_Light_Gray")
+                self.writedxf("9")
 
-            self.writedxf(tn, "62")
-            if (self.dxfcolor == "Black"):
-                self.writedxf(tn, "0")
-            if (self.dxfcolor == "Red"):
-                self.writedxf(tn, "1")
-            if (self.dxfcolor == "Yellow"):
-                self.writedxf(tn, "2")
-            if (self.dxfcolor == "Green"):
-                self.writedxf(tn, "3")
-            if (self.dxfcolor == "Cyan"):
-                self.writedxf(tn, "4")
-            if (self.dxfcolor == "Blue"):
-                self.writedxf(tn, "5")
-            if (self.dxfcolor == "Magenta"):
-                self.writedxf(tn, "6")
-            if (self.dxfcolor == "White"):
-                self.writedxf(tn, "7")
-            if (self.dxfcolor == "Dark Gray"):
-                self.writedxf(tn, "8")
-            if (self.dxfcolor == "Light Gray"):
-                self.writedxf(tn, "9")
-
-    def dxfline(self, tn, xbegin, ybegin, xend, yend):
-        self.writedxf(tn, "0")
-        self.writedxf(tn, "LINE")
+    def dxfline(self, xbegin, ybegin, xend, yend, zbegin = 0.0, zend = 0.0):
+        self.writedxf("0")
+        self.writedxf("LINE")
 #
-        self.writedxfcolor(tn)
+        self.writedxfcolor()
 #
-        self.writedxf(tn, "10")
-        self.writedxf(tn, str(xbegin))
-        self.writedxf(tn, "20")
-        self.writedxf(tn, str(ybegin))
-        self.writedxf(tn, "30")
-        self.writedxf(tn, "0.0")
-        self.writedxf(tn, "11")
-        self.writedxf(tn, str(xend))
-        self.writedxf(tn, "21")
-        self.writedxf(tn, str(yend))
-        self.writedxf(tn, "31")
-        self.writedxf(tn, "0.0")
+        self.writedxf("10")
+        self.writedxf(str(xbegin))
+        self.writedxf("20")
+        self.writedxf(str(ybegin))
+        self.writedxf("30")
+        self.writedxf(str(zbegin))
+        self.writedxf("11")
+        self.writedxf(str(xend))
+        self.writedxf("21")
+        self.writedxf(str(yend))
+        self.writedxf("31")
+        self.writedxf(str(zend))
 
-    def beginpolyline(self, tn):#, xbegin, ybegin
-        self.writedxf(tn, "0")
-        self.writedxf(tn, "POLYLINE")
-        self.writedxf(tn, "8")
-        self.writedxf(tn, "default")
-        self.writedxf(tn, "66")
-        self.writedxf(tn, "1")
-#
-        self.writedxfcolor(tn)
-#
-#        self.writedxf(tn, "10")
-#        self.writedxf(tn, str(xbegin))
-#        self.writedxf(tn, "20")
-#        self.writedxf(tn, str(ybegin))
-#        self.writedxf(tn, "30")
-#        self.writedxf(tn, "0.0")
-        self.writedxf(tn, "70")
-        self.writedxf(tn, "0")
+    def beginpolyline(self, xbegin, ybegin, zbegin = 0.0):
+        self.bpx = xbegin
+        self.bpy = ybegin
+        self.bpz = zbegin
 
-    def addvertex(self, tn, xend, yend):
-        self.writedxf(tn, "0")
-        self.writedxf(tn, "VERTEX")
-        self.writedxf(tn, "8")
-        self.writedxf(tn, "default")
-        self.writedxf(tn, "70")
-        self.writedxf(tn, "32")
-        self.writedxf(tn, "10")
-        self.writedxf(tn, str(xend))
-        self.writedxf(tn, "20")
-        self.writedxf(tn, str(yend))
-        self.writedxf(tn, "30")
-        self.writedxf(tn, "0.0")
+    def addvertex(self, xend, yend, zend = 0.0):
+        self.dxfline(self.bpx, self.bpy, xend, yend, self.bpz, zend)
+        self.bpx = xend
+        self.bpy = yend
+        self.bpz = zend
 
-    def closepolyline(self, tn):
-        self.writedxf(tn, "0")
-        self.writedxf(tn, "SEQEND")
+    def closepolyline(self):
+        self.bpx = 0.0
+        self.bpy = 0.0
 
-    def dxfarc(self, tn, xcenter, ycenter, radius, anglebegin, endangle):
+    def dxfarc(self, xcenter, ycenter, radius, anglebegin, endangle):
         if (self.generatedxf == True):
-            self.writedxf(tn, "0")
-            self.writedxf(tn, "ARC")
+            self.writedxf("0")
+            self.writedxf("ARC")
 #
-            self.writedxfcolor(tn)
+            self.writedxfcolor()
 #
-            self.writedxf(tn, "10")
-            self.writedxf(tn, str(xcenter))
-            self.writedxf(tn, "20")
-            self.writedxf(tn, str(ycenter))
-            self.writedxf(tn, "40")
-            self.writedxf(tn, str(radius))
-            self.writedxf(tn, "50")
-            self.writedxf(tn, str(anglebegin))
-            self.writedxf(tn, "51")
-            self.writedxf(tn, str(endangle))
-
-    def gcodearc(self, tn, xcenter, ycenter, radius, anglebegin, endangle):
-        if (self.generategcode == True):
-            self.writegc(tn, "(0)")
+            self.writedxf("10")
+            self.writedxf(str(xcenter))
+            self.writedxf("20")
+            self.writedxf(str(ycenter))
+            self.writedxf("40")
+            self.writedxf(str(radius))
+            self.writedxf("50")
+            self.writedxf(str(anglebegin))
+            self.writedxf("51")
+            self.writedxf(str(endangle))
 
     def cutarcNECCdxf(self, ex, ey, ez, xcenter, ycenter, radius):
 #        global toolpath
 #        toolpath = self.currenttool()
 #        toolpath = toolpath.translate([self.xpos(), self.ypos(), self.zpos()])
-        self.dxfarc(self.currenttoolnumber(), xcenter, ycenter, radius, 0, 90)
+        self.dxfarc(xcenter, ycenter, radius, 0, 90)
         if (self.zpos == ez):
             self.settzpos(0)
         else:
@@ -1814,7 +1700,7 @@ class gcodepreview:
 #        global toolpath
 #        toolpath = self.currenttool()
 #        toolpath = toolpath.translate([self.xpos(), self.ypos(), self.zpos()])
-        self.dxfarc(self.currenttoolnumber(), xcenter, ycenter, radius, 90, 180)
+        self.dxfarc(xcenter, ycenter, radius, 90, 180)
         if (self.zpos == ez):
             self.settzpos(0)
         else:
@@ -1833,7 +1719,7 @@ class gcodepreview:
 #        global toolpath
 #        toolpath = self.currenttool()
 #        toolpath = toolpath.translate([self.xpos(), self.ypos(), self.zpos()])
-        self.dxfarc(self.currenttoolnumber(), xcenter, ycenter, radius, 180, 270)
+        self.dxfarc(xcenter, ycenter, radius, 180, 270)
         if (self.zpos == ez):
             self.settzpos(0)
         else:
@@ -1852,7 +1738,7 @@ class gcodepreview:
 #        global toolpath
 #        toolpath = self.currenttool()
 #        toolpath = toolpath.translate([self.xpos(), self.ypos(), self.zpos()])
-        self.dxfarc(self.currenttoolnumber(), xcenter, ycenter, radius, 270, 360)
+        self.dxfarc(xcenter, ycenter, radius, 270, 360)
         if (self.zpos == ez):
             self.settzpos(0)
         else:
@@ -1871,7 +1757,7 @@ class gcodepreview:
 #        global toolpath
 #        toolpath = self.currenttool()
 #        toolpath = toolpath.translate([self.xpos(), self.ypos(), self.zpos()])
-        self.dxfarc(self.currenttoolnumber(), xcenter, ycenter, radius, 0, 90)
+        self.dxfarc(xcenter, ycenter, radius, 0, 90)
         if (self.zpos == ez):
             self.settzpos(0)
         else:
@@ -1890,7 +1776,7 @@ class gcodepreview:
 #        global toolpath
 #        toolpath = self.currenttool()
 #        toolpath = toolpath.translate([self.xpos(), self.ypos(), self.zpos()])
-        self.dxfarc(self.currenttoolnumber(), xcenter, ycenter, radius, 270, 360)
+        self.dxfarc(xcenter, ycenter, radius, 270, 360)
         if (self.zpos == ez):
             self.settzpos(0)
         else:
@@ -1909,7 +1795,7 @@ class gcodepreview:
 #        global toolpath
 #        toolpath = self.currenttool()
 #        toolpath = toolpath.translate([self.xpos(), self.ypos(), self.zpos()])
-        self.dxfarc(self.currenttoolnumber(), xcenter, ycenter, radius, 180, 270)
+        self.dxfarc(xcenter, ycenter, radius, 180, 270)
         if (self.zpos == ez):
             self.settzpos(0)
         else:
@@ -1928,7 +1814,7 @@ class gcodepreview:
 #        global toolpath
 #        toolpath = self.currenttool()
 #        toolpath = toolpath.translate([self.xpos(), self.ypos(), self.zpos()])
-        self.dxfarc(self.currenttoolnumber(), xcenter, ycenter, radius, 90, 180)
+        self.dxfarc(xcenter, ycenter, radius, 90, 180)
         if (self.zpos == ez):
             self.settzpos(0)
         else:
@@ -1991,12 +1877,12 @@ class gcodepreview:
         if self.generatepaths == False:
             return self.cutarcNWCWdxf(ex, ey, ez, xcenter, ycenter, radius)
 
-    def dxfpostamble(self, tn):
-#        self.writedxf(tn, str(tn))
-        self.writedxf(tn, "0")
-        self.writedxf(tn, "ENDSEC")
-        self.writedxf(tn, "0")
-        self.writedxf(tn, "EOF")
+    def dxfpostamble(self):
+#        self.writedxf(str(tn))
+        self.writedxf("0")
+        self.writedxf("ENDSEC")
+        self.writedxf("0")
+        self.writedxf("EOF")
 
     def gcodepostamble(self):
         if self.generatecut == True:
@@ -2018,59 +1904,15 @@ class gcodepreview:
     def closedxffile(self):
         if self.generatedxf == True:
 #            global dxfclosed
-            self.dxfpostamble(-1)
+            self.dxfpostamble()
 #            self.dxfclosed = True
             self.dxf.close()
 
-    def closedxffiles(self):
-        if self.generatedxfs == True:
-            if (self.large_square_tool_num > 0):
-                self.dxfpostamble(self.large_square_tool_num)
-            if (self.small_square_tool_num > 0):
-                self.dxfpostamble(self.small_square_tool_num)
-            if (self.large_ball_tool_num > 0):
-                self.dxfpostamble(self.large_ball_tool_num)
-            if (self.small_ball_tool_num > 0):
-                self.dxfpostamble(self.small_ball_tool_num)
-            if (self.large_V_tool_num > 0):
-                self.dxfpostamble(self.large_V_tool_num)
-            if (self.small_V_tool_num > 0):
-                self.dxfpostamble(self.small_V_tool_num)
-            if (self.DT_tool_num > 0):
-                self.dxfpostamble(self.DT_tool_num)
-            if (self.KH_tool_num > 0):
-                self.dxfpostamble(self.KH_tool_num)
-            if (self.Roundover_tool_num > 0):
-                self.dxfpostamble(self.Roundover_tool_num)
-            if (self.MISC_tool_num > 0):
-                self.dxfpostamble(self.MISC_tool_num)
-
-            if (self.large_square_tool_num > 0):
-                self.dxflgsq.close()
-            if (self.small_square_tool_num > 0):
-                self.dxfsmsq.close()
-            if (self.large_ball_tool_num > 0):
-                self.dxflgbl.close()
-            if (self.small_ball_tool_num > 0):
-                self.dxfsmbl.close()
-            if (self.large_V_tool_num > 0):
-                self.dxflgV.close()
-            if (self.small_V_tool_num > 0):
-                self.dxfsmV.close()
-            if (self.DT_tool_num > 0):
-                self.dxfDT.close()
-            if (self.KH_tool_num > 0):
-                self.dxfKH.close()
-            if (self.Roundover_tool_num > 0):
-                self.dxfRt.close()
-            if (self.MISC_tool_num > 0):
-                self.dxfMt.close()
-
-    def dxfcircle(self, tool_num, xcenter, ycenter, radius):
-        self.dxfarc(tool_num, xcenter, ycenter, radius,  0, 90)
-        self.dxfarc(tool_num, xcenter, ycenter, radius, 90, 180)
-        self.dxfarc(tool_num, xcenter, ycenter, radius, 180, 270)
-        self.dxfarc(tool_num, xcenter, ycenter, radius, 270, 360)
+    def dxfcircle(self, xcenter, ycenter, radius):
+        self.dxfarc(xcenter, ycenter, radius,  0, 90)
+        self.dxfarc(xcenter, ycenter, radius, 90, 180)
+        self.dxfarc(xcenter, ycenter, radius, 180, 270)
+        self.dxfarc(xcenter, ycenter, radius, 270, 360)
 
     def cutcircleCC(self, xcenter, ycenter, bz, ez, radius):
         self.setzpos(bz)
@@ -2081,101 +1923,30 @@ class gcodepreview:
 
     def cutcircleCCdxf(self, xcenter, ycenter, bz, ez, radius):
         self.cutcircleCC(self, xcenter, ycenter, bz, ez, radius)
-        self.dxfcircle(self, tool_num, xcenter, ycenter, radius)
+        self.dxfcircle(self, xcenter, ycenter, radius)
 
-    def dxfrectangle(self, tool_num, xorigin, yorigin, xwidth, yheight, corners = "Square", radius = 6):
+    def dxfrectangle(self, xorigin, yorigin, xwidth, yheight, corners = "Square", radius = 6):
         if corners == "Square":
-            self.dxfline(tool_num, xorigin, yorigin, xorigin + xwidth, yorigin)
-            self.dxfline(tool_num, xorigin + xwidth, yorigin, xorigin + xwidth, yorigin + yheight)
-            self.dxfline(tool_num, xorigin + xwidth, yorigin + yheight, xorigin, yorigin + yheight)
-            self.dxfline(tool_num, xorigin, yorigin + yheight, xorigin, yorigin)
+            self.dxfline(xorigin, yorigin, xorigin + xwidth, yorigin)
+            self.dxfline(xorigin + xwidth, yorigin, xorigin + xwidth, yorigin + yheight)
+            self.dxfline(xorigin + xwidth, yorigin + yheight, xorigin, yorigin + yheight)
+            self.dxfline(xorigin, yorigin + yheight, xorigin, yorigin)
         elif corners == "Fillet":
-            self.dxfrectangleround(tool_num, xorigin, yorigin, xwidth, yheight, radius)
+            self.dxfrectangleround(xorigin, yorigin, xwidth, yheight, radius)
         elif corners == "Chamfer":
-            self.dxfrectanglechamfer(tool_num, xorigin, yorigin, xwidth, yheight, radius)
+            self.dxfrectanglechamfer(xorigin, yorigin, xwidth, yheight, radius)
         elif corners == "Flipped Fillet":
-            self.dxfrectangleflippedfillet(tool_num, xorigin, yorigin, xwidth, yheight, radius)
+            self.dxfrectangleflippedfillet(xorigin, yorigin, xwidth, yheight, radius)
 
-    def dxfrectangleround(self, tool_num, xorigin, yorigin, xwidth, yheight, radius):
-# begin section
-        self.writedxf(tool_num, "0")
-        self.writedxf(tool_num, "SECTION")
-        self.writedxf(tool_num, "2")
-        self.writedxf(tool_num, "ENTITIES")
-        self.writedxf(tool_num, "0")
-        self.writedxf(tool_num, "LWPOLYLINE")
-        self.writedxf(tool_num, "5")
-        self.writedxf(tool_num, "4E")
-        self.writedxf(tool_num, "100")
-        self.writedxf(tool_num, "AcDbEntity")
-        self.writedxf(tool_num, "8")
-        self.writedxf(tool_num, "0")
-        self.writedxf(tool_num, "6")
-        self.writedxf(tool_num, "ByLayer")
-#
-        self.writedxfcolor(tool_num)
-#
-        self.writedxf(tool_num, "370")
-        self.writedxf(tool_num, "-1")
-        self.writedxf(tool_num, "100")
-        self.writedxf(tool_num, "AcDbPolyline")
-        self.writedxf(tool_num, "90")
-        self.writedxf(tool_num, "8")
-        self.writedxf(tool_num, "70")
-        self.writedxf(tool_num, "1")
-        self.writedxf(tool_num, "43")
-        self.writedxf(tool_num, "0")
-#1 upper right corner before arc (counter-clockwise)
-        self.writedxf(tool_num, "10")
-        self.writedxf(tool_num, str(xorigin + xwidth))
-        self.writedxf(tool_num, "20")
-        self.writedxf(tool_num, str(yorigin + yheight - radius))
-        self.writedxf(tool_num, "42")
-        self.writedxf(tool_num, "0.414213562373095")
-#2 upper right corner after arc
-        self.writedxf(tool_num, "10")
-        self.writedxf(tool_num, str(xorigin + xwidth - radius))
-        self.writedxf(tool_num, "20")
-        self.writedxf(tool_num, str(yorigin + yheight))
-#3 upper left corner before arc (counter-clockwise)
-        self.writedxf(tool_num, "10")
-        self.writedxf(tool_num, str(xorigin + radius))
-        self.writedxf(tool_num, "20")
-        self.writedxf(tool_num, str(yorigin + yheight))
-        self.writedxf(tool_num, "42")
-        self.writedxf(tool_num, "0.414213562373095")
-#4 upper left corner after arc
-        self.writedxf(tool_num, "10")
-        self.writedxf(tool_num, str(xorigin))
-        self.writedxf(tool_num, "20")
-        self.writedxf(tool_num, str(yorigin + yheight - radius))
-#5 lower left corner before arc (counter-clockwise)
-        self.writedxf(tool_num, "10")
-        self.writedxf(tool_num, str(xorigin))
-        self.writedxf(tool_num, "20")
-        self.writedxf(tool_num, str(yorigin + radius))
-        self.writedxf(tool_num, "42")
-        self.writedxf(tool_num, "0.414213562373095")
-#6 lower left corner after arc
-        self.writedxf(tool_num, "10")
-        self.writedxf(tool_num, str(xorigin + radius))
-        self.writedxf(tool_num, "20")
-        self.writedxf(tool_num, str(yorigin))
-#7 lower right corner before arc (counter-clockwise)
-        self.writedxf(tool_num, "10")
-        self.writedxf(tool_num, str(xorigin + xwidth - radius))
-        self.writedxf(tool_num, "20")
-        self.writedxf(tool_num, str(yorigin))
-        self.writedxf(tool_num, "42")
-        self.writedxf(tool_num, "0.414213562373095")
-#8 lower right corner after arc
-        self.writedxf(tool_num, "10")
-        self.writedxf(tool_num, str(xorigin + xwidth))
-        self.writedxf(tool_num, "20")
-        self.writedxf(tool_num, str(yorigin + radius))
-# end current section
-        self.writedxf(tool_num, "0")
-        self.writedxf(tool_num, "SEQEND")
+    def dxfrectangleround(self, xorigin, yorigin, xwidth, yheight, radius):
+        self.dxfarc(xorigin + radius, yorigin + radius, radius,  180, 270)
+        self.dxfarc(xorigin + xwidth - radius, yorigin + radius, radius, 270, 360)
+        self.dxfarc(xorigin + xwidth - radius, yorigin + yheight - radius, radius, 0, 90)
+        self.dxfarc(xorigin + radius, yorigin + yheight - radius, radius, 90, 180)
+        self.dxfline(xorigin + radius, yorigin, xorigin + xwidth - radius, yorigin)
+        self.dxfline(xorigin + xwidth, yorigin + radius, xorigin + xwidth, yorigin + yheight - radius)
+        self.dxfline(xorigin + xwidth - radius, yorigin + yheight, xorigin + radius, yorigin + yheight)
+        self.dxfline(xorigin, yorigin + yheight - radius, xorigin, yorigin + radius)
 
     def dxfrectanglechamfer(self, tool_num, xorigin, yorigin, xwidth, yheight, radius):
         self.dxfline(tool_num, xorigin + radius, yorigin, xorigin, yorigin + radius)
@@ -2188,18 +1959,18 @@ class gcodepreview:
         self.dxfline(tool_num, xorigin + xwidth - radius, yorigin + yheight, xorigin + radius, yorigin + yheight)
         self.dxfline(tool_num, xorigin, yorigin + yheight - radius, xorigin, yorigin + radius)
 
-    def dxfrectangleflippedfillet(self, tool_num, xorigin, yorigin, xwidth, yheight, radius):
-        self.dxfarc(tool_num, xorigin, yorigin, radius,  0, 90)
-        self.dxfarc(tool_num, xorigin + xwidth, yorigin, radius, 90, 180)
-        self.dxfarc(tool_num, xorigin + xwidth, yorigin + yheight, radius, 180, 270)
-        self.dxfarc(tool_num, xorigin, yorigin + yheight, radius, 270, 360)
+    def dxfrectangleflippedfillet(self, xorigin, yorigin, xwidth, yheight, radius):
+        self.dxfarc(xorigin, yorigin, radius,  0, 90)
+        self.dxfarc(xorigin + xwidth, yorigin, radius, 90, 180)
+        self.dxfarc(xorigin + xwidth, yorigin + yheight, radius, 180, 270)
+        self.dxfarc(xorigin, yorigin + yheight, radius, 270, 360)
 
-        self.dxfline(tool_num, xorigin + radius, yorigin, xorigin + xwidth - radius, yorigin)
-        self.dxfline(tool_num, xorigin + xwidth, yorigin + radius, xorigin + xwidth, yorigin + yheight - radius)
-        self.dxfline(tool_num, xorigin + xwidth - radius, yorigin + yheight, xorigin + radius, yorigin + yheight)
-        self.dxfline(tool_num, xorigin, yorigin + yheight - radius, xorigin, yorigin + radius)
+        self.dxfline(xorigin + radius, yorigin, xorigin + xwidth - radius, yorigin)
+        self.dxfline(xorigin + xwidth, yorigin + radius, xorigin + xwidth, yorigin + yheight - radius)
+        self.dxfline(xorigin + xwidth - radius, yorigin + yheight, xorigin + radius, yorigin + yheight)
+        self.dxfline(xorigin, yorigin + yheight - radius, xorigin, yorigin + radius)
 
-    def cutrectangle(self, tool_num, bx, by, bz, xwidth, yheight, zdepth):
+    def cutrectangle(self, bx, by, bz, xwidth, yheight, zdepth):
         self.cutline(bx, by, bz)
         self.cutline(bx, by, bz - zdepth)
         self.cutline(bx + xwidth, by, bz - zdepth)
@@ -2207,11 +1978,11 @@ class gcodepreview:
         self.cutline(bx, by + yheight, bz - zdepth)
         self.cutline(bx, by, bz - zdepth)
 
-    def cutrectangledxf(self, tool_num, bx, by, bz, xwidth, yheight, zdepth):
-        self.cutrectangle(tool_num, bx, by, bz, xwidth, yheight, zdepth)
-        self.dxfrectangle(tool_num, bx, by, xwidth, yheight, "Square")
+    def cutrectangledxf(self, bx, by, bz, xwidth, yheight, zdepth):
+        self.cutrectangle(bx, by, bz, xwidth, yheight, zdepth)
+        self.dxfrectangle(bx, by, xwidth, yheight, "Square")
 
-    def cutrectangleround(self, tool_num, bx, by, bz, xwidth, yheight, zdepth, radius):
+    def cutrectangleround(self, bx, by, bz, xwidth, yheight, zdepth, radius):
 #        self.rapid(bx + radius, by, bz)
         self.cutline(bx + radius, by, bz + zdepth)
         self.cutline(bx + xwidth - radius, by, bz + zdepth)
@@ -2223,9 +1994,9 @@ class gcodepreview:
         self.cutline(bx, by + radius, bz + zdepth)
         self.cutquarterCCSW(bx + radius, by, bz + zdepth, radius)
 
-    def cutrectanglerounddxf(self, tool_num, bx, by, bz, xwidth, yheight, zdepth, radius):
-        self.cutrectangleround(tool_num, bx, by, bz, xwidth, yheight, zdepth, radius)
-        self.dxfrectangleround(tool_num, bx, by, xwidth, yheight, radius)
+    def cutrectanglerounddxf(self, bx, by, bz, xwidth, yheight, zdepth, radius):
+        self.cutrectangleround(bx, by, bz, xwidth, yheight, zdepth, radius)
+        self.dxfrectangleround(bx, by, xwidth, yheight, radius)
 
     def cutkeyholegcdxf(self, kh_tool_num, kh_start_depth, kh_max_depth, kht_direction, kh_distance):
         if (kht_direction == "N"):
@@ -2254,47 +2025,47 @@ class gcodepreview:
 #        else:
 #            return cube([0.001, 0.001, 0.001])
 
-    def dxfKH(self, kh_tool_num, oXpos, oYpos, kh_start_depth, kh_max_depth, kh_angle, kh_distance):
+    def dxfKH(self, oXpos, oYpos, kh_start_depth, kh_max_depth, kh_angle, kh_distance):
 #        oXpos = self.xpos()
 #        oYpos = self.ypos()
 #Circle at entry hole
-        self.dxfarc(kh_tool_num, oXpos, oYpos, self.tool_radius(kh_tool_num, 7), 0, 90)
-        self.dxfarc(kh_tool_num, oXpos, oYpos, self.tool_radius(kh_tool_num, 7), 90, 180)
-        self.dxfarc(kh_tool_num, oXpos, oYpos, self.tool_radius(kh_tool_num, 7), 180, 270)
-        self.dxfarc(kh_tool_num, oXpos, oYpos, self.tool_radius(kh_tool_num, 7), 270, 360)
+        self.dxfarc(oXpos, oYpos, self.tool_radius(self.currenttoolnumber(), 7), 0, 90)
+        self.dxfarc(oXpos, oYpos, self.tool_radius(self.currenttoolnumber(), 7), 90, 180)
+        self.dxfarc(oXpos, oYpos, self.tool_radius(self.currenttoolnumber(), 7), 180, 270)
+        self.dxfarc(oXpos, oYpos, self.tool_radius(self.currenttoolnumber(), 7), 270, 360)
 #pre-calculate needed values
-        r = self.tool_radius(kh_tool_num, 7)
+        r = self.tool_radius(self.currenttoolnumber(), 7)
 #        print(r)
-        rt = self.tool_radius(kh_tool_num, 1)
+        rt = self.tool_radius(self.currenttoolnumber(), 1)
 #        print(rt)
-        ro = math.sqrt((self.tool_radius(kh_tool_num, 1))**2-(self.tool_radius(kh_tool_num, 7))**2)
+        ro = math.sqrt((self.tool_radius(self.currenttoolnumber(), 1))**2-(self.tool_radius(self.currenttoolnumber(), 7))**2)
 #        print(ro)
         angle = math.degrees(math.acos(ro/rt))
 #Outlines of entry hole and slot
         if (kh_angle == 0):
 #Lower left of entry hole
-            self.dxfarc(kh_tool_num, self.xpos(), self.ypos(), self.tool_radius(kh_tool_num, 1), 180, 270)
+            self.dxfarc(self.xpos(), self.ypos(), self.tool_radius(self.currenttoolnumber(), 1), 180, 270)
 #Upper left of entry hole
-            self.dxfarc(kh_tool_num, self.xpos(), self.ypos(), self.tool_radius(kh_tool_num, 1), 90, 180)
+            self.dxfarc(self.xpos(), self.ypos(), self.tool_radius(self.currenttoolnumber(), 1), 90, 180)
 #Upper right of entry hole
-#            self.dxfarc(kh_tool_num, self.xpos(), self.ypos(), rt, 41.810, 90)
-            self.dxfarc(kh_tool_num, self.xpos(), self.ypos(), rt, angle, 90)
+#            self.dxfarc(self.xpos(), self.ypos(), rt, 41.810, 90)
+            self.dxfarc(self.xpos(), self.ypos(), rt, angle, 90)
 #Lower right of entry hole
-            self.dxfarc(kh_tool_num, self.xpos(), self.ypos(), rt, 270, 360-angle)
-#            self.dxfarc(kh_tool_num, self.xpos(), self.ypos(), self.tool_radius(kh_tool_num, 1), 270, 270+math.acos(self.tool_diameter(kh_tool_num, 5)/self.tool_diameter(kh_tool_num, 1)))
+            self.dxfarc(self.xpos(), self.ypos(), rt, 270, 360-angle)
+#            self.dxfarc(self.xpos(), self.ypos(), self.tool_radius(self.currenttoolnumber(), 1), 270, 270+math.acos(self.tool_diameter(self.currenttoolnumber(), 5)/self.tool_diameter(self.currenttoolnumber(), 1)))
 #Actual line of cut
-#            self.dxfline(kh_tool_num, self.xpos(), self.ypos(), self.xpos()+kh_distance, self.ypos())
+#            self.dxfline(self.xpos(), self.ypos(), self.xpos()+kh_distance, self.ypos())
 #upper right of end of slot (kh_max_depth+4.36))/2
-            self.dxfarc(kh_tool_num, self.xpos()+kh_distance, self.ypos(), self.tool_diameter(kh_tool_num, (kh_max_depth+4.36))/2, 0, 90)
+            self.dxfarc(self.xpos()+kh_distance, self.ypos(), self.tool_diameter(self.currenttoolnumber(), (kh_max_depth+4.36))/2, 0, 90)
 #lower right of end of slot
-            self.dxfarc(kh_tool_num, self.xpos()+kh_distance, self.ypos(), self.tool_diameter(kh_tool_num, (kh_max_depth+4.36))/2, 270, 360)
+            self.dxfarc(self.xpos()+kh_distance, self.ypos(), self.tool_diameter(self.currenttoolnumber(), (kh_max_depth+4.36))/2, 270, 360)
 #upper right slot
-            self.dxfline(kh_tool_num, self.xpos()+ro, self.ypos()-(self.tool_diameter(kh_tool_num, 7)/2), self.xpos()+kh_distance, self.ypos()-(self.tool_diameter(kh_tool_num, 7)/2))
-#            self.dxfline(kh_tool_num, self.xpos()+(math.sqrt((self.tool_diameter(kh_tool_num, 1)^2)-(self.tool_diameter(kh_tool_num, 5)^2))/2), self.ypos()+self.tool_diameter(kh_tool_num, (kh_max_depth))/2, ( (kh_max_depth-6.34))/2)^2-(self.tool_diameter(kh_tool_num, (kh_max_depth-6.34))/2)^2, self.xpos()+kh_distance, self.ypos()+self.tool_diameter(kh_tool_num, (kh_max_depth))/2, kh_tool_num)
+            self.dxfline(self.xpos()+ro, self.ypos()-(self.tool_diameter(self.currenttoolnumber(), 7)/2), self.xpos()+kh_distance, self.ypos()-(self.tool_diameter(self.currenttoolnumber(), 7)/2))
+#            self.dxfline(self.xpos()+(math.sqrt((self.tool_diameter(self.currenttoolnumber(), 1)^2)-(self.tool_diameter(self.currenttoolnumber(), 5)^2))/2), self.ypos()+self.tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2, ( (kh_max_depth-6.34))/2)^2-(self.tool_diameter(self.currenttoolnumber(), (kh_max_depth-6.34))/2)^2, self.xpos()+kh_distance, self.ypos()+self.tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2, self.currenttoolnumber())
 #end position at top of slot
 #lower right slot
-            self.dxfline(kh_tool_num, self.xpos()+ro, self.ypos()+(self.tool_diameter(kh_tool_num, 7)/2), self.xpos()+kh_distance, self.ypos()+(self.tool_diameter(kh_tool_num, 7)/2))
-#        dxfline(kh_tool_num, self.xpos()+(math.sqrt((self.tool_diameter(kh_tool_num, 1)^2)-(self.tool_diameter(kh_tool_num, 5)^2))/2), self.ypos()-self.tool_diameter(kh_tool_num, (kh_max_depth))/2, ( (kh_max_depth-6.34))/2)^2-(self.tool_diameter(kh_tool_num, (kh_max_depth-6.34))/2)^2, self.xpos()+kh_distance, self.ypos()-self.tool_diameter(kh_tool_num, (kh_max_depth))/2, KH_tool_num)
+            self.dxfline(self.xpos()+ro, self.ypos()+(self.tool_diameter(self.currenttoolnumber(), 7)/2), self.xpos()+kh_distance, self.ypos()+(self.tool_diameter(self.currenttoolnumber(), 7)/2))
+#        dxfline(self.xpos()+(math.sqrt((self.tool_diameter(self.currenttoolnumber(), 1)^2)-(self.tool_diameter(self.currenttoolnumber(), 5)^2))/2), self.ypos()-self.tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2, ( (kh_max_depth-6.34))/2)^2-(self.tool_diameter(self.currenttoolnumber(), (kh_max_depth-6.34))/2)^2, self.xpos()+kh_distance, self.ypos()-self.tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2, self.currenttoolnumber())
 #end position at top of slot
 #    hull(){
 #      translate([xpos(), ypos(), zpos()]){
@@ -2317,76 +2088,76 @@ class gcodepreview:
 #    setxpos(getxpos()-kh_distance);
 #  } else if (kh_angle > 0 && kh_angle < 90) {
 #//echo(kh_angle);
-#  dxfarc(getxpos(), getypos(), tool_diameter(KH_tool_num, (kh_max_depth))/2, 90+kh_angle, 180+kh_angle, KH_tool_num);
-#  dxfarc(getxpos(), getypos(), tool_diameter(KH_tool_num, (kh_max_depth))/2, 180+kh_angle, 270+kh_angle, KH_tool_num);
-#dxfarc(getxpos(), getypos(), tool_diameter(KH_tool_num, (kh_max_depth))/2, kh_angle+asin((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_num, (kh_max_depth))/2)), 90+kh_angle, KH_tool_num);
-#dxfarc(getxpos(), getypos(), tool_diameter(KH_tool_num, (kh_max_depth))/2, 270+kh_angle, 360+kh_angle-asin((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_num, (kh_max_depth))/2)), KH_tool_num);
+#  dxfarc(getxpos(), getypos(), tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2, 90+kh_angle, 180+kh_angle, self.currenttoolnumber());
+#  dxfarc(getxpos(), getypos(), tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2, 180+kh_angle, 270+kh_angle, self.currenttoolnumber());
+#dxfarc(getxpos(), getypos(), tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2, kh_angle+asin((tool_diameter(self.currenttoolnumber(), (kh_max_depth+4.36))/2)/(tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2)), 90+kh_angle, self.currenttoolnumber());
+#dxfarc(getxpos(), getypos(), tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2, 270+kh_angle, 360+kh_angle-asin((tool_diameter(self.currenttoolnumber(), (kh_max_depth+4.36))/2)/(tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2)), self.currenttoolnumber());
 #dxfarc(getxpos()+(kh_distance*cos(kh_angle)),
-#  getypos()+(kh_distance*sin(kh_angle)), tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2, 0+kh_angle, 90+kh_angle, KH_tool_num);
-#dxfarc(getxpos()+(kh_distance*cos(kh_angle)), getypos()+(kh_distance*sin(kh_angle)), tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2, 270+kh_angle, 360+kh_angle, KH_tool_num);
-#dxfline( getxpos()+tool_diameter(KH_tool_num, (kh_max_depth))/2*cos(kh_angle+asin((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_num, (kh_max_depth))/2))),
-# getypos()+tool_diameter(KH_tool_num, (kh_max_depth))/2*sin(kh_angle+asin((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_num, (kh_max_depth))/2))),
-# getxpos()+(kh_distance*cos(kh_angle))-((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)*sin(kh_angle)),
-# getypos()+(kh_distance*sin(kh_angle))+((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)*cos(kh_angle)), KH_tool_num);
-#//echo("a", tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2);
-#//echo("c", tool_diameter(KH_tool_num, (kh_max_depth))/2);
-#echo("Aangle", asin((tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2)/(tool_diameter(KH_tool_num, (kh_max_depth))/2)));
+#  getypos()+(kh_distance*sin(kh_angle)), tool_diameter(self.currenttoolnumber(), (kh_max_depth+4.36))/2, 0+kh_angle, 90+kh_angle, self.currenttoolnumber());
+#dxfarc(getxpos()+(kh_distance*cos(kh_angle)), getypos()+(kh_distance*sin(kh_angle)), tool_diameter(self.currenttoolnumber(), (kh_max_depth+4.36))/2, 270+kh_angle, 360+kh_angle, self.currenttoolnumber());
+#dxfline( getxpos()+tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2*cos(kh_angle+asin((tool_diameter(self.currenttoolnumber(), (kh_max_depth+4.36))/2)/(tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2))),
+# getypos()+tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2*sin(kh_angle+asin((tool_diameter(self.currenttoolnumber(), (kh_max_depth+4.36))/2)/(tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2))),
+# getxpos()+(kh_distance*cos(kh_angle))-((tool_diameter(self.currenttoolnumber(), (kh_max_depth+4.36))/2)*sin(kh_angle)),
+# getypos()+(kh_distance*sin(kh_angle))+((tool_diameter(self.currenttoolnumber(), (kh_max_depth+4.36))/2)*cos(kh_angle)), self.currenttoolnumber());
+#//echo("a", tool_diameter(self.currenttoolnumber(), (kh_max_depth+4.36))/2);
+#//echo("c", tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2);
+#echo("Aangle", asin((tool_diameter(self.currenttoolnumber(), (kh_max_depth+4.36))/2)/(tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2)));
 #//echo(kh_angle);
 # cutwithfeed(getxpos()+(kh_distance*cos(kh_angle)), getypos()+(kh_distance*sin(kh_angle)), -kh_max_depth, feed);
 #            toolpath = toolpath.union(self.cutline(self.xpos()+kh_distance, self.ypos(), -kh_max_depth))
         elif (kh_angle == 90):
 #Lower left of entry hole
-            self.dxfarc(kh_tool_num, oXpos, oYpos, self.tool_radius(kh_tool_num, 1), 180, 270)
+            self.dxfarc(oXpos, oYpos, self.tool_radius(self.currenttoolnumber(), 1), 180, 270)
 #Lower right of entry hole
-            self.dxfarc(kh_tool_num, oXpos, oYpos, self.tool_radius(kh_tool_num, 1), 270, 360)
+            self.dxfarc(oXpos, oYpos, self.tool_radius(self.currenttoolnumber(), 1), 270, 360)
 #left slot
-            self.dxfline(kh_tool_num, oXpos-r, oYpos+ro, oXpos-r, oYpos+kh_distance)
+            self.dxfline(oXpos-r, oYpos+ro, oXpos-r, oYpos+kh_distance)
 #right slot
-            self.dxfline(kh_tool_num, oXpos+r, oYpos+ro, oXpos+r, oYpos+kh_distance)
+            self.dxfline(oXpos+r, oYpos+ro, oXpos+r, oYpos+kh_distance)
 #upper left of end of slot
-            self.dxfarc(kh_tool_num, oXpos, oYpos+kh_distance, r, 90, 180)
+            self.dxfarc(oXpos, oYpos+kh_distance, r, 90, 180)
 #upper right of end of slot
-            self.dxfarc(kh_tool_num, oXpos, oYpos+kh_distance, r, 0, 90)
+            self.dxfarc(oXpos, oYpos+kh_distance, r, 0, 90)
 #Upper right of entry hole
-            self.dxfarc(kh_tool_num, oXpos, oYpos, rt, 0, 90-angle)
+            self.dxfarc(oXpos, oYpos, rt, 0, 90-angle)
 #Upper left of entry hole
-            self.dxfarc(kh_tool_num, oXpos, oYpos, rt, 90+angle, 180)
+            self.dxfarc(oXpos, oYpos, rt, 90+angle, 180)
 #            toolpath = toolpath.union(self.cutline(oXpos, oYpos+kh_distance, -kh_max_depth))
         elif (kh_angle == 180):
 #Lower right of entry hole
-            self.dxfarc(kh_tool_num, oXpos, oYpos, self.tool_radius(kh_tool_num, 1), 270, 360)
+            self.dxfarc(oXpos, oYpos, self.tool_radius(self.currenttoolnumber(), 1), 270, 360)
 #Upper right of entry hole
-            self.dxfarc(kh_tool_num, oXpos, oYpos, self.tool_radius(kh_tool_num, 1), 0, 90)
+            self.dxfarc(oXpos, oYpos, self.tool_radius(self.currenttoolnumber(), 1), 0, 90)
 #Upper left of entry hole
-            self.dxfarc(kh_tool_num, oXpos, oYpos, rt, 90, 180-angle)
+            self.dxfarc(oXpos, oYpos, rt, 90, 180-angle)
 #Lower left of entry hole
-            self.dxfarc(kh_tool_num, oXpos, oYpos, rt, 180+angle, 270)
+            self.dxfarc(oXpos, oYpos, rt, 180+angle, 270)
 #upper slot
-            self.dxfline(kh_tool_num, oXpos-ro, oYpos-r, oXpos-kh_distance, oYpos-r)
+            self.dxfline(oXpos-ro, oYpos-r, oXpos-kh_distance, oYpos-r)
 #lower slot
-            self.dxfline(kh_tool_num, oXpos-ro, oYpos+r, oXpos-kh_distance, oYpos+r)
+            self.dxfline(oXpos-ro, oYpos+r, oXpos-kh_distance, oYpos+r)
 #upper left of end of slot
-            self.dxfarc(kh_tool_num, oXpos-kh_distance, oYpos, r, 90, 180)
+            self.dxfarc(oXpos-kh_distance, oYpos, r, 90, 180)
 #lower left of end of slot
-            self.dxfarc(kh_tool_num, oXpos-kh_distance, oYpos, r, 180, 270)
+            self.dxfarc(oXpos-kh_distance, oYpos, r, 180, 270)
 #            toolpath = toolpath.union(self.cutline(oXpos-kh_distance, oYpos, -kh_max_depth))
         elif (kh_angle == 270):
 #Upper left of entry hole
-            self.dxfarc(kh_tool_num, oXpos, oYpos, self.tool_radius(kh_tool_num, 1), 90, 180)
+            self.dxfarc(oXpos, oYpos, self.tool_radius(self.currenttoolnumber(), 1), 90, 180)
 #Upper right of entry hole
-            self.dxfarc(kh_tool_num, oXpos, oYpos, self.tool_radius(kh_tool_num, 1), 0, 90)
+            self.dxfarc(oXpos, oYpos, self.tool_radius(self.currenttoolnumber(), 1), 0, 90)
 #left slot
-            self.dxfline(kh_tool_num, oXpos-r, oYpos-ro, oXpos-r, oYpos-kh_distance)
+            self.dxfline(oXpos-r, oYpos-ro, oXpos-r, oYpos-kh_distance)
 #right slot
-            self.dxfline(kh_tool_num, oXpos+r, oYpos-ro, oXpos+r, oYpos-kh_distance)
+            self.dxfline(oXpos+r, oYpos-ro, oXpos+r, oYpos-kh_distance)
 #lower left of end of slot
-            self.dxfarc(kh_tool_num, oXpos, oYpos-kh_distance, r, 180, 270)
+            self.dxfarc(oXpos, oYpos-kh_distance, r, 180, 270)
 #lower right of end of slot
-            self.dxfarc(kh_tool_num, oXpos, oYpos-kh_distance, r, 270, 360)
+            self.dxfarc(oXpos, oYpos-kh_distance, r, 270, 360)
 #lower right of entry hole
-            self.dxfarc(kh_tool_num, oXpos, oYpos, rt, 180, 270-angle)
+            self.dxfarc(oXpos, oYpos, rt, 180, 270-angle)
 #lower left of entry hole
-            self.dxfarc(kh_tool_num, oXpos, oYpos, rt, 270+angle, 360)
+            self.dxfarc(oXpos, oYpos, rt, 270+angle, 360)
 #            toolpath = toolpath.union(self.cutline(oXpos, oYpos-kh_distance, -kh_max_depth))
 #        print(self.zpos())
 #        self.setxpos(oXpos)
@@ -2396,28 +2167,28 @@ class gcodepreview:
 
 #  } else if (kh_angle == 90) {
 #    //Lower left of entry hole
-#    dxfarc(getxpos(), getypos(), 9.525/2, 180, 270, KH_tool_num);
+#    dxfarc(getxpos(), getypos(), 9.525/2, 180, 270, self.currenttoolnumber());
 #    //Lower right of entry hole
-#    dxfarc(getxpos(), getypos(), 9.525/2, 270, 360, KH_tool_num);
+#    dxfarc(getxpos(), getypos(), 9.525/2, 270, 360, self.currenttoolnumber());
 #    //Upper right of entry hole
-#    dxfarc(getxpos(), getypos(), 9.525/2, 0, acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), KH_tool_num);
+#    dxfarc(getxpos(), getypos(), 9.525/2, 0, acos(tool_diameter(self.currenttoolnumber(), 5)/tool_diameter(self.currenttoolnumber(), 1)), self.currenttoolnumber());
 #    //Upper left of entry hole
-#    dxfarc(getxpos(), getypos(), 9.525/2, 180-acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), 180, KH_tool_num);
+#    dxfarc(getxpos(), getypos(), 9.525/2, 180-acos(tool_diameter(self.currenttoolnumber(), 5)/tool_diameter(self.currenttoolnumber(), 1)), 180, self.currenttoolnumber());
 #    //Actual line of cut
 #    dxfline(getxpos(), getypos(), getxpos(), getypos()+kh_distance);
 #    //upper right of slot
-#    dxfarc(getxpos(), getypos()+kh_distance, tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2, 0, 90, KH_tool_num);
+#    dxfarc(getxpos(), getypos()+kh_distance, tool_diameter(self.currenttoolnumber(), (kh_max_depth+4.36))/2, 0, 90, self.currenttoolnumber());
 #    //upper left of slot
-#    dxfarc(getxpos(), getypos()+kh_distance, tool_diameter(KH_tool_num, (kh_max_depth+6.35))/2, 90, 180, KH_tool_num);
+#    dxfarc(getxpos(), getypos()+kh_distance, tool_diameter(self.currenttoolnumber(), (kh_max_depth+6.35))/2, 90, 180, self.currenttoolnumber());
 #    //right of slot
 #    dxfline(
-#        getxpos()+tool_diameter(KH_tool_num, (kh_max_depth))/2,
-#        getypos()+(math.sqrt((tool_diameter(KH_tool_num, 1)^2)-(tool_diameter(KH_tool_num, 5)^2))/2), //( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_num, (kh_max_depth-6.34))/2)^2,
-#        getxpos()+tool_diameter(KH_tool_num, (kh_max_depth))/2,
+#        getxpos()+tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2,
+#        getypos()+(math.sqrt((tool_diameter(self.currenttoolnumber(), 1)^2)-(tool_diameter(self.currenttoolnumber(), 5)^2))/2), //( (kh_max_depth-6.34))/2)^2-(tool_diameter(self.currenttoolnumber(), (kh_max_depth-6.34))/2)^2,
+#        getxpos()+tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2,
 #    //end position at top of slot
 #        getypos()+kh_distance,
-#        KH_tool_num);
-#    dxfline(getxpos()-tool_diameter(KH_tool_num, (kh_max_depth))/2, getypos()+(math.sqrt((tool_diameter(KH_tool_num, 1)^2)-(tool_diameter(KH_tool_num, 5)^2))/2), getxpos()-tool_diameter(KH_tool_num, (kh_max_depth+6.35))/2, getypos()+kh_distance, KH_tool_num);
+#        self.currenttoolnumber());
+#    dxfline(getxpos()-tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2, getypos()+(math.sqrt((tool_diameter(self.currenttoolnumber(), 1)^2)-(tool_diameter(self.currenttoolnumber(), 5)^2))/2), getxpos()-tool_diameter(self.currenttoolnumber(), (kh_max_depth+6.35))/2, getypos()+kh_distance, self.currenttoolnumber());
 #    hull(){
 #      translate([xpos(), ypos(), zpos()]){
 #        keyhole_shaft(6.35, 9.525);
@@ -2439,35 +2210,35 @@ class gcodepreview:
 #    setypos(getypos()-kh_distance);
 #  } else if (kh_angle == 180) {
 #    //Lower right of entry hole
-#    dxfarc(getxpos(), getypos(), 9.525/2, 270, 360, KH_tool_num);
+#    dxfarc(getxpos(), getypos(), 9.525/2, 270, 360, self.currenttoolnumber());
 #    //Upper right of entry hole
-#    dxfarc(getxpos(), getypos(), 9.525/2, 0, 90, KH_tool_num);
+#    dxfarc(getxpos(), getypos(), 9.525/2, 0, 90, self.currenttoolnumber());
 #    //Upper left of entry hole
-#    dxfarc(getxpos(), getypos(), 9.525/2, 90, 90+acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), KH_tool_num);
+#    dxfarc(getxpos(), getypos(), 9.525/2, 90, 90+acos(tool_diameter(self.currenttoolnumber(), 5)/tool_diameter(self.currenttoolnumber(), 1)), self.currenttoolnumber());
 #    //Lower left of entry hole
-#    dxfarc(getxpos(), getypos(), 9.525/2, 270-acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), 270, KH_tool_num);
+#    dxfarc(getxpos(), getypos(), 9.525/2, 270-acos(tool_diameter(self.currenttoolnumber(), 5)/tool_diameter(self.currenttoolnumber(), 1)), 270, self.currenttoolnumber());
 #    //upper left of slot
-#    dxfarc(getxpos()-kh_distance, getypos(), tool_diameter(KH_tool_num, (kh_max_depth+6.35))/2, 90, 180, KH_tool_num);
+#    dxfarc(getxpos()-kh_distance, getypos(), tool_diameter(self.currenttoolnumber(), (kh_max_depth+6.35))/2, 90, 180, self.currenttoolnumber());
 #    //lower left of slot
-#    dxfarc(getxpos()-kh_distance, getypos(), tool_diameter(KH_tool_num, (kh_max_depth+6.35))/2, 180, 270, KH_tool_num);
+#    dxfarc(getxpos()-kh_distance, getypos(), tool_diameter(self.currenttoolnumber(), (kh_max_depth+6.35))/2, 180, 270, self.currenttoolnumber());
 #    //Actual line of cut
 #    dxfline(getxpos(), getypos(), getxpos()-kh_distance, getypos());
 #    //upper left slot
 #    dxfline(
-#        getxpos()-(math.sqrt((tool_diameter(KH_tool_num, 1)^2)-(tool_diameter(KH_tool_num, 5)^2))/2),
-#        getypos()+tool_diameter(KH_tool_num, (kh_max_depth))/2, //( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_num, (kh_max_depth-6.34))/2)^2,
+#        getxpos()-(math.sqrt((tool_diameter(self.currenttoolnumber(), 1)^2)-(tool_diameter(self.currenttoolnumber(), 5)^2))/2),
+#        getypos()+tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2, //( (kh_max_depth-6.34))/2)^2-(tool_diameter(self.currenttoolnumber(), (kh_max_depth-6.34))/2)^2,
 #        getxpos()-kh_distance,
 #    //end position at top of slot
-#        getypos()+tool_diameter(KH_tool_num, (kh_max_depth))/2,
-#        KH_tool_num);
+#        getypos()+tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2,
+#        self.currenttoolnumber());
 #    //lower right slot
 #    dxfline(
-#        getxpos()-(math.sqrt((tool_diameter(KH_tool_num, 1)^2)-(tool_diameter(KH_tool_num, 5)^2))/2),
-#        getypos()-tool_diameter(KH_tool_num, (kh_max_depth))/2, //( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_num, (kh_max_depth-6.34))/2)^2,
+#        getxpos()-(math.sqrt((tool_diameter(self.currenttoolnumber(), 1)^2)-(tool_diameter(self.currenttoolnumber(), 5)^2))/2),
+#        getypos()-tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2, //( (kh_max_depth-6.34))/2)^2-(tool_diameter(self.currenttoolnumber(), (kh_max_depth-6.34))/2)^2,
 #        getxpos()-kh_distance,
 #    //end position at top of slot
-#        getypos()-tool_diameter(KH_tool_num, (kh_max_depth))/2,
-#        KH_tool_num);
+#        getypos()-tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2,
+#        self.currenttoolnumber());
 #    hull(){
 #      translate([xpos(), ypos(), zpos()]){
 #        keyhole_shaft(6.35, 9.525);
@@ -2489,35 +2260,35 @@ class gcodepreview:
 #    setxpos(getxpos()+kh_distance);
 #  } else if (kh_angle == 270) {
 #    //Upper right of entry hole
-#    dxfarc(getxpos(), getypos(), 9.525/2, 0, 90, KH_tool_num);
+#    dxfarc(getxpos(), getypos(), 9.525/2, 0, 90, self.currenttoolnumber());
 #    //Upper left of entry hole
-#    dxfarc(getxpos(), getypos(), 9.525/2, 90, 180, KH_tool_num);
+#    dxfarc(getxpos(), getypos(), 9.525/2, 90, 180, self.currenttoolnumber());
 #    //lower right of slot
-#    dxfarc(getxpos(), getypos()-kh_distance, tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2, 270, 360, KH_tool_num);
+#    dxfarc(getxpos(), getypos()-kh_distance, tool_diameter(self.currenttoolnumber(), (kh_max_depth+4.36))/2, 270, 360, self.currenttoolnumber());
 #    //lower left of slot
-#    dxfarc(getxpos(), getypos()-kh_distance, tool_diameter(KH_tool_num, (kh_max_depth+4.36))/2, 180, 270, KH_tool_num);
+#    dxfarc(getxpos(), getypos()-kh_distance, tool_diameter(self.currenttoolnumber(), (kh_max_depth+4.36))/2, 180, 270, self.currenttoolnumber());
 #    //Actual line of cut
 #    dxfline(getxpos(), getypos(), getxpos(), getypos()-kh_distance);
 #    //right of slot
 #    dxfline(
-#        getxpos()+tool_diameter(KH_tool_num, (kh_max_depth))/2,
-#        getypos()-(math.sqrt((tool_diameter(KH_tool_num, 1)^2)-(tool_diameter(KH_tool_num, 5)^2))/2), //( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_num, (kh_max_depth-6.34))/2)^2,
-#        getxpos()+tool_diameter(KH_tool_num, (kh_max_depth))/2,
+#        getxpos()+tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2,
+#        getypos()-(math.sqrt((tool_diameter(self.currenttoolnumber(), 1)^2)-(tool_diameter(self.currenttoolnumber(), 5)^2))/2), //( (kh_max_depth-6.34))/2)^2-(tool_diameter(self.currenttoolnumber(), (kh_max_depth-6.34))/2)^2,
+#        getxpos()+tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2,
 #    //end position at top of slot
 #        getypos()-kh_distance,
-#        KH_tool_num);
+#        self.currenttoolnumber());
 #    //left of slot
 #    dxfline(
-#        getxpos()-tool_diameter(KH_tool_num, (kh_max_depth))/2,
-#        getypos()-(math.sqrt((tool_diameter(KH_tool_num, 1)^2)-(tool_diameter(KH_tool_num, 5)^2))/2), //( (kh_max_depth-6.34))/2)^2-(tool_diameter(KH_tool_num, (kh_max_depth-6.34))/2)^2,
-#        getxpos()-tool_diameter(KH_tool_num, (kh_max_depth))/2,
+#        getxpos()-tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2,
+#        getypos()-(math.sqrt((tool_diameter(self.currenttoolnumber(), 1)^2)-(tool_diameter(self.currenttoolnumber(), 5)^2))/2), //( (kh_max_depth-6.34))/2)^2-(tool_diameter(self.currenttoolnumber(), (kh_max_depth-6.34))/2)^2,
+#        getxpos()-tool_diameter(self.currenttoolnumber(), (kh_max_depth))/2,
 #    //end position at top of slot
 #        getypos()-kh_distance,
-#        KH_tool_num);
+#        self.currenttoolnumber());
 #    //Lower right of entry hole
-#    dxfarc(getxpos(), getypos(), 9.525/2, 360-acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), 360, KH_tool_num);
+#    dxfarc(getxpos(), getypos(), 9.525/2, 360-acos(tool_diameter(self.currenttoolnumber(), 5)/tool_diameter(self.currenttoolnumber(), 1)), 360, self.currenttoolnumber());
 #    //Lower left of entry hole
-#    dxfarc(getxpos(), getypos(), 9.525/2, 180, 180+acos(tool_diameter(KH_tool_num, 5)/tool_diameter(KH_tool_num, 1)), KH_tool_num);
+#    dxfarc(getxpos(), getypos(), 9.525/2, 180, 180+acos(tool_diameter(self.currenttoolnumber(), 5)/tool_diameter(self.currenttoolnumber(), 1)), self.currenttoolnumber());
 #    hull(){
 #      translate([xpos(), ypos(), zpos()]){
 #        keyhole_shaft(6.35, 9.525);
@@ -2599,31 +2370,31 @@ class gcodepreview:
         self.rapidZ(0)
         self.rapidXY(0, 0)
         ctp = ctp.union(self.cutlinedxfgc(self.xpos(), self.ypos(), -stockZthickness * Proportion))
-        self.dxfarc(self.currenttoolnumber(), 0, 0, DTR, 180, 270)
-        self.dxfline(self.currenttoolnumber(), -DTR, 0, -DTR, stockZthickness + DTR)
-        self.dxfarc(self.currenttoolnumber(), 0, stockZthickness + DTR, DTR, 90, 180)
-        self.dxfline(self.currenttoolnumber(), 0, stockZthickness + DTR * 2, Joint_Width, stockZthickness + DTR * 2)
+        self.dxfarc(0, 0, DTR, 180, 270)
+        self.dxfline(-DTR, 0, -DTR, stockZthickness + DTR)
+        self.dxfarc(0, stockZthickness + DTR, DTR, 90, 180)
+        self.dxfline(0, stockZthickness + DTR * 2, Joint_Width, stockZthickness + DTR * 2)
         i = 0
         while i < Number_of_Dovetails * 2:
             ctp = ctp.union(self.cutline(i * (Joint_Width / (Number_of_Dovetails * 2)), stockZthickness + DTO, -(stockZthickness * Proportion)))
             ctp = ctp.union(self.cutline((i+2) * (Joint_Width / (Number_of_Dovetails * 2)), stockZthickness + DTO, -(stockZthickness * Proportion)))
             ctp = ctp.union(self.cutline((i+2) * (Joint_Width / (Number_of_Dovetails * 2)), 0, -(stockZthickness * Proportion)))
-            self.dxfarc(self.currenttoolnumber(), i * (Joint_Width / (Number_of_Dovetails * 2)), 0, DTR, 270, 360)
-            self.dxfline(self.currenttoolnumber(),
+            self.dxfarc(i * (Joint_Width / (Number_of_Dovetails * 2)), 0, DTR, 270, 360)
+            self.dxfline(
                 i * (Joint_Width / (Number_of_Dovetails * 2)) + DTR,
                 0,
                 i * (Joint_Width / (Number_of_Dovetails * 2)) + DTR, stockZthickness * Proportion - DTT_diameter / 2)
-            self.dxfarc(self.currenttoolnumber(), (i + 1) * (Joint_Width / (Number_of_Dovetails * 2)), stockZthickness * Proportion - DTT_diameter / 2, (Joint_Width / (Number_of_Dovetails * 2)) - DTR, 90, 180)
-            self.dxfarc(self.currenttoolnumber(), (i + 1) * (Joint_Width / (Number_of_Dovetails * 2)), stockZthickness * Proportion - DTT_diameter / 2, (Joint_Width / (Number_of_Dovetails * 2)) - DTR, 0, 90)
-            self.dxfline(self.currenttoolnumber(),
+            self.dxfarc((i + 1) * (Joint_Width / (Number_of_Dovetails * 2)), stockZthickness * Proportion - DTT_diameter / 2, (Joint_Width / (Number_of_Dovetails * 2)) - DTR, 90, 180)
+            self.dxfarc((i + 1) * (Joint_Width / (Number_of_Dovetails * 2)), stockZthickness * Proportion - DTT_diameter / 2, (Joint_Width / (Number_of_Dovetails * 2)) - DTR, 0, 90)
+            self.dxfline(
                 (i + 2) * (Joint_Width / (Number_of_Dovetails * 2)) - DTR,
                 0,
                 (i + 2) * (Joint_Width / (Number_of_Dovetails * 2)) - DTR, stockZthickness * Proportion - DTT_diameter / 2)
-            self.dxfarc(self.currenttoolnumber(), (i + 2) * (Joint_Width / (Number_of_Dovetails * 2)), 0, DTR, 180, 270)
+            self.dxfarc((i + 2) * (Joint_Width / (Number_of_Dovetails * 2)), 0, DTR, 180, 270)
             i += 2
-        self.dxfarc(self.currenttoolnumber(), Joint_Width, stockZthickness + DTR, DTR, 0, 90)
-        self.dxfline(self.currenttoolnumber(), Joint_Width + DTR, stockZthickness + DTR, Joint_Width + DTR, 0)
-        self.dxfarc(self.currenttoolnumber(), Joint_Width, 0, DTR, 270, 360)
+        self.dxfarc(Joint_Width, stockZthickness + DTR, DTR, 0, 90)
+        self.dxfline(Joint_Width + DTR, stockZthickness + DTR, Joint_Width + DTR, 0)
+        self.dxfarc(Joint_Width, 0, DTR, 270, 360)
         return ctp
 
     def Full_Blind_Finger_Joint_square(self, bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, normalormirror = "Default"):
