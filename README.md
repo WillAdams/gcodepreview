@@ -4,7 +4,7 @@ OpenPythonSCAD library for moving a tool in lines and arcs so as to model how a 
 
 ![OpenSCAD gcodepreview Unit Tests](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/gcodepreviewtemplate.png?raw=true)
 
-Uses Python in OpenSCAD: https://pythonscad.org/[^pythonscad]
+Uses [Python in OpenSCAD](https://pythonscad.org/)[^pythonscad]
 
 [^pythonscad]: Previously this was http://www.guenther-sohler.net/openscad/ 
 
@@ -26,7 +26,7 @@ The files for this library are:
 
 And there several sample/template files which may be used as the starting point for a given project:
 
- - gcodepreviewtemplate.txt (gcptmpl) --- .txt file collecting all commands with brief comments which may be used as a quick reference or copy-pasting from
+ - gcodepreviewtemplate.txt (gcptmpl) --- .txt file collecting various commands with brief comments which may be used as a quick reference or copy-pasting from
  - gcodepreviewtemplate.py (gcptmplpy) --- .py example file 
  - gcodepreviewtemplate.scad (gcptmplscad) --- .scad example file
  - gcpdxf.py (gcpdxfpy) --- .py example file which only makes dxf file(s) and which will run in "normal" Python in addition to PythonSCAD
@@ -84,6 +84,8 @@ Supporting OpenSCAD usage makes possible such examples as: openscad_gcodepreview
 
 ![OpenSCAD Graph Editor Cut Joinery File](https://raw.githubusercontent.com/WillAdams/gcodepreview/main/OSGE_cutjoinery.png?raw=true)
 
+Written as a [Literate Program](http://literateprogramming.com/) in [lualatex](https://www.luatex.org/) which is a version of Donald E. Knuth's [TeX typesetting program](https://tug.org/whatis.html) extended by the [Lua programming language](https://www.lua.org/) using a custom package, [literati.sty](https://github.com/WillAdams/gcodepreview/blob/main/literati.sty) developed with a bit of help on [tex.stackexchange.com](https://tex.stackexchange.com/questions/722886/how-to-write-out-multiple-text-files-from-multiple-instances-of-latex-environmen) rather than using a more typical IDE because of the need for keeping multiple files in synch and so as to have a single point of control (the .tex source file used to generate the .pdf and all other files for this project).
+
 | Version       | Notes         |
 | ------------- | ------------- |
 | 0.1           | Version  supports setting up stock, origin, rapid positioning, making cuts, and writing out matching G-code, and creating a DXF with polylines.                                 |
@@ -105,6 +107,8 @@ Supporting OpenSCAD usage makes possible such examples as: openscad_gcodepreview
 | 0.91          | Finish converting to native OpenPythonSCAD trigonometric functions.                                                                                                             |
 | 0.92          | Remove multiple DXFs and unimplemented features, add hooks for 3D printing.                                                                                                     |
 | 0.93          | Initial support for 3D printing.                                                                                                                                                |
+| 0.931         | Update support for OpenSCAD modules.                                                                                                                                            |
+| 0.932         | Update DXF file-handling for Carbide Create 839.                                                                                                                                |
 
 To do:
 
@@ -115,6 +119,7 @@ To do:
  - fully implement/verify describing/saving/loading tools using CutViewer comments
  - support for additional tooling shapes (lollipop cutters)
  - threadmilling
+ - create font using lines and arcs with parameters for overshoot and width/spacing
 
 Possible future improvements:
 
@@ -136,8 +141,8 @@ Issues/Research:
 
 Deprecated features:
 
+ - polylines
  - exporting SVGs --- coordinate system differences between OpenSCAD/DXFs and SVGs would require managing the inversion of the coordinate system (using METAPOST, which shares the same orientation and which can write out SVGs may be used for future versions)
  - using linear/rotate_extrude --- 2D geometry is rotated to match the arc of the movement, which is appropriate to a 5-axis machine, but not workable for a 3-axis. Adding an option to support the use of such commands for horizontal movement is within the realm of possibility.
  - multiple DXF files
  - RapCAD support
-
