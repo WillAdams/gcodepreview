@@ -17,7 +17,7 @@ except ModuleNotFoundError as e:
     print("OpenSCAD module not loaded.")
 
 def pygcpversion():
-    thegcpversion = 0.931
+    thegcpversion = 0.9313
     return thegcpversion
 
 class gcodepreview:
@@ -1059,6 +1059,9 @@ class gcodepreview:
 #        print(self.cutcolor)
 #        print(ex, ey, ez)
         tm = self.toolmovement(self.xpos(), self.ypos(), self.zpos(), ex, ey, ez)
+        if self.cutcolor == "Dark Gray":
+            self.cutcolor = "Gray"
+#        print("cutline color =", self.cutcolor)
         tm = color(tm, self.cutcolor)
         ts = self.shaftmovement(self.xpos(), self.ypos(), self.zpos(), ex, ey, ez)
         ts = color(ts, self.rapidcolor)
@@ -1139,7 +1142,15 @@ class gcodepreview:
         self.cutline(ex, ey, ez)
 
     def cutvertexdxf(self, ex, ey, ez):
-        self.addvertex(ex, ey)
+        self.addvertex(ex, ey, ez)
+        self.cutline(ex, ey, ez)
+
+    def cutpolylinedxf(self, ex, ey, ez):
+        self.addopline(ex, ey, ez)
+        self.cutline(ex, ey, ez)
+
+    def cutvertexdxfgc(self, ex, ey, ez):
+        self.addvertex(ex, ey, ez)
         self.writegc("G01 X", str(ex), " Y", str(ey), " Z", str(ez))
         self.cutline(ex, ey, ez)
 
@@ -1431,8 +1442,8 @@ class gcodepreview:
         SITE_PKG = rf"C:\Users\{os.getlogin()}\AppData\Local\Programs\Python\Python312\Lib\site-packages"
 
         if SITE_PKG not in sys.path:
-	        sys.path.append(SITE_PKG)
-	
+            sys.path.append(SITE_PKG)
+
         # Unwind some default folder adds by PythonScad that seem to conflict!!
         # Specifically: ctypes.
         unwinds = set([
@@ -1592,7 +1603,18 @@ class gcodepreview:
 
     def setdxfcolor(self, color):
         self.dxfcolor = color
-        self.cutcolor = color
+        if color == "Cyan":
+            self.cutcolor = "Aqua"
+        elif color == "Magenta":
+            self.cutcolor = "Fuchsia"
+        if color == "Dark Gray":
+#            print("dxfcolor set to ", color)
+            self.cutcolor = "Gray"
+#            print("self.cutcolor = ", self.cutcolor)
+        if color == "Light Gray":
+            self.cutcolor = "Silver"
+        else:
+            self.cutcolor = color
 
     def setdxflayer(self, layer):
         self.dxflayer = layer
@@ -1610,17 +1632,17 @@ class gcodepreview:
                 self.writedxf("2")
             if (self.dxfcolor == "Green"):
                 self.writedxf("3")
-            if (self.dxfcolor == "Cyan"):
+            if (self.dxfcolor == "Cyan" or self.dxfcolor == "Aqua"):
                 self.writedxf("4")
             if (self.dxfcolor == "Blue"):
                 self.writedxf("5")
-            if (self.dxfcolor == "Magenta"):
+            if (self.dxfcolor == "Magenta" or self.dxfcolor == "Fuchsia"):
                 self.writedxf("6")
             if (self.dxfcolor == "White"):
                 self.writedxf("7")
-            if (self.dxfcolor == "Dark Gray"):
+            if (self.dxfcolor == "Dark Gray" or self.dxfcolor == "Gray"):
                 self.writedxf("8")
-            if (self.dxfcolor == "Light Gray"):
+            if (self.dxfcolor == "Light Gray" or self.dxfcolor == "Silver"):
                 self.writedxf("9")
 
     def dxfline(self, xbegin, ybegin, xend, yend, zbegin = 0.0, zend = 0.0):
@@ -1641,6 +1663,47 @@ class gcodepreview:
         self.writedxf(str(yend))
         self.writedxf("31")
         self.writedxf(str(zend))
+
+    def beginopenpolyline(self, xbegin, ybegin, zbegin = 0.0, co = 0):
+        self.writedxf("0")
+        self.writedxf("LWPOLYLINE")
+        self.writedxf("8")
+        self.writedxf(str(self.dxflayer))
+        self.writedxf("90")
+        self.writedxf("4")
+        self.writedxf("70")
+        self.writedxf(str(co))
+        self.bpx = xbegin
+        self.bpy = ybegin
+        self.bpz = zbegin
+        self.writedxf("10")
+        self.writedxf(str(xbegin))
+        self.writedxf("20")
+        self.writedxf(str(ybegin))
+        self.writedxf("30")
+        self.writedxf(str(zbegin))
+
+    def addopline(self, xend, yend, zend = 0.0):
+        self.writedxf("10")
+        self.writedxf(str(xend))
+        self.writedxf("20")
+        self.writedxf(str(yend))
+        self.writedxf("30")
+        self.writedxf(str(zend))
+        self.bpx = xend
+        self.bpy = yend
+        self.bpz = zend
+
+    def finishopenpolyline(self, xend, yend, zend = 0.0):
+        self.writedxf("10")
+        self.writedxf(str(xend))
+        self.writedxf("20")
+        self.writedxf(str(yend))
+        self.writedxf("30")
+        self.writedxf(str(zend))
+        self.bpx = xend
+        self.bpy = yend
+        self.bpz = zend
 
     def beginpolyline(self, xbegin, ybegin, zbegin = 0.0):
         self.bpx = xbegin
@@ -1948,6 +2011,32 @@ class gcodepreview:
         self.dxfline(xorigin + xwidth - radius, yorigin + yheight, xorigin + radius, yorigin + yheight)
         self.dxfline(xorigin, yorigin + yheight - radius, xorigin, yorigin + radius)
 
+    def dxfrectanglelwp(self, bx, by, xwidth, yheight):
+        self.writedxf("0")
+        self.writedxf("LWPOLYLINE")
+        self.writedxf("8")
+        self.writedxf(self.dxflayer)
+        self.writedxf("90")
+        self.writedxf("4")
+        self.writedxf("70")
+        self.writedxf("1")
+        self.writedxf("10")
+        self.writedxf(str(bx))#lower-left X
+        self.writedxf("20")
+        self.writedxf(str(by))#lower-left Y
+        self.writedxf("10")
+        self.writedxf(str(bx+xwidth))#lower-right X
+        self.writedxf("20")
+        self.writedxf(str(by))
+        self.writedxf("10")
+        self.writedxf(str(bx+xwidth))
+        self.writedxf("20")
+        self.writedxf(str(by+yheight))
+        self.writedxf("10")
+        self.writedxf(str(bx))
+        self.writedxf("20")
+        self.writedxf(str(by+yheight))
+
     def dxfrectanglechamfer(self, tool_num, xorigin, yorigin, xwidth, yheight, radius):
         self.dxfline(tool_num, xorigin + radius, yorigin, xorigin, yorigin + radius)
         self.dxfline(tool_num, xorigin, yorigin + yheight - radius, xorigin + radius, yorigin + yheight)
@@ -1984,19 +2073,68 @@ class gcodepreview:
 
     def cutrectangleround(self, bx, by, bz, xwidth, yheight, zdepth, radius):
 #        self.rapid(bx + radius, by, bz)
-        self.cutline(bx + radius, by, bz + zdepth)
-        self.cutline(bx + xwidth - radius, by, bz + zdepth)
-        self.cutquarterCCSE(bx + xwidth, by + radius, bz + zdepth, radius)
-        self.cutline(bx + xwidth, by + yheight - radius, bz + zdepth)
-        self.cutquarterCCNE(bx + xwidth - radius, by + yheight, bz + zdepth, radius)
-        self.cutline(bx + radius, by + yheight, bz + zdepth)
-        self.cutquarterCCNW(bx, by + yheight - radius, bz + zdepth, radius)
-        self.cutline(bx, by + radius, bz + zdepth)
-        self.cutquarterCCSW(bx + radius, by, bz + zdepth, radius)
+        self.cutline(bx + radius, by, bz - zdepth)
+        self.cutline(bx + xwidth - radius, by, bz - zdepth)
+        self.cutquarterCCSE(bx + xwidth, by + radius, bz - zdepth, radius)
+        self.cutline(bx + xwidth, by + yheight - radius, bz - zdepth)
+        self.cutquarterCCNE(bx + xwidth - radius, by + yheight, bz - zdepth, radius)
+        self.cutline(bx + radius, by + yheight, bz - zdepth)
+        self.cutquarterCCNW(bx, by + yheight - radius, bz - zdepth, radius)
+        self.cutline(bx, by + radius, bz - zdepth)
+        self.cutquarterCCSW(bx + radius, by, bz - zdepth, radius)
 
     def cutrectanglerounddxf(self, bx, by, bz, xwidth, yheight, zdepth, radius):
         self.cutrectangleround(bx, by, bz, xwidth, yheight, zdepth, radius)
         self.dxfrectangleround(bx, by, xwidth, yheight, radius)
+
+    def cutpocketrectanglerounddxf(self, bx, by, bz, xwidth, yheight, zdepth, radius):
+        self.cutpocketrectangleround(bx, by, bz, xwidth, yheight, zdepth, radius)
+        self.dxfrectanglelwp(bx, by, xwidth, yheight)
+    # half-depth cut around perimeter for checking
+    #    self.cutrectangleround(bx, by, bz, xwidth, yheight, zdepth/2, radius)
+
+    def cutpocketrectangleround(self, bx, by, bz, xwidth, yheight, zdepth, radius):
+        if yheight > xwidth:
+            self.movetosafeZ()
+            self.rapid(bx + radius*2.5, by+radius, 0)
+            self.cutline(bx + radius*2.5, by+radius, bz - zdepth)
+            self.cutline(bx + xwidth - radius*2, by+radius, bz - zdepth)
+            self.cutquarterCCSE(bx + xwidth - radius, by + radius*1.5, bz - zdepth, radius/2)
+            self.cutline(bx + xwidth-radius, by + yheight - radius*2, bz - zdepth)
+            self.cutquarterCCNE(bx + xwidth - radius*1.5, by + yheight-radius, bz - zdepth, radius/2)
+            self.cutline(bx + radius*1.5, by + yheight-radius, bz - zdepth)
+            self.cutquarterCCNW(bx+radius, by + yheight - radius*1.5, bz - zdepth, radius/2)
+            self.cutline(bx+radius*2, by + radius*2, bz - zdepth)
+            self.cutquarterCCSW(bx + radius*2.5, by+radius, bz - zdepth, radius/2)
+            number_of_passes = int((xwidth)/(radius*1.999))
+            so = xwidth/number_of_passes/2
+            cw = 0
+            while cw < xwidth-radius*1.5:
+                self.cutline(bx+radius+cw, by+radius, bz - zdepth)
+                self.cutline(bx+radius+cw, by+yheight-radius, bz - zdepth)
+                cw += so
+        else:
+            self.movetosafeZ()
+            self.rapid(bx + radius*1.5, by+radius, 0)
+            self.cutline(bx + radius*2.5, by+radius, bz - zdepth)
+            self.cutline(bx + xwidth - radius*2, by+radius, bz - zdepth)
+            self.cutquarterCCSE(bx + xwidth - radius, by + radius*1.5, bz - zdepth, radius/2)
+            self.cutline(bx + xwidth-radius, by + yheight - radius*2, bz - zdepth)
+            self.cutquarterCCNE(bx + xwidth - radius*1.5, by + yheight-radius, bz - zdepth, radius/2)
+            self.cutline(bx + radius*1.5, by + yheight-radius, bz - zdepth)
+            self.cutquarterCCNW(bx+radius, by + yheight - radius*1.5, bz - zdepth, radius/2)
+            self.cutline(bx+radius*1, by + radius*2, bz - zdepth)
+            self.cutquarterCCSW(bx + radius*1.5, by+radius, bz - zdepth, radius/2)
+            number_of_passes = int((yheight)/(radius*1.999))
+            so = yheight/number_of_passes/2
+            cw = 0
+            self.cutline(bx+radius, by+radius, bz - zdepth)
+            while cw < yheight-radius*1.5:
+                self.cutline(bx+radius, by+radius+cw, bz - zdepth)
+                self.cutline(bx+xwidth-radius, by+radius+cw, bz - zdepth)
+                cw += so
+        self.movetosafeZ()
+        self.rapid(bx+radius, by, 0)
 
     def cutkeyholegcdxf(self, kh_tool_num, kh_start_depth, kh_max_depth, kht_direction, kh_distance):
         if (kht_direction == "N"):
@@ -2397,9 +2535,12 @@ class gcodepreview:
         self.dxfarc(Joint_Width, 0, DTR, 270, 360)
         return ctp
 
-    def Full_Blind_Finger_Joint_square(self, bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter, normalormirror = "Default"):
-    # Joint_Orientation = "Horizontal" "Even" == "Lower", "Odd" == "Upper"
-    # Joint_Orientation = "Vertical" "Even" == "Left", "Odd" == "Right"
+    def Full_Blind_Finger_Joint(self, bx, by, orientation, side, width, thickness, largeVdiameter, smallDiameter, normalormirror = "Default", squaretool = 102, smallV = 390, largeV = 301):
+    # initial calculations
+        Number_of_Pins = int(((width - thickness * 2) / (smallDiameter * 2.2) / 2) + 0.0) * 2 + 1
+        Finger_Width = ((Number_of_Pins * 2) - 1) * smallDiameter * 1.1
+        Finger_Origin = width/2 - Finger_Width/2
+    # set contextual variables
         if (orientation == "Vertical"):
             if (normalormirror == "Default" and side != "Both"):
                 if (side == "Left"):
@@ -2412,56 +2553,72 @@ class gcodepreview:
                      normalormirror = "Even"
                 if (side == "Upper"):
                      normalormirror = "Odd"
-        Finger_Width = ((Number_of_Pins * 2) - 1) * smallDiameter * 1.1
-        Finger_Origin = width/2 - Finger_Width/2
-        rapid = self.rapidZ(0)
+    # change tool and set up for cut
+        self.toolchange(squaretool, 17000)
         self.setdxfcolor("Cyan")
-        rapid = rapid.union(self.rapidXY(bx, by))
-        toolpath = (self.Finger_Joint_square(bx, by, orientation, side, width, thickness, Number_of_Pins, Finger_Origin, smallDiameter))
+        self.setdxflayer("Square - top depth")
+        self.movetosafeZ()
+        self.rapidXY(bx, by)
+        self.rapidZ(0)
         if (orientation == "Vertical"):
             if (side == "Both"):
-                toolpath = self.cutrectanglerounddxf(self.currenttoolnum, bx - (thickness - smallDiameter/2), by-smallDiameter/2, 0, (thickness * 2) - smallDiameter, width+smallDiameter, (smallDiameter / 2) / Tan(45), smallDiameter/2)
+                    self.cutpocketrectanglerounddxf(
+                    bx - (thickness - smallDiameter/2),
+                    by-smallDiameter/2-smallDiameter/4,
+                    0,
+                    (thickness * 2) - smallDiameter,
+                    width+smallDiameter+smallDiameter/2,
+                    (smallDiameter / 2) / Tan(45),
+                    smallDiameter/2)
             if (side == "Left"):
-                toolpath = self.cutrectanglerounddxf(self.currenttoolnum, bx - (smallDiameter/2), by-smallDiameter/2, 0, thickness, width+smallDiameter, ((smallDiameter / 2) / Tan(45)), smallDiameter/2)
+                    self.cutpocketrectanglerounddxf(
+                    bx - (smallDiameter/2),
+                    by-smallDiameter/2-smallDiameter/4,
+                    0,
+                    thickness,
+                    width+smallDiameter+smallDiameter/2,
+                    ((smallDiameter / 2) / Tan(45)),
+                    smallDiameter/2)
             if (side == "Right"):
-                toolpath = self.cutrectanglerounddxf(self.currenttoolnum, bx - (thickness - smallDiameter/2), by-smallDiameter/2, 0, thickness, width+smallDiameter, ((smallDiameter / 2) / Tan(45)), smallDiameter/2)
-        toolpath = toolpath.union(self.Finger_Joint_square(bx, by, orientation, side, width, thickness, Number_of_Pins, Finger_Origin, smallDiameter))
+                    self.cutpocketrectanglerounddxf(
+                    bx - (thickness - smallDiameter/2),
+                    by-smallDiameter/2-smallDiameter/4,
+                    0,
+                    thickness,
+                    width+smallDiameter+smallDiameter/2,
+                    ((smallDiameter / 2) / Tan(45)),
+                    smallDiameter/2)
         if (orientation == "Horizontal"):
             if (side == "Both"):
-                toolpath = self.cutrectanglerounddxf(
-                    self.currenttoolnum,
-                    bx-smallDiameter/2,
+                self.cutpocketrectanglerounddxf(
+                    bx-smallDiameter/2-smallDiameter/4,
                     by - (thickness - smallDiameter/2),
                     0,
-                    width+smallDiameter,
+                    width+smallDiameter+smallDiameter/2,
                     (thickness * 2) - smallDiameter,
                     (smallDiameter / 2) / Tan(45),
                     smallDiameter/2)
             if (side == "Lower"):
-                toolpath = self.cutrectanglerounddxf(
-                    self.currenttoolnum,
-                    bx - (smallDiameter/2),
+                self.cutpocketrectanglerounddxf(
+                    bx-smallDiameter/2-smallDiameter/4,
                     by - smallDiameter/2,
                     0,
-                    width+smallDiameter,
+                    width+smallDiameter+smallDiameter/2,
                     thickness,
                     ((smallDiameter / 2) / Tan(45)),
                     smallDiameter/2)
             if (side == "Upper"):
-                toolpath = self.cutrectanglerounddxf(
-                    self.currenttoolnum,
-                    bx - smallDiameter/2,
+                self.cutpocketrectanglerounddxf(
+                    bx-smallDiameter/2-smallDiameter/4,
                     by - (thickness - smallDiameter/2),
                     0,
-                    width+smallDiameter,
+                    width+smallDiameter+smallDiameter/2,
                     thickness,
                     ((smallDiameter / 2) / Tan(45)),
                     smallDiameter/2)
-        toolpath = toolpath.union(self.Finger_Joint_square(bx, by, orientation, side, width, thickness, Number_of_Pins, Finger_Origin, smallDiameter))
-        return toolpath
-
-    def Finger_Joint_square(self, bx, by, orientation, side, width, thickness, Number_of_Pins, Finger_Origin, smallDiameter, normalormirror = "Default"):
-        jointdepth = -(thickness - (smallDiameter / 2) / Tan(45))
+    # continue with small square tool to cut fingers and central channel for small V tool
+        self.setdxfcolor("Blue")
+        self.setdxflayer("Square - pocket depth")
     # Joint_Orientation = "Horizontal" "Even" == "Lower", "Odd" == "Upper"
     # Joint_Orientation = "Vertical" "Even" == "Left", "Odd" == "Right"
         if (orientation == "Vertical"):
@@ -2476,185 +2633,183 @@ class gcodepreview:
                      normalormirror = "Even"
                 if (side == "Upper"):
                      normalormirror = "Odd"
+        jointdepth = -(thickness - (smallDiameter / 2) / Tan(45))
         radius = smallDiameter/2
         jointwidth = thickness - smallDiameter
-        toolpath = self.currenttool()
-        rapid = self.rapidZ(0)
-        self.setdxfcolor("Blue")
-        toolpath = toolpath.union(self.cutlineZgcfeed(jointdepth,1000))
-        self.beginpolyline(self.currenttool())
+    #    toolpath = self.currenttool()
+        self.rapidXY(bx, by)
+        self.rapidZ(0)
         if (orientation == "Vertical"):
-            rapid = rapid.union(self.rapidXY(bx, by + Finger_Origin))
-            self.addvertex(self.currenttoolnumber(), self.xpos(), self.ypos())
-            toolpath = toolpath.union(self.cutlineZgcfeed(jointdepth,1000))
+            self.cutlineZgcfeed(jointdepth,1000)
+            self.beginopenpolyline(bx, by)
+            self.cutpolylinedxf(bx, by + Finger_Origin, jointdepth)
             i = 0
             while i <= Number_of_Pins - 1:
                 if (side == "Right"):
-                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos(), self.ypos() + smallDiameter + radius/5, jointdepth))
+                    self.cutpolylinedxf(self.xpos(), self.ypos() + smallDiameter + radius/5, jointdepth)
                 if (side == "Left" or side == "Both"):
-                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos(), self.ypos() + radius, jointdepth))
-                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos() + jointwidth, self.ypos(), jointdepth))
-                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos(), self.ypos() + radius/5, jointdepth))
-                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos() - jointwidth, self.ypos(), jointdepth))
-                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos(), self.ypos() + radius, jointdepth))
+                    self.cutpolylinedxf(self.xpos(), self.ypos() + radius, jointdepth)
+                    self.cutpolylinedxf(self.xpos() + jointwidth, self.ypos(), jointdepth)
+                    self.cutpolylinedxf(self.xpos(), self.ypos() + radius/5, jointdepth)
+                    self.cutpolylinedxf(self.xpos() - jointwidth, self.ypos(), jointdepth)
+                    self.cutpolylinedxf(self.xpos(), self.ypos() + radius, jointdepth)
                 if (side == "Left"):
-                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos(), self.ypos() + smallDiameter + radius/5, jointdepth))
+                    self.cutpolylinedxf(self.xpos(), self.ypos() + smallDiameter + radius/5, jointdepth)
                 if (side == "Right" or side == "Both"):
                     if (i < (Number_of_Pins - 1)):
     #                    print(i)
-                        toolpath = toolpath.union(self.cutvertexdxf(self.xpos(), self.ypos() + radius, jointdepth))
-                        toolpath = toolpath.union(self.cutvertexdxf(self.xpos() - jointwidth, self.ypos(), jointdepth))
-                        toolpath = toolpath.union(self.cutvertexdxf(self.xpos(), self.ypos() + radius/5, jointdepth))
-                        toolpath = toolpath.union(self.cutvertexdxf(self.xpos() + jointwidth, self.ypos(), jointdepth))
-                        toolpath = toolpath.union(self.cutvertexdxf(self.xpos(), self.ypos() + radius, jointdepth))
+                        self.cutpolylinedxf(self.xpos(), self.ypos() + radius, jointdepth)
+                        self.cutpolylinedxf(self.xpos() - jointwidth, self.ypos(), jointdepth)
+                        self.cutpolylinedxf(self.xpos(), self.ypos() + radius/5, jointdepth)
+                        self.cutpolylinedxf(self.xpos() + jointwidth, self.ypos(), jointdepth)
+                        self.cutpolylinedxf(self.xpos(), self.ypos() + radius, jointdepth)
                 i += 1
+            self.cutpolylinedxf(bx, by + width, jointdepth)
     # Joint_Orientation = "Horizontal" "Even" == "Lower", "Odd" == "Upper"
         if (orientation == "Horizontal"):
-            rapid = rapid.union(self.rapidXY(bx + Finger_Origin, by))
-            self.addvertex(self.currenttoolnumber(), self.xpos(), self.ypos())
-            toolpath = toolpath.union(self.cutlineZgcfeed(jointdepth,1000))
+            self.rapidXY(bx, by)
+            self.beginopenpolyline(bx, by)
+            self.cutpolylinedxf(bx + Finger_Origin, by, jointdepth)
+            self.cutlineZgcfeed(jointdepth,1000)
             i = 0
             while i <= Number_of_Pins - 1:
                 if (side == "Upper"):
-                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos() + smallDiameter + radius/5, self.ypos(), jointdepth))
+                    self.cutpolylinedxf(self.xpos() + smallDiameter + radius/5, self.ypos(), jointdepth)
                 if (side == "Lower" or side == "Both"):
-                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos() + radius, self.ypos(), jointdepth))
-                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos(), self.ypos() + jointwidth, jointdepth))
-                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos() + radius/5, self.ypos(), jointdepth))
-                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos(), self.ypos() - jointwidth, jointdepth))
-                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos() + radius, self.ypos(), jointdepth))
+                    self.cutpolylinedxf(self.xpos() + radius, self.ypos(), jointdepth)
+                    self.cutpolylinedxf(self.xpos(), self.ypos() + jointwidth, jointdepth)
+                    self.cutpolylinedxf(self.xpos() + radius/5, self.ypos(), jointdepth)
+                    self.cutpolylinedxf(self.xpos(), self.ypos() - jointwidth, jointdepth)
+                    self.cutpolylinedxf(self.xpos() + radius, self.ypos(), jointdepth)
                 if (side == "Lower"):
-                    toolpath = toolpath.union(self.cutvertexdxf(self.xpos() + smallDiameter + radius/5, self.ypos(), jointdepth))
+                    self.cutpolylinedxf(self.xpos() + smallDiameter + radius/5, self.ypos(), jointdepth)
                 if (side == "Upper" or side == "Both"):
                     if (i < (Number_of_Pins - 1)):
     #                    print(i)
-                        toolpath = toolpath.union(self.cutvertexdxf(self.xpos() + radius, self.ypos(), jointdepth))
-                        toolpath = toolpath.union(self.cutvertexdxf(self.xpos(), self.ypos() - jointwidth, jointdepth))
-                        toolpath = toolpath.union(self.cutvertexdxf(self.xpos() + radius/5, self.ypos(), jointdepth))
-                        toolpath = toolpath.union(self.cutvertexdxf(self.xpos(), self.ypos() + jointwidth, jointdepth))
-                        toolpath = toolpath.union(self.cutvertexdxf(self.xpos() + radius, self.ypos(), jointdepth))
+                        self.cutpolylinedxf(self.xpos() + radius, self.ypos(), jointdepth)
+                        self.cutpolylinedxf(self.xpos(), self.ypos() - jointwidth, jointdepth)
+                        self.cutpolylinedxf(self.xpos() + radius/5, self.ypos(), jointdepth)
+                        self.cutpolylinedxf(self.xpos(), self.ypos() + jointwidth, jointdepth)
+                        self.cutpolylinedxf(self.xpos() + radius, self.ypos(), jointdepth)
                 i += 1
-        self.closepolyline(self.currenttoolnumber())
-        return toolpath
-
-    def Full_Blind_Finger_Joint_smallV(self, bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter):
-        rapid = self.rapidZ(0)
-    #    rapid = rapid.union(self.rapidXY(bx, by))
-        self.setdxfcolor("Red")
-        if (orientation == "Vertical"):
-            rapid = rapid.union(self.rapidXY(bx, by - smallDiameter/6))
-            toolpath = self.cutlineZgcfeed(-thickness,1000)
-            toolpath = self.cutlinedxfgc(bx, by + width + smallDiameter/6, - thickness)
-        if (orientation == "Horizontal"):
-            rapid = rapid.union(self.rapidXY(bx - smallDiameter/6, by))
-            toolpath = self.cutlineZgcfeed(-thickness,1000)
-            toolpath = self.cutlinedxfgc(bx + width + smallDiameter/6, by, -thickness)
-    #        rapid = self.rapidZ(0)
-
-        return toolpath
-
-    def Full_Blind_Finger_Joint_largeV(self, bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter):
-        radius = smallDiameter/2
-        rapid = self.rapidZ(0)
-        Finger_Width = ((Number_of_Pins * 2) - 1) * smallDiameter * 1.1
-        Finger_Origin = width/2 - Finger_Width/2
-    #    rapid = rapid.union(self.rapidXY(bx, by))
-    # Joint_Orientation = "Horizontal" "Even" == "Lower", "Odd" == "Upper"
-    # Joint_Orientation = "Vertical" "Even" == "Left", "Odd" == "Right"
-        if (orientation == "Vertical"):
-            rapid = rapid.union(self.rapidXY(bx, by))
-            toolpath = self.cutlineZgcfeed(-thickness,1000)
-            toolpath = toolpath.union(self.cutlinedxfgc(bx, by + Finger_Origin, -thickness))
-            rapid = self.rapidZ(0)
-            rapid = rapid.union(self.rapidXY(bx, by + width - Finger_Origin))
-            self.setdxfcolor("Blue")
-            toolpath = toolpath.union(self.cutlineZgcfeed(-thickness,1000))
-            toolpath = toolpath.union(self.cutlinedxfgc(bx, by + width, -thickness))
-            if (side == "Left" or side == "Both"):
-                rapid = self.rapidZ(0)
-                self.setdxfcolor("Dark Gray")
-                rapid = rapid.union(self.rapidXY(bx+thickness-(smallDiameter / 2) / Tan(45), by - radius/2))
-                toolpath = toolpath.union(self.cutlineZgcfeed(-(smallDiameter / 2) / Tan(45),10000))
-                toolpath = toolpath.union(self.cutlinedxfgc(bx+thickness-(smallDiameter / 2) / Tan(45), by + width + radius/2, -(smallDiameter / 2) / Tan(45)))
-                rapid = self.rapidZ(0)
-                self.setdxfcolor("Green")
-                rapid = rapid.union(self.rapidXY(bx+thickness/2, by+width))
-                toolpath = toolpath.union(self.cutlineZgcfeed(-thickness/2,1000))
-                toolpath = toolpath.union(self.cutlinedxfgc(bx+thickness/2, by + width -thickness, -thickness/2))
-                rapid = self.rapidZ(0)
-                rapid = rapid.union(self.rapidXY(bx+thickness/2, by))
-                toolpath = toolpath.union(self.cutlineZgcfeed(-thickness/2,1000))
-                toolpath = toolpath.union(self.cutlinedxfgc(bx+thickness/2, by +thickness, -thickness/2))
-            if (side == "Right" or side == "Both"):
-                rapid = self.rapidZ(0)
-                self.setdxfcolor("Dark Gray")
-                rapid = rapid.union(self.rapidXY(bx-(thickness-(smallDiameter / 2) / Tan(45)), by - radius/2))
-                toolpath = toolpath.union(self.cutlineZgcfeed(-(smallDiameter / 2) / Tan(45),10000))
-                toolpath = toolpath.union(self.cutlinedxfgc(bx-(thickness-(smallDiameter / 2) / Tan(45)), by + width + radius/2, -(smallDiameter / 2) / Tan(45)))
-                rapid = self.rapidZ(0)
-                self.setdxfcolor("Green")
-                rapid = rapid.union(self.rapidXY(bx-thickness/2, by+width))
-                toolpath = toolpath.union(self.cutlineZgcfeed(-thickness/2,1000))
-                toolpath = toolpath.union(self.cutlinedxfgc(bx-thickness/2, by + width -thickness, -thickness/2))
-                rapid = self.rapidZ(0)
-                rapid = rapid.union(self.rapidXY(bx-thickness/2, by))
-                toolpath = toolpath.union(self.cutlineZgcfeed(-thickness/2,1000))
-                toolpath = toolpath.union(self.cutlinedxfgc(bx-thickness/2, by +thickness, -thickness/2))
-    # Joint_Orientation = "Horizontal" "Even" == "Lower", "Odd" == "Upper"
-        if (orientation == "Horizontal"):
-            rapid = rapid.union(self.rapidXY(bx, by))
-            self.setdxfcolor("Blue")
-            toolpath = self.cutlineZgcfeed(-thickness,1000)
-            toolpath = toolpath.union(self.cutlinedxfgc(bx + Finger_Origin, by, -thickness))
-            rapid = rapid.union(self.rapidZ(0))
-            rapid = rapid.union(self.rapidXY(bx + width - Finger_Origin, by))
-            toolpath = toolpath.union(self.cutlineZgcfeed(-thickness,1000))
-            toolpath = toolpath.union(self.cutlinedxfgc(bx + width, by, -thickness))
-            if (side == "Lower" or side == "Both"):
-                rapid = self.rapidZ(0)
-                self.setdxfcolor("Dark Gray")
-                rapid = rapid.union(self.rapidXY(bx - radius, by+thickness-(smallDiameter / 2) / Tan(45)))
-                toolpath = toolpath.union(self.cutlineZgcfeed(-(smallDiameter / 2) / Tan(45),10000))
-                toolpath = toolpath.union(self.cutlinedxfgc(bx + width + radius, by+thickness-(smallDiameter / 2) / Tan(45), -(smallDiameter / 2) / Tan(45)))
-                rapid = self.rapidZ(0)
-                self.setdxfcolor("Green")
-                rapid = rapid.union(self.rapidXY(bx+width, by+thickness/2))
-                toolpath = toolpath.union(self.cutlineZgcfeed(-thickness/2,1000))
-                toolpath = toolpath.union(self.cutlinedxfgc(bx + width -thickness, by+thickness/2, -thickness/2))
-                rapid = self.rapidZ(0)
-                rapid = rapid.union(self.rapidXY(bx, by+thickness/2))
-                toolpath = toolpath.union(self.cutlineZgcfeed(-thickness/2,1000))
-                toolpath = toolpath.union(self.cutlinedxfgc(bx +thickness, by+thickness/2, -thickness/2))
-            if (side == "Upper" or side == "Both"):
-                rapid = self.rapidZ(0)
-                self.setdxfcolor("Dark Gray")
-                rapid = rapid.union(self.rapidXY(bx - radius, by-(thickness-(smallDiameter / 2) / Tan(45))))
-                toolpath = toolpath.union(self.cutlineZgcfeed(-(smallDiameter / 2) / Tan(45),10000))
-                toolpath = toolpath.union(self.cutlinedxfgc(bx + width + radius, by-(thickness-(smallDiameter / 2) / Tan(45)), -(smallDiameter / 2) / Tan(45)))
-                rapid = self.rapidZ(0)
-                self.setdxfcolor("Green")
-                rapid = rapid.union(self.rapidXY(bx+width, by-thickness/2))
-                toolpath = toolpath.union(self.cutlineZgcfeed(-thickness/2,1000))
-                toolpath = toolpath.union(self.cutlinedxfgc(bx + width -thickness, by-thickness/2, -thickness/2))
-                rapid = self.rapidZ(0)
-                rapid = rapid.union(self.rapidXY(bx, by-thickness/2))
-                toolpath = toolpath.union(self.cutlineZgcfeed(-thickness/2,1000))
-                toolpath = toolpath.union(self.cutlinedxfgc(bx +thickness, by-thickness/2, -thickness/2))
-        rapid = self.rapidZ(0)
-        return toolpath
-
-    def Full_Blind_Finger_Joint(self, bx, by, orientation, side, width, thickness, largeVdiameter, smallDiameter, normalormirror = "Default", squaretool = 102, smallV = 390, largeV = 301):
-        Number_of_Pins = int(((width - thickness * 2) / (smallDiameter * 2.2) / 2) + 0.0) * 2 + 1
-#        print("Number of Pins: ",Number_of_Pins)
+            self.cutpolylinedxf(bx + width, by, jointdepth)
+        self.closepolyline()
         self.movetosafeZ()
-        self.toolchange(squaretool, 17000)
-        toolpath = self.Full_Blind_Finger_Joint_square(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter)
-        self.movetosafeZ()
-        self.toolchange(smallV, 17000)
-        toolpath = toolpath.union(self.Full_Blind_Finger_Joint_smallV(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter))
+    # switch to Large V to cut along interior edge and miters at begin/end of joint area
         self.toolchange(largeV, 17000)
-        toolpath = toolpath.union(self.Full_Blind_Finger_Joint_largeV(bx, by, orientation, side, width, thickness, Number_of_Pins, largeVdiameter, smallDiameter))
-        return toolpath
+        self.rapidXY(bx, by)
+        self.rapidZ(0)
+        self.setdxfcolor("Dark Gray")
+        self.setdxflayer("Large V - top depth")
+        if (orientation == "Vertical"):
+            if (side == "Left" or side == "Both"):
+                self.rapidZ(0)
+                self.rapidXY(bx+thickness-(smallDiameter / 2) / Tan(45), by - radius/2)
+                self.cutlineZgcfeed(-(smallDiameter / 2) / Tan(45),10000)
+                self.cutlinedxfgc(bx+thickness-(smallDiameter / 2) / Tan(45), by + width + radius/2, -(smallDiameter / 2) / Tan(45))
+                self.rapidZ(0)
+            if (side == "Right" or side == "Both"):
+                self.rapidZ(0)
+                self.rapidXY(bx-(thickness-(smallDiameter / 2) / Tan(45)), by - radius/2)
+                self.cutlineZgcfeed(-(smallDiameter / 2) / Tan(45),10000)
+                self.cutlinedxfgc(bx-(thickness-(smallDiameter / 2) / Tan(45)), by + width + radius/2, -(smallDiameter / 2) / Tan(45))
+                self.rapidZ(0)
+        if (orientation == "Horizontal"):
+            if (side == "Lower" or side == "Both"):
+                self.rapidZ(0)
+                self.rapidXY(bx - radius, by+thickness-(smallDiameter / 2) / Tan(45))
+                self.cutlineZgcfeed(-(smallDiameter / 2) / Tan(45),10000)
+                self.cutlinedxfgc(bx + width + radius, by+thickness-(smallDiameter / 2) / Tan(45), -(smallDiameter / 2) / Tan(45))
+                self.rapidZ(0)
+            if (side == "Upper" or side == "Both"):
+                self.rapidZ(0)
+                self.rapidXY(bx - radius, by-(thickness-(smallDiameter / 2) / Tan(45)))
+                self.cutlineZgcfeed(-(smallDiameter / 2) / Tan(45),10000)
+                self.cutlinedxfgc(bx + width + radius, by-(thickness-(smallDiameter / 2) / Tan(45)), -(smallDiameter / 2) / Tan(45))
+                self.rapidZ(0)
+        self.setdxfcolor("Magenta")
+        self.setdxflayer("Large V - half thickness")
+        if (orientation == "Vertical"):
+            if (side == "Left" or side == "Both"):
+                self.rapidZ(0)
+                self.rapidXY(bx+thickness/2, by+width)
+                self.cutlineZgcfeed(-thickness/2,1000)
+                self.cutlinedxfgc(bx+thickness/2, by + width -thickness, -thickness/2)
+                self.rapidZ(0)
+                self.rapidXY(bx+thickness/2, by)
+                self.cutlineZgcfeed(-thickness/2,1000)
+                self.cutlinedxfgc(bx+thickness/2, by +thickness, -thickness/2)
+                self.rapidZ(0)
+            if (side == "Right" or side == "Both"):
+                self.rapidZ(0)
+                self.rapidXY(bx-thickness/2, by+width)
+                self.cutlineZgcfeed(-thickness/2,1000)
+                self.cutlinedxfgc(bx-thickness/2, by + width -thickness, -thickness/2)
+                self.rapidZ(0)
+                self.rapidXY(bx-thickness/2, by)
+                self.cutlineZgcfeed(-thickness/2,1000)
+                self.cutlinedxfgc(bx-thickness/2, by +thickness, -thickness/2)
+                self.rapidZ(0)
+        if (orientation == "Horizontal"):
+            if (side == "Upper" or side == "Both"):
+                self.rapidZ(0)
+                self.rapidXY(bx+width, by-thickness/2)
+                self.cutlineZgcfeed(-thickness/2,1000)
+                self.cutlinedxfgc(bx + width -thickness, by-thickness/2, -thickness/2)
+                self.rapidZ(0)
+                self.rapidXY(bx, by-thickness/2)
+                self.cutlineZgcfeed(-thickness/2,1000)
+                self.cutlinedxfgc(bx +thickness, by-thickness/2, -thickness/2)
+                self.rapidZ(0)
+            if (side == "Lower" or side == "Both"):
+                self.rapidZ(0)
+                self.rapidXY(bx+width, by+thickness/2)
+                self.cutlineZgcfeed(-thickness/2,1000)
+                self.cutlinedxfgc(bx + width -thickness, by+thickness/2, -thickness/2)
+                self.rapidZ(0)
+                self.rapidXY(bx, by+thickness/2)
+                self.cutlineZgcfeed(-thickness/2,1000)
+                self.cutlinedxfgc(bx +thickness, by+thickness/2, -thickness/2)
+                self.rapidZ(0)
+    ## Joint_Orientation = "Horizontal" "Even" == "Lower", "Odd" == "Upper"
+        self.setdxfcolor("Green")
+        self.setdxflayer("Large V - full depth")
+        if (orientation == "Horizontal"):
+            self.rapidZ(0)
+            self.rapidXY(bx, by)
+            self.cutlineZgcfeed(-thickness,1000)
+            self.cutlinedxfgc(bx + Finger_Origin, by, -thickness)
+            self.rapidZ(0)
+            self.rapidXY(bx + width - Finger_Origin, by)
+            self.cutlineZgcfeed(-thickness,1000)
+            self.cutlinedxfgc(bx + width, by, -thickness)
+            self.rapidZ(0)
+        if (orientation == "Vertical"):
+            self.rapidZ(0)
+            self.rapidXY(bx, by)
+            self.cutlineZgcfeed(-thickness,1000)
+            self.cutlinedxfgc(bx, by + Finger_Origin, -thickness)
+            self.rapidZ(0)
+            self.rapidXY(bx, by + width - Finger_Origin)
+            self.cutlineZgcfeed(-thickness,1000)
+            self.cutlinedxfgc(bx, by + width, -thickness)
+            self.rapidZ(0)
+        self.movetosafeZ()
+    # switch to smallV tool to cut V channel along joint edge at bottom of stock
+        self.toolchange(smallV)
+        self.rapidXY(bx, by)
+        self.rapidZ(0)
+        self.setdxfcolor("Red")
+        self.setdxflayer("Small V - full depth")
+        if (orientation == "Vertical"):
+            self.rapidXY(bx, by - smallDiameter/6)
+            self.cutlineZgcfeed(-thickness,1000)
+            self.cutlinedxfgc(bx, by + width + smallDiameter/6, - thickness)
+        if (orientation == "Horizontal"):
+            self.rapidXY(bx - smallDiameter/6, by)
+            self.cutlineZgcfeed(-thickness,1000)
+            self.cutlinedxfgc(bx + width + smallDiameter/6, by, -thickness)
+        self.movetosafeZ()
 
     def previewgcodefile(self, gc_file):
         gc_file = open(gc_file, 'r')
