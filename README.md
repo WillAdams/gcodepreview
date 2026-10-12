@@ -109,7 +109,8 @@ Written as a [Literate Program](http://literateprogramming.com/) in [lualatex](h
 | 0.93          | Initial support for 3D printing.                                                                                                                                                |
 | 0.931         | Update support for OpenSCAD modules.                                                                                                                                            |
 | 0.9312        | Update DXF file-handling for Carbide Create 839.                                                                                                                                |
-| 0.9313        | Update Full_Blind_Finger_Joint to use layers, add LWPOLYLINE where appropriate                                                                                                  |
+| 0.9313        | Update Full_Blind_Box_Joint to use layers, add LWPOLYLINE where appropriate                                                                                                  |
+| 0.9314        | Update Full_Blind_Box_Joint, general cleanup                                                                                                  |
 
 To do:
 
