@@ -1,7 +1,4 @@
 #!/usr/bin/env python
-#icon "C:\Program Files\PythonSCAD\bin\openscad.exe" --trust-python
-#Currently tested with https://www.pythonscad.org/downloads/PythonSCAD_nolibfive-2025.06.04-x86-64-Installer.exe and Python 3.11
-#gcodepreview (gcpversion)0.93, for use with PythonSCAD,
 #if using from PythonSCAD using OpenSCAD code, see gcodepreview.scad
 
 import sys
@@ -587,8 +584,8 @@ class gcodepreview:
             self.shaftlength = 20.0
             self.defineVtool(self.diameter, self.flute, self.shaftlength, self.shaftdiameter)
             self.toolnumber = "330041"
-        elif (tool_number == 390) or (tool_number == 390032): #390 == 390032
-            self.writegc("(TOOL/MILL, 0.03, 0.00, 1.5875, 45.00)")
+        elif (tool_number == 390) or (tool_number == 390032):
+            self.writegc("(TOOL/MILL,0.03, 0.00, 1.5875, 45.00)")
             self.endmilltype = "V"
             self.diameter = 3.175
             self.flute = 1.5875
@@ -598,6 +595,17 @@ class gcodepreview:
             self.shaftlength = 20.0
             self.defineVtool(self.diameter, self.flute, self.shaftlength, self.shaftdiameter)
             self.toolnumber = "390032"
+        elif (tool_number == 690) or (tool_number == 290032):
+            self.writegc("(TOOL/MILL,0.10, 0.05, 12.70, 45.00)")
+            self.endmilltype = "V"
+            self.diameter = 1.5875
+            self.flute = 0.79375
+            self.angle = 90
+            self.shaftdiameter = 3.175
+            self.shaftheight = 1.5875
+            self.shaftlength = 20.0
+            self.defineVtool(self.diameter, self.flute, self.shaftlength, self.shaftdiameter)
+            self.toolnumber = "290032"
 #
         elif (tool_number == 374) or (tool_number == 906043): #374 == 906043
             self.writegc("(TOOL/MILL, 9.53, 0.00, 3.17, 0.00)")
@@ -1513,7 +1521,7 @@ class gcodepreview:
             show(self.rapids)
         else:
             part = self.stock.difference(self.rapids)
-            part = self.stock.difference(self.toolpaths)
+            part = part.difference(self.toolpaths)
             show(part)
 
     def showtooloutline(self):
@@ -1529,7 +1537,8 @@ class gcodepreview:
         show(to)
 
     def returnstockandtoolpaths(self):
-        part = self.stock.difference(self.toolpaths)
+        part = self.stock.difference(self.rapids)
+        part = part.difference(self.toolpaths)
         return part
 
     def writegc(self, *arguments):
@@ -1570,6 +1579,7 @@ class gcodepreview:
 
     def opendxffile(self, basefilename = "export"):
         self.basefilename = basefilename
+        print("Opening ", self.basefilename)
 #        global generatedxfs
 #        global dxfclosed
         self.dxfclosed = False
@@ -1667,8 +1677,9 @@ class gcodepreview:
     def beginopenpolyline(self, xbegin, ybegin, zbegin = 0.0, co = 0):
         self.writedxf("0")
         self.writedxf("LWPOLYLINE")
-        self.writedxf("8")
-        self.writedxf(str(self.dxflayer))
+        self.writedxfcolor()
+#        self.writedxf("8")
+#        self.writedxf(str(self.dxflayer))
         self.writedxf("90")
         self.writedxf("4")
         self.writedxf("70")
@@ -1970,6 +1981,7 @@ class gcodepreview:
             self.dxfpostamble()
 #            self.dxfclosed = True
             self.dxf.close()
+            print("Closing opened file.")
 
     def dxfcircle(self, xcenter, ycenter, radius):
         self.dxfarc(xcenter, ycenter, radius,  0, 90)
@@ -2071,6 +2083,11 @@ class gcodepreview:
         self.cutrectangle(bx, by, bz, xwidth, yheight, zdepth)
         self.dxfrectangle(bx, by, xwidth, yheight, "Square")
 
+    def cutnarrowrectangledxf(self, bx, by, bz, xwidth, yheight, zdepth, radius):
+        self.cutpocketrectangleroundnarrow(bx, by, bz, xwidth, yheight, zdepth, radius)
+        self.dxfrectanglelwp(bx, by, xwidth, yheight)
+#        self.dxfrectangle(bx, by, xwidth, yheight, "Square")
+
     def cutrectangleround(self, bx, by, bz, xwidth, yheight, zdepth, radius):
 #        self.rapid(bx + radius, by, bz)
         self.cutline(bx + radius, by, bz - zdepth)
@@ -2087,11 +2104,32 @@ class gcodepreview:
         self.cutrectangleround(bx, by, bz, xwidth, yheight, zdepth, radius)
         self.dxfrectangleround(bx, by, xwidth, yheight, radius)
 
+    def cutrectangledxf(self, bx, by, bz, xwidth, yheight, zdepth, radius):
+        self.cutrectangleround(bx, by, bz, xwidth, yheight, zdepth, radius)
+        self.dxfrectangle(bx, by, xwidth, yheight)
+
     def cutpocketrectanglerounddxf(self, bx, by, bz, xwidth, yheight, zdepth, radius):
         self.cutpocketrectangleround(bx, by, bz, xwidth, yheight, zdepth, radius)
         self.dxfrectanglelwp(bx, by, xwidth, yheight)
     # half-depth cut around perimeter for checking
     #    self.cutrectangleround(bx, by, bz, xwidth, yheight, zdepth/2, radius)
+
+    def cutpocketrectangleroundnarrow(self, bx, by, bz, xwidth, yheight, zdepth, radius):
+    #first, cut perimeter
+        self.movetosafeZ()
+        self.rapid(bx + radius, by+radius, 0)
+        self.cutline(bx + xwidth - radius, by+radius, bz - zdepth)
+        self.cutline(bx + xwidth - radius, by+yheight - radius, bz - zdepth)
+        self.cutline(bx + radius, by+yheight - radius, bz - zdepth)
+        self.cutline(bx + radius, by+radius, bz - zdepth)
+        self.cutline(bx + xwidth - radius, by+radius, bz - zdepth)
+        if yheight > xwidth:
+            self.cutline(bx + xwidth/2, by+radius, bz - zdepth)
+            self.cutline(bx + xwidth/2, by+yheight -radius, bz - zdepth)
+        else:
+            self.cutline(bx + radius, by+yheight/2, bz - zdepth)
+            self.cutline(bx + xwidth-radius, by+yheight/2, bz - zdepth)
+        self.movetosafeZ()
 
     def cutpocketrectangleround(self, bx, by, bz, xwidth, yheight, zdepth, radius):
         if yheight > xwidth:
@@ -2535,24 +2573,26 @@ class gcodepreview:
         self.dxfarc(Joint_Width, 0, DTR, 270, 360)
         return ctp
 
-    def Full_Blind_Finger_Joint(self, bx, by, orientation, side, width, thickness, largeVdiameter, smallDiameter, normalormirror = "Default", squaretool = 102, smallV = 390, largeV = 301):
+    def Full_Blind_Box_Joint(self, bx, by, orientation, side, width, thickness, largeVdiameter, smallDiameter, squaretool = 102, smallV = 390, largeV = 301):
+        """
+    Cuts a full blind box joint.
+    Parameters:
+    bx (float): X-origin
+    by (float): Y-origin
+    orientation (string): "Vertical" or "Horizontal"
+    side (string): "Right" or "Left" (for Vertical), "Upper" or "Lower" (for Horizontal) --- append "Mirror" to toggle number of pins
+    width (float): length of the joint
+    thickness (float): thickness of the stock
+    largeVdiameter (float): diameter of large V tool
+    smallDiameter (float): diameter of small V tool
+    squaretool
+    smallV
+    largeV
+    """
     # initial calculations
         Number_of_Pins = int(((width - thickness * 2) / (smallDiameter * 2.2) / 2) + 0.0) * 2 + 1
         Finger_Width = ((Number_of_Pins * 2) - 1) * smallDiameter * 1.1
         Finger_Origin = width/2 - Finger_Width/2
-    # set contextual variables
-        if (orientation == "Vertical"):
-            if (normalormirror == "Default" and side != "Both"):
-                if (side == "Left"):
-                     normalormirror = "Even"
-                if (side == "Right"):
-                     normalormirror = "Odd"
-        if (orientation == "Horizontal"):
-            if (normalormirror == "Default" and side != "Both"):
-                if (side == "Lower"):
-                     normalormirror = "Even"
-                if (side == "Upper"):
-                     normalormirror = "Odd"
     # change tool and set up for cut
         self.toolchange(squaretool, 17000)
         self.setdxfcolor("Cyan")
@@ -2570,7 +2610,7 @@ class gcodepreview:
                     width+smallDiameter+smallDiameter/2,
                     (smallDiameter / 2) / Tan(45),
                     smallDiameter/2)
-            if (side == "Left"):
+            if (side == "Right" or side =="RightMirror"):
                     self.cutpocketrectanglerounddxf(
                     bx - (smallDiameter/2),
                     by-smallDiameter/2-smallDiameter/4,
@@ -2579,7 +2619,7 @@ class gcodepreview:
                     width+smallDiameter+smallDiameter/2,
                     ((smallDiameter / 2) / Tan(45)),
                     smallDiameter/2)
-            if (side == "Right"):
+            if (side == "Left" or side == "LeftMirror"):
                     self.cutpocketrectanglerounddxf(
                     bx - (thickness - smallDiameter/2),
                     by-smallDiameter/2-smallDiameter/4,
@@ -2598,7 +2638,7 @@ class gcodepreview:
                     (thickness * 2) - smallDiameter,
                     (smallDiameter / 2) / Tan(45),
                     smallDiameter/2)
-            if (side == "Lower"):
+            if (side == "Upper" or side =="UpperMirror"):
                 self.cutpocketrectanglerounddxf(
                     bx-smallDiameter/2-smallDiameter/4,
                     by - smallDiameter/2,
@@ -2607,7 +2647,7 @@ class gcodepreview:
                     thickness,
                     ((smallDiameter / 2) / Tan(45)),
                     smallDiameter/2)
-            if (side == "Upper"):
+            if (side == "Lower" or side == "LowerMirror"):
                 self.cutpocketrectanglerounddxf(
                     bx-smallDiameter/2-smallDiameter/4,
                     by - (thickness - smallDiameter/2),
@@ -2619,20 +2659,8 @@ class gcodepreview:
     # continue with small square tool to cut fingers and central channel for small V tool
         self.setdxfcolor("Blue")
         self.setdxflayer("Square - pocket depth")
-    # Joint_Orientation = "Horizontal" "Even" == "Lower", "Odd" == "Upper"
-    # Joint_Orientation = "Vertical" "Even" == "Left", "Odd" == "Right"
-        if (orientation == "Vertical"):
-            if (normalormirror == "Default" and side != "Both"):
-                if (side == "Left"):
-                     normalormirror = "Even"
-                if (side == "Right"):
-                     normalormirror = "Odd"
-        if (orientation == "Horizontal"):
-            if (normalormirror == "Default" and side != "Both"):
-                if (side == "Lower"):
-                     normalormirror = "Even"
-                if (side == "Upper"):
-                     normalormirror = "Odd"
+    # Joint_Orientation = "Horizontal" "Even" == "Upper", "Odd" == "Lower"
+    # Joint_Orientation = "Vertical" "Even" == "Right", "Odd" == "Left"
         jointdepth = -(thickness - (smallDiameter / 2) / Tan(45))
         radius = smallDiameter/2
         jointwidth = thickness - smallDiameter
@@ -2645,27 +2673,40 @@ class gcodepreview:
             self.cutpolylinedxf(bx, by + Finger_Origin, jointdepth)
             i = 0
             while i <= Number_of_Pins - 1:
-                if (side == "Right"):
+                if (side == "Left"):
                     self.cutpolylinedxf(self.xpos(), self.ypos() + smallDiameter + radius/5, jointdepth)
-                if (side == "Left" or side == "Both"):
+                if (side == "RightMirror"):
+                    self.cutpolylinedxf(self.xpos(), self.ypos() + smallDiameter + radius/5, jointdepth)
+                if (side == "Right" or side == "Both"):
                     self.cutpolylinedxf(self.xpos(), self.ypos() + radius, jointdepth)
                     self.cutpolylinedxf(self.xpos() + jointwidth, self.ypos(), jointdepth)
                     self.cutpolylinedxf(self.xpos(), self.ypos() + radius/5, jointdepth)
                     self.cutpolylinedxf(self.xpos() - jointwidth, self.ypos(), jointdepth)
                     self.cutpolylinedxf(self.xpos(), self.ypos() + radius, jointdepth)
-                if (side == "Left"):
+                if (side == "Right"):
                     self.cutpolylinedxf(self.xpos(), self.ypos() + smallDiameter + radius/5, jointdepth)
-                if (side == "Right" or side == "Both"):
-                    if (i < (Number_of_Pins - 1)):
-    #                    print(i)
+                if (side == "LeftMirror"):
+                    self.cutpolylinedxf(self.xpos(), self.ypos() + radius, jointdepth)
+                    self.cutpolylinedxf(self.xpos() - jointwidth, self.ypos(), jointdepth)
+                    self.cutpolylinedxf(self.xpos(), self.ypos() + radius/5, jointdepth)
+                    self.cutpolylinedxf(self.xpos() + jointwidth, self.ypos(), jointdepth)
+                    self.cutpolylinedxf(self.xpos(), self.ypos() + radius, jointdepth)
+                    self.cutpolylinedxf(self.xpos(), self.ypos() + smallDiameter + radius/5, jointdepth)
+                if (i < (Number_of_Pins - 1)):
+                    if (side == "Left" or side == "Both"):
                         self.cutpolylinedxf(self.xpos(), self.ypos() + radius, jointdepth)
                         self.cutpolylinedxf(self.xpos() - jointwidth, self.ypos(), jointdepth)
                         self.cutpolylinedxf(self.xpos(), self.ypos() + radius/5, jointdepth)
                         self.cutpolylinedxf(self.xpos() + jointwidth, self.ypos(), jointdepth)
                         self.cutpolylinedxf(self.xpos(), self.ypos() + radius, jointdepth)
+                    if (side == "RightMirror"):
+                        self.cutpolylinedxf(self.xpos(), self.ypos() + radius, jointdepth)
+                        self.cutpolylinedxf(self.xpos() + jointwidth, self.ypos(), jointdepth)
+                        self.cutpolylinedxf(self.xpos(), self.ypos() + radius/5, jointdepth)
+                        self.cutpolylinedxf(self.xpos() - jointwidth, self.ypos(), jointdepth)
+                        self.cutpolylinedxf(self.xpos(), self.ypos() + radius, jointdepth)
                 i += 1
             self.cutpolylinedxf(bx, by + width, jointdepth)
-    # Joint_Orientation = "Horizontal" "Even" == "Lower", "Odd" == "Upper"
         if (orientation == "Horizontal"):
             self.rapidXY(bx, by)
             self.beginopenpolyline(bx, by)
@@ -2673,23 +2714,38 @@ class gcodepreview:
             self.cutlineZgcfeed(jointdepth,1000)
             i = 0
             while i <= Number_of_Pins - 1:
-                if (side == "Upper"):
+                if (side == "Lower"):
                     self.cutpolylinedxf(self.xpos() + smallDiameter + radius/5, self.ypos(), jointdepth)
-                if (side == "Lower" or side == "Both"):
+                if (side == "UpperMirror"):
+                    self.cutpolylinedxf(self.xpos() + smallDiameter + radius/5, self.ypos(), jointdepth)
+                if (side == "Upper" or side == "Both"):
                     self.cutpolylinedxf(self.xpos() + radius, self.ypos(), jointdepth)
                     self.cutpolylinedxf(self.xpos(), self.ypos() + jointwidth, jointdepth)
                     self.cutpolylinedxf(self.xpos() + radius/5, self.ypos(), jointdepth)
                     self.cutpolylinedxf(self.xpos(), self.ypos() - jointwidth, jointdepth)
                     self.cutpolylinedxf(self.xpos() + radius, self.ypos(), jointdepth)
-                if (side == "Lower"):
+                if (side == "LowerMirror"):
+                    self.cutpolylinedxf(self.xpos() + radius, self.ypos(), jointdepth)
+                    self.cutpolylinedxf(self.xpos(), self.ypos() - jointwidth, jointdepth)
+                    self.cutpolylinedxf(self.xpos() + radius/5, self.ypos(), jointdepth)
+                    self.cutpolylinedxf(self.xpos(), self.ypos() + jointwidth, jointdepth)
+                    self.cutpolylinedxf(self.xpos() + radius, self.ypos(), jointdepth)
+                if (side == "Upper"):
                     self.cutpolylinedxf(self.xpos() + smallDiameter + radius/5, self.ypos(), jointdepth)
-                if (side == "Upper" or side == "Both"):
-                    if (i < (Number_of_Pins - 1)):
-    #                    print(i)
+                if (side == "LowerMirror"):
+                    self.cutpolylinedxf(self.xpos() + smallDiameter + radius/5, self.ypos(), jointdepth)
+                if (i < (Number_of_Pins - 1)):
+                    if (side == "Lower" or side == "Both"):
                         self.cutpolylinedxf(self.xpos() + radius, self.ypos(), jointdepth)
                         self.cutpolylinedxf(self.xpos(), self.ypos() - jointwidth, jointdepth)
                         self.cutpolylinedxf(self.xpos() + radius/5, self.ypos(), jointdepth)
                         self.cutpolylinedxf(self.xpos(), self.ypos() + jointwidth, jointdepth)
+                        self.cutpolylinedxf(self.xpos() + radius, self.ypos(), jointdepth)
+                    if (side == "UpperMirror"):
+                        self.cutpolylinedxf(self.xpos() + radius, self.ypos(), jointdepth)
+                        self.cutpolylinedxf(self.xpos(), self.ypos() + jointwidth, jointdepth)
+                        self.cutpolylinedxf(self.xpos() + radius/5, self.ypos(), jointdepth)
+                        self.cutpolylinedxf(self.xpos(), self.ypos() - jointwidth, jointdepth)
                         self.cutpolylinedxf(self.xpos() + radius, self.ypos(), jointdepth)
                 i += 1
             self.cutpolylinedxf(bx + width, by, jointdepth)
@@ -2702,26 +2758,26 @@ class gcodepreview:
         self.setdxfcolor("Dark Gray")
         self.setdxflayer("Large V - top depth")
         if (orientation == "Vertical"):
-            if (side == "Left" or side == "Both"):
+            if (side == "Right" or side == "Both" or side == "RightMirror"):
                 self.rapidZ(0)
                 self.rapidXY(bx+thickness-(smallDiameter / 2) / Tan(45), by - radius/2)
                 self.cutlineZgcfeed(-(smallDiameter / 2) / Tan(45),10000)
                 self.cutlinedxfgc(bx+thickness-(smallDiameter / 2) / Tan(45), by + width + radius/2, -(smallDiameter / 2) / Tan(45))
                 self.rapidZ(0)
-            if (side == "Right" or side == "Both"):
+            if (side == "Left" or side == "Both"):
                 self.rapidZ(0)
                 self.rapidXY(bx-(thickness-(smallDiameter / 2) / Tan(45)), by - radius/2)
                 self.cutlineZgcfeed(-(smallDiameter / 2) / Tan(45),10000)
                 self.cutlinedxfgc(bx-(thickness-(smallDiameter / 2) / Tan(45)), by + width + radius/2, -(smallDiameter / 2) / Tan(45))
                 self.rapidZ(0)
         if (orientation == "Horizontal"):
-            if (side == "Lower" or side == "Both"):
+            if (side == "Upper" or side == "Both" or side == "UpperMirror"):
                 self.rapidZ(0)
                 self.rapidXY(bx - radius, by+thickness-(smallDiameter / 2) / Tan(45))
                 self.cutlineZgcfeed(-(smallDiameter / 2) / Tan(45),10000)
                 self.cutlinedxfgc(bx + width + radius, by+thickness-(smallDiameter / 2) / Tan(45), -(smallDiameter / 2) / Tan(45))
                 self.rapidZ(0)
-            if (side == "Upper" or side == "Both"):
+            if (side == "Lower" or side == "Both" or side == "LowerMirror"):
                 self.rapidZ(0)
                 self.rapidXY(bx - radius, by-(thickness-(smallDiameter / 2) / Tan(45)))
                 self.cutlineZgcfeed(-(smallDiameter / 2) / Tan(45),10000)
@@ -2730,7 +2786,7 @@ class gcodepreview:
         self.setdxfcolor("Magenta")
         self.setdxflayer("Large V - half thickness")
         if (orientation == "Vertical"):
-            if (side == "Left" or side == "Both"):
+            if (side == "Right" or side == "Both" or side == "RightMirror"):
                 self.rapidZ(0)
                 self.rapidXY(bx+thickness/2, by+width)
                 self.cutlineZgcfeed(-thickness/2,1000)
@@ -2740,7 +2796,7 @@ class gcodepreview:
                 self.cutlineZgcfeed(-thickness/2,1000)
                 self.cutlinedxfgc(bx+thickness/2, by +thickness, -thickness/2)
                 self.rapidZ(0)
-            if (side == "Right" or side == "Both"):
+            if (side == "Left" or side == "Both" or side == "LeftMirror"):
                 self.rapidZ(0)
                 self.rapidXY(bx-thickness/2, by+width)
                 self.cutlineZgcfeed(-thickness/2,1000)
@@ -2751,7 +2807,7 @@ class gcodepreview:
                 self.cutlinedxfgc(bx-thickness/2, by +thickness, -thickness/2)
                 self.rapidZ(0)
         if (orientation == "Horizontal"):
-            if (side == "Upper" or side == "Both"):
+            if (side == "Lower" or side == "Both" or side == "LowerMirror"):
                 self.rapidZ(0)
                 self.rapidXY(bx+width, by-thickness/2)
                 self.cutlineZgcfeed(-thickness/2,1000)
@@ -2761,7 +2817,7 @@ class gcodepreview:
                 self.cutlineZgcfeed(-thickness/2,1000)
                 self.cutlinedxfgc(bx +thickness, by-thickness/2, -thickness/2)
                 self.rapidZ(0)
-            if (side == "Lower" or side == "Both"):
+            if (side == "Upper" or side == "Both" or side == "UpperMirror"):
                 self.rapidZ(0)
                 self.rapidXY(bx+width, by+thickness/2)
                 self.cutlineZgcfeed(-thickness/2,1000)
@@ -2771,7 +2827,7 @@ class gcodepreview:
                 self.cutlineZgcfeed(-thickness/2,1000)
                 self.cutlinedxfgc(bx +thickness, by+thickness/2, -thickness/2)
                 self.rapidZ(0)
-    ## Joint_Orientation = "Horizontal" "Even" == "Lower", "Odd" == "Upper"
+    ## Joint_Orientation = "Horizontal" "Even" == "Upper", "Odd" == "Lower"
         self.setdxfcolor("Green")
         self.setdxflayer("Large V - full depth")
         if (orientation == "Horizontal"):

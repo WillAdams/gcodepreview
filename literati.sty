@@ -229,7 +229,7 @@ Last line was \the\lst@lineno\ for #1\ gcpy\ \thegcpy\ pyscad\ \thepyscad\ gcpsc
     {
         \GenericError{}{invalid~filename~("#1")}{}{}
     }
-    \iow_open:Nn \g_tmpa_iow {#1}
+    \iow_open:Nn \g_tmpa_iow {#1.tmp}
     \int_step_inline:nn {\l_doc_counter_tl}
     {
         \doc_copy_file_content:nN {#1-##1.vrb} \g_tmpa_iow

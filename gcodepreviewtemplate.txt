@@ -1,6 +1,22 @@
-self.debugenable = True
+gcp.Full_Blind_Box_Joint(100, 20, "Vertical", "Both", Joint_Width, stockZthickness, largeVdiameter, smallDiameter)
 
-testvariable = 1
+gcp.Full_Blind_Box_Joint(20, 20, "Vertical", "Left", Joint_Width, stockZthickness, largeVdiameter, smallDiameter)
 
-self.outputdebugnote("Current value of testvariable is: ", testvariable)
+gcp.Full_Blind_Box_Joint(20, 100, "Vertical", "Left", Joint_Width, stockZthickness, largeVdiameter, smallDiameter)
+
+gcp.Full_Blind_Box_Joint(180, 20, "Vertical", "Right", Joint_Width, stockZthickness, largeVdiameter, smallDiameter)
+
+gcp.Full_Blind_Box_Joint(100, 100, "Vertical", "Right", Joint_Width, stockZthickness, largeVdiameter, smallDiameter)
+
+# Joint_Orientation = "Horizontal" "Even" == "Lower", "Odd" == "Upper"
+
+gcp.Full_Blind_Box_Joint(20, 20, "Horizontal", "Lower", Joint_Width, stockZthickness, largeVdiameter, smallDiameter)
+
+gcp.Full_Blind_Box_Joint(20, 100, "Horizontal", "Both", Joint_Width, stockZthickness, largeVdiameter, smallDiameter)
+
+gcp.Full_Blind_Box_Joint(20, 180, "Horizontal", "Upper", Joint_Width, stockZthickness, largeVdiameter, smallDiameter)
+
+gcp.Full_Blind_Box_Joint(100, 100, "Horizontal", "Upper", Joint_Width, stockZthickness, largeVdiameter, smallDiameter)
+
+gcp.Full_Blind_Box_Joint(100, 20, "Horizontal", "Lower", Joint_Width, stockZthickness, largeVdiameter, smallDiameter)
 
